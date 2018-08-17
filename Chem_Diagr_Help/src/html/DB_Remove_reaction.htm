@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>DATABASE: Remove a Reaction</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a>&nbsp;/ <a href="DB_Databases.htm">Databases</a>&nbsp;/ <a href="DB_Create_your_database.htm">Create&nbsp;databases</a>&nbsp;/ <a href="DB_logK_files.htm"><nobr>logK-files</nobr></a></font></td>
+  </tr>
+</table>
+
+<h3>Remove a Reaction from the databases:</h3>
+
+<p>If you need to remove a reaction given in a <b>text <nobr>log<i>K</i>&deg;-</nobr>file</b>,
+erase the corresponding line with a text editor.</p>
+
+<p>If you wish to remove a reaction given in the
+<b>binary <nobr>log<i>K</i>&deg;-</nobr>database</b>,
+so that it may not be retrieved, give again the name of the reaction product
+but preceede the name by a <nobr>&#147;<tt>@</tt>&#148;.</nobr> For example:</p>
+
+<p class="indent">
+<nobr><tt>@FeOH+;</tt></nobr>
+</p>
+
+<p>The order by which the database files are searched may be changed
+using the pull-down menu &#147;Options / Data / <nobr>Database&nbsp;files&#148;</nobr>
+of DATABASE. The order is important: for two species with the same name (but different
+<nobr>log<i>K</i>&deg;</nobr> values), only the last one will be retained.
+To remove a species (by preceeding the name with a <nobr>&#147;<tt>@</tt>&#148;)</nobr>
+it is necessary that the species to remove does not appear in a database
+which is&nbsp;read&nbsp;later.</p>
+
+<p>See also: <a href="DB_Remove_change_data.htm">Removing or Changing data.</a></p>
+
+</body>
+</html>

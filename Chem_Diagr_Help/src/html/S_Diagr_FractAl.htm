@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Fraction diagram (H+,*Al(OH)3)</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <nobr><a href="SP_Data_File_Format.htm">Input data-file format</a>&nbsp;/</nobr> <nobr><a href="SP_Names_Numbers.htm">Names and Numbers</a>&nbsp;/</nobr> <nobr><a href="SP_Removing_Species.htm">Deactivate species</a></nobr></font></td>
+  </tr>
+</table>
+
+
+<p>
+Example of a diagram with a <b>deactivated solid component:</b></p>
+
+<p><center>
+<img src="images/Diagr_FractAl.gif" alt="Fract_Diagr_Al" title="Fract_Diagr_Al" height="240" width="351" border="1">
+</center></p>
+<p>
+<ul><li>first the component <nobr>Al<sup>3+</sup></nobr> has been
+<a href="S_Modify_Chem_System.htm">exchanged</a>
+with <nobr>Al(OH)<sub>3</sub>(cr).</nobr></li>
+<li>then all solids except the amorphous Al-hydroxide
+have been <a href="SP_Removing_Species.htm">deactivated</a>
+by adding an asterisk (*) as the first character in the
+name. The components are therefore: <nobr><tt>H+</tt></nobr> and <nobr><tt>*Al(OH)3(cr)</tt>.</nobr></li>
+</ul>
+The diagram above shows that even if the
+solid component <nobr>(Al(OH)<sub>3</sub>(cr))</nobr> has been deactivated,
+all other aluminium species may be formed (unless they
+have been deactivated as well).</p>
+
+<p>Remember that <a href="DB_Solid_solub.htm">amorphous solids are more soluble than crystalline.</a></p>
+
+<p>The diagram above was obtained with the following input file:
+<pre> 2 8 3 1
+H+,  *Al(OH)3(cr)
+Al(OH)2+    , -3.04   1 1  Al(OH)3     , -7.76   0 1
+Al(OH)4-    , -15.09 -1 1  Al2(OH)2 4+ ,  7.7    4 2
+Al3(OH)4+5  ,  9.16   5 3  AlOH+2      ,  2.73   2 1
+OH-         , -14    -1 0  Al 3+       ,  7.7    3 1
+Al(OH)3(am) , -3.1    0 1  *Al2O3(cr)  , -4.25   0 2
+*AlOOH(s)   , -0.7    0 1
+*Al(OH)3(cr), H+,
+LAV, -3 -11  T, 1E-3</pre></p>
+
+</body>
+</html>

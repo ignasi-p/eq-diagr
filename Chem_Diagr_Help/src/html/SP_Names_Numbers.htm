@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Names and Numbers in data files</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <nobr><a href="SP_Data_File_Format.htm">Input data-file format</a></nobr></font></td>
+  </tr>
+</table>
+
+<h3>Data file structure:  Names and numbers</h3>
+
+<p><nobr><b>General:</b></nobr><br>
+
+Data in the input files must be separated by either commas, blanks, or
+end-of-line. Example:</p>
+<p class="indent">
+<pre>Fe 3+,  -13.02    0 -1  1
+Fe(OH)2 ,  -20.8    -2  0  1</pre>
+</p>
+<p>Names and texts may contain &#147;space&#148;, like
+<nobr>&#147;<tt>Fe 3+</tt>&#148;,</nobr> and therefore they
+must end with either a comma or an end-of-line. This also means that a comma can not
+be included in a chemical name: <nobr>&#147;<tt>Fe(OH)2,am</tt>&#148;</nobr>
+is an illegal name.</p>
+
+<p><b>Comments</b> can be added at the end of any line after a slash (/) when it follows
+either a comma or white space. For example:</p>
+<p class="indent">
+<nobr><tt>H+, e&#8722;, Cu+2 / Three components</tt></nobr>
+</p>
+
+<p>A comment at the end of the first line of the <a href="SP_Data_File_Chemical_System.htm">data-file</a>
+may be used to indicate for what <b><a href="DB_Temperature.htm">temperature</a></b>
+the equilibrium constants are given, for example &#147;<tt>/ t=50</tt>&#148;.</p>
+
+<p>Note: a chemical species name can not contain <nobr>&#147;&nbsp;/&#148;</nobr> (a space followed by a slash).
+For example <nobr>&#147;<tt>1/2&nbsp;Fe2O3</tt>&#148;</nobr> is acceptable, but
+<nobr>&#147;<tt>Fe2O3&nbsp;/2</tt>&#148;</nobr>
+will give unpredictable results: any text from the the <nobr>&#147;&nbsp;<tt>/2</tt>&#148;</nobr> to the
+end of the line will be treated as a comment!</p>
+
+<p><b>Names of chemical <nobr>species:</b></nobr><br>
+As mentioned above, a name can not contain a comma (,) and it can not contain a slash
+following a space <nobr>(&nbsp;/).</nobr></p>
+<ul>
+<li><a href="SP_Phase_Indicator.htm">Phase indicator</a> (solid, gas, etc).</li>
+<li><a href="SP_Charges_in_Names.htm">Electric charge</a></li>
+<li><a href="SP_Removing_Species.htm">Removing species <nobr>with &#147;*&#148;</nobr></a></li>
+<li><a href="SP_Species_Zero_Conc.htm">Species with zero concentration</a>
+<nobr>(e<sup>&#8722;</sup>,</nobr> <nobr>H<sub>2</sub>O,</nobr> gases,
+<nobr>&#147;*&#148;)</nobr></li>
+</ul>
+
+<a name="Numbers"></a>
+<p><nobr><b>Numbers:</b></nobr><br>
+Real values can be entered with or without decimal point (i.e.,
+<nobr><tt>10.0</tt>,</nobr> or <nobr><tt>10</tt>),</nobr>
+and with or without exponent (i.e., <nobr><tt>1.0E-3</tt>,</nobr>
+<nobr><tt>1e-3</tt>,</nobr> or <nobr><tt>0.001</tt>).</nobr> Integer values
+(like the number of chemical components) can not contain a decimal point or
+an exponent.</p>
+</body>
+</html>

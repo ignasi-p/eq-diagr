@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Fraction diagram: Reverse Concs.</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="top">
+    &nbsp;<a href="S_0_Main.htm"><img src="images/Spana.gif" width="30" height="30" border="0" alt="Spana"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="S_0_Main.htm">SPANA</a>&nbsp;/ <a href="S_Making_Diagrams.htm">Making a diagram</a></font></td>
+  </tr>
+</table>
+
+<p>Example of a diagram where <b>reversed concentration ranges</b> are used.
+The diagram shows the species distribution for <nobr>Fe<sup>3+</sup></nobr>
+when chloride is exchanged for sulphate. <i>Note</i> that both <nobr>Cl<sup>&#8722;</sup></nobr>
+and <nobr>SO<sub>4</sub><sup>2&#8722;</sup></nobr> are varied along the
+<i>X</i>-axis, although only one component is shown in the <i>X</i>-axis of the diagram.
+The composition changes from 0.4 M HCl at the left of the diagram to
+0.2 M <nobr>H<sub>2</sub>SO<sub>4</sub></nobr> at the right
+(see last two lines of the input file below).
+The <a href="SP_Ionic_Strength.htm">ionic strength</a>
+is evaluated iteratively at each point.</p>
+
+<p>
+<center>
+<img src="images/Reverse_Concs_Diagr.gif" height="221" width="317" border="1" alt="Reverse_Concs_Diagr" title="Reverse_Concs_Diagr">
+</center>
+</p>
+<p></p>
+<p>This diagram was obtained with the following input file:
+<pre><code> 4 15 5 0
+H+,  Fe 3+,  SO4 2-,  Cl-
+Fe(OH)2+      , -4.8    -2 1 0 0  Fe(OH)3       , -12     -3 1 0 0
+Fe(OH)4-      , -21.6   -4 1 0 0  Fe(SO4)2-     ,  6.22    0 1 2 0
+Fe2(OH)2+4    , -2.82   -2 2 0 0  Fe3(OH)4+5    , -6.3    -4 3 0 0
+FeCl+2        ,  1.52    0 1 0 1  FeCl2+        ,  2.22    0 1 0 2
+FeCl3         ,  1.02    0 1 0 3  FeCl4-        , -0.98    0 1 0 4
+FeOH 2+       , -2.15   -1 1 0 0  FeSO4+        ,  4.25    0 1 1 0
+H2SO4         ,  0.78    2 0 1 0  HSO4-         ,  1.982   1 0 1 0
+OH-           , -14.002 -1 0 0 0  Fe(OH)3(s)    , -3.03   -3 1 0 0
+Fe2(SO4)3(cr) , -0.19    0 2 3 0  Fe2O3(cr)     ,  0.1    -6 2 0 0
+FeOCl(cr)     , -4.55   -2 1 0 1  FeOOH(cr)     , -0.17   -3 1 0 0
+Fe 3+, Cl-,
+T, 0.4  T, 1E-5
+TV, 0   0.2
+TV, 0.4   0</code></pre>
+</p>
+</body>
+</html>

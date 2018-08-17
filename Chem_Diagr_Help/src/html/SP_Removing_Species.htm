@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Removing species with a "*"</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <nobr><a href="SP_Data_File_Format.htm">Input data-file format</a>&nbsp;/</nobr> <a href="SP_Names_Numbers.htm">Names&nbsp;and&nbsp;Numbers</a></font></td>
+  </tr>
+</table>
+
+<p><b>Removing species:</b> If the first character in the name for a chemical species
+is an asterisk <nobr>(*),</nobr> the species will not be included in the calculations.
+This is a quick method to <u>deactivate</u> a species without having to remove it from the
+input data file.</p>
+
+<p>It is convenient to
+<a href="S_Modify_Chem_System.htm#Deactivate">deactivate species using SPANA</a>.</p>
+
+<p>Note that if you <u>deactivate a component</u> in this way, then only the
+<i>free</i> component is removed from the mass balance calculations.
+For example, if the components are <nobr>H<sup>+</sup></nobr> and
+<nobr>Al(OH)<sub>3</sub>(cr)</nobr> and you deactivate the Al oxyhydroxide by
+changing its name to <nobr>*Al(OH)<sub>3</sub>(cr),</nobr> then you suppress the
+precipitation of that solid in the calculations, but aluminium is <u>not</u>
+removed: the Al-complexes <nobr>AlOH<sup>2+</sup>,</nobr>
+<nobr>Al(OH)<sub>3</sub>(cr),</nobr> etc, still remain.
+<a href="S_Diagr_FractAl.htm">Example</a>.</p>
+
+<p>Note that some species <nobr>(H<sub>2</sub>O,</nobr> <nobr>e<sup>&#8722;</sup></nobr>
+and <a href="ChEq_Gases.htm">gases</a>) always have
+<a href="SP_Species_Zero_Conc.htm">zero concentration</a> and therefore,
+it is <b>not necessary</b> to add a &#147;*&#148; as the
+first character for these species.</p>
+</body>
+</html>

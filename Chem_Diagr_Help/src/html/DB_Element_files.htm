@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>DATABASE: Element-files</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a>&nbsp;/ <a href="DB_Databases.htm">Databases</a>&nbsp;/ <a href="DB_Create_your_database.htm">Create&nbsp;databases</a></font></td>
+  </tr>
+</table>
+
+<h3>Element-files</h3>
+
+<p>The role of the element file is to establish correspondences between chemical
+elements and metal ions and ligands in the database.</p>
+
+<p>The name of the element file must have extention
+<nobr>&#147;<tt>elt</tt>&#148;.</nobr></p>
+
+<h5>Format of Element-files:</h5>
+
+<p>Element files are plain text files. Each line must contain:</p>
+<ul>
+<li>Name of the chemical element</li>
+<li>How many chemical components are associated with the element</li>
+<li>For each component: its name, and an optional explanation text</li>
+</ul>
+<p class="cont">The data is separated by either commas <nobr>(,)</nobr> or semicolons <nobr>(;).</nobr></p>
+<p>Examples:</p>
+<p class="indent">
+<nobr><tt>C,1,gly-;glycine (aminoacetate),</tt></nobr><br>
+<nobr><tt>Fe,2; Fe&nbsp;2+,, Fe&nbsp;3+,,</tt></nobr>
+</p>
+
+<p class="cont">As shown in the second line of this example, the explanation text is optional,
+it is given to help the user explaining what the different ligand names mean.</p>
+
+<p><i>Comments:</i> lines starting with a slash <nobr>(/)</nobr> are considered
+comments and discarded. Any extra information at the end of a line is also discarded.</p>
+
+<p><a href="DB_Names_Numbers.htm"><b>How to enter names and numbers</b></a></p>
+
+<p><b>To remove a component</b> from the list of available components for a given element,
+preceede the name of the component by a <nobr>&#147;@&#148;.</nobr> For example:</p>
+<p class="indent">
+<nobr><tt>Fe,1,@Fe&nbsp;2+,,</tt></nobr>
+</p>
+
+<p class="cont">This would remove <nobr>&#147;Fe&nbsp;2+&#148;</nobr> from the components
+available for iron.
+
+See also <a href="DB_Remove_change_data.htm">Removing or Changing <nobr>data</a>.</nobr></p>
+
+</body>
+</html>

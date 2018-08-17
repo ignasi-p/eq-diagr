@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>PlotPS: Convert diagrams to PostScript</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="top">
+    &nbsp;<a href="S_0_Main.htm"><img src="images/Spana.gif" width="30" height="30" border="0" alt="Spana"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="S_0_Main.htm">SPANA</a>&nbsp;/ <a href="S_Printing.htm">Printing&nbsp;Diagrams</a></font></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+    &nbsp;<a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <nobr><a href="SP_Plot-Files.htm">Plot-files</a></nobr></font></td>
+  </tr>
+</table>
+
+<h3>Convert diagrams to PostScript</h3>
+
+<p><a href="SP_Plot-Files.htm">Plot-files</a> may be
+converted into PostScript with the <b>PlotPS</b> program:</p>
+<ul>
+<li>The menu &#147;Convert <nobr>to ... /</nobr>
+	  <nobr>PS (or EPS)&#148;</nobr> in a diagram
+	  window runs the <b>PlotPS</b> program to convert a diagram
+		into PostScript format.</li>
+<li>It is also possible to run <b>PlotPS</b> in
+    <a href="SP_Batch_Mode.htm"><nobr>batch-mode</a>.</nobr></li>
+</ul>
+
+<p>PostScript files may be printed (on PostScript printers) or converted to pdf-format.
+If&nbsp;you choose to create an <i>encapsulated</i> PostScript file, it may be inserted
+in a publication (for example into a <nobr>MS-Word</nobr> document) and then printed.
+PostScript and encapsulated PostScript files have names ending with
+&#147;<b>ps</b>&#148; and &#147;<b>eps</b>&#148; respectively.
+Note that some word processors are not able to display encapsulated PostScript
+images on the screen (they only show a rectangle where the picture will
+be placed, the picture appears only on the printed page).</p>
+
+<p><a name="Ghost"></a>
+PostScript files may be viewed under Windows with the following software:</p>
+
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="middle"><td><tt>&nbsp;</tt></td>
+<td valign="middle"><nobr><tt>&nbsp;<img src="images/gsview2.gif" width="32" height="32" alt="GSview">&nbsp;</tt></nobr></td>
+<td><nobr><a class="www" target="_blank" href="http://pages.cs.wisc.edu/~ghost/gsview/">GSview</a><tt>&nbsp;</tt> with</nobr></td>
+<td valign="middle"><nobr><tt>&nbsp;<img src="images/ghost32.gif" width="32" height="32" alt="GhostS">&nbsp;</tt></nobr></td>
+<td><a class="www" target="_blank" href="http://pages.cs.wisc.edu/~ghost/">GhostScript</a></td>
+</tr></table>
+
+<p>PostScript files are plain text files: they maybe changed with any
+text editor.
+Because PostScript is a kind of programming language, by editing the files
+it is possible to:</p>
+<ul>
+<li>add or move labels,</li>
+<li>remove parts of the plot,</li>
+<li>change lines into dashed or dotted lines, etc.</li>
+</ul>
+
+<p>See also a short description of the <a href="S_PostScript_Commands.htm">PostScript
+<nobr>commands</a>.</nobr></p>
+
+<p>The <nobr><tt>ps</tt>-</nobr> or <nobr><tt>eps</tt>-files</nobr> created by
+<a href="S_0_Main.htm">SPANA</a> (i.e., by the <b>PlotPS</b> program)
+contain two parts:</p>
+<ul>
+<li>a &#147;Prolog&#148; where functions and variables are defined;</li>
+<li>a section where the drawing is performed.</li>
+</ul>
+
+<p>Functions and variables can be divided in two groups: those dealing with text output,
+and those related to line drawing. Comments in the &#147;Prolog&#148; describe how
+the functions defined by <b>PlotPS</b> may be used, and comments are written by
+<b>PlotPS</b> in the &#147;drawing&#148; section indicating what part of the
+drawing is being performed (axis, curves, labels
+on curves, heading, etc). See the description of some
+<a href="S_PostScript_Commands.htm">PostScript commands</a></p>
+
+<p><b>Example</b> using the functions and variables defined in the
+&#147;Prolog&#148; created by <b>PlotPS</b>, the following text:</p>
+<pre style="margin-left:1em; margin-top:0.4ex;">
+0 0 0 setrgbcolor _sn Lt3 1100 1200 Mv
+1220 1200 Ln 1220 1250 Ln
+1100 1250 Ln 1100 1200 Ln
+1160 1225 Mv 25 _setSize (25\260C) cShow</pre>
+
+<p class="cont">
+(added before the last &#147;<tt>stroke grestore end</tt>&#148; lines) will add a
+box <nobr>(1.2&times;0.5</nobr> cm) placed 11&nbsp;cm to the right of the left margin,
+and 12&nbsp;cm above the bottom margin. The <nobr>&#147;<tt>Lt3</tt>&#148;</nobr>
+command makes the box to be drawn with a dotted line. The box has the text
+<nobr>&#147;25&deg;C&#148;</nobr> centred inside it.</p>
+
+</body>
+</html>

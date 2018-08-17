@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Chem.Equil. - Solubilities</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="Hydra"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a></font></td>
+  </tr>
+</table>
+
+<h3>Solubility of solids:<br>Dissolution or precipitation?</h3>
+
+<p>
+The solubility of oxides, hydroxides or oxyhydroxides for
+many transition metals is strongly dependent on the particle size and
+crystallinity of the solid.
+</p>
+<p>
+For <nobr>Fe(III),</nobr> <nobr>Al(III),</nobr> etc, there is a large difference
+between the solubilities of crystalline oxides and amorphous hydroxides. The amorphous
+solids precipitate when the oversaturation is high, as when mixing solutions in
+the laboratory. The amorphous solids will slowly re-crystallise and form more
+insoluble (more stable) solids. See for example:</p>
+<p class="indent">
+D Langmuir, <i>Aqueous Environmental Geochemistry.</i> Prentice-Hall, Inc., 1997.
+<nobr>Sect.7.7</nobr> and <nobr>Chapter&nbsp;12,</nobr>  diagrams on
+<nobr>p.&nbsp;255</nobr> &amp; 438.
+</p>
+<p>
+The following diagram shows that for <nobr>Fe(III)</nobr> the difference is a factor
+of almost <nobr>10<sup>5</sup>:</nobr></p>
+<p><center>
+<img src="images/Diagr_SolubFe.gif" alt="Diagr_Solub_Fe(III)" title="Diagr_Solub_Fe(III)" height="179" width="268" border="1">
+</center>
+The endings &#147;(am)&#148; and &#147;(cr)&#148; in the formulas are
+<a href="SP_Phase_Indicator.htm">phase indicators</a>.
+The diagram shows that <nobr>[Fe(III)]<sub>TOT</sub></nobr> &#8776;
+<nobr>10<sup>&#8722;12.3</sup></nobr> when haematite
+<nobr>(Fe<sub>2</sub>O<sub>3</sub>)</nobr> is in equilibrium with an aqueous
+solution of <nobr>pH =&nbsp;8.</nobr> The diagram also shows that you can have
+a <nobr>10<sup>&#8722;5</sup>&nbsp;mM</nobr>
+solution of <nobr>Fe(III)</nobr> at <nobr>pH 2</nobr> without precipitation:
+the solution is metastable. If the pH is increased, amorphous <nobr>Fe(OH)<sub>3</sub></nobr>
+precipitates at pH about <nobr>4.3</nobr>
+</p>
+
+<h4>Modelling dissolution or precipitation?</h4>
+
+<p>To model the precipitation of Fe(III), the diagram above shows that
+the amorphous hydroxide,
+<nobr>Fe(OH)<sub>3</sub>(am),</nobr> should be included in the calcualtions,
+but the crystalline phases should be excluded
+<nobr>(Fe<sub>2</sub>O<sub>3</sub>(cr)</nobr> and <nobr>FeOOH(cr)).</nobr>
+On the other hand, to model a dissolution reaction the dissolving solid must be included
+in the calculations.</p>
+
+<h4><i>For advanced users</i>:<br>
+Search preferences for solids in <a href="DB_0_Main.htm">DATABASE:</a></h4>
+
+<p>If you edit the <a href="1_Install_Uninstall.htm#INI">ini-file</a> <tt>.DataBase.ini</tt> with a text editor,
+and change the entry <tt>All_Solids_Ask</tt> to <tt>true</tt> (or set <tt>advancedMenu = true</tt>),
+and then re-start DATABASE, the menu &#147;Options / Preferences / Solids&#148;
+will be available. Selecting this menu option will show a secondary window where
+you can choose between:
+<ul>
+<li><u>Include all solids</u> when searching the databases. This option is the default.
+This should be choosen to model processes where solids are added and their
+<b>dissolution</b> process is being studied.</li> 
+<li><u>Exclude solid</u> names ending with <nobr>&#147;(cr)&#148;.</nobr> This option
+should be chosen when modelling <b>precipitation</b> processes.</li>
+</ul></p>
+ 
+<h4>Exclude solids from the calculations</h4>
+
+<p>
+To exclude solids, they can be <a href="SP_Removing_Species.htm">deactivated</a>
+in the calculations,
+see <a href="S_Modify_Chem_System.htm#Deactivate">deactivate spcies in SPANA</a>.
+Alternatively, you can exclude <nobr>&#147;(cr)&#148;-solids</nobr> from the search in DATABASE.
+</p> 
+
+<h4>See also</h4>
+
+<ul>
+<li><a href="SP_Phase_Indicator.htm">phase indicators</a></li>
+<li><a href="DB_Solids.htm">solids in logK files</a></li>
+<li><a href="ChEq_Solids.htm">chemical equilibria with solids</a></li>
+</ul>
+  
+</body>
+</html>

@@ -1,0 +1,99 @@
+/* Style Sheet for JavaHelp: font-size: 21pt; */
+body {font-family: Serif, Times, "Times New Roman", Georgia;
+	    margin-top:0; margin-left:7; margin-right:7; color:black; background-color:white}
+
+h1 {font-family: SansSerif, Arial, Helvetica, sans-serif; font-weight: bold;
+    font-size: 145%; margin-bottom: 0}
+h2 {font-family: SansSerif, Arial, Helvetica, sans-serif; font-weight: bold;
+    font-size: 130%; margin-top:16pt; margin-bottom: 0}
+h3 {font-family: SansSerif, Arial, Helvetica, sans-serif; font-weight: bold;
+    font-size: 110%; margin-top: 14pt; margin-bottom: 0}
+h4 {font-family: SansSerif, Arial, Helvetica, sans-serif; font-weight: bold;
+    font-size: 100%; margin-top: 15pt; margin-bottom: 0}
+h5 {font-weight: bold; font-size: 100%; margin-top: 15pt; margin-bottom: 0}
+h6 {font-weight: bold; font-size: 95%; margin-top: 14pt; margin-bottom: 0}
+
+a {color: #008000;}
+a:visited {color: #008000;}
+a:active {color: #008000;}
+a:hover {color: #D2691E;} /* chocolate */
+
+a.www {color:#0000FF;} /* blue */
+a.www:visited {color:#0000FF;}
+a.www:active {color:#0000FF;}
+a.www:hover {color:#D2691E;} /* chocolate */
+
+p  { /* unfortunately, JavaHelp does not understand line-height */
+     /* line-height:30pt; */ margin-top:10pt; margin-bottom:0; text-indent:0;}
+pre {font-family:monospace; font-size:95%;
+     /* line-height:22pt; */ margin-top:10pt; margin-bottom:0; text-indent:0;}
+center {/* line-height:30pt; */ margin-top:0; margin-bottom:0;}
+address {font-size: 95%; font-style: italic; font-weight: normal; color: black;}
+
+code {font-family:monospace; font-size:92%}
+kbd {font-family:monospace; font-size:92%}
+samp {font-family:monospace; font-size:92%}
+tt {font-family:monospace; font-size:92%}
+var {font-style: italic; font-weight: normal}
+
+li {/* line-height:30pt; */ margin-top: 0; margin-bottom: 0}
+
+li p{/* line-height:30pt; */ margin-top: 5pt;margin-bottom: 0}
+
+/* Ordered lists */
+ul {list-style-image:url(images/blue-ball-mid.gif);
+    margin-left: 25pt; margin-top: 0; margin-bottom: 4pt}
+ul li ul{list-style-image:url(images/blue-sqr-mid.gif)}
+ul ul{list-style-image:url(images/blue-sqr-mid.gif)}
+
+/* Numbered lists embedded in ordered lists */
+ul li ol{list-style-image:none; list-style-type: decimal}
+ul li ol li ol{list-style-type: lower-alpha}
+ul li ol ol{list-style-type: lower-alpha}
+ul ol{list-style-image:none; list-style-type: decimal}
+ul ol li ol{list-style-type: lower-alpha}
+ul ol ol{list-style-type: lower-alpha}
+
+
+/* Numbered lists */
+ol {list-style-type: decimal;
+    margin-left: 32pt; margin-top: 0; margin-bottom: 4pt}
+ol li ol{list-style-type: lower-alpha}
+ol ol{list-style-type: lower-alpha}
+
+/* Ordered lists embedded in Numbered lists */
+ol li ul {list-style-image:url(images/blue-ball-mid.gif)}
+ol li ul li ul {list-style-image:url(images/blue-sqr-mid.gif)}
+ol li ul ul {list-style-image:url(images/blue-sqr-mid.gif)}
+ol ul {list-style-image:url(images/blue-ball-mid.gif)}
+ol ul li ul {list-style-image:url(images/blue-sqr-mid.gif)}
+ol ul ul{list-style-image:url(images/blue-sqr-mid.gif)}
+
+dl {margin-left: 0; margin-top: 10; margin-bottom: 5}
+dt {font-size:96%; font-style: normal; font-weight: bold;
+    margin-top: 0; margin-bottom: 0; text-indent: 0}
+dd {font-size:98%; font-style: normal; font-weight: normal;
+    margin-top: 0; margin-left: 25}
+
+dir {margin-left: 25pt; margin-top: 5; margin-bottom: 0}
+menu {margin-left: 25pt; margin-top: 5; margin-bottom: 0}
+
+table {/* border-style: solid; border-color: silver; */
+       border: 0; margin-top: 0; margin-bottom: 0}
+td {/*border-style: solid; border-color: silver;*/
+    padding-left: 5; padding-right: 5; padding-top: 0; padding-bottom: 0;
+    margin-top: 0; margin-bottom: 0}
+th {border-style: solid; border-color: silver;
+    padding-left: 1; padding-right: 1; padding-top: 1; padding-bottom: 1}
+td p {/* line-height:30pt; */ margin-top:0; margin-bottom:0;}
+
+sup {text-decoration:none;	font-size:90%;}
+sub {text-decoration:none;	font-size:90%;}
+sub sub {text-decoration:none;	font-size:100%;} /* PCO2 */
+small {font-size:90%;}
+.indent {/*line-height:30pt; */ margin-left:20pt; margin-top:0; margin-bottom:0; text-indent:0;}
+.indent2 {/* line-height:30pt; */ margin-left:40pt; margin-top:0; margin-bottom:0; text-indent:0;}
+.cont {/* line-height:30pt; */ margin-top:0; margin-bottom:0; text-indent:0;}
+.c {background-color: #FFCC66}  /* highlight text with yellow background*/
+
+img {vertical-align: middle;}

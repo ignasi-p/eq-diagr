@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Problems running DataBase/Spana?</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="0_Index.htm"><img src="images/thco35_s.gif" border="0" width="32" height="32" alt="Chem.Eq.Diagr"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="0_Index.htm">Chemical Equilibrium Diagrams</a>&nbsp;/ <a href="1_Install_Uninstall.htm"><nobr>Install &amp; Uninstall</nobr></a></font></td>
+  </tr>
+</table>
+
+<h3>Problems when running DataBase/Spana?</h3>
+
+<p>What to do if you try the &ldquo;Chemical Equilibrium Diagrams&rdquo; sofware and things
+do not work?</p>
+
+<p>There are two kinds of possible problems:
+<ul>
+<li>You can not run a program or there is an error. A message appears (or not). Perhaps the program
+  terminates abruptly, or does not even start. These type of problems are discussed <a href="#JavaErrors">below</a>.</li>
+<li>The programs run but the results seem wrong:
+<ul>
+<li>Parts of the diagram are missing: <a href="SP_Failures.htm">the calculations failed</a></li>
+<li><a href="SP_Strange_Results.htm">The diagram seems wrong</a></li>
+<li>The equilibrium constants obtained from DataBase are erroneous:
+  <a href="DB_Databases.htm">Modify a database</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<a name="JavaErrors"></a>
+<h4>If the programs do not run, or you find an error</h4>
+
+<p>There might be programming errors or &#147;bugs&#148;, or Java exceptions. In such cases a special
+window opens atomatically, reporting the problem.
+Or the program(s) might be performing in non-intelligent ways. Please send these observations
+to the <a href="1_Acknowledgements.htm">author</a> at:
+<img src="images/e-mail.gif" alt="e-mail" height="19" width="237" border="0" align="middle">
+</p>
+
+<p>If a program does not start: before contacting the author open a terminal console and type:</p>
+<p class="indent"><tt>java -jar <i>program_name</i>.jar</tt></p>
+<p class="cont">The message(s) that you get will give a clue to what the problem might be.</p>
+
+
+<p>Because Spana calls background programs to make the calculations and to
+handle diagrams, there is always the possibility that these other programs do not
+work in your computer environment. To find out the source of a problem:
+<ul>
+<li>In Spana open the message window with the menu <nobr>&#147;Preferences /</nobr>
+Show messages and errors&#148;.</li>
+<li>In the menu <nobr>&#147;Preferences /</nobr>
+General options&#148; select
+  <i>&#147;advanced&#148;</i> program level.
+	Then select <i>&#147;Verbose output of program messages&#148;</i>.
+	</li>
+<li>Then in the menu <nobr>&#147;Preferences /</nobr>
+Calculation options&#148; select
+<ul><li><i>&#147;Keep windows open after calculations&#148;</i></li>
+<li><i>&#147;Write messages in SED &amp; Predom&#148;</i></li></ul>
+This will keep the calculation windows (<a href="SP_SED.htm">SED</a> or
+  <a href="SP_PREDOM.htm">Predom</a>) open. Any error messages reported in these windows may give
+  a clue to how to solve the problem.</li>
+</ul>
+</p>
+
+</body>
+</html>

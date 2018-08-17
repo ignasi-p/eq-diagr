@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>DATABASE: Create Your Own Databases</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a>&nbsp;/ <a href="DB_Databases.htm">Databases</a></font></td>
+  </tr>
+</table>
+
+<h3>Create Your Own Databases</h3>
+
+<p>You might need to add data to supplement the <a href="DB_Supplied.htm">database files supplied</a> with the DATABASE program.</p>
+
+<p>The simplest way to create your own database is using the DATABASE program, see
+<a href="DB_Add_data.htm">Adding Data with DATABASE.</a></p>
+
+<p>The program <b>DataMaintenance</b> may also be used to create or edit databases,
+as well as to check for common input mistakes.</p>
+
+<p>Because databases are plain text files, you can also use
+a text editor to create databases. A database consists of two files:</p>
+<ul>
+<li>A <b><a href="DB_logK_files.htm">logK-file</a></b> includes stoichiometry and <nobr>log<i>K</i></nobr> values
+for reactions.</li>
+
+<li>An <b><a href="DB_Element_files.htm">elements-file</a></b> has information on which components should be
+listed under a given chemical element.  For example, one might add a new ligand:
+<i>glycinate</i>, which should be listed under the element <i>carbon.</i> The program has no
+way of knowing this unless you enter the information in the element-file.</li>
+
+</ul>
+
+<p><b>File Names:</b> The two files (the logK-file and the element-file) are plain text files
+and must have the same name but different extensions: <tt>ELT</tt> for the element-file,
+and either of: <nobr><tt>TXT</tt>,</nobr>
+<nobr><tt>SKV</tt>,</nobr> or <tt>CSV</tt>
+for the logK-file. For example, a database could consists of the two files:
+<nobr><tt>lactate.elt</tt>&nbsp;</nobr>  and
+<nobr><tt>lactate.txt</tt>.</nobr></p>
+
+<p>
+<b>Format of the database files:</b>
+<ul>
+<li><a href="DB_logK_files.htm"><b>logK-files</b></a></li>
+<li><a href="DB_Element_files.htm"><b>element files</b></a></li>
+</ul></p>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+
+jh=.\src\javahelp
+html=.\src\html
+indx=\PortableApps\NetBeans_JavaSE_8.0_Portable\App\jh2.0\javahelp\bin\jhindexer.bat
+
+indexer_output.log :  $(html)\*.htm  $(html)\*.css  $(html)\images\*.gif
+	@cd $(jh)
+	@echo current dir: $(MAKEDIR)\src\javahelp
+	@echo.==== Running jhIndexer
+	@echo.jhindexer.bat -verbose ..\html
+	@echo.^ ^ ^ (please wait)
+	@rem
+	@echo current dir: >$(MAKEDIR)\indexer_output.log
+	@echo $(MAKEDIR)\src\javahelp >>$(MAKEDIR)\indexer_output.log
+	@$(indx) -verbose ..\html >>$(MAKEDIR)\indexer_output.log
+	@rem
+  @echo.^ ^ ^ (finished, see log-file "indexer_output.log")
+	@cd ..\..

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>DATABASE: Complex formation & Hydrolysis</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a>&nbsp;/ <a href="DB_Databases.htm">Databases</a>&nbsp;/ <a href="DB_Create_your_database.htm">Create&nbsp;databases</a>&nbsp;/ <a href="DB_logK_files.htm"><nobr>logK-files</nobr></a></font></td>
+  </tr>
+</table>
+
+<h3>Complex formation and hydrolysis:</h3>
+
+<p>Example of <b>complex formation</b> reaction:</p>
+<table cellspacing="0" cellpadding="0" border="0"><tr><td><tt>&nbsp;&nbsp;</tt>
+</td><td>
+<nobr>Fe<sup>3+</sup></nobr> <nobr>+&nbsp;edta<sup>4&#8722;</sup></nobr>
+		<img src="images/rlh.gif" alt="=" border="0" width="14" height="10">  
+    <nobr>Fe(edta)<sup>&#8722;</sup></nobr>
+</td></tr></table>
+
+<p>Line in the logK-file:</p>
+<p class="indent">
+  <nobr><tt>FeEDTA-;25.1;;;Fe 3+;1;;;EDTA 4-;1;;;;;;;0;Smith&amp;Martell</tt>
+  </nobr>
+  </p>
+
+<p><b>Hydrolysis</b> reactions can not be entered as complexation reactions with
+<nobr>OH<sup>&#8722;</sup>:</nobr> they must be re-written, if needed, in
+terms of water and <nobr>H<sup>+</sup>.</nobr> For example:</p>
+
+<p class="indent">
+  <nobr>Ni<sup>2+</sup></nobr> <nobr>+&nbsp;3&nbsp;H<sub>2</sub>O</nobr>
+	<img src="images/rlh.gif" alt="=" border="0" width="14" height="10">
+	<nobr>Ni(OH)<sub>3</sub><sup>&#8722;</sup></nobr>
+  <nobr>+&nbsp;3&nbsp;H<sup>+</sup></nobr>
+  </p>
+
+<p>Line in logK-file:</p>
+
+<p class="indent">
+  <nobr><tt>Ni(OH)3-;-31;;;Ni 2+;1;H+;-3;H2O;3;;;;;;;-3</tt></nobr>
+  </p>
+
+<p>See notes on <a href="ChEq_H2O.htm">water.</a></p>
+
+</body>
+</html>

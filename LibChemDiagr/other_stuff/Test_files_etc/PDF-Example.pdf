@@ -1,0 +1,76 @@
+%PDF-1.1
+%The body has 7 objects.
+%The font is in object nbr.6
+% and the page drawing in object nbr.7
+1 0 obj
+ << /Type /Catalog
+    /Outlines 2 0 R
+    /Pages 3 0 R
+    >>
+endobj
+2 0 obj
+ << /Type /Outlines
+    /Count 0
+  >>
+endobj
+3 0 obj
+ << /Type /Pages
+    /Kids [4 0 R]
+    /Count 1
+  >>
+endobj
+4 0 obj
+ << /Type /Page
+    /Parent 3 0 R
+    /MediaBox [0 0 593 792]
+    /Contents 7 0 R
+    /Resources
+      << /ProcSet 5 0 R
+         /Font << /F1 6 0 R >>
+       >>
+  >>
+endobj
+5 0 obj
+  [/PDF /Text]
+endobj
+6 0 obj
+ << /Type /Font
+    /Subtype /Type1
+    /Name /F1
+    /BaseFont /Helvetica
+    /Encoding /WinAnsiEncoding
+  >>
+endobj
+7 0 obj
+<< /Length 294 >>
+stream
+% print "CO32-"
+  BT  %begin text
+  /F1 24 Tf  %set font
+  1 0 0 1 100 500 Tm  %move to
+  (CO) Tj -6 Ts (3) Tj 5 Ts (2\226) Tj
+  ET  %end text
+% draw a line
+  0.5 0.25 1 RG 0.85 w %set colour and line width
+  100 490 m       %move
+  150 490 l       %line to
+  S         %Stroke path
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f
+0000000106 00000 n
+0000000190 00000 n
+0000000248 00000 n
+0000000322 00000 n
+0000000515 00000 n
+0000000548 00000 n
+0000000682 00000 n
+trailer
+ << /Size 8
+    /Root 1 0 R
+  >>
+startxref
+1031
+%%EOF

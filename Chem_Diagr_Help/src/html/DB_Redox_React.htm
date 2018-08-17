@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>DATABASE: Redox Reactions</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a>&nbsp;/ <a href="DB_Databases.htm">Databases</a>&nbsp;/ <a href="DB_Create_your_database.htm">Create&nbsp;databases</a>&nbsp;/ <a href="DB_logK_files.htm"><nobr>logK-files</nobr></a></font></td>
+  </tr>
+</table>
+
+<h3>Redox reactions:</h3>
+
+<p>Between <b>components</b>: The formation reactions for <i>both</i> redox species
+in a redox couple must be given. For example:</p>
+<p class="indent">
+<nobr><tt>Fe 2+;13.02;;;Fe 3+;1;;;e-;1;;;;;;;0</tt></nobr><br>
+<nobr><tt>Fe 3+;-13.02;;;Fe 2+;1;;;e-;-1;;;;;;;0</tt></nobr>
+</p>
+
+<p>This allows DATABASE to find both <nobr>Fe(II)</nobr> when
+<nobr><tt>Fe</tt>&nbsp;<tt>3+</tt></nobr> is chosen as component,
+and to find <nobr>Fe(III)</nobr> when <nobr><tt>Fe</tt>&nbsp;<tt>2+</tt></nobr>
+is chosen. Note the sign <nobr>(+</nobr> or <nobr>&#8722;)</nobr>
+for the formation equilibrium constant and for the stoichiometric coefficients.</p>
+
+<p><b>Products of redox-reactions:</b> for example, the formation of magnetite:</p>
+
+<p class="indent">
+<nobr>3&nbsp;Fe<sup>2+</sup></nobr>  <nobr>+&nbsp;4&nbsp;H<sub>2</sub>O</nobr>
+	<img src="images/rlh.gif" alt="=" border="0" width="14" height="10">
+	<nobr>2&nbsp;e<sup>&#8722;</sup></nobr> <nobr>+&nbsp;8&nbsp;H<sup>+</sup></nobr>  <nobr>+&nbsp;Fe<sub>3</sub>O<sub>4</sub>(s)</nobr>
+</p>
+
+<p class="cont">line in the database:</p>
+<p class="indent">
+<nobr><tt>Fe3O4(s);-41.58;;;Fe 2+;3;H+;-8;e-;-2;H2O;4;;;;;-8</tt></nobr>
+</p>
+
+</body>
+</html>

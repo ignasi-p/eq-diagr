@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Tutorial: H+ affinity diagram</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="0_Index.htm"><img src="images/thco35_s.gif" border="0" width="32" height="32" alt="Chem.Eq.Diagr"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="0_Index.htm">Chemical Equilibrium Diagrams</a>&nbsp;/ <a href="Tut_0_Tutorials.htm">Tutorials</a></font></td>
+  </tr>
+</table>
+
+<h3>Proton affinity diagrams</h3>
+
+<p>This diagram type can only be selected in <a href="S_0_Main.htm">SPANA</a> with the
+&#147;advanced&#148; program level (in the menu Preferences / General options).</p>
+
+<p>A proton affinity curve made with Spana will show the derivative of bound
+<nobr>H<sup>+</sup></nobr> ions with respect to the logarithm of the
+<nobr>H<sup>+</sup></nobr> <a href="SP_Activity.htm">activity:</a>
+<table cellspacing="0" cellpadding="0" border="0">
+ <tr valign="center"><td><tt>&nbsp;&nbsp;</tt></td>
+ <td>
+    <table cellspacing="0" cellpadding="0" border="0">
+    <tr valign="baseline">
+    <td><nobr><i>d</i> [H<sup>+</sup>]<sub>bound</sub></nobr></td><td></td>
+    </tr>
+    <tr valign="baseline"><td><hr></td></tr>
+    <tr valign="baseline">
+    <td align="center"><nobr><i>d</i> (log{H<sup>+</sup>})</nobr></td><td></td>
+    </tr>
+    </table>
+  </td>
+  </tr>
+</table>
+this function can, for example, be plotted against pH or <nobr>[H<sup>+</sup>]<sub>TOT</sub>.</nobr> Remember that
+<nobr>log{H<sup>+</sup>}</nobr> = <nobr>&#8722;<a href="SP_pH.htm">pH</a>.</nobr></p>
+<p>Here brackets &#147;[]&#148; indicate concentrations, and braces &#147;{}&#148; indicate <a href="SP_Activity.htm">activities.</a></p>
+<p>The amount of bound <nobr>H<sup>+</sup></nobr> is calculated as:
+<table cellspacing="0" cellpadding="0" border="0">
+ <tr valign="baseline"><td><tt>&nbsp;&nbsp;</tt></td>
+ <td><nobr>[H<sup>+</sup>]<sub>bound</sub></nobr></td>
+  <td><tt>&nbsp;=&nbsp;</tt></td>
+  <td> <nobr>[H<sup>+</sup>]<sub>TOT</sub></nobr>
+    <nobr>&#8722; [H<sup>+</sup>]</nobr> <nobr>&#8722; [OH<sup>&#8722;</sup>]</nobr></td>
+  </tr>
+</table></p>
+<p>This is the amount of <nobr>H<sup>+</sup></nobr> bound in different species,
+for example in <nobr>HCO<sub>3</sub><sup>&#8722;</sup></nobr> or in
+<nobr>Al(OH)<sub>4</sub><sup>&#8722;</sup>.</nobr>
+The derivative is approximated numerically:</p>
+<table cellspacing="0" cellpadding="0" border="0">
+ <tr><td><tt>&nbsp;&nbsp;</tt></td>
+ <td valign="top">
+    <table cellspacing="0" cellpadding="0" border="0">
+    <tr valign="baseline">
+    <td><nobr><i>d</i> [H<sup>+</sup>]<sub>bound</sub></nobr></td><td></td>
+    </tr>
+    <tr valign="baseline"><td><hr></td></tr>
+    <tr valign="baseline">
+    <td align="center"><nobr><i>d</i> (log <i>a</i><sub><span>H<sup>+</sup></span></sub>)</nobr></td><td></td>
+    </tr>
+    </table>
+  </td>
+  <td  valign="middle"><table cellspacing="0" cellpadding="0" border="0">
+  <tr><td>&nbsp;</td></tr><tr><td>
+  <tt>&nbsp;=&nbsp;</tt></td></tr><tr><td>&nbsp;</td></tr></table>
+  </td>
+ <td valign="top">
+    <table cellspacing="0" cellpadding="0" border="0">
+    <tr valign="baseline">
+    <td><nobr>&#916; [H<sup>+</sup>]<sub>bound</sub></nobr></td>
+    </tr>
+    <tr valign="baseline"><td><hr></td></tr>
+    <tr valign="baseline">
+    <td><nobr>&#916; (&#8722;pH)</nobr></td>
+    </tr>
+    </table>
+  </td>
+  </tr>
+</table>
+If a value for the <a href="SP_Ionic_Strength.htm">ionic strenght</a>
+is <b>not</b> <a href="S_Making_Diagrams.htm#Parameters">given in Spana</a> when
+making the diagram, then pH = <nobr>&#8722;log [H<sup>+</sup>].</nobr></p>
+
+<p>The resulting diagram shows a peak for each protonation reaction,
+and it can be more useful than the corresponding titration curve. Unfortunately
+peaks may overlap, and a diagram&rsquo;s interpretation is never unique.</p>
+
+<h4><a name="Top"></a>Examples:</h4>
+<ul style="margin-top:10pt">
+  <li><b><a href="#Citric">Citric acid</a></b></li>
+  <li><b><a href="#Mix">Mixture of oxalate and carbonate</i></a></b></li>
+  <li><b><a href="#Al_Hydrolysis">Al(III) hydrolysis</i></a></b></li>
+  </ul>
+<a name="Citric"></a>
+<hr><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<h3>Citric acid</h3>
+
+<p>Select citrate <nobr>(cit<sup>3&#8722;</sup>)</nobr> and <nobr>H<sup>+</sup></nobr>
+as components in <a href="DB_0_Main.htm">DATABASE.</a> In <a href="S_0_Main.htm">SPANA</a> make sure you have selected the
+&#147;advanced&#148; program level (in the menu Preferences / General options).</p>
+
+<p>Make and compare the titration curves <b>without</b> and <b>with</b> citrate:
+<center>
+<img src="images/H_aff_citr_1.gif" height="220" width="355" alt="Titration_citr = 0" title="Titration_citr = 0" border="1">
+</center>
+<center>
+<img src="images/H_aff_citr_2.gif" height="220" width="355" alt="Titration_citr" title="Titration_citrate" border="1">
+</center>
+</p>
+<p>It is difficult to tell what kind of ligand is present only by looking at these
+curves. By taking the derivative, making a proton affinity diagram,
+it becomes clear that there are three protonation sites:
+<center>
+<img src="images/H_aff_citr_3.gif" height="220" width="355" alt="Titration_citr_H-affinity" title="Titration_citr_H-affinity" border="1">
+</center>
+</p>
+
+<a name="Mix"></a>
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td><hr><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+</td><td width="20" align="right">
+<a href="#Top"><img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</td></tr></table>
+
+<h3>Mixture</h3>
+
+<p>Select oxalate <nobr>(ox<sup>2&#8722;</sup>),</nobr> carbonate
+<nobr>(CO<sub>3</sub><sup>2&#8722;</sup>)</nobr> and <nobr>H<sup>+</sup></nobr>
+as components in <a href="DB_0_Main.htm">DATABASE.</a> In <a href="S_0_Main.htm">SPANA</a>
+make sure you have selected the &#147;advanced&#148; program level
+(in the menu Preferences / General options).</p>
+
+<p>When a mixture of ligands is presents (in this case <nobr>ox<sup>2&#8722;</sup></nobr> and
+<nobr>CO<sub>3</sub><sup>2&#8722;</sup>)</nobr> in the proton affinity diagram
+the height of the peaks is proportional to the concentration of the corresponding
+ligand. For example:</p>
+<p><center>
+<img src="images/H_aff_mix.gif" height="220" width="324" alt="Proton_affinity_diagram_Mixture" title="Proton_affinity_diagram_Mixture" border="1">
+</center>
+Note that the peaks are located at the pH corresponding to the protonation constant.</p>
+
+<a name="Al_Hydrolysis"></a>
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td><hr><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+</td><td width="20" align="right">
+<a href="#Top"><img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</td></tr></table>
+
+<h3>Al(III) hydrolysis</h3>
+
+<p>An example where several peaks are overlapping in a proton affinity diagram.</p>
+
+<p>Select <nobr>Al<sup>3+</sup></nobr> and <nobr>H<sup>+</sup></nobr>
+as components in DATABASE. In SPANA make sure you have selected the
+&#147;advanced&#148; program level (in the menu Preferences / General options).</p>
+
+<p>Select the menu &#147;Run&nbsp;/
+<a href="S_Modify_Chem_System.htm">Modify chemical <nobr>system</a>&#148;.</nobr>
+Double click on each of the solid phases (<nobr>Al(OH)<sub>3</sub>(cr)</nobr>,
+<nobr>AlOOH(s),</nobr> etc) and <a href="S_Modify_Chem_System.htm#Deactivate">deactivate</a> all of them
+(by <a href="SP_Removing_Species.htm">adding a &#147;*&#148; at the beginning of the <nobr>name</a>).</nobr>
+Save the file.</p>
+
+<p>Make a proton affinity diagram for <nobr>[Al(III)]<sub>TOT</sub></nobr> =
+<nobr>10<sup>&#8722;6</sup>M.</nobr> The diagram shows two peaks:</p>
+<p><center>
+<img src="images/H_aff_Al_0.gif" height="220" width="324" alt="Proton_affinity_diagram_Al" title="Proton_affinity_diagram_Al" border="1">
+</center>
+The corresponding logarithmic diagram:</p>
+<p><center>
+<img src="images/H_aff_Al_1.gif" height="220" width="324" alt="Log_diagram_Al" title="Log_diagram_Al" border="1">
+</center>
+shows that the peak at the highest pH corresponds to the <nobr>H<sup>+</sup></nobr> exange
+between <nobr>Al(OH)<sub>4</sub><sup>&#8722;</sup></nobr>  and <nobr>Al(OH)<sub>3</sub></nobr>,
+while the peak at lower pH corresponds to two reactions: the proton exange between
+<nobr>Al(OH)<sub>3</sub></nobr>, <nobr>AlOH<sup>2+</sup></nobr> and
+<nobr>Al<sup>3+</sup></nobr>.</p>
+
+
+<p style="text-align:right; line-height:0; margin-top:0; margin-bottom:0">
+<a href="#Top"><img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</p>
+</body>
+</html>

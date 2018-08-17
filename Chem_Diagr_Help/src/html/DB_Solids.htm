@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>DATABASE: Solids</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a>&nbsp;/ <a href="DB_Databases.htm">Databases</a>&nbsp;/ <a href="DB_Create_your_database.htm">Create&nbsp;databases</a>&nbsp;/ <a href="DB_logK_files.htm"><nobr>logK-files</nobr></a></font></td>
+  </tr>
+</table>
+
+<h3>Reactions with Solids:</h3>
+
+<p>For solids, like for aqueous complexes, the <nobr>log<i>K</i>&deg;-</nobr>value
+for the formation reaction is needed. Note that this is the inverse of the
+<i>solubility product,</i> i.e.:  <nobr>log<i>K</i><sub>sp</sub></nobr> =
+<nobr>&#8722;&nbsp;log<i>K</i><sub>f</sub></nobr></p>
+
+<p>The state of a solid is indicated at the end of the name with a
+<a href="SP_Phase_Indicator.htm">phase indicator</a>:
+<nobr>&#147;(s)&#148;</nobr> solid;
+<nobr>&#147;(am)&#148;</nobr> or <nobr>&#147;(a)&#148;</nobr> amorphous;
+<nobr>&#147;(ppt)&#148;</nobr> precipitated;
+<nobr>&#147;(cr)&#148;</nobr> or <nobr>&#147;(c)&#148;</nobr> crystalline; etc.</p>
+
+<p>The concentration of a solid is equivalent to that of an aqueous species
+(mols of solid per litre of aqueous solution).</p>
+
+<p><b>Examples:</b></p>
+
+<p class="cont"><i>Precipitation:</i></p>
+<p class="indent2">
+<nobr>Ag<sup>+</sup></nobr> <nobr>+&nbsp;Cl<sup>&#8722;</sup></nobr>
+	<img src="images/rlh.gif" alt="=" border="0" width="14" height="10">
+  <nobr>AgCl(cr)</nobr></p>
+<p class="indent">
+line in logK-file:</p>
+<p class="indent2">
+<nobr><tt>AgCl(cr);9.75;;;Ag+;1;;;Cl-;1;;;;;;;0;cerargyrite Wateq4F</tt></nobr>
+</p>
+
+<p class="cont"><i>Hydrolysis:</i></p>
+<p class="indent2">
+<nobr>2&nbsp;Bi<sup>3+</sup></nobr> <nobr>+&nbsp;3H<sub>2</sub>O</nobr>
+	<img src="images/rlh.gif" alt="=" border="0" width="14" height="10"> <nobr>Bi<sub>2</sub>O<sub>3</sub>(s)</nobr>
+	<nobr>+&nbsp;6H<sup>+</sup></nobr></p>
+<p class="indent">
+line in logK-file:</p>
+<p class="indent2">
+<nobr><tt>Bi2O3(s);-6.92;;;Bi 3+;2;H+;-6;H2O;3;;;;;;;-6;76Bae/Mes</tt></nobr>
+</p>
+
+<p class="cont"><i>Redox:</i>&nbsp;&nbsp;  for example, the formation of magnetite,</p>
+<p class="indent2">
+<nobr>3&nbsp;Fe<sup>3+</sup></nobr>  <nobr>+&nbsp;e&#8722;</nobr>
+	<nobr>+&nbsp;4&nbsp;H<sub>2</sub>O</nobr>
+	<img src="images/rlh.gif" alt="=" border="0" width="14" height="10">  <nobr>8&nbsp;H<sup>+</sup></nobr>
+	  <nobr>+&nbsp;Fe<sub>3</sub>O<sub>4</sub>(cr)</nobr>
+</p>
+<p class="indent">
+line in database:</p>
+<p class="indent2">
+<nobr><tt>Fe3O4(cr);1.968;;;Fe 3+;3;H+;-8;e-;1;H2O;4;;;;;-8;90Hem</tt></nobr>
+</p>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+/* Style Sheet for JavaHelp: font-size: 21pt; */
+body {font-family: Serif, Times, "Times New Roman", Georgia;
+	    margin-top:0; margin-left:7; margin-right:7; color:black; background-color:white}
+
+h1 {font-family: SansSerif, Arial, Helvetica, sans-serif; font-weight: bold;
+    font-size: 145%; margin-bottom: 0}
+h2 {font-family: SansSerif, Arial, Helvetica, sans-serif; font-weight: bold;
+    font-size: 130%; margin-top:16pt; margin-bottom: 0}
+h3 {font-family: SansSerif, Arial, Helvetica, sans-serif; font-weight: bold;
+    font-size: 110%; margin-top: 14pt; margin-bottom: 0}
+h4 {font-family: SansSerif, Arial, Helvetica, sans-serif; font-weight: bold;
+    font-size: 100%; margin-top: 15pt; margin-bottom: 0}
+h5 {font-weight: bold; font-size: 95%; margin-top: 15pt; margin-bottom: 0}
+h6 {font-weight: bold; font-size: 92%; margin-top: 14pt; margin-bottom: 0}
+
+p  { /* unfortunately, JavaHelp does not understand line-height */
+     /* line-height:30pt; */ margin-top:10pt; margin-bottom:0; text-indent:0;}
+pre {font-family:monospace; font-size:95%;
+     /* line-height:22pt; */ margin-top:10pt; margin-bottom:0; text-indent:0;}
+center {/* line-height:30pt; */ margin-top:0; margin-bottom:0;}
+
+code {font-family:monospace; font-size:92%}
+kbd {font-family:monospace; font-size:92%}
+samp {font-family:monospace; font-size:92%}
+tt {font-family:monospace; font-size:92%}
+var {font-style: italic; font-weight: normal}
+
+li {/* line-height:30pt; */ margin-top: 0; margin-bottom: 0}
+
+li p{/* line-height:30pt; */ margin-top: 5pt;margin-bottom: 0}
+
+/* Ordered lists */
+ul {margin-left: 25pt; margin-top: 0; margin-bottom: 4pt}
+
+/* Numbered lists */
+ol {margin-left: 32pt; margin-top: 0; margin-bottom: 4pt}

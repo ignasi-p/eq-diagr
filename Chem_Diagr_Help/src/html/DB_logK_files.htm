@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>DATABASE: logK-files</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a>&nbsp;/ <a href="DB_Databases.htm">Databases</a>&nbsp;/ <a href="DB_Create_your_database.htm">Create&nbsp;databases</a></font></td>
+  </tr>
+</table>
+
+<h3>logK-files</h3>
+
+<p>logK-files contain stoichiometry for the reactions and their
+<nobr>log<i>K</i>&deg;,</nobr> <nobr>&#916;<i>H</i>&deg;,</nobr> and
+<nobr>&#916;<i>Cp</i>&deg;</nobr> values.</p>
+
+<p>These files are plain text files
+and may be written with a text editor. It is convenient to create and edit
+the logK-files with a spread-sheet program (like MS-Excel), wich may also be
+used to sort the database lines alfabetically, etc. You can also use the
+menu &#147;Options / Data / <nobr>Add data!&#148;</nobr>
+of DATABASE to create a new database.</p>
+
+<p>The program <b>DataMaintenance</b> may also be used to create or edit databases,
+as well as to check for common input mistakes.</p>
+
+<p>logK-file names must have one of the following extensions:
+<nobr>&#147;<tt>txt</tt>&#148;,</nobr>
+<nobr>&#147;<tt>skv</tt>&#148;,</nobr> or
+<nobr>&#147;<tt>csv</tt>&#148;.</nobr></p>
+
+
+<h5><b>Format for the "log<i>K</i>-files":</b></h5>
+<p>Each file may have any number of lines. Each line must contain:</p>
+<ul>
+<li>Name of the reaction product</li>
+<li>log<i>K</i>&deg;, overall equilibrium constant of formation at <nobr>25&deg;C.</nobr>
+		<a href="ChEq_Sources_logK.htm">How to get equilibrium constants</a></li>
+<li>&#916;<i>H</i>&deg;, enthalpy change for the reaction <nobr>(kJ/mol).</nobr>
+Used for <a href="DB_Temperature.htm">temperature extrapolations.</a> See
+&#147;<a href="ChEq_Sources_Data.htm">how to get thermodynamic data</a>&#148;</li>
+<li>&#916;<i>Cp</i>&deg;, heat capacity change for the reaction <nobr>(J/mol K).</nobr>
+Used for <a href="DB_Temperature.htm">temperature extrapolations.</a></li>
+<li>The stoichiometry of the reaction is given as 6 component names and their corresponding
+	coefficients</li>
+<li>Number of <nobr>H<sup>+</sup></nobr> ions (protons) involved in the
+  reaction (can be negative)</li>
+<li>A (short) text describing the <nobr>reference(s)</nobr> for the data</li>
+</ul>
+<p>The data is separated by either commas <nobr>(,)</nobr> or semicolons <nobr>(;).</nobr></p>
+
+<p>Examples:</p>
+<p class="indent">
+<nobr><tt>CuCl2-;5.62;-17.67;169;Cu+;1;;;Cl-;2;;;;;;;0;2000Pu/Ta</tt></nobr><br>
+<nobr><tt>CaCO3(cr);8.48;9.62;;Ca 2+;1;;;CO3 2-;1;;;;;;;0;Wateq4F / calcite</tt></nobr>
+</p>
+
+<p><i>Comments:</i> lines starting with a slash <nobr>(/)</nobr> are considered
+comments and discarded. Comments may also be added after the reference description:
+a slash <nobr>(/)</nobr> preceeded by either a space, a comma or a semicolon
+indicates the beginning of the comment (see second line in the examples above).</p>
+
+<p><a href="DB_Names_Numbers.htm"><b>How to enter names and numbers in databases</b></a></p>
+
+<p><b>Special Cases and Examples:</b></p>
+<ul>
+<li><a href="DB_Remove_reaction.htm">Remove a reaction</a></li>
+<li><a href="DB_Complex_formation_Hydrolysis.htm">Complex formation and hydrolysis</a></li>
+<li><a href="DB_Redox_React.htm">Redox reactions</a></li>
+<li><a href="DB_Solids.htm">Solids</a></li>
+<li><a href="DB_Gases.htm">Gases</a></li>
+<li><a href="ChEq_H2O.htm">Water</a></li>
+</ul>
+
+</body>
+</html>

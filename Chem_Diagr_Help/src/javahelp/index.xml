@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
+<index version="2.0">
+<indexitem text="% (PostScript comment)" target="S_PostScript_Commands_htm_Comments" expand="true"/>
+<indexitem text="%APPDATA%" target="Install_Uninstall_htm_INI"/>
+<indexitem text="%HOMEDRIVE%" target="Install_Uninstall_htm_INI"/>
+<indexitem text="%HOMEPATH%" target="Install_Uninstall_htm_INI"/>
+<indexitem text="(a) = amorphous" target="SP_Phase_Indicator_htm" />
+<indexitem text="(am) = amorphous" target="SP_Phase_Indicator_htm" expand="false">
+  <indexitem text="phase indicators" target="SP_Phase_Indicator_htm"/>
+  <indexitem text="solids in databases" target="DB_Solids_htm"/>
+  <indexitem text="solids in data-files" target="SP_Data_File_Chemical_System_htm_Solids_Last"/>
+  <indexitem text="solids in reactions" target="ChEq_Solids_htm"/>
+  </indexitem>
+<indexitem text="(c) = crystalline" target="SP_Phase_Indicator_htm" />
+<indexitem text="(cr) = crystalline" target="SP_Phase_Indicator_htm" expand="false">
+  <indexitem text="include/exclude" target="DB_Solid_solub_htm"/>
+  <indexitem text="phase indicators" target="SP_Phase_Indicator_htm"/>
+  <indexitem text="solids in databases" target="DB_Solids_htm"/>
+  <indexitem text="solids in data-files" target="SP_Data_File_Chemical_System_htm_Solids_Last"/>
+  <indexitem text="solids in reactions" target="ChEq_Solids_htm"/>
+  </indexitem>
+<indexitem text="(l) = liquid" target="SP_Phase_Indicator_htm"/>
+<indexitem text="(g) = gaseous" target="SP_Phase_Indicator_htm" expand="false">
+	<indexitem text="fixed pressure in diagrams" target="Tut_CO2_htm"/>
+  <indexitem text="fugacity" target="SP_Activity_htm_Gases"/>
+  <indexitem text="gases in reactions" target="ChEq_Gases_htm"/>
+  <indexitem text="phase indicators" target="SP_Phase_Indicator_htm"/>
+  </indexitem>
+<indexitem text="(ppt) = precipitated" target="SP_Phase_Indicator_htm" />
+<indexitem text="(vit) = vitreous" target="SP_Phase_Indicator_htm" />
+<indexitem text="(s) = solid" target="SP_Phase_Indicator_htm" expand="false">
+  <indexitem text="include/exclude" target="DB_Solid_solub_htm"/>
+  <indexitem text="phase indicators" target="SP_Phase_Indicator_htm"/>
+  <indexitem text="solids in databases" target="DB_Solids_htm"/>
+  <indexitem text="solids in data-files" target="SP_Data_File_Chemical_System_htm_Solids_Last"/>
+  <indexitem text="solids in reactions" target="ChEq_Solids_htm"/>
+  </indexitem>
+<indexitem text="* (asterisk)" target="SP_Removing_Species_htm" expand="false">
+	<indexitem text="deactivate species in Spana" target="S_Modify_Chem_System_htm_Deactivate"/>
+  <indexitem text="deactivate solids (dissolution vs. precipitation)" target="DB_Solid_solub_htm"/>
+  </indexitem>
+<indexitem text=", (comma)" target="SP_Names_Numbers_htm"/>
+<indexitem text=".dat (data file)" target="SP_Data_File_Format_htm" expand="false">
+  <indexitem text="examples" target="Tut_Example_Files_htm"/>
+  <indexitem text="file association" target="S_Interacting_w_Windows_htm"/>
+  <indexitem text="for PREDOM" target="SP_PREDOM_Input_File_Format_htm"/>
+  <indexitem text="for SED" target="SP_SED_Input_File_Format_htm"/>
+  <indexitem text="make a data file (Database)" target="DB_0_Main_htm"/>
+  <indexitem text="modify chemical system" target="S_Modify_Chem_System_htm"/>
+  <indexitem text="names and numbers in" target="SP_Names_Numbers_htm"/>
+  <indexitem text="working with Spana" target="S_Working_with_htm"/>
+  </indexitem>
+<indexitem text=".eps" target="SP_PostScript_htm"/>
+<indexitem text=".pdf" target="SP_PDF_htm"/>
+<indexitem text=".plt (plot file)" target="SP_Plot-Files_htm" expand="false">
+  <indexitem text="convert to other formats" target="S_Printing_htm_Convert"/>
+  <indexitem text="examples" target="Tut_Example_Files_htm"/>
+  <indexitem text="file association" target="S_Interacting_w_Windows_htm"/>
+  <indexitem text="format of plot files" target="SP_Plot-File_Format_htm"/>
+  <indexitem text="make it pretty" target="SP_Plot-File_Format_htm_Make_Changes"/>
+  <indexitem text="printing" target="S_Printing_htm"/>
+  <indexitem text="working with Spana" target="S_Working_with_htm"/>
+  </indexitem>
+<indexitem text=".ps" target="SP_PostScript_htm"/>
+<indexitem text="/ (slash)" target="SP_Names_Numbers_htm"/>
+<indexitem text="\ (backslash) in PostScript"  target="S_PostScript_Commands_htm_Back_Slash"/>
+<indexitem text="1st diagram" target="Tut_Make_1st_Diag_htm"/>
+<indexitem text="acetic acid titration" target="Tut_Titr_htm"/>
+<indexitem text="acknowledgements" target="Acknowledgements_htm_Ack"/>
+<indexitem text="activity" target="SP_Activity_htm" expand="false">
+  <indexitem text="of H2O" target="SP_Activity_htm_H2O"/>
+  </indexitem>
+<indexitem text="activity coefficient" target="SP_Ionic_Strength_htm" expand="false">
+  <indexitem text="models" target="SP_Ionic_Strength_htm_Models"/>
+  <indexitem text="in calculations" target="S_Making_Diagrams_htm_Parameters"/>
+  </indexitem>
+<indexitem text="affinity (of H+) diagrams" target="Tut_H_aff_spectr_htm"/>
+<indexitem text="amorphous" target="ChEq_Solids_htm"/>
+<indexitem text="associate file types (Windows)" target="S_Interacting_w_Windows_htm"/>
+<indexitem text="batch files" target="SP_Batch_Mode_htm"/>
+<indexitem text="bitmap file" target="S_Printing_htm_BMP"/>
+<indexitem text="bugs (errors)" target="Problems_htm"/>
+<indexitem text="calculations" target="SP_0_Main_htm" expand="false">
+  <indexitem text="failures" target="SP_Failures_htm"/>
+  <indexitem text="HaltaFall" target="SP_Haltafall_htm"/>
+  <indexitem text="strange results" target="SP_Strange_Results_htm"/>
+  <indexitem text="tolerance" target="S_Menu_Prefs_htm_Calcs"/>
+  </indexitem>
+<indexitem text="CFG-files" target="Install_Uninstall_htm_CFG"/>
+<indexitem text="change a diagram" target="SP_Plot-File_Format_htm_Make_Changes"/>
+<indexitem text="character codes (PostScript)" target="S_PostScript_Chars_Fig_htm"/>
+<indexitem text="check stoichiometric coefficients" target="SP_Failures_htm_Check_Stoich"/>
+<indexitem text="chemical component" target="ChEq_Components_htm"/>
+<indexitem text="chemical equilibrium reaction" target="ChEq_0_Contents_htm"/>
+<indexitem text="chemical system" target="ChEq_Def_System_htm"/>
+<indexitem text="clipboard" target="S_Printing_htm_Clipboard"/>
+<indexitem text="CO2 fixed pressure tutorial" target="Tut_CO2_htm"/>
+<indexitem text="code (PostScript character)" target="S_PostScript_Chars_Fig_htm"/>
+<indexitem text="comma (,)" target="SP_Names_Numbers_htm"/>
+<indexitem text="command-line" target="SP_Batch_Mode_htm"/>
+<indexitem text="comments in datafiles" target="SP_Names_Numbers_htm"/>
+<indexitem text="comments in plot files" target="SP_Plot-File_Format_htm"/>
+<indexitem text="comments in PostScript" target="S_PostScript_Commands_htm_Comments"/>
+<indexitem text="complexes (ions)" target="ChEq_Def_System_htm_Complexes" expand="false">
+  <indexitem text="reaction product" target="ChEq_Definitions_htm"/>
+  <indexitem text="exchange with a component" target="S_Modify_Chem_System_htm_Mod_Exch"/>
+  </indexitem>
+<indexitem text="component" target="ChEq_Components_htm" expand="true">
+  <indexitem text="exchange with a complex" target="S_Modify_Chem_System_htm_Mod_Exch"/>
+  </indexitem>
+<indexitem text="concentration" target="SP_Molality_htm" expand="false">
+  <indexitem text="data file format: concentrations" target="SP_Data_File_Concs_htm"/>
+  </indexitem>
+<indexitem text="configuration files" target="Install_Uninstall_htm_CFG"/>
+<indexitem text="constant gas pressure in diagrams" target="Tut_CO2_htm"/>
+<indexitem text="constants" target="Some_Constants_htm"/>
+<indexitem text="convert plot files" target="S_Printing_htm_Convert" expand="false">
+  <indexitem text="to PDF" target="SP_PDF_htm"/>
+  <indexitem text="to PostScript" target="SP_PostScript_htm"/>
+  </indexitem>
+<indexitem text="copy/paste" target="S_Printing_htm_Clipboard"/>
+<indexitem text="corrosion of Fe (tutorial)" target="Tut_Redox_htm"/>
+<indexitem text="credits" target="Acknowledgements_htm"/>
+<indexitem text="crystalline" target="ChEq_Solids_htm"/>
+<indexitem text="data file" target="SP_Data_File_Format_htm" expand="true">
+  <indexitem text="examples" target="Tut_Example_Files_htm"/>
+  <indexitem text="file association" target="S_Interacting_w_Windows_htm"/>
+  <indexitem text="for PREDOM" target="SP_PREDOM_Input_File_Format_htm"/>
+  <indexitem text="for SED" target="SP_SED_Input_File_Format_htm"/>
+  <indexitem text="make a data file (Database)" target="DB_0_Main_htm"/>
+  <indexitem text="modify chemical system" target="S_Modify_Chem_System_htm"/>
+  <indexitem text="names and numbers in" target="SP_Names_Numbers_htm"/>
+  <indexitem text="working with Spana" target="S_Working_with_htm"/>
+  </indexitem>
+<indexitem text="data sources" target="ChEq_Sources_htm"/>
+<indexitem text="DataBase (the program)" target="DB_0_Main_htm"/>
+<indexitem text="database files" target="DB_Databases_htm" expand="true">
+  <indexitem text="supplied database files" target="DB_Supplied_htm"/>
+  <indexitem text="create your own database" target="DB_Create_your_database_htm"/>
+  </indexitem>
+<indexitem text="DataMaintenance (program)" target="DB_Create_your_database_htm"/>
+<indexitem text="Davies Eqn." target="SP_Ionic_Strength_Davies_htm"/>
+<indexitem text="deactivate species" target="SP_Removing_Species_htm" expand="true">
+  <indexitem text="in Spana" target="S_Modify_Chem_System_htm_Deactivate"/>
+  <indexitem text="solids (dissolution vs. precipitation)" target="DB_Solid_solub_htm"/>
+  </indexitem>
+<indexitem text="diagram" target="S_Diagram_Window_htm" expand="true">
+  <indexitem text="(see plot file)" target="SP_Plot-Files_htm"/>
+  <indexitem text="convert to other formats" target="S_Printing_htm_Convert"/>
+  <indexitem text="font" target="S_Menu_Prefs_htm_Fonts"/>
+  <indexitem text="fraction" target="SP_Diagr_Fract_htm"/>
+  <indexitem text="log(activity)" target="S_Diagr_Loga_CO2_htm"/>
+  <indexitem text="logarithmic" target="S_Diagr_Log_CO2_htm"/>
+  <indexitem text="make a diagram" target="S_Making_Diagrams_htm"/>
+  <indexitem text="make it pretty" target="SP_Plot-File_Format_htm_Make_Changes"/>
+  <indexitem text="make your 1st diagram" target="Tut_Make_1st_Diag_htm"/>
+  <indexitem text="modify diagrams" target="S_Printing_htm"/>
+  <indexitem text="predominance area" target="SP_Diagr_Predom_htm"/>
+  <indexitem text="preferences" target="S_Menu_Prefs_htm_Diagr"/>
+  <indexitem text="printing" target="S_Printing_htm"/>
+  <indexitem text="solubility" target="S_Diagr_SolublAl_htm"/>
+  </indexitem>
+<indexitem text="disclaimer" target="Disclaimer_htm"/>
+<indexitem text="dissolution (of solids)" target="DB_Solid_solub_htm"/>
+<indexitem text="document" target="S_Printing_htm_Clipboard"/>
+<indexitem text="drag and drop" target="S_Working_with_htm_Open_Files"/>
+<indexitem text="e-" target="Eh_pe_htm" expand="false">
+  <indexitem text="in DATABASE" target="DB_Working_with_htm"/>
+  <indexitem text="redox reactions" target="ChEq_Redox_React_htm"/>
+  <indexitem text="zero concentration" target="SP_Species_Zero_Conc_htm"/>
+  </indexitem>
+<indexitem text="E0 (standard potential)" target="ChEq_Redox_React_htm_E0"/>
+<indexitem text="editor" target="S_Menu_Prefs_htm_Editor"/>
+<indexitem text="EDTA, Mg-titration" target="Tut_Titr_htm_Mg-edta"/>
+<indexitem text="Eh" target="Eh_pe_htm" expand="false">
+  <indexitem text="show Eh/pe in diagrams" target="S_Making_Diagrams_htm_Diagram"/>
+  </indexitem>
+<indexitem text="electric charge" target="SP_Charges_in_Names_htm"/>
+<indexitem text="electrode potential" target="Eh_pe_htm"/>
+<indexitem text="electron" target="Eh_pe_htm" expand="false">
+  <indexitem text="in DATABASE" target="DB_Working_with_htm"/>
+  <indexitem text="redox reactions" target="ChEq_Redox_React_htm"/>
+  <indexitem text="zero concentration" target="SP_Species_Zero_Conc_htm"/>
+  </indexitem>
+<indexitem text="encapsulated PostScript" target="SP_PostScript_htm"/>
+<indexitem text="encoding (in PostScript)" target="S_PostScript_Commands_htm_Encoding"/>
+<indexitem text="environment variables" target="Install_Uninstall_htm_INI" expand="false">
+  <indexitem text="databases" target="DB_Remove_change_data_htm_Network"/>
+  </indexitem>
+<indexitem text="equilibrium constants" target="ChEq_Definitions_htm" expand="false">
+  <indexitem text="sources of" target="ChEq_Sources_logK_htm"/>
+  </indexitem>
+<indexitem text="equilibrium reactions" target="ChEq_0_Contents_htm"/>
+<indexitem text="errors" target="SP_Failures_htm" expand="false">
+  <indexitem text="program errors" target="Problems_htm"/>
+  <indexitem text="strange results" target="SP_Strange_Results_htm"/>
+  </indexitem>
+<indexitem text="examples" target="Tut_0_Tutorials_htm"/>
+<indexitem text="Excel (table output in SED)" target="S_Making_Diagrams_htm_Table_Output" expand="false">
+	<indexitem text="preferences" target="S_Menu_Prefs_htm_Table"/>
+  </indexitem>
+<indexitem text="exchange component with complex" target="S_Modify_Chem_System_htm_Mod_Exch"/>
+<indexitem text="exclude (cr)-solids" target="DB_Solid_solub_htm"/>
+<indexitem text="failures" target="SP_Failures_htm" expand="false">
+  <indexitem text="program errors" target="Problems_htm"/>
+  <indexitem text="strange results" target="SP_Strange_Results_htm"/>
+  </indexitem>
+<indexitem text="Faraday" target="Some_Constants_htm"/>
+<indexitem text="Fe corrosion (tutorial)" target="Tut_Redox_htm"/>
+<indexitem text="file associations (Windows)" target="S_Interacting_w_Windows_htm"/>
+<indexitem text="File Explorer (Windows)" target="S_Interacting_w_Windows_htm"/>
+<indexitem text="file name extensions" target="S_Working_with_htm"/>
+<indexitem text="file manager (Windows)" target="S_Interacting_w_Windows_htm"/>
+<indexitem text="first diagram" target="Tut_Make_1st_Diag_htm"/>
+<indexitem text="fixed gas pressure tutorial" target="Tut_CO2_htm"/>
+<indexitem text="format of a data file" target="SP_Data_File_Format_htm" expand="false">
+  <indexitem text="1) chemical system" target="SP_Data_File_Chemical_System_htm"/>
+  <indexitem text="2) plot definition" target="SP_Data_File_Plot_htm"/>
+  <indexitem text="3) concentrations" target="SP_Data_File_Concs_htm"/>
+  </indexitem>
+<indexitem text="format of a database" target="DB_Create_your_database_htm" expand="false">
+  <indexitem text="logK-files" target="DB_logK_files_htm"/>
+  <indexitem text="element files" target="DB_Element_files_htm"/>
+  </indexitem>
+<indexitem text="format of a plot file" target="SP_Plot-File_Format_htm" expand="false">
+  <indexitem text="make changes in a diagram" target="SP_Plot-File_Format_htm_Make_Changes"/>
+  </indexitem>
+<indexitem text="formation constant" target="ChEq_Definitions_htm"/>
+<indexitem text="fraction diagram" target="SP_Diagr_Fract_htm"/>
+<indexitem text="free energy" target="ChEq_Sources_Data_htm"/>
+<indexitem text="fugacity" target="SP_Activity_htm_Gases"/>
+<indexitem text="gas" target="ChEq_Gases_htm" expand="true">
+	<indexitem text="exchange with a component" target="S_Modify_Chem_System_htm_Mod_Exch"/>
+	<indexitem text="fixed pressure diagrams" target="Tut_CO2_htm"/>
+  <indexitem text="fugacity" target="SP_Activity_htm_Gases"/>
+  <indexitem text="gas constant" target="Some_Constants_htm"/>
+  </indexitem>
+<indexitem text="GhostScript" target="SP_PostScript_htm_Ghost"/>
+<indexitem text="Gibbs free energy" target="ChEq_Sources_Data_htm"/>
+<indexitem text="GSview" target="SP_PostScript_htm_Ghost"/>
+<indexitem text="H+ affinity diagrams" target="Tut_H_aff_spectr_htm"/>
+<indexitem text="H2O (water)" target="ChEq_H2O_htm" expand="false">
+  <indexitem text="osmotic coefficient" target="SP_Activity_htm_H2O"/>
+  </indexitem>
+<indexitem text="HALTAFALL" target="SP_Haltafall_htm"  expand="false">
+  <indexitem text="options" target="S_Menu_Prefs_htm_Calcs"/>
+  </indexitem>
+<indexitem text="HKF (simplified activity coefficients model)" target="SP_Ionic_Strength_HKF_htm"/>
+<indexitem text="hydrogen electrode" target="ChEq_Redox_React_htm"/>
+<indexitem text="IAP (ion activity product)" target="ChEq_Solids_htm_IAP"/>
+<indexitem text="include (cr)-solids" target="DB_Solid_solub_htm"/>
+<indexitem text="ideal solution" target="SP_Activity_htm"/>
+<indexitem text="INI-files" target="Install_Uninstall_htm_INI" expand="false">
+  <indexitem text="console plot programs" target="SP_Plot-Files_htm_INI_Files"/>
+  </indexitem>
+<indexitem text="input data file" target="SP_Data_File_Format_htm" expand="true">
+  <indexitem text="examples" target="Tut_Example_Files_htm"/>
+  <indexitem text="file association" target="S_Interacting_w_Windows_htm"/>
+  <indexitem text="for PREDOM" target="SP_PREDOM_Input_File_Format_htm"/>
+  <indexitem text="for SED" target="SP_SED_Input_File_Format_htm"/>
+  <indexitem text="make a data file (Database)" target="DB_0_Main_htm"/>
+  <indexitem text="modify chemical system" target="S_Modify_Chem_System_htm"/>
+  <indexitem text="names and numbers in" target="SP_Names_Numbers_htm"/>
+  <indexitem text="working with Spana" target="S_Working_with_htm"/>
+  </indexitem>
+<indexitem text="insert diagram in document" target="S_Printing_htm_Clipboard"/>
+<indexitem text="installing" target="Install_Uninstall_htm"/>
+<indexitem text="interchange a component with a complex" target="S_Modify_Chem_System_htm_Mod_Exch"/>
+<indexitem text="ion activity product" target="ChEq_Solids_htm_IAP"/>
+<indexitem text="ionic strength" target="SP_Ionic_Strength_htm" expand="false">
+  <indexitem text="models to calculate effects" target="SP_Ionic_Strength_htm_Models"/>
+  <indexitem text="when making a diagram" target="S_Making_Diagrams_htm_Parameters"/>
+  </indexitem>
+<indexitem text="iron corrosion (tutorial)" target="Tut_Redox_htm"/>
+<indexitem text="ISOLatin1" target="S_PostScript_Commands_htm_Encoding"/>
+<indexitem text="license" target="Disclaimer_htm"/>
+<indexitem text="logarithmic diagram" target="SP_Diagr_Log_htm"/>
+<indexitem text="logK" target="ChEq_Definitions_htm"/>
+<indexitem text="magnetite" target="Tut_Redox_htm_magnetite"/>
+<indexitem text="make a diagram pretty for a publication" target="SP_Plot-File_Format_htm_Make_Changes"/>
+<indexitem text="SPANA" target="S_0_Main_htm"/>
+<indexitem text="Mg-EDTA titration" target="Tut_Titr_htm_Mg-edta"/>
+<indexitem text="modify chemical system" target="S_Modify_Chem_System_htm"/>
+<indexitem text="modify diagrams" target="S_Printing_htm"/>
+<indexitem text="molality" target="SP_Molality_htm"/>
+<indexitem text="names of chemical species" target="SP_Names_Numbers_htm" expand="false">
+  <indexitem text="electric charge" target="SP_Charges_in_Names_htm"/>
+  <indexitem text="phase indicator" target="SP_Phase_Indicator_htm"/>
+  <indexitem text="remove species with &quot;*&quot;" target="SP_Removing_Species_htm"/>
+  </indexitem>
+<indexitem text="Network server" target="Install_Uninstall_htm_Run_Netw" expand="false">
+  <indexitem text="databases" target="DB_Remove_change_data_htm_Network"/>
+  </indexitem>
+<indexitem text="numbers in data files" target="SP_Names_Numbers_htm_Numbers"/>
+<indexitem text="one area only (in PREDOM)" target="SP_PREDOM_Input_File_Format_htm"/>
+<indexitem text="only aqueous species (in PREDOM)" target="S_Making_Diagrams_htm_Only_Aqu"/>
+<indexitem text="organic ligands" target="DB_Organics_htm" />
+<indexitem text="osmotic coefficient" target="SP_Activity_htm_H2O" />
+<indexitem text="output table (for SED)" target="S_Making_Diagrams_htm_Table_Output" expand="false">
+	<indexitem text="preferences" target="S_Menu_Prefs_htm_Table"/>
+  </indexitem>
+<indexitem text="parameters for command-ine (batch mode)" target="SP_Batch_Mode_htm"/>
+<indexitem text="paste a diagram on a document" target="S_Printing_htm_Clipboard"/>
+<indexitem text="PDF" target="SP_PDF_htm"/>
+<indexitem text="pe" target="Eh_pe_htm" expand="false">
+  <indexitem text="pe or Eh in diagrams" target="S_Making_Diagrams_htm_Diagram"/>
+  </indexitem>
+<indexitem text="pH" target="SP_pH_htm"/>
+<indexitem text="phase rule" target="ChEq_Solids_htm"/>
+<indexitem text="plot files" target="SP_Plot-Files_htm" expand="true">
+  <indexitem text="convert to other formats" target="S_Printing_htm_Convert"/>
+  <indexitem text="examples" target="Tut_Example_Files_htm"/>
+  <indexitem text="file association" target="S_Interacting_w_Windows_htm"/>
+  <indexitem text="format of plot files" target="SP_Plot-File_Format_htm"/>
+  <indexitem text="make it pretty" target="SP_Plot-File_Format_htm_Make_Changes"/>
+  <indexitem text="printing" target="S_Printing_htm"/>
+  <indexitem text="working with Spana" target="S_Working_with_htm"/>
+  </indexitem>
+<indexitem text="PlotPDF" target="SP_PDF_htm"/>
+<indexitem text="PlotPS" target="SP_PostScript_htm"/>
+<indexitem text="portable applications (installing as)" target="Install_Uninstall_htm_Run_USB"/>
+<indexitem text="PostScript" target="SP_PostScript_htm" expand="false">
+  <indexitem text="character codes" target="S_PostScript_Chars_Fig_htm"/>
+  <indexitem text="commands" target="S_PostScript_Commands_htm"/>
+  </indexitem>
+<indexitem text="precipitation (of solids)" target="DB_Solid_solub_htm"/>
+<indexitem text="PREDOM" target="SP_PREDOM_htm" expand="false">
+  <indexitem text="PREDOM from SPANA" target="S_Making_Diagrams_htm"/>
+  </indexitem>
+<indexitem text="predominance area diagram" target="SP_Diagr_Predom_htm"/>
+<indexitem text="pressure (of gas) fixed in diagrams" target="Tut_CO2_htm"/>
+<indexitem text="printing diagrams" target="S_Printing_htm"/>
+<indexitem text="proton affinity diagrams" target="Tut_H_aff_spectr_htm"/>
+<indexitem text="publishing" target="S_Printing_htm_Clipboard"/>
+<indexitem text="reaction products" target="ChEq_Definitions_htm" expand="false">
+  <indexitem text="complexes (ions)" target="ChEq_Def_System_htm_Complexes"/>
+  <indexitem text="exchange with a component" target="S_Modify_Chem_System_htm_Mod_Exch"/>
+  </indexitem>
+<indexitem text="redox potential" target="Eh_pe_htm" expand="false">
+  <indexitem text="show in diagrams" target="S_Making_Diagrams_htm_Diagram"/>
+  </indexitem>
+<indexitem text="redox reactions" target="ChEq_Redox_React_htm" expand="false">
+  <indexitem text="Cu(II) to Cu(I) by CN- (tutorial)" target="Tut_Redox_htm_Cu-CN"/>
+  <indexitem text="Fe corrosion (tutorial)" target="Tut_Redox_htm"/>
+  </indexitem>
+<indexitem text="references (to data)" target="DB_References"/>
+<indexitem text="references (to software)" target="Acknowledgements_htm_Refs"/>
+<indexitem text="removing species" target="SP_Removing_Species_htm" expand="false">
+	<indexitem text="in Spana" target="S_Modify_Chem_System_htm_Deactivate"/>
+  <indexitem text="solids (dissolution vs. precipitation)" target="DB_Solid_solub_htm"/>
+  </indexitem>
+<indexitem text="reports: inserting diagrams in" target="S_Printing_htm_Clipboard"/>
+<indexitem text="Roman font (PostScript)" target="S_PostScript_Chars_Fig_htm"/>
+<indexitem text="running in batch mode" target="SP_Batch_Mode_htm"/>
+<indexitem text="saturation idex" target="ChEq_Solids_htm_IAP"/>
+<indexitem text="SED" target="SP_SED_htm" expand="false">
+  <indexitem text="run from SPANA" target="S_Making_Diagrams_htm"/>
+  </indexitem>
+<indexitem text="setup" target="Install_Uninstall_htm"/>
+<indexitem text="SI (saturation index)" target="ChEq_Solids_htm_IAP"/>
+<indexitem text="SIT (specific ion interaction theory)" target="SP_Ionic_Strength_SIT_htm"/>
+<indexitem text="SOLGASWATER" target="SP_Solgaswater_htm"/>
+<indexitem text="solids" target="ChEq_Solids_htm" expand="true">
+  <indexitem text="activity of" target="SP_Activity_htm_Solids"/>
+  <indexitem text="exchange with a component" target="S_Modify_Chem_System_htm_Mod_Exch"/>
+  <indexitem text="in databases" target="DB_Solids_htm"/>
+  <indexitem text="include/exclude" target="DB_Solid_solub_htm"/>
+  <indexitem text="names: phase indicator" target="SP_Phase_Indicator_htm"/>
+	<indexitem text="saturation idex" target="ChEq_Solids_htm_IAP"/>
+  <indexitem text="solids in data-files" target="SP_Data_File_Chemical_System_htm_Solids_Last"/>
+  </indexitem>
+<indexitem text="solubility diagram" target="SP_Diagr_Solubl_htm" expand="false">
+  <indexitem text="of a specific solid" target="S_Diagr_SolublAl_htm"/>
+	<indexitem text="dissolution vs. precipitation" target="DB_Solid_solub_htm"/>
+  </indexitem>
+<indexitem text="solubility product" target="ChEq_Solids_htm"/>
+<indexitem text="sources of data" target="ChEq_Sources_htm"/>
+<indexitem text="SPANA (program)" target="S_0_Main_htm"/>
+<indexitem text="special cases" target="SP_Special_Cases_htm"/>
+<indexitem text="spreadsheet (table output in SED)" target="S_Making_Diagrams_htm_Table_Output" expand="false">
+	<indexitem text="preferences" target="S_Menu_Prefs_htm_Table"/>
+  </indexitem>
+<indexitem text="stoichiometry of a reaction" target="ChEq_Def_System_htm" expand="false">
+  <indexitem text="check stoichiometry" target="SP_Failures_htm_Check_Stoich"/>
+  </indexitem>
+<indexitem text="strange results" target="SP_Strange_Results_htm"/>
+<indexitem text="Symbol font (PostScript)" target="S_PostScript_Chars_Fig_htm"/>
+<indexitem text="table output (for SED)" target="S_Making_Diagrams_htm_Table_Output" expand="false">
+	<indexitem text="preferences" target="S_Menu_Prefs_htm_Table"/>
+  </indexitem>
+<indexitem text="temperature" target="DB_Temperature_htm"  expand="false">
+	<indexitem text="making a data-file " target="DB_Temperature_htm"/>
+	<indexitem text="in a data-file" target="SP_Names_Numbers_htm"/>
+	<indexitem text="making a diagram" target="S_Making_Diagrams_htm_Parameters"/>
+	<indexitem text="ionic strength corrections" target="SP_Ionic_Strength_htm_Models"/>
+	<indexitem text="pe to Eh (redox potential)" target="Eh_pe_htm"/>
+  </indexitem>
+<indexitem text="text editor" target="S_Menu_Prefs_htm_Editor"/>
+<indexitem text="title for the diagram" target="SP_Data_File_Format_htm" expand="false">
+	<indexitem text="make a diagram" target="S_Making_Diagrams_htm_Diagram"/>
+  </indexitem>
+<indexitem text="titration tutorials" target="Tut_Titr_htm"/>
+<indexitem text="tolerance (calculations)" target="S_Menu_Prefs_htm_Calcs"/>
+<indexitem text="tutorials" target="Tut_0_Tutorials_htm"/>
+<indexitem text="uninstalling" target="Install_Uninstall_htm_Uninstall"/>
+<indexitem text="warranty" target="Disclaimer_htm"/>
+<indexitem text="USB memory (installing on)" target="Install_Uninstall_htm_Run_USB"/>
+<indexitem text="water (H2O)" target="ChEq_H2O_htm" expand="false">
+  <indexitem text="osmotic coefficient" target="SP_Activity_htm_H2O"/>
+  </indexitem>
+<indexitem text="Windows" target="S_Interacting_w_Windows_htm"/>
+<indexitem text="word processor" target="S_Printing_htm_Clipboard"/>
+<indexitem text="worksheet (table output in SED)" target="S_Making_Diagrams_htm_Table_Output" expand="false">
+	<indexitem text="preferences" target="S_Menu_Prefs_htm_Table"/>
+  </indexitem>
+<indexitem text="zero concentration (species with)" target="SP_Species_Zero_Conc_htm"/>
+</index>

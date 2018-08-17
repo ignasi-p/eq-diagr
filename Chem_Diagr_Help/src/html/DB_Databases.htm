@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Databases in "DATABASE"</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a></font></td>
+  </tr>
+</table>
+
+<h2>Databases</h2>
+
+<p>A database consists of two files:</p>
+<ul>
+<li><p>A <a href="DB_logK_files.htm">logK-file</a> includes stoichiometry and <nobr>log<i>K</i>&deg;</nobr>
+values for reactions.</p></li>
+
+<li><p>An <a href="DB_Element_files.htm">elements-file</a> has information on which components should be
+	listed under a given chemical element.</p>
+  <p style="line-height:2.5ex; margin-top:0.4ex; margin-bottom:0; text-indent:0;">
+  For example, if the <a href="DB_Organics.htm">organic ligand</a> <i>glycinate</i> is added to the database,
+	the DATABASE program has no way of knowing that it should be listed under <i>carbon</i>.
+  This information is given in the element-file.</p></li>
+</ul>
+
+<p><b>Which databases?</b> Any number of databases may be read by the DATABASE program.
+Use the pull-down menu &#147;Options / Data / <nobr>Database&nbsp;files&#148;</nobr> to add or
+remove databases.</p>
+
+<p>The <i>binary</i> database supplied consists of two files
+<nobr>&#147;<tt>Reactions.elb</tt>&#148;</nobr> and
+<nobr>&#147;<tt>Reactions.db</tt>&#148;.</nobr> These files can not be edited.</p>
+
+<p><b>What Order?</b> The order in which the databases are searched may be changed
+using the pull-down menu &#147;Options / Data / <nobr>Database&nbsp;files&#148;</nobr> of  DATABASE.
+The order is important because for two species with the same name
+(but different logK value), only the last one will be retained,
+see <a href="DB_Remove_change_data.htm"><b>Removing or Changing data.</b></a></p>
+
+<p><a href="DB_Supplied.htm"><b>Database files supplied</b></a></p>
+
+<p><a href="DB_Add_data.htm"><b>Adding Data with DATABASE</b></a></p>
+
+<p><a href="DB_Create_your_database.htm"><b>Create your own databases</b></a></p>
+
+</body>
+</html>

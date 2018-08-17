@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0" categoryclosedimage="BookClosed" categoryopenimage="BookOpen" topicimage="HelpDocItem">
+<tocitem text="Chemical Equilibrium Diagram Software" target="0_Index_htm" image="HelpDocItem"/>
+<tocitem text="Make Your 1st Diagram" target="Tut_Make_1st_Diag_htm" image="HelpDocItem"/>
+
+<tocitem text="Chemical Equilibrium Reactions" target="ChEq_0_Contents_htm" expand="false">
+    <tocitem text="What are chemical equilibria?" target="ChEq_Definitions_htm"/>
+    <tocitem text="How to define the Chemical System" target="ChEq_Def_System_htm">
+      <tocitem text="Chemical Components" target="ChEq_Components_htm"/>
+      </tocitem>
+    <tocitem text="Special Cases" target="ChEq_Special_Cases_htm">
+      <tocitem text="Water" target="ChEq_H2O_htm"/>
+      <tocitem text="Redox reactions" target="ChEq_Redox_React_htm"/>
+      <tocitem text="Solids" target="ChEq_Solids_htm"/>
+      <tocitem text="Gases" target="ChEq_Gases_htm"/>
+      </tocitem>
+    <tocitem text="Sources of data" target="ChEq_Sources_htm">
+      <tocitem text="Sources of equilibrium constants" target="ChEq_Sources_logK_htm"/>
+      <tocitem text="Sources of thermodynamic data" target="ChEq_Sources_Data_htm"/>
+      </tocitem>
+  </tocitem>
+
+<tocitem text="DATABASE" target="DB_0_Main_htm" expand="false">
+    <tocitem text="Searching reactions with Database" target="DB_Working_with_htm"/>
+		<tocitem text="Temperature" target="DB_Temperature_htm"/>
+        <tocitem text="Solids" target="DB_Solid_solub_htm"/>		
+    <tocitem text="Databases" target="DB_Databases_htm">
+      <tocitem text="Supplied database files" target="DB_Supplied_htm">
+        <tocitem text="Organic ligands" target="DB_Organics_htm"/>
+      </tocitem>
+      <tocitem text="Remove/Change data" target="DB_Remove_change_data_htm"/>
+      <tocitem text="Create a database" target="DB_Create_your_database_htm">
+        <tocitem text="Add data" target="DB_Add_data_htm"/>
+        <tocitem text="Element files" target="DB_Element_files_htm"/>
+        <tocitem text="logK files" target="DB_logK_files_htm">
+          <tocitem text="Remove a reaction" target="DB_Remove_reaction_htm"/>
+          <tocitem text="Complexation &amp; Hydrolysis" target="DB_Complex_formation_Hydrolysis_htm"/>
+          <tocitem text="Redox" target="DB_Redox_React_htm"/>
+          <tocitem text="Solids" target="DB_Solids_htm"/>
+          <tocitem text="Gases" target="DB_Gases_htm"/>
+          <tocitem text="Water" target="ChEq_H2O_htm"/>
+        </tocitem>
+        <tocitem text="Names &amp; numbers" target="DB_Names_Numbers_htm"/>
+      </tocitem>
+    </tocitem>
+</tocitem>
+
+<tocitem text="SPANA" target="S_0_Main_htm" expand="false">
+    <tocitem text="Working with Spana" target="S_Working_with_htm">
+      <tocitem text="Using batch files" target="S_Batch_htm"/>
+      </tocitem>
+    <tocitem text="Modifying a Chemical System" target="S_Modify_Chem_System_htm"/>
+    <tocitem text="Making a Diagram" target="S_Making_Diagrams_htm">
+      <tocitem text="Eh and pe" target="Eh_pe_htm"/>
+      <tocitem text="Ionic Strength Corrections" target="SP_Ionic_Strength_htm"/>
+      </tocitem>
+    <tocitem text="Displaying Diagrams" target="S_Diagram_Window_htm"/>
+    <tocitem text="Printing Diagrams" target="S_Printing_htm">
+      <tocitem text="Making it pretty" target="SP_Plot-File_Format_htm_Make_Changes"/>
+      <tocitem text="PDF" target="SP_PDF_htm"/>
+      <tocitem text="PostScript" target="SP_PostScript_htm">
+        <tocitem text="PostScript File Description" target="S_PostScript_Commands_htm">
+          <tocitem text="PS Character Codes" target="S_PostScript_Chars_Fig_htm"/>
+          </tocitem>
+        </tocitem>
+      </tocitem>
+    <tocitem text="Interacting with Windows" target="S_Interacting_w_Windows_htm"/>
+    <tocitem text="Menu Preferences" target="S_Menu_Prefs_htm"/>
+  </tocitem>
+
+<tocitem text="Tutorials" target="Tut_0_Tutorials_htm" expand="false">
+    <tocitem text="Make your 1st diagram" target="Tut_Make_1st_Diag_htm"/>
+    <tocitem text="logP(CO2) constant" target="Tut_CO2_htm"/>
+    <tocitem text="Redox reactions" target="Tut_Redox_htm"/>
+    <tocitem text="Titrations" target="Tut_Titr_htm"/>
+    <tocitem text="H+ affinity diagrams" target="Tut_H_aff_spectr_htm"/>
+    <tocitem text="Example files" target="Tut_Example_Files_htm"/>
+  </tocitem>
+
+<tocitem text="SED and PREDOM" target="SP_0_Main_htm" expand="false">
+
+    <tocitem text="HALTAFALL" target="SP_Haltafall_htm"/>
+
+    <tocitem text="Ionic Strength Corrections" target="SP_Ionic_Strength_htm">
+      <tocitem text="molality" target="SP_Molality_htm"/>
+      <tocitem text="activity" target="SP_Activity_htm"/>
+    </tocitem>
+
+    <tocitem text="SED" target="SP_SED_htm">
+      <tocitem text="Fraction diagrams" target="SP_Diagr_Fract_htm"/>
+      <tocitem text="Logarithmic diagrams" target="SP_Diagr_Log_htm"/>
+      <tocitem text="Solubility diagrams" target="SP_Diagr_Solubl_htm"/>
+      <tocitem text="Format of input Data File" target="SP_SED_Input_File_Format_htm"/>
+    </tocitem>
+
+    <tocitem text="PREDOM" target="SP_PREDOM_htm">
+      <tocitem text="Predominance Area Diagrams" target="SP_Diagr_Predom_htm"/>
+      <tocitem text="How it works" target="SP_PREDOM_How_htm"/>
+      <tocitem text="Format of input Data File" target="SP_PREDOM_Input_File_Format_htm"/>
+    </tocitem>
+
+    <tocitem text="Data File Format" target="SP_Data_File_Format_htm">
+      <tocitem text="Names and Numbers in data files" target="SP_Names_Numbers_htm">
+        <tocitem text="Phase indicators" target="SP_Phase_Indicator_htm"/>
+        <tocitem text="Electric charge" target="SP_Charges_in_Names_htm"/>
+        <tocitem text="Removing a species with a &quot;*&quot;" target="SP_Removing_Species_htm"/>
+        </tocitem>
+      <tocitem text="The Chemical System" target="SP_Data_File_Chemical_System_htm"/>
+      <tocitem text="Plot definition" target="SP_Data_File_Plot_htm"/>
+      <tocitem text="Concentrations" target="SP_Data_File_Concs_htm"/>
+    </tocitem>
+
+    <tocitem text="Special Cases" target="SP_Special_Cases_htm">
+      <tocitem text="Solids" target="ChEq_Solids_htm"/>
+      <tocitem text="Species with zero concentration" target="SP_Species_Zero_Conc_htm">
+        <tocitem text="Removing a species with a &quot;*&quot;" target="SP_Removing_Species_htm"/>
+        </tocitem>
+      <tocitem text="Strange results?" target="SP_Strange_Results_htm"/>
+      <tocitem text="The programs fail?" target="SP_Failures_htm"/>
+    </tocitem>
+
+    <tocitem text="Plot Files" target="SP_Plot-Files_htm">
+      <tocitem text="Plot-File Format" target="SP_Plot-File_Format_htm"/>
+      <tocitem text="Making it Pretty" target="SP_Plot-File_Format_htm_Make_Changes"/>
+      <tocitem text="Convert to other formats" target="SP_Plot-File_Convert_htm">
+        <tocitem text="Convert to PDF" target="SP_PDF_htm"/>
+        <tocitem text="Convert to PostScript" target="SP_PostScript_htm">
+          <tocitem text="PostScript File Description" target="S_PostScript_Commands_htm">
+              <tocitem text="PS Character Codes" target="S_PostScript_Chars_Fig_htm"/>
+            </tocitem>
+          </tocitem>
+        </tocitem>
+    </tocitem>
+
+    <tocitem text="Run in Batch Mode" target="SP_Batch_Mode_htm"/>
+
+  </tocitem>
+
+<tocitem text="Installing and Uninstalling" target="Install_Uninstall_htm"/>
+
+<tocitem text="Credits" target="Acknowledgements_htm" image="HelpDocItem"/>
+<tocitem text="License &amp; Disclaimer" target="Disclaimer_htm" image="HelpDocItem"/>
+</toc>

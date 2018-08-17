@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Logarithmic diagram (H+,CO2)</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="top">
+    &nbsp;<a href="S_0_Main.htm"><img src="images/Spana.gif" width="30" height="30" border="0" alt="Spana"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="S_0_Main.htm">SPANA</a>&nbsp;/ <a href="S_Modify_Chem_System.htm"><nobr>Modify Chem. System</nobr></a></font></td>
+  </tr>
+</table>
+
+<p>Example of a <b>logarithmic diagram</b> showing the concentrations
+(on a logarithmic scale) for all species in the system <nobr>H<sup>+</sup>,</nobr>
+<nobr>CO<sub>2</sub>(g).</nobr> Note that the component
+<nobr>CO<sub>3</sub><sup>2&#8722;</sup></nobr> in DATABASE has been
+<a href="S_Modify_Chem_System.htm">exchanged for a reaction</a>,
+in this case for <nobr>CO<sub>2</sub>(g).</nobr></p>
+
+<p><center>
+<img src="images/Diagr_LogCO2.gif" border="1" alt="Diagr H+ / CO2" title="Diagr H+ / CO2" height="216" width="342">
+</center></p>
+
+<p>Note that the concentration of <nobr>CO<sub>2</sub>(g)</nobr> is not shown.
+The calculations consider the aqueous phase only, and the concentrations for gases
+are set to zero. The <i>fugacity</i> <nobr>(&#8776;</nobr> partial pressure)
+is calculated and it is displayed in
+<a href="S_Diagr_Loga_CO2.htm"><nobr>log activity</nobr> <nobr>diagrams</a>.</nobr></p>
+<p>The diagram displayed above was obtained with the following input file:
+<pre><code> 2 5 0 0
+H+, CO2(g)
+CO2    , -1.472   0  1
+H2CO3  , -4.247   0  1
+HCO3-  , -7.825  -1  1
+OH-    , -14.002 -1  0
+CO3 2- , -18.152 -2  1
+LC,-9, 1, H+,
+LAV, -1 -12  LA, -3.5</code></pre>
+</p>
+</body>
+</html>

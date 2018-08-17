@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>PREDOM: How it works</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <a href="SP_PREDOM.htm">PREDOM</a></font></td>
+  </tr>
+</table>
+
+<h3>PREDOM: Predominance Area Diagrams</h3>
+
+<h3>How it works</h3>
+
+<p><b>PREDOM</b> uses a point to point technique, which is slow, and has a plot
+resolution that depends on the interval between points. The advantage is that
+<nobr>log(<i>Tot.Conc.</i>)</nobr> can be the variable in an axis.</p>
+<ul>
+<li>The concentration area to be studied is divided with 50 steps in each axis,
+		giving a grid of 2601 chemical compositions to solve. Larger grids
+		(smaller steps) may be selected by the user.</li>
+<li>For every point in the grid, the mass-balance equations are solved
+		(if the <nobr>Tot. Conc.</nobr> is given for at least one component) by calling the
+		<a href="SP_Haltafall.htm">HALTAFALL</a> algorithm, and then the species
+		distribution is determined.</li>
+<li>If <i>no solid is present</i>, the predominant soluble species is the one with a
+    highest fraction of the main component.
+		For example, for <nobr>Fe<sub>2</sub>(OH)<sub>2</sub><sup>4+</sup>,</nobr> the
+		fraction is <nobr><b>2</b>[Fe<sub>2</sub>(OH)<sub>2</sub><sup>4+</sup>]/[Fe]<sub>TOT</sub></nobr>
+		while for <nobr>Fe(OH)<sub>2</sub><sup>+</sup>,</nobr> the fraction is
+		<nobr>[Fe(OH)<sub>2</sub><sup>+</sup>]/[Fe]<sub>TOT</sub>.</nobr>  Therefore, the first
+		complex will dominate over the second only if <nobr>[Fe<sub>2</sub>(OH)<sub>2</sub><sup>4+</sup>]</nobr>
+		&gt; <nobr>&frac12;[Fe(OH)<sub>2</sub><sup>+</sup>].</nobr></li>
+<li>If <i>some solids are formed</i> by the main component, then the predominating species
+	  in the diagram will be the solid with the largest fraction of the main component.
+		In this case the predominant species in the plot is the solid, even in a case
+		where the solid's concentration (mol/L) is smaller than the predominating aqueous
+		species.</li>
+</ul>
+
+</body>
+</html>

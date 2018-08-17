@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>PostScript File Description</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="top">
+    &nbsp;<a href="S_0_Main.htm"><img src="images/Spana.gif" width="30" height="30" border="0" alt="Spana"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="S_0_Main.htm">SPANA</a>&nbsp;/ <a href="S_Printing.htm">Printing&nbsp;Diagrams</a>&nbsp;/ <a href="SP_PostScript.htm">PostScript</a></font></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+    &nbsp;<a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <nobr><a href="SP_Plot-Files.htm">Plot-files</a>&nbsp;/</nobr> <a href="SP_PostScript.htm">PostScript</a></font></td>
+  </tr>
+</table>
+
+<h3><nobr>P<small>OST</small>S<small>CRIPT</small>:</nobr> <nobr>A Short</nobr> Description</h3>
+
+<p>The information given here has been extracted from the following two books:</p>
+<ul>
+<li><i>PostScript Language Reference Manual</i>, by Adobe Systems Inc.,
+  <nobr>2<i>nd</i></nobr> ed., Reading, Massachusetts: Addison-Wesley Publ.
+  Co., 1990, 764p.</li>
+<li><i>PostScript Language Tutorial and Cookbook</i>, by Adobe Systems Inc.,
+  Reading, Massachusetts: Addison-Wesley Publ. Co., 1985;
+  <nobr>11<i>th</i></nobr> printing, 1988.</li>
+</ul>
+
+<p><a name="Comments"></a>
+PostScript is a device-independent page description programming language.
+A&nbsp;short summary of its characteristics is given here:</p>
+<ul type="square">
+<li>PostScript files are text files: they may be edited with any text editor.
+  <nobr>A PostScript</nobr> file contains a program that describes how to print
+  one or more pages.</li>
+<li><u>Comments</u> may be written after a percent sign <nobr>(<b>%</b>).</nobr>
+  Anything in a line after a &#147;%&#148; is ignored by PostScript.
+  Nevertheless some comments are significant:
+  <ul type="disc">
+  <li>The first line must start with &#147;%!&#148;</li>
+  <li>The following comments are usually taken into account by programs that deal with
+		PostScript files: <nobr>%%Title,</nobr> <nobr>%%Creator,</nobr> <nobr>%%CreationDate,</nobr>
+		<nobr>%%DocumentFonts,</nobr> <nobr>%%BoundingBox,</nobr>
+		<nobr>%%Pages,</nobr> <nobr>%%Page,</nobr> <nobr>%%EndComments,</nobr> <nobr>%%EndProlog,</nobr>
+		and <nobr>%%Trailer.</nobr></li>
+	<li>The <nobr>%%BoundingBox</nobr> comment is necessary to include an
+    encapsulated PostScript file in another document. The size of the bounding
+    box is given in default units	<nobr>(1/72</nobr> of an inch =
+    <nobr>1/28.35</nobr> of a cm).</li>
+  </ul>
+  </li>
+<li>The working memory in PostScript is a <i>stack</i> (data are stored as
+  books on a pile: last book placed on the stack is the first one that may
+  be picked-up). For example: <nobr><tt>270 360 add</tt></nobr> will first
+  place two numbers on the stack, and the operator add will take these two
+  numbers out from the stack, perform a sum, and place the result on the stack.
+</li>
+<li>Drawing consists of creating a <i>path</i> (a set of lines, points, arcs,
+  text, etc) with the command <tt>newpath</tt> followed by path-creating commands
+  (for example: <tt>moveto</tt> and <nobr><tt>lineto</tt>).</nobr> Once the
+  path has been composed it is painted with the command <nobr><tt>stroke</tt>.</nobr>
+  Several paths are usually drawn on a page. Finally the command
+  <tt>showpage</tt> prints the current page.</li>
+<li>Dictionaries are tables of keys associated to their definitions.
+  The <i>system dictionary</i> contains the names of all PostScript operators
+  with their associated built-in actions. The <i>user dictionary</i> contains
+  the procedures and variables defined by a PostScript program by the <tt>def</tt>
+  operator: <nobr><tt>/ppcm 28.35 def</tt></nobr> will place the variable <tt>ppcm</tt>
+  (defined as 28.35) in the user dictionary.</li>
+<li>Procedures may be defined to perform any given printing task.
+  For example: <tt><nobr>/Ln {lineto} def</nobr> </tt>will define the procedure
+  <nobr><tt>Ln</tt>,</nobr> which may be used instead of <nobr><tt>lineto</tt>.</nobr>
+  Then: <tt><nobr>270 360 Ln</nobr> </tt>would create a line in the current
+  path from the current point to the <i>x</i> and <i>y</i> coordinates present in
+  the stack (that is: <i>x</i>=270 and <i>y</i>=<nobr>360).</nobr>
+  Using procedures, parts of a page may be defined and then used to compose
+  the rest of the page, after translation, rotation, scaling, etc.</li>
+<li>Text is printed as follows. First a font must be selected
+  <nobr>(<tt>findfont</tt>),</nobr> scaled <nobr>(<tt>scalefont</tt>),</nobr>
+  and established as the current font <nobr>(<tt>setfont</tt>).</nobr>
+  For example: <nobr><tt>/Times-Roman findfont</nobr> <nobr>15 scalefont</nobr>
+  <nobr>setfont.</tt></nobr> Strings of text are placed on the stack by
+  enclosing them in parenthesis, and they are printed on the current page
+  with the <tt>show</tt> operator. For example: <tt>100 100 moveto
+  (Hello) <nobr>show</tt>.</nobr></li>
+<li><a name="Back_Slash"></a>
+  In a text string the backslash <nobr>(\)</nobr> character has a special
+  meaning:
+  <table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+  <td>&nbsp;&nbsp;</td>
+		<td valign="top">\(</td>
+    <td>&nbsp;&nbsp;</td>
+		<td valign="top">left parenthesis</td>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		      <td valign="top">\)</td>
+          <td>&nbsp;&nbsp;</td>
+		      <td valign="top">right parenthesis</td>
+    </tr><tr>
+    <td></td>
+		<td valign="top">\\</td>
+    <td></td>
+		<td valign="top">backslash</td>
+      <td></td>
+		    <td valign="top">\nnn</td>
+        <td></td>
+		    <td valign="top"><a href="S_PostScript_Chars_Fig.htm">character codes</a> (octal)</td>
+  </tr></table></li>
+<li><a name="Encoding"></a>
+  Octal character codes give different results depending on the
+  <i><u>encoding</u></i> and on the <i><u>font family</u></i>.
+  The <a href="SP_PostScript.htm">PlotPS</a> conversion program
+  uses the <nobr><u>ISO Latin-1</u></nobr> encoding and both <u>Roman</u> and <u>Symbol</u>
+  fonts. Several accented letters and symbols are available as
+  <a href="S_PostScript_Chars_Fig.htm">character <nobr>codes</a>.</nobr>
+  Two examples:
+  <table cellspacing="0" cellpadding="4" border="1" align="center"><tr>
+  <td><i>In the PostScript file:</i></td><td><i>In the print-out</i></td></tr>
+  <tr><td valign="baseline"><nobr>(t = 25\260C) show</nobr></td>
+	 <td  valign="baseline"><nobr>t = 25&deg;C</nobr></td>
+  </tr><tr>
+	 <td valign="baseline"><nobr>(Varf\366r \344r det s\345?) show</nobr></td>
+	 <td valign="baseline"><nobr>Varför är det så?</nobr></td>
+  </tr></table>
+  </li>
+</ul>
+
+<p>Additional details are given in the books listed above.</p>
+
+<p>The <a href="SP_PostScript.htm">PlotPS</a> program used by
+<a href="S_0_Main.htm">SPANA</a> defines its own set of functions and
+variables.</p>
+
+</body>
+</html>

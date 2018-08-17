@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>DATABASE: Remove/Change Data</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a>&nbsp;/ <a href="DB_Databases.htm">Databases</a></font></td>
+  </tr>
+</table>
+
+<h3>Remove or Change Data</h3>
+
+<p>Removing and changing data is based on reading a database
+<i>after</i> all other databases.</p>
+
+<p>The order in which databases are
+searched can be changed using the pull-down menu
+&#147;Options / Data / <nobr>Database&nbsp;files&#148;.</nobr>
+The order is important because for two species with the same name
+(but different <nobr>log<i>K</i>&deg;</nobr> value),
+only the last one will be retained.</p>
+
+<p><b>Single User</b>
+(when there is a copy of DATABASE/SPANA installed on <i>your</i> computer):</p>
+<ul>
+<li>change a logK-value by entering the new value using the menu
+	&#147;Options / Data / <nobr><a href="DB_Add_data.htm">Add&nbsp;data!</a>&#148;.</nobr>
+	A new logK-file <nobr>(default name: <tt>New-Data.txt</tt>)</nobr> and the
+	corresponding element-file <nobr>(<tt>New-Data.elt</tt></nobr>)
+	are then created and these files
+	are read after reading the binary database supplied with DATABASE. For two species
+	with the same name (but different <nobr>log<i>K</i>&deg;</nobr> value),
+	only the last one read will be retained.</li>
+
+<li>remove components from the list for an element by adding a new component
+	with the same name but preceeding the name with a <nobr>&#147;<tt>@</tt>&#148;</nobr>
+	(in menu &#147;Options / Data / <nobr>Add&nbsp;data!&#148;).</nobr>
+	For example, adding <nobr>&#147;<tt>@Fe</tt>&nbsp;<tt>2+</tt>&#148;</nobr>
+	linked to <nobr>&#147;Fe&#148;</nobr> removes <nobr>Fe(II)</nobr> from the
+	components available for iron.</li>
+
+<li>remove reactions by adding a new species with the same name but inserting
+	a <nobr>&#147;<tt>@</tt>&#148;</nobr> at the beginning of the name.
+	For example, to remove the species <nobr>&#147;<tt>FeOH</tt>&nbsp;<tt>2+</tt>&#148;</nobr>
+	just add a species named <nobr>&#147;<tt>@FeOH</tt>&nbsp;<tt>2+</tt>&#148;.</nobr>
+	The <nobr>log<i>K</i>&deg;</nobr> value is not used, because the species will be removed.</li>
+</ul>
+
+<p><a name="Network"></a>
+<b>Running on a Network server:</b></p>
+<ul>
+<li>Each user may change or remove data as indicated above.
+	The database New-Data is then saved locally on a user directory.</li>
+<li>To make collective changes and deletions of data if DATABASE has been
+  installed on a network server, and all users run the same	program file:
+	<ul>
+	<li>Create the database New-Data as indicated above for a single user.</li>
+	<li>Move then the files that you created (for example <nobr><tt>New-Data.elt</tt></nobr>
+	and <nobr><tt>New-Data.txt</tt>)</nobr>
+	to the network directory where the DATABASE program is located.</li>
+  <li>Start the DATABASE program (from the network server) and use the
+	pull-down menu &#147;Options / Data / <nobr>Database&nbsp;files&#148;</nobr>
+	to add your new database <nobr>(<tt>New-Data.txt</tt></nobr>, newly created and moved
+	to the network folder) as the <i>last</i> database in the list. Then
+	close the DATABASE program.</li>
+	</ul>
+	The database list will be stored in the
+	<a href="1_Install_Uninstall.htm#INI"><nobr>&#147;ini&#148;-</nobr>file</a>
+	in the network directory.
+	In this way the new data are then automatically used by all users. See also
+	<a href="1_Install_Uninstall.htm">Installing and Uninstalling</a>.
+	</li>
+</ul>
+
+</body>
+</html>

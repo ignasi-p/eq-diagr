@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Ionic strength</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a></font></td>
+  </tr>
+</table>
+
+<p><b>The Ionic Strength</b> corresponds to the concentration of electric charge
+in a solution:</p>
+<p class="indent">
+<nobr><b><i>I</i></b> = &frac12; &sum; <i>m<sub>i</sub></i> <i>Z<sub>i</sub></i><sup>2</sup></nobr>
+</p>
+
+<p class="cont">
+where <nobr><i>m<sub>i</sub></i></nobr> is the
+<a href="SP_Molality.htm">molality</a> of an aqueous species <nobr>&#147;<i>i</i>&#148;</nobr>
+with charge <nobr><i>Z<sub>i</sub></i>.</nobr>  For strong 1:1 electrolytes (like NaCl)
+the ionic strength is equivalent to the total concentration.  The ionic strength is
+used to calculate activity coefficients in dilute aqueous solutions.</p>
+
+<p><a name="Act_Coef"></a>
+<b>The activity coefficient</b>, <nobr>&#947;<sub><i>i</i></sub>,</nobr> gives the
+relationship between concentration and thermodynamic activity:</p>
+<p class="indent">
+<nobr>&#947;<sub><i>i</i></sub> = <i>a<sub>i</sub></i> / <i>m<sub>i</sub></i> </nobr>
+</p>
+<p class="cont">
+where <nobr><i>a<sub>i</sub></i></nobr> and and <nobr><i>m<sub>i</sub></i></nobr> are the
+<a href="SP_Activity.htm">activity</a> and <a href="SP_Molality.htm">molality</a>,
+respectively, of the aqueous species <nobr>&#147;<i>i</i>&#148;.</nobr> Note
+that in equations concentrations are usually written with brackets,
+for example <nobr>&#147;[H<sup>+</sup>]&#148;,</nobr> while activities are
+often written with braces, <nobr>&#147;{H<sup>+</sup>}&#148;.</nobr></p>
+
+<p><b>Activity coefficient calculations in <a href="S_0_Main.htm">SPANA</a>
+(using <nobr><a href="SP_0_Main.htm">SED/PREDOM</a>):</b></nobr>
+
+If the equilibrium constants in the input file are given for zero ionic strength
+(standard conditions) then it is possible to give a value for the ionic strength,
+<nobr><b><i>I</i></b>,</nobr> and the calculations will include the activity
+coefficients calculated using the
+the given values for <b>temperature</b> and ionic strength.</p>
+
+<a name="Models"></a>
+<h3>Models for activity coefficients</h3>
+
+<p>In in <a href="S_0_Main.htm">SPANA</a> the user may choose a model to evaluate
+activity coefficients if the <i>advanced</i> program level selected in the menu
+&#147;Preferences / <nobr>General options&#148;.</nobr>
+The following models may be selected:</p>
+
+<ul>
+<li><a href="SP_Ionic_Strength_Davies.htm"><b>Davies</b> equation</a></li>
+<li><a href="SP_Ionic_Strength_HKF.htm"><b>simplified HKF</b> (Helgeson-Kirkham-Flowers) model.</a>
+This is the default method in the <i>normal</i> program level of SPANA.</li>
+<li><a href="SP_Ionic_Strength_SIT.htm"><b>SIT</b> (specific ion interaction theory)</a></li>
+</ul>
+
+
+<a name="Comparison"></a>
+<p><a href="SP_log_gamma.htm"><b>Comparison</b></a> between some experimental data and
+the Davies <nobr>eqn.,</nobr> the simplified HKF model and the SIT model.</p>
+
+<p>Of the models available, the <a href="SP_Ionic_Strength_SIT.htm">SIT model</a> gives the most
+accurate results for ionic strength corrections, but only at <nobr>25&deg;C,</nobr> and provided that
+ion-interaction paramaters <nobr>(<i>&#949;</i>)</nobr> are available.
+<a href="SP_Ionic_Strength_SIT.htm#Convergence">Convergence problems</a>
+might occur with this model in some cases.</p>
+
+<p>For temperatures <nobr>&#8800;&nbsp;25&deg;C</nobr> the
+<a href="SP_Ionic_Strength_HKF.htm">simplified HKF model</a> will give
+sufficiently accurate results at concentrations <nobr>&#8804;&nbsp;0.2&nbsp;molal.</nobr>
+This model is more robust, and recommended to make diagrams on a routine basis.
+</p>
+
+<p>&nbsp;</p>
+</body>
+</html>

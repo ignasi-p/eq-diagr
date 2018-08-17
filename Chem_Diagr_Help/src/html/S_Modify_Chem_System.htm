@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>SPANA: Modify a Chemical System</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="top"><a name="Top"></a>
+    &nbsp;<a href="S_0_Main.htm"><img src="images/Spana.gif" width="30" height="30" border="0" alt="Spana"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="S_0_Main.htm">SPANA</a></font></td>
+  </tr>
+</table>
+
+<h3>SPANA:  Modify a Chemical System</h3>
+
+<p>A chemical system may be modified by selecting either one of the pull-down menus:
+&#147;File / Data File / Modify&#148; and
+&#147;Run / Modify Chemical <nobr>System&#148;.</nobr>
+A new window appears showing the chemical system.
+The reaction and the equilibrium constant are shown in
+a status bar when you point with the mouse to a species name in the lists:</p>
+<p><center>
+<img src="images/Mod_Chem_Syst.gif" height="351" width="290" alt="Mod_Chem_Syst" title="Mod_Chem_Syst" border="0">
+</center></p>
+
+<p>
+  <ul type="disc">
+  <li><a href="#Mod_Del">Delete</a></li>
+  <li><a href="#Mod_Exch">Exchange a component with a reaction</a></li>
+  <li><a href="#Mod_Merge">Merge with another data file</a></li>
+  <li><a href="#Deactivate">Deactivate a species or change its <nobr>log<i>K</i></nobr></a></li>
+  </ul>
+</p>
+
+<a name="Mod_Del"></a>
+<hr><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td>&nbsp;</td>
+<td align="right" valign="top">
+<p><img src="images/delete.gif" alt="Delete" border="1" title="Delete" height="37" width="37"></p>
+</td>
+<td>&nbsp;</td>
+<td valign="top"><p>
+    <b>Delete</b> either a single reaction or a component, with all reactions where
+    it participates. For example, removing the component <nobr>Cu<sup>2+</sup></nobr>
+    will also take away <nobr>CuOH<sup>+</sup>,</nobr> etc.</p>
+    </td></tr>
+<tr><td colspan="4"><hr></td></tr>
+<tr valign="top"><td></td>
+<td align="right" valign="top"><p><a name="Mod_Exch"></a>
+<img src="images/exchange.gif" alt="Exchange" title="Exchange" height="37" width="37" border="1"></p></td>
+<td>&nbsp;</td>
+<td valign="top"><p>
+    <b>Exchange a component with a reaction.</b> For example:
+    <nobr>Fe<sup>2+</sup></nobr> for <nobr>Fe<sup>3+</sup>;</nobr>
+    <nobr>CO<sub>2</sub>(g)</nobr> for <nobr>CO<sub>3</sub><sup>2&#8722;</sup>;</nobr> etc.
+    This is useful when the equilibrium constants are based on
+    <nobr>CO<sub>3</sub><sup>2&#8722;</sup></nobr>
+    as a component but a diagram for a given <nobr>CO<sub>2</sub>(g)</nobr> partial
+    pressure is needed <nobr>(<a href="S_Diagr_Log_CO2.htm">example</a>).</nobr>
+    May also be used to create diagrams for solutions saturated with
+    a solid <nobr>(<a href="S_Diagr_SolublAl.htm">example</a></nobr> with <nobr>Al).</nobr></p>
+</td></tr>
+<tr><td colspan="4"><hr></td></tr>
+<tr valign="top"><td></td>
+<td align="right" valign="top"><p><a name="Mod_Merge"></a>
+<img src="images/Merge.gif" alt="Merge" title="Merge" height="37" width="37" border="1"></p>
+</td>
+<td>&nbsp;</td>
+<td valign="top"><p>
+    <b>Merge with another data file</b> (Only in <i>ad&shy;vanced</i> program level). For example: merge a file with the components
+		<nobr>H<sup>+</sup>,</nobr> <nobr>e&#8722;,</nobr> <nobr>Fe<sup>2+</sup></nobr>
+		and a file with <nobr>Cr<sup>3+</sup>,</nobr> <nobr>e&#8722;,</nobr>
+		<nobr>H<sup>+</sup>,</nobr> to create a file with the system: <nobr>H<sup>+</sup>,</nobr>
+		<nobr>e&#8722;,</nobr> <nobr>Fe<sup>2+</sup>,</nobr> <nobr>Cr<sup>3+</sup>.</nobr>
+		Note that afterwards you will need to add manually any species formed by both
+		Fe and Cr, for example <nobr>FeCr<sub>2</sub>O<sub>4</sub>(s).</nobr></p>
+</td></tr>
+</table>
+
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td><hr><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+</td><td width="20" align="right">
+<a href="#Top"><img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</td></tr></table>
+
+<p><a name="Deactivate"></a>
+By double-clicking on a <a href="ChEq_Def_System.htm">reaction product</a> a new window appears where you can easily
+<b>deactivate</b> the species
+(by <a href="SP_Removing_Species.htm">adding a &#147;*&#148; at the beginning of the <nobr>name</a>)</nobr>
+and/or <b>change the equilibrium constant:</b></p>
+<p><center>
+<img src="images/logK_Ch.gif" height="137" width="280" alt="logK_Ch.gif, 13kB" title="logK_Ch" border="0">
+</center></p>
+<p>This window allows you to make changes quickly without the need of a text editor
+and without learning the <a href="SP_Data_File_Format.htm">format of the input data file</a>.
+Note, however, that <a href="ChEq_Components.htm">components</a> can not be <a href="SP_Removing_Species.htm">deactivated</a>
+with SPANA; you must use a text editor to  add a
+&#147;*&#148; at the start of their names. However, it is always possible to
+first deactivate a species and then <a href="#Mod_Exch">exange it with a component</a>.</p>
+
+<p style="text-align:right; line-height:0; margin-top:0; margin-bottom:0">
+<a href="#Top"><img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</p>
+</body>
+</html>

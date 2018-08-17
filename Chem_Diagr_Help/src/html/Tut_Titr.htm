@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Tutorial: Titrations</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50"><a name="Top"></a>
+    <a href="0_Index.htm"><img src="images/thco35_s.gif" border="0" width="32" height="32" alt="Chem.Eq.Diagr"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="0_Index.htm">Chemical Equilibrium Diagrams</a>&nbsp;/ <a href="Tut_0_Tutorials.htm">Tutorials</a></font></td>
+  </tr>
+</table>
+
+<h3>Titration curves</h3>
+
+<p>Titration curves are only of interest
+to explore under what conditions a titration can be made.
+For example to find out what are the lower limits
+for the reagent concentrations.</p>
+<p style="margin-top: 1 ex">
+<ul type="square">
+  <li><b><a href="#Acid-base">Acid-base</a></b></li>
+  <li><b><a href="#Mg-edta">Mg with <i>edta</i></a></b></li>
+  </ul>
+</p>
+<a name="Acid-base"></a>
+<hr><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<h3>Acid-base titrations</h3>
+
+<p>Acid-base titration curves are plots of calculated pH as a funtion of added
+acid <nobr>(H<sup>+</sup>)</nobr> or base <nobr>(OH<sup>&#8722;</sup>).</nobr></p>
+
+<p>Because the components in the <a href="DB_0_Main.htm">DATABASE</a> database
+are the un-protonated ligands, you might need to
+<a href="S_Modify_Chem_System.htm">exchange a component for a complex</a> in
+<a href="SP_0_Main.htm">Spana</a> if you
+wish to simulate the titration of an acid (a protonated ligand) with a base.</p>
+
+<p>For example: titration of <b>acetic acid</b> with NaOH. In order to have
+<nobr>OH<sup>&#8722;</sup></nobr> as the component in
+the <i>X</i>-axis it is necessary to set the hydroxide ion as a chemical component.
+This is achieved by <a href="S_Modify_Chem_System.htm">exchanging a component
+with a reaction.</a> In this case the original component <nobr>H<sup>+</sup></nobr>
+is exchanged for the complex <nobr>OH<sup>&#8722;</sup>.</nobr> Acetate,
+<nobr>CH<sub>3</sub>COO<sup>&#8722;</sup></nobr> is also exchanged with acetic
+acid <nobr>(CH<sub>3</sub>COOH).</nobr>
+<a name="StrongAcid"></a>
+Now it is possible to calculate a titration curve of acetic acid:
+<center>
+<img src="images/Titration_acetic.gif" height="220" width="324" alt="Titration_acetic" title="Titration_acetic" border="1">
+</center>
+</p>
+<p>In this example the <i>X</i>-axis starts at <nobr>[OH<sup>&#8722;</sup>]<sub>TOT</sub></nobr> =
+<nobr>&#8722;5 mM</nobr> to simulate an initial solution
+containing a strong acid, <nobr>[HCl]<sub>initial</sub></nobr> = 5 mM,
+and 10 mM acetic acid. Compare
+the diagram above with a titration curve without acetic acid
+<nobr>(<a href="Tut_Titr_StrongAcid.htm">titration</nobr> of a strong acid with
+a strong <nobr>base</a>).</nobr></p>
+
+<p>You can simulate a tritration of a smaller amount of acetic acid, but
+remember to decrease the <i>X</i>-axis range in the same proportion. For example,
+for a titration of 1 mM of acid, the <nobr>[OH<sup>&#8722;</sup>]</nobr>
+concentration should be between zero and  <nobr>&#8776;2</nobr> mM.
+What is the minimum initial acid concentration required to &#147;see&#148; a pH
+change? Is it possible, for example, to titrate a <nobr>1 &#956;M</nobr> solution?</p>
+
+<a name="Mg-edta"></a>
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td><hr><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+</td><td width="20" align="right">
+<a href="#Top"><img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</td></tr></table>
+
+<h3>Titration of Mg with <i>edta</i></h3>
+
+<p><i>edta</i> (ethylenediaminetetraacetate) is a is widely used
+hexadentate (&#147;six-toothed&#148;) ligand and chelating agent.
+Organic ligands like <i>edta</i> are linked to the element <b>carbon</b>
+in DATABASE</p>
+
+<p>Magnesium can be titrated with <i>edta</i> using a pH 10 buffer and
+<a href="Tut_Titr_Calmagite.htm">Calmagite</a> as metal-indicator.
+This is a tri-protic acid, <nobr>H<sub>3</sub>ind,</nobr> and its colour changes
+with protonation: <nobr>H<sub>2</sub>ind<sup>&#8722;</sup></nobr> is bright red
+(pH &lt; 9),
+<nobr>Hind<sup>2&#8722;</sup></nobr> is clear blue (pH 9 to 12), and
+<nobr>ind<sup>3&#8722;</sup></nobr> is reddish orange (pH &gt; 12).
+Complexation with Ca or Mg also induces a colour change (at pH 10):</p>
+
+<table cellspacing="0" cellpadding="0">
+ <tr valign="baseline">
+  <td><tt>&nbsp;&nbsp;</tt></td>
+  <td>Mg<sup>2+</sup></td>
+  <td align="right">
+  &nbsp;+&nbsp;<nobr>Hind<sup>2&#8722;</sup></nobr><br><font color="#0000FF"><b>blue</b></font>&nbsp;&nbsp;</td>
+  <td>&nbsp;<img src="images/rlh.gif" alt="=" title="=" height="10" width="14" border="0">&nbsp;</td>
+  <td align="center">
+  <nobr>Mg(ind)<sup>&#8722;</sup></nobr><br><font color="#DC143C"><b>red</b></font>
+  </td>
+  <td>&nbsp;+&nbsp;<nobr>H<sup>+</sup></nobr></td>
+  </tr>
+</table>
+
+<p><b>Equilibrium constants:</b> because Calmagite is not included in the <a href="DB_0_Main.htm">DATABASE</a>
+database you must <a href="DB_Add_data.htm">add the new data</a> for this indicator.
+The original <a href="Tut_Titr_Calmagite.htm">reference</a> contains
+some approximate equilibrium constants
+(at <a href="SP_Ionic_Strength.htm">ionic strength</a> <i>I</i> = <nobr>0.1 M):</nobr></p>
+
+<table cellspacing="0" cellpadding="0">
+ <tr valign="baseline"><td><tt>&nbsp;&nbsp;</tt></td>
+ <td><nobr>ind<sup>3&#8722;</sup></nobr> + <nobr>H<sup>+</sup></nobr>
+    <img src="images/rlh.gif" alt="=" title="=" height="10" width="14" border="0">
+    <nobr>Hind<sup>2&#8722;</sup></nobr></td>
+  <td><tt>&nbsp;&nbsp;</tt></td>
+  <td><nobr>log<i>K</i><sub>1,H</sub></nobr> = 12.35</td>
+  </tr>
+ <tr valign="baseline"><td><tt>&nbsp;&nbsp;</tt></td>
+ <td><nobr>ind<sup>3&#8722;</sup></nobr> + <nobr>2H<sup>+</sup></nobr>
+    <img src="images/rlh.gif" alt="=" title="=" height="10" width="14" border="0">
+    <nobr>H<sub>2</sub>ind<sup>&#8722;</sup></nobr></td>
+  <td><tt>&nbsp;&nbsp;</tt></td>
+  <td><nobr>log<i>&#946;</i><sub>2,H</sub></nobr> = 20.49</td>
+  </tr>
+ <tr valign="baseline"><td><tt>&nbsp;&nbsp;</tt></td>
+ <td><nobr>ind<sup>3&#8722;</sup></nobr> + <nobr>Mg<sup>2+</sup></nobr>
+    <img src="images/rlh.gif" alt="=" title="=" height="10" width="14" border="0">
+    <nobr>Mg(ind)<sup>&#8722;</sup></nobr></td>
+  <td><tt>&nbsp;&nbsp;</tt></td>
+  <td><nobr>log<i>K</i><sub>1,Mg</sub></nobr> = 5.7</td>
+  </tr>
+</table>
+<p>The last equilibrium constant, <nobr><i>K</i><sub>1,Mg</sub>,</nobr> was
+estimated in the reference from a meassured 25% &#147;extent of dissociation
+of the compound&#148; at <i>I</i> = <nobr>0.1,</nobr> pH = 10 and
+Calmagite and Mg concentrations equal to <nobr>2.5&times;10<sup>&#8722;5</sup></nobr>
+M. Simulations made with <a href="S_0_Main.htm">Spana</a> show that
+to obtain such a degree of complex formation, <nobr>log<i>K</i><sub>1,Mg</sub></nobr>
+must instead be <nobr>&#8776;7.4,</nobr>
+and we will use this value here.</p>
+
+<p>Extrapolation to zero ionic strength using
+<a href="SP_Ionic_Strength.htm#Models">Davies eqn.</a> gives
+<nobr>log<i>K</i>&deg;<sub>1,H</sub></nobr> <nobr>&#8776;13.02,</nobr>
+<nobr>log<i>&#946;</i>&deg;<sub>2,H</sub></nobr> <nobr>&#8776;21.60,</nobr>
+and
+<nobr>log<i>K</i>&deg;<sub>1,Mg</sub></nobr> <nobr>&#8776;8.7.</nobr></p>
+
+<p><a href="DB_Add_data.htm">Add these data</a> in DATABASE.</p>
+
+
+<p><b>Titration curve:</b> to simulate a Mg-<i>edta</i> tritration start by selecting in DATABASE
+the following components: <nobr>H<sup>+</sup>,</nobr> <nobr>Mg<sup>2+</sup>,</nobr>
+<nobr>EDTA<sup>4&#8722;</sup>,</nobr> <nobr>NH<sub>3</sub></nobr> and
+<nobr>Ind<sup>3&#8722;</sup></nobr> (which you just <a href="DB_Add_data.htm">added</a>).
+Note that <i>edta</i> is found among the order organic ligands, linked to the element <b>carbon</b>.
+Then use the menu &#147;File / Save and Exit&#148; to make an input file for <a href="SP_0_Main.htm">Spana</a>.</p>
+
+<p>When simulating a titration it is important to keep track of the proton balance.
+<i>Edta</i> solutions are normally prepared from the di-sodium salt
+<nobr>Na<sub>2</sub><i>edta</i>&middot;2H<sub>2</sub>O.</nobr>
+In Spana select the menu &#147;Run&nbsp;/
+<nobr><a href="S_Modify_Chem_System.htm">Modify chemical system</a>&#148;</nobr>
+to exchange <nobr>EDTA<sup>4&#8722;</sup></nobr> for
+<nobr>H<sub>2</sub>EDTA<sup>2&#8722;</sup>.</nobr>
+Exchange also <nobr>Ind<sup>3&#8722;</sup></nobr> for <nobr>HInd<sup>2&#8722;</sup></nobr>
+and <nobr>H<sup>+</sup></nobr> for <nobr>NH<sub>4</sub><sup>+</sup></nobr>
+(to simulate a <nobr>NH<sub>4</sub><sup>+</sup>/NH<sub>3</sub></nobr> pH&#8776;10 buffer).</p>
+
+<p>The components are now: <nobr>Mg<sup>2+</sup>,</nobr> <nobr>H<sub>2</sub>EDTA<sup>2&#8722;</sup>,</nobr>
+<nobr>HInd<sup>2&#8722;</sup>,</nobr> <nobr>NH<sub>4</sub><sup>+</sup></nobr>
+and <nobr>NH<sub>3</sub>.</nobr></p>
+
+<p>Now a diagram can be made. Select <nobr>H<sub>2</sub>EDTA<sup>2&#8722;</sup></nobr>
+for the <i>X</i>-axis, <nobr>[NH<sub>4</sub><sup>+</sup>]<sub>T</sub></nobr> = 0.001 and
+<nobr>[NH<sub>3</sub>]<sub>T</sub></nobr> = 0.02 (to keep pH &#8776;10),
+<nobr>[Mg<sup>2+</sup>]<sub>T</sub></nobr> = 0.001 and
+<nobr>[HInd<sup>2&#8722;</sup>]<sub>T</sub></nobr> = <nobr>5&times;10<sup>&#8722;6</sup>.</nobr></p>
+
+<p>The following fraction diagram for Calmagite species is obtained:
+<center>
+<img src="images/Titration_Mg-edta.gif" height="222" width="330" alt="Titration_Mg-edta" title="Titration_Mg-edta" border="1">
+</center>
+<font size="-1">(the colours of the curves have been changed using the menu &#147;Preferences /
+<a href="S_Menu_Prefs.htm#Diagr">Diagram <nobr>windows</a>&#148;.</nobr></font></p>
+
+<p>The end point is reached when the solution is <b><font color="#0000FF">blue</font></b>
+without a trace of <b><font color="#800080">purple</font></b> colour. By varying the
+the concentration of the buffer <nobr>(NH<sub>3</sub>)</nobr> it is seen that
+if pH is decreased below 10 then the fraction of <nobr>H<sub>2</sub>ind<sup>&#8722;</sup></nobr>
+increases, the final colour becomes less <b><font color="#0000FF">blue</font></b>,
+and the titration&rsquo;s end point is more difficult to see.</p>
+
+<p>It may be shown, by making a fraction diagram for <nobr>Mg<sup>2+</sup>,</nobr>
+that the initial solution is slightly oversaturated with <nobr>Mg(OH)<sub>2</sub>(cr)</nobr>,
+and precipitation might occur at higher pH, or higher Mg-concentrations.
+This would make the colour change sluggish and the end point difficult to see.
+In conclusion: the buffering of pH is fundamental
+in this titration.</p>
+
+<p style="text-align:right; line-height:0; margin-top:0; margin-bottom:0">
+<a href="#Top"><img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</p>
+</body>
+</html>

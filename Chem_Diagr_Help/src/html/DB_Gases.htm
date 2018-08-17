@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>DATABASE: Reactions with Gases</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a>&nbsp;/ <a href="DB_Databases.htm">Databases</a>&nbsp;/ <a href="DB_Create_your_database.htm">Create&nbsp;databases</a>&nbsp;/ <a href="DB_logK_files.htm"><nobr>logK-files</nobr></a></font></td>
+  </tr>
+</table>
+
+<h3>Reactions with Gases:</h3>
+
+<p>Any species with a name ending with <nobr>&#147;(g)&#148;</nobr> is
+considered to be a gas.</p>
+
+<p>The <i>fugacity</i> for a gas is equivalent to the activity for an aqueous species.</p>
+
+<p><b>log<i>K</i>&deg;-value:</b> for an equilibrium between a gas phase and an
+aqueous solution, it must be assumed either <nobr><b>1)</b>&nbsp;constant</nobr>
+pressure or  <nobr><b>2)</b>&nbsp;constant</nobr> volume. The value of
+<nobr>log<i>K</i>&deg;</nobr> will be different for these two cases. Example:</p>
+
+<p class="indent">
+<nobr>CO<sub>2</sub>(g)</nobr> <nobr>+&nbsp;H<sub>2</sub>O</nobr>
+	<img src="images/rlh.gif" alt="=" border="0" width="14" height="10">
+	<nobr>HCO<sub>3</sub><sup>&#8722;</sup></nobr> <nobr>+&nbsp;H<sup>+</sup></nobr>
+  </p>
+
+<p>For constant pressure:</p>
+<p class="indent">
+<nobr>log<i>K</i><sub>p</sub>&deg;</nobr> = <nobr>log [HCO<sub>3</sub><sup>&#8722;</sup>]</nobr>
+	<nobr>&#8722; pH</nobr> <nobr>&#8722; log <i>P</i><sub>CO<sub>2</sub></sub></nobr>
+  </p>
+
+<p style="margin-top:0.5ex;">
+<i>P</i> is in units of bar.  In the Earth&rsquo;s atmosphere
+<nobr>log&nbsp;<i>P</i><sub>CO<sub>2</sub></sub></nobr>&#8776;<nobr>&#8722;3.5</nobr></p>
+
+<p>For constant volume:</p>
+<p class="indent">
+<nobr>log <i>K</i><sub>v</sub>&deg;</nobr> = <nobr>log [HCO<sub>3</sub><sup>&#8722;</sup>]</nobr>
+	<nobr>&#8722; pH</nobr> <nobr>&#8722; log [CO<sub>2</sub>(g)]</nobr>
+  </p>
+
+<p class="cont">where the concentrations of gases are given in <nobr>mol/L.</nobr></p>
+
+<p>Using the eqn. for perfect gases <nobr>(<i>P V</i></nobr> = <nobr><i>n
+<a href="1_Some_Constants.htm">R</a> T</i>)</nobr> it is found that:</p>
+
+<p class="indent">
+<nobr><i>P</i><sub>CO<sub>2</sub></sub></nobr> = <nobr>[CO<sub>2</sub>(g)]</nobr> 0.01 <nobr><i>R T </i></nobr>
+  </p>
+
+<p>The factor 0.01 is needed to convert the units <nobr>m<sup>3</sup></nobr> to L and Pa to bar.
+Finally one obtains:</p>
+
+<p class="indent">
+<nobr>log <i>K</i><sub>p</sub>&deg;</nobr> = <nobr>log <i>K</i><sub>v</sub>&deg;</nobr>
+	<nobr>+ log (0.01 <i>R T</i>)</nobr>
+  </p>
+
+<p><b>Important:</b> DATABASE and SPANA are based on
+<nobr>log<i>K</i><sub>p</sub>&deg;</nobr> values for gases, with a standard state of 1&nbsp;bar
+<nobr>(&#8776;1 atm).</nobr></p>
+
+<p><b>Note:</b> in diagrams the concentration of gases is not evaluated.
+For example, <nobr>CO<sub>2</sub>(g)</nobr> does <u>not</u> appear in
+<a href="SP_Diagr_Fract.htm">fraction</a> or
+<a href="S_Diagr_Log_CO2.htm">logarithmic</a> diagrams.
+The <i><u>fugacity</u></i> <nobr>(&#8776;</nobr> partial pressure) of gases is calculated and
+it is displayed in <nobr><a href="S_Diagr_Loga_CO2.htm">log activity</a></nobr> diagrams.</p>
+
+<p><b>Example</b> of a <u>redox</u> gas reaction:</p>
+
+<p class="indent">
+<nobr>2&nbsp;H<sub>2</sub>O</nobr>
+	<img src="images/rlh.gif" alt="=" border="0" width="14" height="10"> 
+	<nobr>4&nbsp;H<sup>+</sup></nobr>  <nobr>+&nbsp;4&nbsp;e<sup>&#8722;</sup></nobr> <nobr>+&nbsp;O<sub>2</sub>(g)</nobr>
+  </p>
+
+<p class="cont">line in database:</p>
+
+<p class="indent">
+<nobr><tt>O2(g);-83.12;;;H+;-4;;;e-;-4;H2O;2;;;;;-4;Wateq4F</tt></nobr>
+  </p>
+
+</body>
+</html>

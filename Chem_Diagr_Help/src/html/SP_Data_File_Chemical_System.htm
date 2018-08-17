@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Data-File format: Chemical system</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <nobr><a href="SP_Data_File_Format.htm">Input data-file format</a></nobr></font></td>
+  </tr>
+</table>
+
+<h3>Data file structure:  The chemical system</h3>
+
+<p>The input file consists of: <nobr><b>1)</b></nobr> definition of the
+chemical system; <nobr><b>2)</b></nobr> <a href="SP_Data_File_Plot.htm">plot
+<nobr>information</a>;</nobr> and <nobr><b>3)</b></nobr>
+<a href="SP_Data_File_Concs.htm">concentrations</a> (ranges) for the chemical
+components.</p>
+
+<p>The <b>chemical system</b> must be given as follows:</p>
+
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+		<td><i>Data to be entered:</i></td>
+	<td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+		<td><i>Comments:</i></td></tr>
+<tr valign="top"><td></td><td><hr></td><td></td><td><hr></td></tr>
+<tr valign="top"><td></td>
+		<td><nobr>NA, NX, NF, SOLIDC,</nobr></td>
+	<td></td>
+		<td></td>
+</tr><tr valign="top"><td></td>
+		<td><nobr>IDENT(<i>ia</i>),</nobr></td>
+	<td></td>
+		<td><nobr>(given for <i>ia</i>=1,NA)</nobr></td>
+</tr><tr valign="top"><td></td>
+		<td><nobr>IDENT(<i>ix</i>), LOGBTA(<i>ix</i>),</nobr></td>
+	<td></td>
+		<td></td>
+</tr><tr valign="top"><td></td>
+		<td align="right"><nobr>&nbsp;&nbsp;(P(<i>ia</i>,<i>ix</i>), <i>ia</i>=1,NA),</nobr></td>
+	<td></td>
+		<td><nobr>(for <i>ix</i>=1,NX)</nobr></td>
+</tr><tr valign="top"><td></td>
+		<td><nobr>IDENT(<i>if</i>), LOGBTA(<i>if</i>),</nobr></td>
+	<td></td>
+		<td></td>
+</tr><tr valign="top"><td></td>
+		<td align="right"><nobr>&nbsp;&nbsp;(P(<i>ia</i>,<i>if</i>), <i>ia</i>=1,NA),</nobr></td>
+	<td></td>
+		<td><nobr>(for <i>if</i>=1,NF)</nobr></td></tr>
+<tr valign="top"><td></td><td><hr></td><td></td><td><hr></td></tr>
+</table>
+
+<p class="cont">
+where:</p>
+
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td><nobr>NA&nbsp;=&nbsp;</nobr></td><td>number of chemical components (the last SOLIDC components are assumed to
+	be solid phases).</td>
+</tr></table>
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td><nobr>NX&nbsp;=&nbsp;</nobr></td><td>number of soluble complexes.</td>
+</tr></table>
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td><nobr>NF&nbsp;=&nbsp;</nobr></td><td>number of solid products.</td>
+</tr></table>
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td><nobr>SOLIDC&nbsp;=&nbsp;</nobr></td>
+  <td>number of components which are solids (the last SOLIDC components are assumed to
+	be solid phases).</td>
+</tr></table>
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td><nobr>IDENT(<i>i</i>)&nbsp;=&nbsp;</nobr></td><td>name for species <i>i</i>.</td>
+</tr></table>
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td><nobr>LOGBTA(<i>i</i>)&nbsp;=&nbsp;</nobr></td><td>log&#946; for species
+	<nobr><i>i,</i></nobr> where &#946; = global
+	equilibrium constant of formation.</td>
+</tr></table>
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td><nobr><nobr>P(<i>j,i</i>)</nobr>&nbsp;=&nbsp;</nobr></td><td>formula units (stoichiometric coefficient)
+for reaction <i>i</i> and <nobr>component&nbsp;<i>j</i>.</nobr></td>
+</tr></table>
+
+<p><a name="Solids_Last"></a>
+<b>Important:</b> <b>solids are given after soluble species.</b> This means
+that the SOLIDC component names are given after soluble ones (for example,
+<nobr>H+,</nobr> <nobr>Ca+2,</nobr> <nobr>CaCO3(s)),</nobr>
+and solid products are given after any aqueous species.  <b>Examples:</b>
+a system <a href="SP_Diagr_Log.htm">without solid phases</a>, and a system
+<a href="SP_Diagr_Solubl.htm">with <nobr>solids</a>.</nobr></p>
+
+<p>Although this appears complicated, it is quite simple:
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;</tt>&#8722;&nbsp;</td>
+	<td>the first line specifies the number of components, dissolved species, and solids;</td>
+</tr><tr valign="top"><td><tt>&nbsp;&nbsp;</tt>&#8722;&nbsp;</td>
+	<td>the names of each component are given next;</td>
+</tr><tr valign="top"><td><tt>&nbsp;&nbsp;</tt>&#8722;&nbsp;</td>
+	<td>this is followed by one line for each species: the name, the equilibrium
+	constant and the stoichiometry.</td>
+</tr></table>
+</p>
+
+<p>A <b>comment</b> at the end of the first line may be used to
+indicate for what <a href="DB_Temperature.htm">temperature</a>
+the equilibrium constants are given, for example &#147;<tt>/ t=50</tt>&#148;.</p>
+</body>
+</html>

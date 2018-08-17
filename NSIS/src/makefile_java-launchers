@@ -1,0 +1,76 @@
+
+.SUFFIXES: .nsi .exe
+
+win=..\..\..\Windows-files
+pa=..\..\..\Windows-files\PortableApps_exe
+s=.\PortableApps\Other\Source
+NSIS=\PortableApps\NSISPortable\App\NSIS\makensisw
+
+{}.nsi{$(win)}.exe:
+  if exist $@  del $@ > nul
+  call $(NSIS) $(*B).nsi
+
+
+all : $(pa)\DatabasePortable.exe $(pa)\SpanaPortable.exe \
+      $(win)\AddShowReferences.exe \
+      $(win)\Chem_Diagr_Help.exe \
+      $(win)\DataBase.exe \
+      $(win)\DataMaintenance.exe \
+      $(win)\ShellChangeNotify.exe \
+      $(win)\Spana.exe \
+      $(win)\SED.exe \
+      $(win)\Predom.exe
+
+$(pa)\DatabasePortable.exe : $(s)\DatabasePortable.nsi \
+                             $(s)\DatabasePortable.gif \
+                             $(s)\DatabasePortable.ico
+  @if exist $@  del $@ > nul
+  call $(NSIS) $(s)\$(*B).nsi
+  @if exist $(s)\$(*B).exe move /y $(s)\$(*B).exe $@ >nul
+
+$(pa)\SpanaPortable.exe : $(s)\SpanaPortable.nsi \
+                             $(s)\SpanaPortable.gif \
+                             $(s)\SpanaPortable.ico
+  @if exist $@  del $@ > nul
+  call $(NSIS) $(s)\$(*B).nsi
+  @if exist $(s)\$(*B).exe move /y $(s)\$(*B).exe $@ >nul
+
+$(win)\AddShowReferences.exe : AddShowReferences.nsi images\Refs.ico
+  @if exist $@  del $@ > nul
+  call $(NSIS) $(*B).nsi
+  @if exist $(*B).exe move /y $(*B).exe $@ >nul
+
+$(win)\Chem_Diagr_Help.exe : Chem_Diagr_Help.nsi images\Help.ico
+  @if exist $@  del $@ > nul
+  call $(NSIS) $(*B).nsi
+  @if exist $(*B).exe move /y $(*B).exe $@ >nul
+
+$(win)\DataMaintenance.exe : DataMaintenance.nsi images\Data.ico
+  @if exist $@  del $@ > nul
+  call $(NSIS) $(*B).nsi
+  @if exist $(*B).exe move /y $(*B).exe $@ >nul
+
+$(win)\DataBase.exe : DataBase.nsi images\DataBase.ico
+  @if exist $@  del $@ > nul
+  call $(NSIS) $(*B).nsi
+  @if exist $(*B).exe move /y $(*B).exe $@ >nul
+
+$(win)\SED.exe : SED.nsi images\SED.ico
+  @if exist $@  del $@ > nul
+  call $(NSIS) $(*B).nsi
+  @if exist $(*B).exe move /y $(*B).exe $@ >nul
+
+$(win)\Predom.exe : Predom.nsi images\Predom.ico
+  @if exist $@  del $@ > nul
+  call $(NSIS) $(*B).nsi
+  @if exist $(*B).exe move /y $(*B).exe $@ >nul
+
+$(win)\Spana.exe : Spana.nsi images\Spana_diagram.ico
+  @if exist $@  del $@ > nul
+  call $(NSIS) $(*B).nsi
+  @if exist $(*B).exe move /y $(*B).exe $@ >nul
+
+$(win)\ShellChangeNotify.exe : ShellChangeNotify.nsi images\Folder.ico
+  @if exist $@  del $@ > nul
+  call $(NSIS) $(*B).nsi
+  @if exist $(*B).exe move /y $(*B).exe $@ >nul

@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Installing and Uninstalling</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50"><a name="Top">
+    <a href="0_Index.htm"><img src="images/thco35_s.gif" border="0" width="32" height="32" alt="Chem.Eq.Diagr"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="0_Index.htm">Chemical Equilibrium Diagrams</a></font></td>
+  </tr>
+</table>
+
+<h2></a>DATABASE/SPANA:<br>
+Installing and Uninstalling</h2>
+
+<ul>
+<li><a href="#Distri">Distribution and installing</a></li>
+<li><a href="#INI">INI-files</a></li>
+<li><a href="#CFG">CFG-files</a></li>
+<li><a href="#File_ass">File associations</a></li>
+<li>Installing on a:
+<ul>
+<li><a href="#Run_Netw">Network server</a></li>
+<li><a href="#Run_CDROM">CD-ROM</a></li>
+<li><a href="#Run_USB">USB memory</a></li>
+</ul>
+</li>
+<li><a href="1_Problems.htm">Problems when running DataBase/Spana?</a></li>
+<li><a href="#Uninstall">Uninstalling</a></li>
+</ul>
+
+<a name="Distri"></a>
+<hr><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<h3>Distribution and installing:</h3>
+
+<p>The software is distributed through the Internet at:</nobr></p>
+
+<p class="indent"><a class="www" target="_blank" href="https://www.kth.se/che/medusa/">www.kth.se/che/medusa</a></p>
+
+<p class="indent"><a class="www" target="_blank" href="https://sites.google.com/site/chemdiagr/">sites.google.com/site/chemdiagr</a></p>
+
+<p class="indent"><a class="www" target="_blank" href="https://sourceforge.net/projects/eq-diagr/">sourceforge.net/projects/eq-diagr</a></p>
+
+<ul style="margin-top:10pt"></ul>
+<li><b>Windows:</b> the setup program allows you to make either a standard
+or a <a href="#Run_USB">portable</a> installation.
+For a standard installation the setup program will make the program group
+<nobr>&#147;Equilibrium</nobr> <nobr>Diagrams (java)&#148;</nobr>
+with the necessary icons (shortcuts). Optionally it will also
+<a href=*#File_ass">associate</a> &#147;plt&#148; and  &#147;dat&#148; files with
+<a href="S_0_Main.htm">Spana</a>.
+You can later change these file associations using the menu &#147;Preferences /
+General options&#148; in Spana.</li>
+<li><b>Ubuntu (Linux):</b> copy the <b>non-system specific zip-file</b> to your home directory <nobr>(&#126;).</nobr>
+Double click to open the zip-file.
+Extract the files to your home directory.  Make sure that
+the &#147;Re-create folders&#148;
+and &#147;Overwrite existing files&#148; actions are checked.
+Follow the instructions in the file <nobr>&#147;<tt>Readme_Ubuntu.txt</tt>&#148;.</nobr>
+</li>
+<li><b>Mac OS:</b>
+<ul>
+<li><b>MacOS zip-file:</b> it contains Mac app bundles with icons for <a href="DB_0_Main.htm">DataBase</a>
+and <a href="S_0_Main.htm">Spana</a>. This is perhaps most intuitive for Mac users.</li>
+<li><b>Non-system specific zip-file:</b> copy the zip-file to your desktop.
+Double click to open and un-zip the file.
+Follow the instructions in the file <nobr>&#147;<tt>Readme_MacOS.txt</tt>&#148;.
+Afterwards you may create aliases on the desktop, etc.</li>
+</ul>
+</li>
+</ul>
+
+<a name="INI"></a>
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td><hr> <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+</td><td width="20" align="right">
+<a href="#Top">
+<img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</td></tr></table>
+
+<h3 style="margin-top:0">INI-files and Environment Variables</h3>
+
+<p><b>&#147;ini&#148;-files</b> (for example&nbsp; <nobr>&#147;<tt>.spana.ini</tt>&#148;&nbsp;</nobr>
+and&nbsp;
+<nobr>&#147;<tt>.dataBase.ini</tt>&#148;)</nobr> keep track of the user&rsquo;s preferences,
+the default directory, the databases, etc. <b>&#147;ini&#148;</b>-files are created in the
+installation directory. However, if the programs are installed on a system folder, or on a
+<a href="#Run_Netw">Network</a> disk, or on a <b>CD</b>, then the &#147;ini&#148;-files in the installation
+directory will be read-only, and the programs will try to save
+the user&rsquo;s preferences in directories specified
+in environment variables, etc. The sequence is:
+<ul type="disc">
+<li>The installation directory</li>
+<li><nobr><tt>%HOMEDRIVE%%HOMEPATH%</tt></nobr></li>
+<li><nobr><tt>%HOME%</tt></nobr></li>
+<li><nobr>The user's home directory (system dependent)</nobr></li>
+</ul>
+Note: except for the installation directory, &#147;ini&#148;-files will be
+writen in a sub-folder named <nobr>&#147;<tt>.config\eq-diagr</tt>&#148;.</nobr></p>
+
+<p>A warning message will be displayed if no &#147;ini&#148;-file is found,
+or if it can not be written anywhere.
+See also <a href="#INI">&#147;cfg&#148;-files</a></b> below.</p>
+
+<p><b>DataBase:</b> if an &#147;ini&#148;-file <nobr>(<tt>.dataBase.ini</tt>)</nobr>
+is found in the installation directory (that is, where
+<tt>DataBase.jar</tt> is found) then this file is always used to read the dabase
+names. On a <a href="#Run_Netw">Network</a> server this file would contain
+settings common for all users. A&nbsp;personal &#147;ini&#148;-file
+(either in <nobr><tt>%HOMEDRIVE%%HOMEPATH%</tt></nobr>, or in
+the user&rsquo;s home directory) then provides
+personal settings for each user: the default directory,
+the start position of the DataBase-window, etc.</p>
+
+<a name="CFG"></a>
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td><hr> <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+</td><td width="20" align="right">
+<a href="#Top">
+<img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</td></tr></table>
+
+<h3 style="margin-top:0">CFG-files</h3>
+
+<p><b>&#147;cfg&#148;-files</b> are used to configure program behaviour.
+They are plain text files which you can change with any text editor.
+The configuration parameters are:
+<ul type="disc">
+<li><tt>Debug</tt>: if set to <code>true</code>, verbose debugging output will be printed by
+the corresponding program.  Default is <i>false</i>.  Note: this program behaviour is also
+obtained when using the <a href="SP_Batch_Mode.htm"><nobr>&#147;<tt>-dbg</tt>&#148;</nobr>
+command-line argument.</a></li>
+<li><code>SaveIniFileToApplicationPathOnly</code>: if set to <code>true</code>, then the
+<a href="#INI">ini-file</a> will only be saved to the installation directory.
+Default is <i>false</i>. If this parameter is <code>true</code>, and the installation
+directory is write-protected, <nobr>e.g.</nobr> if it is a <nobr>CD-ROM,</nobr>
+then the ini-file will not be saved.
+See also the <b><a href="#INI">&#147;ini&#148;-files</a></b> description above.</li>
+</ul>
+If a &#147;cfg&#148;-file does not exist for a given program, the default values
+given above are used, and the &#147;cfg&#148;-file is created in the installation directory
+(unless the directory is write-protected).</p>
+
+
+<a name="File_ass"></a>
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td><hr> <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+</td><td width="20" align="right">
+<a href="#Top">
+<img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</td></tr></table>
+
+<h3 style="margin-top:0">File associations</h3>
+
+<p>On <b>Windows,</b> files with extension <nobr>&#147;<tt>plt</tt>&#148;</nobr> and
+<nobr>&#147;<tt>dat</tt>&#148;</nobr> may be automatically
+associated with <a href="S_Interacting_w_Windows.htm">Spana</a> when running the setup program.
+Note, however, these associations might be in conflict with other software.</p>
+<p>To <b>add</b> or <b>remove</b> file associations use the <i>advanced</i> program level
+in the menu &#147;Preferences / <nobr>General
+options&#148;</nobr> in <a href="S_Interacting_w_Windows.htm">Spana.</a></p>
+
+<a name="Run_Netw"></a>
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td><hr> <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+</td><td width="20" align="right">
+<a href="#Top">
+<img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</td></tr></table>
+
+<h3 style="margin-top:1.5ex">Installing on a Network server</h3>
+
+<p>All the files and sub-directories created during the installation can
+be moved by the system administrator to a network disk,
+which should be read-only to normal users. Alternatively the software could be
+installed directly to the final location by the administrator.
+Shortcuts should be modified, if necessary, to point to the correct location
+<nobr>(i.e.,</nobr> to the network directory).
+Environment variables should be defined
+so that <nobr>&#147;<a href="#INI">ini&#148;-files</a></nobr> may be saved
+to appropriate location.
+</p>
+
+<a name="Run_CDROM"></a>
+<h3 style="margin-top:1.5ex; margin-bottom:1ex;">Installing on a CD-ROM</h3>
+<p>You may burn the installation files to a CD.
+&#147;<a href="#INI">Ini&#148;-files</a> will be created when you run the software as described
+<nobr><a href="#INI">above</a>.</nobr> Because the CD is a read-only memory,
+&#147;ini&#148;-files will be created locally in the computer where the CD is inserted.</p>
+
+<p>If you do not want &#147;<a href="#INI">Ini&#148;-files</a> created on the local computer,
+then before burning the CD, run first all programs (Spana, DataBase, etc) from
+the hard-disk, and then edit the <a href="#CFG">configuration files</a> created
+<nobr>(<tt>Spana.cfg</tt>,</nobr> <nobr><tt>DataBase.cfg</tt></nobr>, etc) and
+change <tt>SaveIniFileToApplicationPathOnly</tt>
+from <tt>false</tt> to <tt>true</tt> and burn these files also to the CD. In this way
+local &#147;ini&#148;-files will not be created, but an error message will be
+displayed when ending each program, explaining that the &#147;ini&#148;-file could not be saved.
+</p>
+
+<a name="Run_USB"></a>
+<h3  style="margin-top:1.5ex; margin-bottom:1ex;">Installing on a USB memory</h3>
+
+<p>The programs may be installed on any removable memory.</p>
+<p><b>Windows:</b> Choose the option &#147;Portable application&#148; in the setup program.</p>
+<p>If the <nobr>&#147;<a class="www" target="_blank" href="http://PortableApps.com">PortableApps.com</a>&#148;</nobr>
+plattform is found on the removable drive, Spana/DataBase will be installed following the
+<a class="www" target="_blank" href="http://portableapps.com/about/what_is_a_portable_app">portable apps</a>
+directory structure.</p>
+
+<p>If the <nobr>&#147;<a class="www" target="_blank" href="http://PortableApps.com">PortableApps.com</a>&#148;</nobr>
+plattform is NOT found, the software will be copied into a single folder on the USB drive.
+To run Spana open the USB directory with the file explorer
+and double-click on the file &#147;<tt>Spana&shy;<nobr>Portable.exe</tt>&#148;.</nobr></p>
+
+<p><b>Ubuntu (Linux)</b> and <b>Mac OS:</b> just copy all files to the removable drive. If Java
+is installed on the local Macintosh or Linux, then double-clicking on a &#147;jar&#148;-file
+in the USB memory will start the program.</p>
+
+<p style="margin-bottom:0">
+For all systems: <nobr>&#147;<a href="#INI">ini&#148;-files</a></nobr> will be created
+on the USB memory when you run the software.</p>
+
+<a name="Uninstall"></a>
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td><hr> <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+</td><td width="20" align="right">
+<a href="#Top">
+<img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</td></tr></table>
+
+<h3 style="margin-top:0">Uninstalling</h3>
+
+<ul style="margin-top:10pt">
+<li><b>Windows:</b>
+<ul>
+<li> Several possibilities:
+<ol Type="a">
+<li>Run the &#147;Uninstall&#148; program.
+The shortcut is found in the Start-menu program group; normally
+&#147;Equilibrium <nobr>Diagrams (java)&#148;.</nobr></li>
+<li>Alternative: open the installation directory with the file explorer and
+double-click on the file <nobr>&#147;<tt>Uninstall.exe</tt>&#148;.</nobr></li>
+<li>It should also be possible to use the &#147;add-remove programs&#148; function
+in Windows&rsquo; control panel, but this might not work if you installed
+the software at two or more locations on the same computer.</li>
+</ol>
+Any of these methods will remove the files installed, as well as shortcuts,
+&#147;ini&#148;-files, file associations and any registry keys.</li>
+
+<li>Note that <nobr>&#147;Uninstall&#148;</nobr> may not do a perfect
+job in some special cases, for example if you installed the software at two
+or more locations on the same computer, or if you have modified <a href="#INI">environmental
+variables.</a>
+</li>
+
+<li>As a last option you could delete the installation directory
+(perhaps <nobr><tt>C:\Users\MyName\Eq-Diagr</tt>)</nobr>
+with all its files and sub-directories, but this will <u>not</u> remove shortcuts,
+file associations, registry keys, nor &#147;ini&#148;-files outside the
+installation directory.</li>
+</ul>
+</li>
+<li><b>Removable drives (USB memory):</b>  just delete the installation
+directory with all its files. Remember to back-up any data files and diagrams
+you might have stored in that folder!</li>
+<li><b>Ubuntu (Linux)</b> and <b>Mac&nbsp;OS:</b> Move to trash the installation folder,
+but remember to back-up any data files and diagrams you might have stored in that folder!
+Delete also any desktop shortcuts (aliases on MacOS).</li>
+</ul>
+
+<p style="text-align:right; line-height:0; margin-top:0; margin-bottom:0">
+<a href="#Top"><img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</p>
+</body>
+</html>

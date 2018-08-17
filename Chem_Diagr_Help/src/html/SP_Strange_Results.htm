@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Strange results?</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <a href="SP_Special_Cases.htm">Special&nbsp;Cases</a></font></td>
+  </tr>
+</table>
+
+<h3>Strange results?</h3>
+
+<p>Strange (but correct) results may be obtained in some cases:</p>
+<ul>
+<li><p><b>Fraction diagrams for components that may have negative concentrations:</b> 
+		When requesting a fraction diagram for <nobr>H<sup>+</sup>,</nobr> the plot
+    has <nobr><i>Y</i>-axis</nobr> limits between 0 and 1 (0% to <nobr>100%).</nobr>
+    However, negative values, or even values &gt;1 are possible. Consider the
+		definition of fraction of <nobr>H<sup>+</sup>,</nobr> <nobr>&#945;(<i>i</i>),</nobr> 
+    bound to the different species in the system
+    <nobr>H<sup>+</sup>/HCO<sub>3</sub><sup>&#8722;</sup>:</nobr>
+		<table cellspacing="0" cellpadding="0" border="0">
+			<tr valign="baseline"> <td><tt>&nbsp;&nbsp;</tt></td>
+					<td><nobr>HCO<sub>3</sub><sup>&#8722;</sup> &#8722; H<sup>+</sup>
+									&#8596;
+									CO<sub>3</sub><sup>2&#8722;</sup></nobr></td>
+					<td><tt>&nbsp;</tt></td>
+					<td><nobr>&#945;(CO<sub>3</sub><sup>2&#8722;</sup>) = &#8722; [CO<sub>3</sub><sup>2&#8722;</sup>]/[H<sup>+</sup>]<sub>TOT</sub></nobr></td>
+					</tr>
+			  <tr valign="baseline"> <td></td>
+					<td><nobr>HCO<sub>3</sub><sup>&#8722;</sup>  + H<sup>+</sup>
+									&#8596;
+                  H<sub>2</sub>CO<sub>3</sub></nobr></td>
+					<td></td>
+					<td><nobr>&#945;(H<sub>2</sub>CO<sub>3</sub>) = [H<sub>2</sub>CO<sub>3</sub>]/[H<sup>+</sup>]<sub>TOT</sub></nobr></td>
+					</tr>
+			  <tr valign="baseline"> <td></td>
+					<td><nobr>H<sub>2</sub>O  &#8722; H<sup>+</sup>
+              &#8596; OH<sup>&#8722;</sup></nobr></td>
+					<td></td>
+					<td><nobr>&#945;(OH<sup>&#8722;</sup>) = &#8722;[OH<sup>&#8722;</sup>]/[H<sup>+</sup>]<sub>TOT</sub></nobr></td>
+					</tr>
+				</table>
+	  the value of <nobr>[H<sup>+</sup>]<sub>TOT</sub></nobr> (the total concentration
+	  of <nobr>H<sup>+</sup>)</nobr> might be positive (in acid solutions) or negative
+	  (in alkaline solutions). Therefore in a fraction diagram for the component
+	  <nobr>&#147;H<sup>+</sup>&#148;,</nobr> the fraction values might be negative
+	  or even larger than&nbsp;one!</p></li>
+<li><p><b>Activity ratio diagrams:</b> a diagram that might seem strange (but correct),
+		is the case of the example input file <nobr>EX7.DAT,</nobr> where the activity
+    ratio for the solid phase <nobr>Cu(OH)<sub>2</sub>(s)</nobr> is greatest,
+    but the activity of the solid is nevertheless less than one, and the solid
+    is <u>not</u> present at equilibrium.</p></li>
+<li><p><b>Predominance area diagrams:</b> in some special cases, two solid phases
+		might coexist containing exactly the same amount of metal. In that case, no solid
+		predominates, and some parts of the lines will be missing in the predominance
+		area diagram. For example, on a system with <nobr>H<sup>+</sup>,</nobr>
+		<nobr>e&#8722;,</nobr> <nobr>Fe<sup>2+</sup>,</nobr> <nobr>Ni<sup>2+</sup></nobr> and
+		<nobr>Cr<sup>3+</sup>,</nobr>  <nobr>Fe<sub>3</sub>O<sub>4</sub>(s)</nobr> and
+		<nobr>NiFe<sub>2</sub>O<sub>4</sub>(s)</nobr> might co-exist.<p></li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Data-File format</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a></font></td>
+  </tr>
+</table>
+
+<h2>Input Data-File format</h2>
+
+<p>Input data files for <a href="SP_SED.htm">SED</a> and
+<a href="SP_PREDOM.htm">PREDOM</a> have names ending with
+<nobr>&#147;<b>dat</b>&#148;.</nobr></p>
+
+<p>Data files are plain text files and may be edited with any text editor.</p>
+
+<p><a href="SP_Names_Numbers.htm">How to write <i>Names and Numbers</i></a>&nbsp;
+in data files.</p>
+
+<p>Structure of data files:</p>
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+		<td><nobr><b>1</b>)&nbsp;</nobr></td>
+		<td><nobr><a href="SP_Data_File_Chemical_System.htm">the chemical system</a></nobr></td>
+</tr><tr valign="top"><td></td>
+		<td><nobr><b>2</b>)&nbsp;</nobr></td>
+		<td><a href="SP_Data_File_Plot.htm">diagram type</a> and</td>
+</tr></tr><tr valign="top"><td></td>
+		<td><nobr><b>3</b>)&nbsp;</nobr></td>
+		<td><a href="SP_Data_File_Concs.htm">concentrations for each chemical component</a>.</td>
+</tr></table>
+
+<p><b>Title:</b> The first line after the concentrations (if found, and not empty)
+is used as a <b><u>title</u></b> for the diagram. After that, any number of lines
+with comments may be added.</p>
+
+<p>Several input file <a href="Tut_Example_Files.htm">examples</a> are found in subdirectory
+<nobr>&#147;.<tt>\EXAMPLES</tt>&#148;.</nobr></p>
+
+<p>Using <a href="DB_0_Main.htm">DATABASE</a> is the easiest way to create data files:
+from equilibrium constants available in an electronic database.
+The program <a href="S_0_Main.htm">SPANA</a> may be used to
+<a href="S_Modify_Chem_System.htm">modify the chemical system</a>:
+remove components, interchange components for reaction products, deactivate species, etc.</p>
+
+</body>
+</html>

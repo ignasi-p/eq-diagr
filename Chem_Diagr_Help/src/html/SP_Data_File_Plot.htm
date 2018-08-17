@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Data-File format: Plot definition</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <nobr><a href="SP_Data_File_Format.htm">Input data-file format</a></nobr></font></td>
+  </tr>
+</table>
+
+<h3>Data file structure:  Plot definition</h3>
+
+<p>Input files consist of: <nobr><b>1)</b></nobr> definition of the
+<a href="SP_Data_File_Chemical_System.htm">chemical <nobr>system</a>;</nobr>
+<nobr><b>2)</b></nobr> plot information; and <nobr><b>3)</b></nobr>
+<a href="SP_Data_File_Concs.htm">concentrations</a> (ranges)
+for the chemical components.</p>
+
+<p>The <b>plot definition</b> differs between <a href="SP_SED.htm">SED</a> and
+<nobr><a href="SP_PREDOM.htm">PREDOM</a>:</nobr></p>
+
+<p><i>Data to be entered for <nobr></i>SED:</i></nobr></p>
+<p class="indent"><nobr>YCOMP, [Ymin, Ymax,] [EH,] XCOMP,</nobr></p>
+
+<p><i>Data to be entered for </i>PREDOM:</p>
+<p class="indent">
+<nobr>[EH,] [ONE AREA, NAME,]</nobr><br>
+<nobr>YCOMP, XCOMP, MCOMP,</nobr>
+</p>
+<p>where data within [] are optional. A complete explanation is available for
+<a href="SP_SED_Input_File_Format.htm">SED</a> and
+<nobr><a href="SP_PREDOM_Input_File_Format.htm">PREDOM</a>.</nobr></p>
+
+<p>A list of possible diagram types may be obtained from SED or PREDOM by
+entering a <nobr>&#147;?&#148;</nobr> in the plot-definition input line, and
+running the program (this will make SED or PREDOM complain that
+<nobr>&#147;?&#148;</nobr> is not an acceptable
+diagram type, and the program will print a list of valid
+choices for the plot definition).</p>
+
+</body>
+</html>

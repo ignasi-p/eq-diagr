@@ -1,0 +1,36 @@
+
+jh=.\src\javahelp
+jar=\PortableApps\NetBeans_JavaSE_8.0_Portable\App\jdk\bin\jar
+
+.\store\Chem_Diagr_Help.jar : $(jh)\*.xml  $(jh)\*.hs  $(jh)\*.jhm  indexer_output.log
+	@cd src
+	@echo current dir: $(MAKEDIR)\src
+	@echo.==== Updating jar-file
+	@echo jar uvf  ..\store\Chem_Diagr_Help.jar  html\*.*
+	@rem
+	@echo current dir: >$(MAKEDIR)\jar_output.log
+	@echo $(MAKEDIR)\src >>$(MAKEDIR)\jar_output.log
+	@echo jar uvf ..\store\Chem_Diagr_Help.jar html\*.* >>$(MAKEDIR)\jar_output.log
+  @echo. ----- >>$(MAKEDIR)\jar_output.log
+	@$(jar) uvf ..\store\Chem_Diagr_Help.jar html\*.* >>$(MAKEDIR)\jar_output.log
+	@rem
+  @echo jar uvf  ..\store\Chem_Diagr_Help.jar  javahelp\*.*
+	@rem
+  @echo. ----- >>$(MAKEDIR)\jar_output.log
+	@echo current dir: >>$(MAKEDIR)\jar_output.log
+	@echo $(MAKEDIR)\src >>$(MAKEDIR)\jar_output.log
+  @echo jar uvf ..\store\Chem_Diagr_Help.jar javahelp\*.* >>$(MAKEDIR)\jar_output.log
+  @echo. ----- >>$(MAKEDIR)\jar_output.log
+	@$(jar) uvf ..\store\Chem_Diagr_Help.jar javahelp\*.*  >>$(MAKEDIR)\jar_output.log
+  @echo. ----- >>$(MAKEDIR)\jar_output.log
+	@rem
+  @echo jar uvf  ..\store\Chem_Diagr_Help.jar  javahelp\JavaHelpSearch\*.*
+	@rem
+	@echo current dir: >>$(MAKEDIR)\jar_output.log
+	@echo $(MAKEDIR)\src >>$(MAKEDIR)\jar_output.log
+  @echo jar uvf ..\store\Chem_Diagr_Help.jar javahelp\JavaHelpSearch\*.* >>$(MAKEDIR)\jar_output.log
+  @echo. ----- >>$(MAKEDIR)\jar_output.log
+	@$(jar) uvf ..\store\Chem_Diagr_Help.jar javahelp\JavaHelpSearch\*.*  >>$(MAKEDIR)\jar_output.log
+	@rem
+  @echo.^ ^ ^ (finished, see log-file "jar_output.log")
+	@cd ..

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Davies equation</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <a href="SP_Ionic_Strength.htm">Ionic Strength</a></font></td>
+  </tr>
+</table>
+
+<p>The <b>Davies equation</b> is an empirical equation appropriate
+for ionic strengths up to <nobr>&asymp;0.1 M:</nobr>
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;</tt></td>
+	<td valign="top"><nobr>log &#947;<sub><i>i</i></sub><font size="+2"> </font>= </nobr></td>
+	<td valign="top"><nobr>&#8722;0.5<font size="+2"> </font><i>Z<sub>i</sub></i><sup>2</sup></nobr>
+	<nobr><font size="+2">(</font>&#8730;<b><i>I</i></b> &nbsp;/
+		<font size="+1">&nbsp;(</font>1+&#8730;<b><i>I</i></b>
+		<font size="-2"> </font>
+		<font size="+1">) &#8722;&nbsp;0.3 <b><i>I</i></b></font>
+		<font size="+2">)</font></nobr>
+</td></tr></table></p>
+
+<p class="cont">
+where <b><i>I</i></b> is the <a href="SP_Ionic_Strength.htm">ionic strength</a>;
+<nobr>&#947;<sub><i>i</i></sub></nobr> is the
+<a href="SP_Ionic_Strength.htm#Act_Coef">activity coefficient</a> of an
+ion &#147;<i>i</i>&#148; with electric charge <nobr><i>Z<sub>i</sub></i>.&nbsp;</nobr>
+The last parameter was initially <nobr>&#147;0.2&#148;</nobr> 
+(Davies, C.W. (1938) <i><nobr>J. Chem.</nobr> Soc.</i>, 2093-<nobr>2098),&nbsp;</nobr>
+but later Davies changed it to <nobr>&#147;0.3&#148;</nobr> (Davies, C.W. (1962) <i>Ion Association.</i>
+London: Butterworths. <nobr>p.41).</nobr>
+</p>
+
+<p>
+The <b>Davies equation</b> is derived from the
+<a href="SP_Ionic_Strength_DH.htm">Debye-H&uuml;ckel <nobr>model</a>,</nobr>
+simplified by setting <nobr><i>&aring;B<sub>&#947;</sub></i></nobr> =&nbsp;1
+for all electrolytes, and extended with the empirical term:
+<nobr>+0.15<font size="-2">&nbsp;</font><i>Z<sub>i</sub></i><sup>2</sup><font size="-2">&nbsp;</font><i><b>I</b></i>.</nobr>
+</p>
+
+<p>In <a href="S_0_Main.htm">SPANA</a>
+(and <nobr><a href="SP_0_Main.htm">SED/PREDOM</a>)</nobr> the parameter
+<nobr>&#147;0.5&#148;</nobr> is replaced by the temperature-dependent
+solvent parameter <nobr>&#147;<i>A</i>&#148;</nobr> of the 
+<a href="SP_Ionic_Strength_DH.htm">Debye-H&uuml;ckel<nobr> model</a>
+<nobr>(<i>A</i>=0.509</nobr> at <nobr>25&deg;C);</nobr>
+but the value <nobr>&#147;0.3&#148;</nobr> in the last term of the equation
+is kept temperature-independent.
+</p>
+
+<p>The activity of water <nobr>(H<sub>2</sub>O) is given by:</nobr>
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td valign="top"><nobr>log <i>a</i><sub>H<sub>2</sub>O</sub><font size="+1"> </font>= </nobr></td>
+	<td valign="top"><nobr>&#8722; &Phi; &#8721;<i>m<sub>k</sub></i>&nbsp;/</nobr>
+		<nobr><font size="+1">(</font>ln(10)&nbsp;55.508<font size="+1">)</font></nobr>
+</td></tr></table></p>
+
+<p class="cont">
+where &#147;<i>k</i>&#148; are all solute species in the aqeuous solution, and &#147;&Phi;&#148;
+is the osmotic coefficient, which for the <b>Davies equation</b> it is given by:
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td valign="top"><nobr>&Phi;<font size="+1"> </font>= </nobr></td>
+	<td valign="top">1 &#8722; <nobr>(2/3)</nobr> <nobr><font size="+1">(</font>ln(10)/&#8721;<i>m<sub>k</sub></i><font size="+1">)</font></nobr>
+		<nobr><i>A</i>&nbsp;<b><i>I</i></b><sup>3/2</sup></nobr>
+		<nobr><i>&sigma;</i>(&#8730;<b><i>I</i></b>)</nobr>
+          <nobr>+&nbsp;<font size="+1">(</font>ln(10)/&#8721;<i>m<sub>k</sub></i><font size="+1">)</font>
+					<i>A</i>&nbsp;0.3&nbsp;<b><i>I</i></b><sup>2</sup></nobr>
+</td></tr></table></p>
+<p class="cont">where
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td valign="top"><nobr>&sigma;</i>(<i>x</i>)<font size="+2"> </font>= </nobr></td>
+	<td valign="top"><nobr>(3/<i>x</i><sup>3</sup>)</nobr> <nobr><font size="+2">(</font>(1+<i>x</i>)</nobr> <nobr>&#8722; 1/(1+<i>x</i>)</nobr> <nobr>&#8722; 2 ln(1+<i>x</i>)<font size="+2">)</font></nobr>
+</td></tr></table></p>
+
+<p>Note that in the calculations the values of <nobr>log <i>&#947;<sub>i</sub></i></nobr>
+are cut-off to be in the range <nobr>&plusmn;(20 <i>Z<sub>i</sub></i><sup>2</sup>),</nobr> and
+<nobr>log <i>a</i><sub>H<sub>2</sub>O</sub></nobr> is cut-off to be in the
+range &plusmn;4.</p>
+<p><hr><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --></p>
+
+<p style="margin-top: 0 ex">
+<a href="SP_Ionic_Strength.htm#Models">
+<img src="images/Back.gif" alt="back" title="back" height="13" width="16" border="0"></a>
+<tt>&nbsp;</tt><a href="SP_Ionic_Strength.htm#Models">Models</a> for activity coefficients</p>
+
+<p style="margin-top: 0 ex">
+<a href="SP_log_gamma.htm"><img src="images/Back.gif" alt="back" title="back" height="13" width="16" border="0"></a>
+<tt>&nbsp;</tt><a href="SP_log_gamma.htm">Comparison</a> between experimental data and models</p>
+
+</body>
+</html>

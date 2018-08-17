@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Log Activity Diagram (H+,CO2)</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="top">
+    &nbsp;<a href="S_0_Main.htm"><img src="images/Spana.gif" width="30" height="30" border="0" alt="Spana"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="S_0_Main.htm">SPANA</a>&nbsp;/ <a href="S_Modify_Chem_System.htm"><nobr>Modify Chem. System</nobr></a></font></td>
+  </tr>
+</table>
+
+<p>Example of a <b>log activity diagram</b> showing the <a href="SP_Activity.htm">activities</a>
+(on a logarithmic scale) for all species in the system <nobr>H<sup>+</sup>,</nobr>
+<nobr>CO<sub>2</sub>(g).</nobr> Note that the component
+<nobr>CO<sub>3</sub><sup>2&#8722;</sup></nobr> in DATABASE has been
+<a href="S_Modify_Chem_System.htm">exchanged for a reaction</a>,
+in this case for <nobr>CO<sub>2</sub>(g).</nobr></p>
+
+<p><center>
+<img src="images/Diagr_LogaCO2.gif" border="1" alt="Diagram H+ / CO2" title="Diagram H+ / CO2" height="215" width="343">
+</center></p>
+
+<p>Note that for gases the <i>fugacity</i> <nobr>(&#8776;</nobr> partial pressure)
+is calculated and it is displayed. The calculations consider the aqueous phase only,
+and the concentrations for gases are set to zero and they are not displayed in
+a <a href="S_Diagr_Log_CO2.htm">logarithmic diagram</a>.</p>
+
+<p><b>Note:</b> &#147;log activity diagrams&#148; can only be created with the
+<i>advanced</i> program level selected in the menu &#147;Preferences / <nobr>General
+options&#148;</nobr> in SPANA.</p>
+
+<p>The diagram displayed above was obtained with the following input file:
+<pre><code> 2 5 0 0
+H+, CO2(g)
+CO2    , -1.472   0  1
+H2CO3  , -4.247   0  1
+HCO3-  , -7.825  -1  1
+OH-    , -14.002 -1  0
+CO3 2- , -18.152 -2  1
+LAC,-9, 1, H+,
+LAV, -1 -12  LA, -3.5</code></pre>
+</p>
+</body>
+</html>

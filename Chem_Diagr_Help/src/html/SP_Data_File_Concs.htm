@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Data-File format: Concentrations</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <nobr><a href="SP_Data_File_Format.htm">Input data-file format</a></nobr></font></td>
+  </tr>
+</table>
+
+<h3>Data file structure:  Concentrations</h3>
+
+<p>Input files consist of: <nobr><b>1)</b></nobr> definition of the
+<a href="SP_Data_File_Chemical_System.htm">chemical <nobr>system</a>;</nobr>
+<nobr><b>2)</b></nobr> <a href="SP_Data_File_Plot.htm">plot
+<nobr>information</a>;</nobr> and <nobr><b>3)</b></nobr> concentrations (ranges)
+for the chemical components</p>
+
+<p><b>Concentrations</b> must be given for each chemical component
+<i>in the same order</i> as that of the name-list given at the beginning
+of the input file.</p>
+
+<p>The information needed is:  an option, followed by 1 or 2 numerical values:</p>
+
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+		<td><i>Data to be entered:</i></td>
+	<td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+		<td><i>Comments:</i></td></tr>
+<tr valign="top"><td></td><td><hr></td><td></td><td><hr></td></tr>
+<tr><td></td>
+		<td><nobr>HOW(<i>ia</i>),</nobr> <nobr><tt>&nbsp;&nbsp;</tt>CLOW(<i>ia</i>), [CHIGH(<i>ia</i>)]</nobr></td>
+	<td></td>
+		<td valign="middle"><nobr>(for <i>ia</i>=1,NA)</nobr></td>
+</tr><tr valign="top"><td></td><td><hr></td><td></td><td><hr></td></tr>
+</table>
+
+<p class="cont">
+where NA is the number of chemical components and the option HOW =
+a text describing what type of concentration is given for each
+chemical component.
+It must be one of:  T, TV, LTV, LA, or LAV:</p>
+
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td><nobr>if HOW&nbsp;=&nbsp;</nobr></td>
+		<td>T, then a fixed <nobr><b>T</b>otal</nobr> concentration for that
+      component is given in CLOW.</td>
+</tr><tr valign="top"><td></td>
+	<td><nobr>if HOW&nbsp;=&nbsp;</nobr></td>
+		<td>TV, then the <nobr><b>T</b>otal</nobr> conc. is <nobr><b>V</b>aried</nobr> for that
+		component within the minimum and maximum values: CLOW and CHIGH.</td>
+</tr><tr valign="top"><td></td>
+	<td><nobr>if HOW&nbsp;=&nbsp;</nobr></td>
+		<td>LTV, then the <nobr><b>L</b>og(<b>T</b>otal conc.)</nobr> is <nobr><b>V</b>aried</nobr> for
+		that component with the min. and max. values: CLOW and CHIGH.</td>
+</tr><tr valign="top"><td></td>
+	<td><nobr>if HOW&nbsp;=&nbsp;</nobr></td>
+		<td>LA, then the fixed <nobr><b>L</b>og(<b>A</b>ctivity)</nobr> for that
+      component is given in CLOW.</td>
+</tr><tr valign="top"><td></td>
+	<td><nobr>if HOW&nbsp;=&nbsp;</nobr></td>
+		<td>LAV, then the <nobr><b>L</b>og(<b>A</b>ctivity)</nobr> is <nobr><b>V</b>aried</nobr> for that
+		component within the limits: CLOW and CHIGH.</td>
+</tr></table>
+
+<p>See the examples for a <a href="SP_Diagr_Log.htm">logarithmic</a> and
+for a <a href="SP_Diagr_Solubl.htm">solubility</a> diagrams.</p>
+
+</body>
+</html>

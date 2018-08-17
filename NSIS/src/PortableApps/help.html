@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<head>
+<title>Portable Chemical Equilibrium Diagrams Help</title>
+<style>
+a:link {color:#008000;} /* forestgreen */
+a:visited {color:#008000;}
+a:active {color:#008000;}
+a:hover {color:#FF1493;} /* deeppink */
+a.www:link {color:#0000FF;} /* blue */
+a.www:visited {color:#0000FF;}
+a.www:active {color:#0000FF;}
+a.www:hover {color:#D2691E;} /* chocolate */
+h1 {margin-bottom:0.5em;}
+h2 {margin-bottom:0.5em;}
+h3 {margin-top:1ex; margin-bottom:1ex}
+h4 {margin-top:2ex; margin-bottom:1ex;}
+p  {line-height:2.5ex; margin-top:1ex; margin-bottom:0; text-indent:0;}
+img {border: 0;}
+tt {font-family:monospace; font-size:95%;}
+pre {font-family:monospace; font-size:90%; line-height:2ex; margin-top:0; margin-bottom:0; text-indent:0;}
+ol ol {list-style-type: lower-alpha;}
+ul {margin-left:3ex; margin-top:0; margin-bottom:0.3ex;}
+ol {margin-left:4ex; margin-top:0; margin-bottom:0.3ex;}
+li {line-height:2.5ex; margin-top:0; margin-bottom:0;}
+td p {line-height:2.5ex; margin-top:0; margin-bottom:0;} /* paragraph within table data */
+sup {text-decoration:none;	font-size:80%;}
+sub {text-decoration:none;	font-size:80%;}
+sub sub {text-decoration:none;	font-size:100%;} /* PCO2 */
+.indent {margin-left:1em; line-height:2.5ex; margin-top:0; margin-bottom:0; text-indent:0;}
+.indent2 {margin-left:2em; line-height:2.5ex; margin-top:0; margin-bottom:0; text-indent:0;}
+.cont {line-height:2.5ex; margin-top:0; margin-bottom:0; text-indent:0;}
+.mini {font-size:smaller; }
+</style>
+</head>
+<body>
+<a class="www" href="http://sites.google.com/site/chemdiagr/">
+<img src="Other/Help/images/Spana_32x32.gif" alt="Spana" title="Spana" height="32" width="32" border="0" align="right">
+</a>
+<h1>Portable Chemical Equilibrium Diagrams</h1>
+
+
+<p>Portable Spana/Database are the lightweight
+<a class="www" href="http://sites.google.com/site/chemdiagr/home/java-versions">
+Chemical Equilibrium Diagrams Software</a>
+(Java version) packaged with a
+<nobr>&ldquo;<tt><a class="www" href="http://PortableApps.com">PortableApps.com</a></tt>&rdquo;</nobr> launcher as a
+<a class="www" href="http://portableapps.com/about/what_is_a_portable_app">portable app</a>,
+so you can explore chemical equilibria in aqueous solutions from an USB flash drive,
+portable hard drive, CD or any other portable media.
+It has the same features as Spana/Database.
+Plus, it leaves no personal information behind on
+the machine you run it on, so you can take your chemical diagrams software
+wherever you go.</p>
+
+<p>
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top">
+    <td><tt>&nbsp;&bull;&nbsp;</tt></td>
+    <td><a class="www" target="_blank" href="http://PortableApps.com/apps">Get more portable apps at <nobr>PortableApps.com</nobr></a>
+    </td></tr>
+<tr valign="top">
+    <td><tt>&nbsp;&bull;&nbsp;</tt></td>
+    <td><a class="www" target="_blank" href="http://en.wikipedia.org/wiki/List_of_portable_software">Wikipedia: List of portable software</a>
+    </td></tr>
+<tr valign="top">
+    <td><tt>&nbsp;&bull;&nbsp;</tt></td>
+    <td><a class="www" target="_blank" href="http://www.portablefreeware.com">www.portablefreeware.com</a>
+    </td></tr>
+<tr valign="top">
+    <td><tt>&nbsp;&bull;&nbsp;</tt></td>
+    <td><a class="www" target="_blank" href="http://www.pendriveapps.com/">www.pendriveapps.com</a>
+    </td></tr>
+    </table>
+</p>
+
+<h4>Portable Spana/Database - Specific Issues</h4>
+
+<p>The file <nobr>&ldquo;<tt>SpanaPortable.exe</tt>&rdquo;</nobr> is a <i>launcher</i>,
+that is, a small program that executes the Spana program itself.
+Database has a corresponding launcher.</p>
+
+<p>These launchers are written using <a class="www" target="_blank" href="http://nsis.sourceforge.net/Features">NSIS</a>,
+and the source code is included in subdirectory <nobr>&ldquo;<tt>Other\Source</tt>&rdquo;.</nobr>
+The launchers have the following functions:</p>
+<ul>
+<li>They check that the exe-files <nobr>&ldquo;<tt>Spana.exe</tt>&rdquo;</nobr>
+and <nobr>&ldquo;<tt>Database.exe</tt>&rdquo;</nobr> are where they should be.
+The directory where Spana/Database are located is given in the INI-files
+<nobr>&ldquo;<tt>SpanaPortable.ini</tt>&rdquo;</nobr> and <nobr>&ldquo;<tt>DatabasePortable.ini</tt>&rdquo;,</nobr>
+see the description in <nobr>&ldquo;<tt>Other\Source\Readme.txt</tt>&rdquo;.</nobr>
+</li>
+
+<li>
+<p>
+The subdirectory <nobr>&ldquo;<tt>Data\settings</tt>&rdquo;</nobr> can contain
+the file &ldquo;<tt>Spana&shy;<nobr>Portable.reg</tt>&rdquo;</nobr> with
+saved Windows Registry data (file associations) from the last program execution.
+Database does not make any registry changes.  When launching the Spana program,
+any existing Spana-data in the Windows Registry (from a local copy of the
+program) is saved as backup in the Registry itself.  Then any data found in
+&ldquo;<tt>Spana&shy;<nobr>Portable.reg</tt>&rdquo;</nobr> is inserted into the
+Windows Registry.</p>
+
+<p>Note that the drive letter can change when the removable
+drive is inserted into another computer. The file
+&ldquo;<tt>Spana&shy;Portable&shy;<nobr>Settings.ini</tt>&rdquo;</nobr> in
+subdirectory <nobr>&ldquo;<tt>Data\settings</tt>&rdquo;</nobr> contains the drive
+letter from which the Spana/Database launchers started during the last session.
+If the drive letter has changed since the last session, the launcher will search
+&ldquo;<tt>Spana&shy;<nobr>Portable.reg</tt>&rdquo;</nobr> and the previous
+drive letter will be replaced with the current drive letter before copying the
+information to the Windows Registry.  The same action is taken on the files
+<nobr>&ldquo;<tt>Spana.ini</tt>&rdquo;</nobr> and
+<nobr>&ldquo;<tt>Database.ini</tt>&rdquo;</nobr>.</p>
+
+<p>When Spana ends the data in the Windows Registry is saved
+in <nobr>&ldquo;<tt>Data\settings</tt>&rdquo;</nobr> and the backup information
+in the Registry is then restored, leaving the Registry in the same state as it
+was before launching SpanaPortable.  The current drive letter is saved in file
+&ldquo;<tt>Spana&shy;Portable&shy;<nobr>Settings.ini</tt>&rdquo;.</nobr></p>
+
+</li>
+<li><p>Finally <nobr>&ldquo;<tt>Spana.exe</tt>&rdquo;</nobr>
+(or <nobr>&ldquo;<tt>Database.exe</tt>&rdquo;</nobr>) is launched.</p></li>
+</ul>
+
+<p>Note that any file name associations with Spana portable only operate while
+Spana protable is running. When you end Portable Spana the file associations will
+go back to those defined in the local computer.</p>
+
+<p>Note that after starting the Spana launcher, the restoring of any Windows
+registy data will be made only after <i>all</i> Spana windows are closed,
+either local or portable. Unpredictable behaviour could result if a
+local copy of Spana is started while the portable Spana is running,
+or vice-versa (because of the shuffling of registry entries for file associations).
+</p>
+
+</body>
+</html>

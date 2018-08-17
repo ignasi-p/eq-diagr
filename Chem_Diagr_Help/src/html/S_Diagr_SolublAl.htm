@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Solubility diagram (H+,AlOOH)</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="top">
+    &nbsp;<a href="S_0_Main.htm"><img src="images/Spana.gif" width="30" height="30" border="0" alt="Spana"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="S_0_Main.htm">SPANA</a>&nbsp;/ <a href="S_Modify_Chem_System.htm"><nobr>Modify Chem. System</nobr></a></font></td>
+  </tr>
+</table>
+
+
+<p>Example of a <b>solubility diagram</b> for a specific solid phase.</p>
+
+<p>If the the solubility of of a solid, for example <nobr>AlOOH</nobr> (boehmite), has to be calculated,
+it is necessary to set the <a href="SP_Activity.htm#Solids">activity</a> <nobr>= 1</nobr>
+(log <i>activity</i> <nobr>= 0)</nobr> for this solid.
+Note that the most stable Al solid at 25&deg;C is instead <nobr>Al(OH)<sub>3</sub></nobr> (gibbsite).
+Unless the activity of <nobr>AlOOH</nobr> is fixed equal to one,
+<nobr>Al(OH)<sub>3</sub></nobr> would precipitate in the calculations.</p>
+
+<p>To set the activity <nobr>= 1</nobr> for a solid you must
+first <a href="S_Modify_Chem_System.htm">exchange a component for a reaction</a>;
+in this case, exchange <nobr>Al<sup>3+</sup></nobr> with <nobr>AlOOH(s).</nobr></p>
+
+<p>The diagram shows the total dissolved concentration of
+Al (on a logarithmic scale) against <nobr>H<sup>+</sup>:</nobr></p>
+
+<p>
+<center><img src="images/Diagr_SolubAl.gif" border="1" alt="Solubility diagram" title="Solubility diagram" height="229" width="328"></center>
+</p>
+
+<p>This diagram was obtained with the following input file:
+<pre> 2 8 3 1
+H+,  AlOOH(s)
+Al(OH)2+     , -2.337   1  1  Al(OH)3      , -7.057   0  1
+Al(OH)4-     , -14.387 -1  1  Al2(OH)2 4+  ,  9.106   4  2
+Al3(OH)4+5   ,  11.269  5  3  AlOH+2       ,  3.433   2  1
+OH-          , -14.002 -1  0  Al 3+        ,  8.403   3  1
+Al(OH)3(am)  , -2.397   0  1  Al(OH)3(cr)  ,  0.703   0  1
+Al2O3(cr)    , -2.844   0  2  LS,-9, 1, H+,
+LAV, -2 -12  LA, 0</pre>
+</p>
+</body>
+</html>

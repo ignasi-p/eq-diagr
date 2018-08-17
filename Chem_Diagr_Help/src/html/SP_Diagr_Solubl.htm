@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Solubility diagrams (H+,CaCO3,CO2)</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <a href="SP_SED.htm">SED</a></font></td>
+  </tr>
+</table>
+
+
+<p>A <b>solubility diagram</b> shows total dissolved concentrations
+(on a logarithmic scale) usually plotted against a free concentration.
+It is convenient to set the activity <nobr>= 1</nobr> for the solid phase of interest.
+This can be done by <a href="S_Modify_Chem_System.htm">exchanging a component
+for a reaction</a>, for example exchanging <nobr>Ca<sup>2+</sup></nobr> with
+<nobr>CaCO<sub>3</sub>(s).</nobr></p>
+
+<p>The following diagram shows the solubility of calcite in the system <nobr>H<sup>+</sup>,</nobr>
+<nobr>CaCO<sub>3</sub>(s),</nobr> and <nobr>CO<sub>2</sub>(g)</nobr> at
+<nobr>log&nbsp;<i>P</i><sub>CO<sub>2</sub></sub></nobr> = <nobr>&#8722;3.5:</nobr></p>
+<p>
+<center><img src="images/Diagr_Solub.gif" border="1" width="328" height="218" alt="Solubility diagram"></center>
+</p>
+
+<p>In this case the component <nobr>CO<sub>3</sub><sup>&#8722;</sup></nobr> has also been
+<a href="S_Modify_Chem_System.htm">exchanged</a> with
+<nobr>CO<sub>2</sub>(g).</nobr> The diagram was obtained with the following input file:</p>
+<pre><code> 3 9 3 1
+H+,  CO2(g),  CaCO3(cr)
+CaCO3     , -5.139   0  0  1  CaHCO3+        ,  2.959   1  0  1
+CaOH+     , -3.156   1 -1  1  CO2            , -1.472   0  1  0
+H2CO3     , -4.247   0  1  0  HCO3-          , -7.825  -1  1  0
+OH-       , -14.002 -1  0  0  Ca 2+          ,  9.674   2 -1  1
+CO3 2-    , -18.152 -2  1  0  Ca(OH)2(cr)    , -12.941  0 -1  1
+CaCO3(am) , -2.088   0  0  1  CaO(cr)   , -23.026  0 -1  1
+LS,-9, 1, H+,
+LAV, -5 -11  LA, -3.5  LA, 0</code></pre>
+</body>
+</html>

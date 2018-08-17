@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>DATABASE: Names & Numbers in the Database</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a>&nbsp;/ <a href="DB_Databases.htm">Databases</a>&nbsp;/ <a href="DB_Create_your_database.htm">Create&nbsp;databases</a></font></td>
+  </tr>
+</table>
+
+<h3>Databases:  Names and numbers</h3>
+
+<p><b>Names of chemical species:</b><br>
+Names must end with either a comma, a semicolon, or an end-of-line,
+and therefore blank space <i>is</i> allowed inside a name, but a comma or semicolon
+<i>can&nbsp;not</i> be included in a name or text. For example:</p>
+
+<p class="indent">
+<nobr><tt>Fe(OH)2(s,a);</tt></nobr> &nbsp; is <b>not</b> correct.
+</p>
+
+<p class="cont">
+Although it is <i>not&nbsp;possible</i> to include a comma
+in a name or text, it is however possible to include a semicolon
+by enclosing the whole name in quotes:</p>
+
+<p class="indent">
+<nobr><tt>"Fe(OH)2(c;a)"</tt></nobr>
+</p>
+<p class="cont">
+This means that if a quote (either &quot; or ') is found at the
+start of a name, DATABASE will look for the ending quote
+(assuming there is no comma between these two quotes), it will read the text
+between them and it will remove the enclosing quotes:</p>
+<p class="indent">
+<nobr><tt>&quot;Cr&quot;(OH)3</tt></nobr>
+</p>
+<p class="cont">will be read as two names (<nobr><tt>Cr</tt></nobr> and
+<nobr><tt>(OH)3</tt>), but</nobr>
+</p>
+<p class="indent">
+<nobr><tt>Cr(&quot;OH&quot;)3</tt></nobr>
+</p>
+<p class="cont">does not start with a quote, and will be read as a single name.</nobr>
+</p>
+
+
+<p><u>Quotes:</u> To include quotes at the start of a name in a database,
+use two quotes and enclose the whole name in quotes, or enclose the whole
+name in single quotes, etc:
+
+<table cellspacing="0" cellpadding="0" border="0">
+<tr>
+  <td><tt>&nbsp;&nbsp;</tt></td>
+  <td><nobr><tt>&quot;&quot;&quot;Cr(OH)4&quot;&quot;-&quot;;</tt>&nbsp;&nbsp;or:&nbsp;&nbsp;<tt>'&quot;Cr(OH)4&quot;-';</tt></nobr></td>
+  </tr>
+<tr>
+  <td></td>
+  <td valign="top">another possibility: <nobr><tt>&quot;'Cr(OH)4'-&quot;;</tt></nobr></td>
+  </tr>
+</table></p>
+
+<p class="cont">
+DATABASE will remove the enclosing quotes when reading the database.
+Note that <a href="S_0_Main.htm">SPANA</a> does <i>not</i> remove quotes from input files when making diagrams.
+</p>
+
+<p><a href="SP_Plot-File_Format.htm#Superscripts">Single quotes in
+names have special meaning</a> when making diagrams,
+and you can use them in names:</p>
+<p class="indent">
+<nobr><tt>Solid'New`(cr)</tt></nobr> &nbsp; will be plotted as: <nobr><tt>Solid<sup>New</sup>(cr)</tt></nobr>
+</p>
+<p class="cont">
+(in this case the name does not start with a quote, and there is no need to enclose
+the whole text with extra quotes for DATABASE).</p>
+
+<p><u>Slash (/)</u>: names can not start with a slash and they can not contain
+&#147; /&#148; (a space followed by a slash),
+because it will be taken as the beginning of a comment:</p>
+
+<table cellspacing="0" cellpadding="0" border="0">
+<tr>
+  <td><tt>&nbsp;&nbsp;</tt></td>
+  <td><nobr><tt>1/2&nbsp;Fe2O3;</tt></nobr></td>
+  <td><tt>&nbsp;&nbsp;</tt></td>
+  <td>is correct, but</td></tr>
+<tr>
+  <td></td>
+  <td valign="top"><nobr><tt>Fe2O3 /2;</tt></nobr></td>
+  <td><tt>&nbsp;&nbsp;</tt></td>
+  <td valign="top">will read as <nobr>&#147;<tt>Fe2O3</tt>&#148;</nobr></td>
+  </tr>
+</table>
+
+<p><b>Electric charges</b> of aqueous species are read from the last characters of a name,
+in two possible ways:</p>
+<ul><li>blank space between name and charge: <tt><nobr>Fe 3+,</nobr> <nobr>CO3 2-,</nobr>
+  <nobr>Na +,</nobr> <nobr>Al(OH)3 -</nobr></tt>
+  </li>
+<li>+/&#8722; followed by a number: <nobr><tt>Fe+3</tt>,</nobr> <nobr><tt>CO3-2</tt>,</nobr>
+	<nobr><tt>Na+</tt>,</nobr> <nobr><tt>Al(OH)3-</tt></nobr></li>
+</ul>
+
+
+<p><b>Phase state:</b> it is indicated at the end of the name
+<table cellspacing="0" cellpadding="0" border="0"><tr><td><tt>&nbsp;&nbsp;</tt></td>
+<td align="right" valign="top"><b>solid</b></td><td><tt>&nbsp;&nbsp;</tt></td><td valign="top">
+	ending in  (s) for solid, (am) or (a) for amorphous, (ppt) for precipitated,
+	(vit) for vitreous,  (cr) or (c) for crystalline.
+	For example: <nobr><tt>Fe2O3(cr)</tt>,</nobr> <nobr><tt>Fe(OH)3(am)</tt></nobr>
+</td></tr>
+<tr><td></td><td align="right" valign="top"><b>gas</b></td><td></td><td valign="top">
+	ending in (g) like <nobr><tt>CO2(g)</tt></nobr>
+</td></tr>
+<tr><td></td><td align="right" valign="top"><b>liquid</b></td><td></td><td valign="top">
+		ending in (l) like <nobr><tt>Hg(l)</tt></nobr>
+</td></tr>
+<tr><td></td><td align="right" valign="top"><b>aqueous</b></td><td></td><td valign="top">
+		any name not ending in <nobr>(s),</nobr> <nobr>(am),</nobr> <nobr>(a),</nobr>
+		<nobr>(ppt),</nobr> <nobr>(vit),</nobr> <nobr>(cr),</nobr> <nobr>(c),</nobr>
+		<nobr>(g)</nobr> or <nobr>(l).</nobr> For example:
+		<nobr><tt>Na+</tt>.</nobr> Example of uncharged aqueous species: <nobr><tt>Fe(OH)3</tt></nobr>
+</td></tr></table>
+See <a href="SP_Phase_Indicator.htm">phase indicators</a>.</p>
+
+<p><b>Name begins with:</b></p>
+<ul>
+<li>an asterisk <nobr>(<tt>*</tt>):</nobr> the species will be included in
+	data-files made by DATABASE, but it will not be included in the diagram
+  calculations in <nobr><a href="S_0_Main.htm">SPANA</a>.</nobr></li>
+<li>@: the species will not be included in data-files produced by
+  <a href="DB_0_Main.htm">DATABASE</a>.	See
+  <a href="DB_Remove_change_data.htm">Removing or Changing <nobr>data</a>.</nobr></li>
+</ul>
+
+<p><b>Numbers:</b><br>
+Real values can be entered with or without decimal point
+(i.e., <nobr>10.0,</nobr> or <nobr>10)</nobr> and with or without exponent
+(i.e., <nobr>1.0E&#8722;3,</nobr> <nobr>1e&#8722;3,</nobr> or <nobr>0.001).</nobr>
+</p>
+
+</body>
+</html>

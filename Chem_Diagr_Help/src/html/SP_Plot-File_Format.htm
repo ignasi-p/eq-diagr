@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Plot file format</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <a href="SP_Plot-Files.htm">Plot&nbsp;Files</a></font></td>
+  </tr>
+</table>
+
+<h3>Plot-file&nbsp;format</h3>
+
+<p>Plot files have a name ending with <nobr>&#147;<b>plt</b>&#148;.</nobr>
+They contain <i>vector</i>-type information.
+This means that they specify where to move a drawing device, and where to
+draw a line from the previous point.</p>
+
+<p>Plot files are plain text files. They may be changed with a
+text editor.</p>
+
+<p style="line-height:2.5ex; margin-top:1.5ex; margin-bottom:2.5ex; text-indent:0;">
+<b><a href="#Make_Changes">Make it pretty: change the diagram</a>.</b></p>
+
+<h4>Plot-file&nbsp;format:</h4>
+<p>Each line contains three integers (I1, I2 and I3) in positions 1 to 9.
+<b>Comments</b> may be written from position
+10 to the <nobr>end-of-line.</nobr></p>
+
+<p>The first number in each line is an integer in position 1
+(this number is called here <nobr>&#147;I1&#148;).</nobr>
+It may have the following values:</p>
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr valign="top">
+  <td><tt>&nbsp;&nbsp;</tt>I1&nbsp;</td>
+	<td>
+		<nobr>= 0&nbsp;</nobr></td><td><nobr>&#147;move to&#148;</nobr></td></tr>
+<tr valign="top"><td></td><td>
+			<nobr>= 1&nbsp;</nobr></td><td><nobr>&#147;draw a line to&#148;</nobr></td></tr>
+<tr valign="top"><td></td><td>
+			<nobr>= 5&nbsp;</nobr></td><td><nobr>&#147;change the colour to&#148;</nobr>
+                              &nbsp; (for screen display)</td></tr>
+<tr valign="top"><td></td><td>
+		  <nobr>= 8&nbsp;</nobr></td><td><nobr>&#147;change the pen number to&#148;</nobr>
+                              &nbsp; (for plotters or printers)</td></tr>
+</table>
+
+<p>The second number (I2) is given in position 2 to 5.
+The meaning of this value depents of the value of I1:</p>
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr valign="top">
+	  <td><nobr><tt>&nbsp;&nbsp;</tt>If&nbsp;&nbsp;</nobr></td>
+		<td><nobr>I1 = 0</nobr></td>
+		<td><nobr>&nbsp;&nbsp;then:&nbsp;&nbsp;</nobr></td>
+		<td><nobr>I2 = <i>X</i>-coordinate in units of 0.1 mm</nobr></td>
+	</tr>
+  <tr valign="top">
+	  <td></td>
+		<td><nobr>I1 = 1</nobr></td><td></td>
+		<td><nobr>I2 = <i>Y</i>-coordinate in units of 0.1 mm</nobr></td>
+	</tr>
+  <tr valign="top">
+	  <td></td>
+		<td><nobr>I1 = 5</nobr></td><td></td>
+		<td><nobr>I2 = screen colour</nobr></td>
+	</tr>
+  <tr valign="top">
+	  <td></td>
+		<td><nobr>I1 = 8</nobr></td><td></td>
+		<td><nobr>I2 = printer pen number</nobr></td>
+	</tr>
+	</table>
+
+<p>The third integer (I3) is given in positions 6 to 9.
+The meaning of this value also depents of the value of I1:</p>
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr valign="top">
+	  <td><nobr><tt>&nbsp;&nbsp;</tt>If&nbsp;&nbsp;</nobr></td>
+		<td><nobr>I1 = 0</nobr></td>
+		<td><nobr>&nbsp;&nbsp;then:&nbsp;&nbsp;</nobr></td>
+		<td><nobr>I3 = <i>X</i>-coordinate in units of 0.1 mm</nobr></td>
+	</tr>
+  <tr valign="top">
+	  <td></td>
+		<td><nobr>I1 = 1</nobr></td><td></td>
+		<td><nobr>I3 = <i>Y</i>-coordinate in units of 0.1 mm</nobr></td>
+	</tr>
+	</table>
+
+<p>The values of I2 and I3 must be right-adjusted, i.e.,
+blanks may exist to the left of the value, but not to the right
+<nobr>of it.</nobr> Values in the range <nobr>&#8722;999</nobr> to 9999 are possible.</p>
+
+<p>For example, to draw a triangle:</p>
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr valign="top">
+	  <td><nobr><tt>&nbsp;&nbsp;</tt></nobr></td>
+		<td><pre>
+0   0   0 Comment:
+5   2      a triangle
+11000   0
+5   3
+110001000
+5   4
+1   0   0</pre></td>
+<td>&nbsp;&nbsp;</td>
+<td><img src="images/Triangle.gif" border="0" width="104" height="92" alt="Triangle"></td></tr></table>
+
+<p>See the <a href="Tut_Example_Files.htm">examples</a> sub-directory.</p>
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<a name="Make_Changes"></a>
+<p style="line-height:1ex; margin-top:0; margin-bottom:0; text-indent:0;">
+&nbsp;</p>
+<hr>
+<h3>Make it Pretty: Change the Diagram</h3>
+
+<p>The present versions of <a href="SP_SED.htm">SED</a> and
+<a href="SP_PREDOM.htm">PREDOM</a> write information
+in <nobr>&#147;plt&#148;</nobr> files about the diagram
+and about the text labels (chemical formulas etc).
+This information is written as <i>comments</i>
+starting from column 10, and it is used by the programs
+<nobr><a href="S_0_Main.htm">SPANA</a>,</nobr>
+<nobr><a href="SP_PDF.htm">PlotPDF</a>,</nobr>
+<nobr><a href="SP_PostScript.htm">PlotPS</a>,</nobr> etc.
+
+<p>With a text editor it is possible to add, delete or move
+<i>text labels</i> using the information in
+these comments.</p>
+
+<p><b>Structure of the plot file:</b> Comments starting with
+<nobr>&#147;--&nbsp;&#148;</nobr>
+indicate the start of different parts of the diagram:
+<nobr>&#147;--&nbsp;AXIS&nbsp;--&#148;,</nobr>
+<nobr>&#147;--&nbsp;HEADING&nbsp;--&#148;,</nobr> etc.
+This makes it possible to search quickly for different parts of a diagram.
+Taking away all lines between two such comments will remove that part of a
+diagram.</p>
+
+<a name="Texts"></a>
+<p><b>Text labels:</b>   They start with a comment <nobr>&#147;TextBegin&#148;</nobr>
+(for chemical formulas a &#147;C&#148; is added: <nobr>&#147;TextBeginC&#148;).</nobr>
+The variables <nobr>&#147;I2&#148;</nobr> and <nobr>&#147;I3&#148;</nobr>
+described above indicate the <i>x-</i> and <i>y-</i>coordinates.
+Text labels end with the comment <nobr>&#147;TextEnd&#148;.</nobr> For example:</p>
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr valign="top">
+	  <td><nobr><tt>&nbsp;&nbsp;</tt></nobr></td>
+		<td>
+<pre>011721245 TextBeginC size=   0.35 cm, angle=    0.00
+0   0   0 [MoO4 2&#8722;]`TOT&acute; =   10.00 mM
+....
+0   0   0 TextEnd</pre>
+</td></tr></table>
+
+<p class="cont">
+will insert <nobr>&#147;[MoO<sub>4</sub><sup>2&#8722;</sup>]<sub>TOT</sub></nobr> =
+<nobr>10.00&nbsp;mM&#148;</nobr> at <i>x</i> = <nobr>11.72&nbsp;cm</nobr> and
+<i>y</i> = <nobr>12.45&nbsp;cm.</nobr>
+It is easy to change the text, its size, to move it, etc</p>
+
+<p>For <b>chemical formulas</b>: A special algorithm is used to determine which
+characters should be super- or <nobr>sub-script:</nobr>
+<ul>
+<li><b>Electric charges:</b> (the same rules as for the
+    <a href="SP_Charges_in_Names.htm">input-file</a>) either:
+		<table cellspacing="0" cellpadding="0" border="0">
+  		<tr valign="top"><td><nobr><tt>&nbsp;&nbsp;</tt><b>1</b>)&nbsp;</nobr></td>
+				<td>blank space between name and charge: <nobr><tt>Fe 3+</tt>,</nobr>
+					<nobr><tt>CO3 2&#8722;</tt>,</nobr>
+					<nobr><tt>Na +</tt>,</nobr>
+					<nobr><tt>Al(OH)3 &#8722;</tt></nobr></td></tr>
+		  <tr valign="top"><td><nobr><tt>&nbsp;&nbsp;</tt><b>2</b>)&nbsp;</nobr></td>
+				<td>+ or &#8722; followed by a number: <nobr><tt>Fe+3</tt>,</nobr>
+					<nobr><tt>CO3&#8722;2</tt>,</nobr> <nobr><tt>Na+</tt>,</nobr>
+				<nobr><tt>Al(OH)3&#8722;</tt></nobr></td></tr>
+		</table>
+		</li>
+<li><a name="Superscripts"></a>
+    <b>Super- and subscripts</b> may be given with apostrophes, <nobr>e.g.:</nobr>
+		<nobr>x&acute;2`.</nobr> Note: &#147;@&#148; may be used to bring
+		the next character to the baseline (the &#147;@&#148; itself is then removed); 
+		this may be used in names containing digits, see example below.</li>
+<li><b>Symbols</b> in chemical formulas:<br>
+  <p class="indent"><nobr><tt>&circ;</tt> is plotted as &#916;</nobr><br>
+  <nobr><tt>$</tt> is plotted as &micro;</nobr><br>
+  <nobr><tt>&tilde;</tt> is plotted as &deg;</nobr></p>
+  </li>
+</ul>
+</p>
+<p class="cont">Example:
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr valign="top">
+	  <td><nobr><tt>&nbsp;&nbsp;</tt></nobr></td>
+		<td><pre>0  50  50 TextBeginC size=   0.35 cm, angle=    0.00
+0   0   0 ^H`f'~ = 5 kJ'.`mol'-1` P`CO2'= 3$bar  t=25~C
+0   0   0 TextEnd
+0  50 150 TextBeginC size=   0.35 cm, angle=    0.00
+0   0   0 x'2` + v`i'@ - log`10'X = 1.35'.`10'-3` for Fe@35Cr
+0   0   0 TextEnd</pre></td></tr></table>
+</p>
+<p class="cont">produces:</p>
+<p><img src="images/chemf.gif" alt="formula" width="342" height="62" border="1"></p>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>SED: Format of input file</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <a href="SP_SED.htm">SED</a></font></td>
+  </tr>
+</table>
+
+<h3>SED: Simple Equilibrium Diagrams</h3>
+
+<h3>Format of the Input Data-File</h3>
+
+<p><a href="SP_Data_File_Format.htm">Format of Input Data-Files</a>: Input
+files consist of: <nobr><b>1)</b></nobr> definition of the
+<a href="SP_Data_File_Chemical_System.htm">chemical <nobr>system</a>;</nobr>
+<nobr><b>2)</b></nobr> <b>plot information;</b> and
+<nobr><b>3)</b></nobr> <a href="SP_Data_File_Concs.htm">concentrations</a>
+(ranges) for the chemical components.</p>
+
+<p>The <b>plot information</b> for <b>SED</b> is as follows:</p>
+<p class="indent">
+[EH,]  YCOMP,  [Ymin, Ymax,]  XCOMP,
+</p>
+<p class="cont">
+where data within [] are optional.</p>
+<p>
+YCOMP and XCOMP describe the variables in the <i>X</i>- and <i>Y</i>-axes as
+follows:</p>
+<p class="indent">XCOMP = name for the component in the <i>X</i>-axis.</p>
+<p class="indent">YCOMP = a text describing the <i>Y</i>-axis:
+<ul class="indent2">
+<li>For a <a href="SP_Diagr_Fract.htm">fraction</a> diagram YCOMP = the name
+				  			of the component in the <i>Y</i>-axis.</li>
+<li>For a <a href="SP_Diagr_Log.htm">logarithmic</a> diagram YCOMP = L
+				  			(or LC, Ymin, Ymax).</li>
+<li>For a <nobr>log(<a href="SP_Diagr_Solubl.htm">solubility</a>)</nobr> diagram
+				  			YCOMP = S (or LS, Ymin, Ymax).</li>
+<li>For a relative diagram YCOMP = R, REFCOMP, Ymin,Ymax
+				  			(where <nobr>&#147;REFCOMP&#148;</nobr> is the name of the
+				  			reference chemical component).</li>
+<li>For calculated <a href="1_Eh_pe.htm">pe</a> in the <i>Y</i>-axis YCOMP = pe, Ymin, Ymax.</li>
+<li>For calculated <a href="SP_pH.htm">pH</a> in the <i>Y</i>-axis YCOMP = pH,
+				  			Ymin, Ymax.</li>
+</ul></p>
+<p class="indent">
+(<i>Ymin</i> and <i>Ymax</i> = minimum and maximum values for the <i>Y</i>-axis)
+</p>
+
+<p>If before YCOMP, the text <nobr>&#147;EH,&#148;</nobr> is found, the redox
+potential (instead of <a href="1_Eh_pe.htm">pe</a>) is used as the variable in
+the diagram.</p>
+
+<p>A list of possible diagram types may be obtained from SED by entering a
+<nobr>&#147;?&#148;</nobr> in the plot-definition input line, and running the
+program: this will make SED complain that <nobr>&#147;?&#148;</nobr> is not
+an acceptable diagram type, and the program will print a list of choices for the
+plot definition.</p>
+
+<p>Several input file <a href="Tut_Example_Files.htm">examples</a> may be
+found in subdirectory <nobr>&#147;.<tt>\EXAMPLES</tt>&#148;.</nobr></p>
+
+</body>
+</html>
