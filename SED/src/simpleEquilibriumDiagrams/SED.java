@@ -37,7 +37,7 @@ import lib.kemi.readWriteDataFiles.ReadChemSyst;
  * 
  * @author Ignasi Puigdomenech */
 public class SED extends javax.swing.JFrame {
-    static final String VERS = "2018-Aug-17";
+    static final String VERS = "2018-Oct-10";
     static final String progName = "SED";
 /** variable needed in "main" method */
     private static SED sedFrame;
@@ -141,7 +141,10 @@ public class SED extends javax.swing.JFrame {
     private final int actCoeffsModelDefault =2;
     /** the ionic strength, or -1 if it has to be calculated at each calculation step */
     private double ionicStrength = Double.NaN;
+    /** the temperature value given given in the command line */
     double temperature_InCommandLine = Double.NaN;
+    /** the pressure value given given in the command line */
+    double pressure_InCommandLine = Double.NaN;
     private int actCoeffsModel_InCommandLine = -1;
     private double tolHalta = Chem.TOL_HALTA_DEF;
     double peEh = Double.NaN;
@@ -355,16 +358,6 @@ public class SED extends javax.swing.JFrame {
                 }
             }};
         getRootPane().getActionMap().put("ALT_S", altSAction);
-        //--- alt-R:  temperature
-        javax.swing.KeyStroke altRKeyStroke = javax.swing.KeyStroke.getKeyStroke(
-                java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.ALT_MASK, false);
-        getRootPane().getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).put(altRKeyStroke,"ALT_R");
-        javax.swing.Action altRAction = new javax.swing.AbstractAction() {
-            @Override public void actionPerformed(java.awt.event.ActionEvent e) {
-                if(jTabbedPane.getSelectedIndex() == 0 &&
-                        jTextFieldT.isEnabled()) {jTextFieldT.requestFocusInWindow();}
-            }};
-        getRootPane().getActionMap().put("ALT_R", altRAction);
         //--- alt-T:  tolerance in Haltafall
         javax.swing.KeyStroke altTKeyStroke = javax.swing.KeyStroke.getKeyStroke(
                 java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.ALT_MASK, false);
@@ -434,7 +427,8 @@ public class SED extends javax.swing.JFrame {
         jTextFieldPltFile.setEnabled(false);
         jLabelStatus.setText("waiting...");
         jLabelProgress.setText(" ");
-        jTextFieldT.setText("NaN"); // no temperature given
+        jLabelTemperature.setText("NaN"); // no temperature given
+        jLabelPressure.setText("NaN"); // no pressure given
         jComboBoxModel.setSelectedIndex(actCoeffsModelDefault);
 
         //--- the methods in DiagrPaintUtility are used to paint the diagram
@@ -492,7 +486,6 @@ public class SED extends javax.swing.JFrame {
     jTextFieldIonicStgr.setText(String.valueOf(ionicStrength));
     showActivityCoefficientControls(calcActCoeffs);
     set_tol_inComboBox();
-    showTemperature();
 
     //--- if help is requested on the command line and the
     //    program's window stays on screen: show the message pane
@@ -544,8 +537,11 @@ public class SED extends javax.swing.JFrame {
         jLabelIonicStrM = new javax.swing.JLabel();
         jPanelT = new javax.swing.JPanel();
         jLabelT = new javax.swing.JLabel();
-        jTextFieldT = new javax.swing.JTextField();
         jLabelTC = new javax.swing.JLabel();
+        jLabelP = new javax.swing.JLabel();
+        jLabelPressure = new javax.swing.JLabel();
+        jLabelBar = new javax.swing.JLabel();
+        jLabelTemperature = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabelModel = new javax.swing.JLabel();
         jComboBoxModel = new javax.swing.JComboBox();
@@ -756,37 +752,23 @@ public class SED extends javax.swing.JFrame {
                 .addComponent(jLabelIonicStrM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jLabelT.setLabelFor(jTextFieldT);
-        jLabelT.setText("<html>tempe<u>r</u>ature</html>");
+        jLabelT.setText("<html>temperature =</html>");
         jLabelT.setEnabled(false);
 
-        jTextFieldT.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldT.setToolTipText("<html>\nThe temperature is needed either to calculate Debye-Hückel constants<br>\nin activity coefficient models, or to calculate Eh values<br>\nfrom pe: Eh = pe*(ln(10)*R*T)/F<br>\nValue must be between 0 and 300 (in Celsius)</html>");
-        jTextFieldT.setEnabled(false);
-        jTextFieldT.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldTActionPerformed(evt);
-            }
-        });
-        jTextFieldT.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextFieldTFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextFieldTFocusLost(evt);
-            }
-        });
-        jTextFieldT.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextFieldTKeyPressed(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextFieldTKeyTyped(evt);
-            }
-        });
-
-        jLabelTC.setText("°C");
+        jLabelTC.setText("<html>°C</html>");
         jLabelTC.setEnabled(false);
+
+        jLabelP.setText("<html>pressure =</html>");
+        jLabelP.setEnabled(false);
+
+        jLabelPressure.setText("88.36");
+        jLabelPressure.setEnabled(false);
+
+        jLabelBar.setText("<html>bar</html>");
+        jLabelBar.setEnabled(false);
+
+        jLabelTemperature.setText("300");
+        jLabelTemperature.setEnabled(false);
 
         javax.swing.GroupLayout jPanelTLayout = new javax.swing.GroupLayout(jPanelT);
         jPanelT.setLayout(jPanelTLayout);
@@ -796,17 +778,26 @@ public class SED extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(jLabelT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldT, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelTemperature)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelTC)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabelTC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(71, 71, 71)
+                .addComponent(jLabelP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelPressure)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(146, Short.MAX_VALUE))
         );
         jPanelTLayout.setVerticalGroup(
             jPanelTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jTextFieldT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabelT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabelTC))
+                .addComponent(jLabelTC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelPressure)
+                .addComponent(jLabelBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelTemperature))
         );
 
         jLabelModel.setLabelFor(jComboBoxModel);
@@ -831,7 +822,7 @@ public class SED extends javax.swing.JFrame {
                 .addComponent(jLabelModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBoxModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanelActCLayout = new javax.swing.GroupLayout(jPanelActC);
@@ -845,10 +836,10 @@ public class SED extends javax.swing.JFrame {
                             .addGroup(jPanelActCLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jPanelT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jCheckActCoeff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jCheckActCoeff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanelT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanelActCLayout.setVerticalGroup(
@@ -858,14 +849,10 @@ public class SED extends javax.swing.JFrame {
                     .addGroup(jPanelActCLayout.createSequentialGroup()
                         .addComponent(jCheckActCoeff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(jPanelT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 6, Short.MAX_VALUE))
-                    .addGroup(jPanelActCLayout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(jPanelT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jLabelTol.setLabelFor(jComboBoxTol);
@@ -1050,9 +1037,9 @@ public class SED extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanelActC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(41, 41, 41)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         jTabbedPane.addTab("<html><u>P</u>arameters</html>", jPanelParameters);
@@ -1219,7 +1206,7 @@ public class SED extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+                .addComponent(jTabbedPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelStatusBar, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1265,12 +1252,10 @@ public class SED extends javax.swing.JFrame {
             calcActCoeffs = true;
             showActivityCoefficientControls(true);
             ionicStrength = readIonStrength();
-            showTemperature();
         }
         else {
             calcActCoeffs = false;
             showActivityCoefficientControls(false);
-            showTemperature();
         }
     }//GEN-LAST:event_jCheckActCoeffActionPerformed
 
@@ -1331,21 +1316,6 @@ public class SED extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextFieldIonicStgrKeyPressed
 
-    private void jTextFieldTKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldTKeyPressed
-        if(evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
-            validateTemperature();
-        }
-    }//GEN-LAST:event_jTextFieldTKeyPressed
-
-    private void jTextFieldTFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldTFocusLost
-        validateTemperature();
-    }//GEN-LAST:event_jTextFieldTFocusLost
-
-    private void jTextFieldTKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldTKeyTyped
-        char key = evt.getKeyChar();
-        if(!isCharOKforNumberInput(key)) {evt.consume();}
-    }//GEN-LAST:event_jTextFieldTKeyTyped
-
     private void jTextFieldDataFileKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDataFileKeyTyped
         char c = Character.toUpperCase(evt.getKeyChar());
         if(evt.getKeyChar() != java.awt.event.KeyEvent.VK_ESCAPE &&
@@ -1395,10 +1365,6 @@ public class SED extends javax.swing.JFrame {
         getTheInputFileName();
     }//GEN-LAST:event_jTextFieldDataFileMouseClicked
 
-    private void jTextFieldTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTActionPerformed
-        validateTemperature();
-    }//GEN-LAST:event_jTextFieldTActionPerformed
-
     private void jTextFieldIonicStgrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIonicStgrActionPerformed
         validateIonicStrength();
     }//GEN-LAST:event_jTextFieldIonicStgrActionPerformed
@@ -1406,10 +1372,6 @@ public class SED extends javax.swing.JFrame {
     private void jTextFieldIonicStgrFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldIonicStgrFocusGained
         jTextFieldIonicStgr.selectAll();
     }//GEN-LAST:event_jTextFieldIonicStgrFocusGained
-
-    private void jTextFieldTFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldTFocusGained
-        jTextFieldT.selectAll();
-    }//GEN-LAST:event_jTextFieldTFocusGained
 
     private void jCheckBoxMenuSEDdebugActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuSEDdebugActionPerformed
         dbg = jCheckBoxMenuSEDdebug.isSelected();
@@ -1905,7 +1867,7 @@ private boolean dispatchArg(String arg) {
                 String t = arg.substring(3);
                 try {temperature_InCommandLine = Double.parseDouble(t);
                     temperature_InCommandLine = Math.min(1000,Math.max(temperature_InCommandLine,-10));
-                    jTextFieldT.setText(String.valueOf(temperature_InCommandLine));
+                    jLabelTemperature.setText(String.valueOf(temperature_InCommandLine));
                     if(dbg) {out.println("Temperature = "+temperature_InCommandLine);}
                     return true;
                     } //try
@@ -1967,6 +1929,26 @@ private boolean dispatchArg(String arg) {
             }// = or :
         } // if starts with "-n"
     } // if length >3
+
+    if(arg.length() >4) {
+        String arg0 = arg.substring(0, 4).toLowerCase();
+        if(arg0.startsWith("-pr") || arg0.startsWith("/pr")) {
+            if(arg.charAt(4) == '=' || arg.charAt(4) == ':') {
+                String t = arg.substring(4);
+                try {pressure_InCommandLine = Double.parseDouble(t);
+                    pressure_InCommandLine = Math.min(10000,Math.max(pressure_InCommandLine,1));
+                    jLabelPressure.setText(String.valueOf(pressure_InCommandLine));
+                    if(dbg) {out.println("Pressure = "+pressure_InCommandLine);}
+                    return true;
+                    } //try
+                catch (NumberFormatException nfe) {
+                  msg = "Error: Wrong numeric format for pressure in text \""+t+"\"";
+                  pressure_InCommandLine = Double.NaN;
+                  break;
+                } //catch
+            }// = or :
+        } // if starts with "-tol"
+    } // if length >4
 
     if(arg.length() >5) {
         String arg0 = arg.substring(0, 5).toLowerCase();
@@ -2176,7 +2158,6 @@ private boolean dispatchArg(String arg) {
       jCheckActCoeff.setText("Activity coefficient calculations");
       jCheckActCoeff.setEnabled(false);
       showActivityCoefficientControls(false);
-      showTemperature();
       jLabelTol.setEnabled(false);
       jComboBoxTol.setEnabled(false);
 
@@ -2227,7 +2208,6 @@ private boolean dispatchArg(String arg) {
       jCheckActCoeff.setText("<html><u>A</u>ctivity coefficient calculations</html>");
       jCheckActCoeff.setEnabled(true);
       showActivityCoefficientControls(jCheckActCoeff.isSelected());
-      showTemperature();
 
       jLabelPltFile.setText("plot file name");
       jLabelPltFile.setEnabled(false);
@@ -2344,7 +2324,6 @@ private boolean dispatchArg(String arg) {
 //<editor-fold defaultstate="collapsed" desc="showTheInputFileName">
   /** Show the input data file name in the JFrame (window) */
   private void showTheInputFileName(java.io.File dataFile) {
-    showTemperature();
     jTextFieldDataFile.setText(dataFile.getAbsolutePath());
     jLabelPltFile.setEnabled(true);
     jLabelPltFile.setText("<html>p<u>l</u>ot file name:</html>");
@@ -2596,6 +2575,7 @@ private class outFilteredStreamSED extends java.io.FilterOutputStream {
     "  -n=nbr   (calculation steps along the X-axis; "+(NSTP_MIN)+" to "+(NSTP_MAX)+")"+nl+
     "  -nostop  (do not stop for warnings)"+nl+
     "  -p=output-plot-file-name"+nl+
+    "  -pr=nbr  (pressure in bar; displayed in the diagram)"+nl+
     "  -rev     (do not reverse the input min. and max. limits in x-axis)"+nl+
     "  -t=nbr   (temperature in degrees C, ignored if not needed)"+nl+
     "  -tbl     (output both a diagram and a table file with comma-"+nl+
@@ -2706,8 +2686,28 @@ private boolean readDataFile(java.io.File dataFile) {
           t_d = temperature_InCommandLine;
         } // temperatures differ
       }  // temperature also given in command line
-      jTextFieldT.setText(String.valueOf(t_d));
+      jLabelTemperature.setText(String.valueOf(t_d));
     } // temperature written in data file
+    //--- get a pressure:
+    double p_d;
+    try {w = rd.getPressure();} // pressure written as a comment in the data file?
+    catch (ReadDataLib.DataReadException ex) {showErrMsgBx(ex); w = Double.NaN;}
+    if(!Double.isNaN(w)) {
+      p_d = w;
+      if(!Double.isNaN(pressure_InCommandLine)) {
+        // pressure also given in command line
+        if(Math.abs(p_d - pressure_InCommandLine)>0.001) { // difference?
+          msg = String.format(engl,"Warning: pressure in data file =%.3f bar,%s",p_d,nl);
+          msg = msg + String.format(engl,
+                  "   but in the command line p=%.3f bar!%s",
+                  pressure_InCommandLine,nl);
+          msg = msg + String.format(engl,"p=%.3f will be used.",pressure_InCommandLine);
+          showErrMsgBx(msg,2);
+          p_d = pressure_InCommandLine;
+        } // pressures differ
+      }  // pressure also given in command line
+      jLabelPressure.setText(String.valueOf(p_d));
+    } // pressure written in data file
 
     try {rd.close();}
     catch (ReadDataLib.ReadDataLibException ex) {showMsg(ex);}
@@ -2753,22 +2753,6 @@ private boolean readDataFile(java.io.File dataFile) {
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="Temperature & Ionic Strength">
-    private void showTemperature() {
-    if(!jCheckActCoeff.isEnabled() ||
-            ((!calcActCoeffs || ionicStrength ==0) &&
-             (diag == null || (diag !=null && diag.pInX !=3 && !diag.Eh)))
-            ) {
-        jLabelT.setText("temperature");
-        jLabelT.setEnabled(false);
-        jLabelTC.setEnabled(false);
-        jTextFieldT.setEnabled(false);}
-    else {
-        jLabelT.setText("<html>tempe<u>r</u>ature</html>");
-        jLabelT.setEnabled(true);
-        jLabelTC.setEnabled(true);
-        jTextFieldT.setEnabled(true);}
-    } //showTemperature()
-
     private void validateIonicStrength() {
         if(jTextFieldIonicStgr.getText().length() <=0) {return;}
         try{
@@ -2776,7 +2760,6 @@ private boolean readDataFile(java.io.File dataFile) {
             ionicStrength = Math.min(1000,Math.max(ionicStrength, -1000));
             if(ionicStrength < 0) {ionicStrength = -1;}
             jTextFieldIonicStgr.setText(String.valueOf(ionicStrength));
-            showTemperature();
         } //try
         catch (NumberFormatException nfe) {
             String msg = "Wrong numeric format"+nl+nl+"Please enter a floating point number.";
@@ -2785,12 +2768,6 @@ private boolean readDataFile(java.io.File dataFile) {
             jTextFieldIonicStgr.requestFocusInWindow();
         } //catch
     } // validateIonicStrength()
-
-    private void validateTemperature() {
-        if(jTextFieldT.getText().length() <=0) {return;}
-        double t = readTemperature();
-        jTextFieldT.setText(String.valueOf(t));
-    } // validateTemperature()
 
   /** Reads the value in <code>jTextFieldIonicStgr</code>.
    * Check that it is within -1 to 1000
@@ -2809,24 +2786,43 @@ private boolean readDataFile(java.io.File dataFile) {
     return w;
   } //readIonStrength()
 
-  /** Reads the value in <code>jTextFieldT</code>.
+  /** Reads the value in <code>jLabelTemperature</code>.
    * Checks that it is within -50 to 1000 Celsius. It returns "NaN"
    * (not_a_number) if there is no temperature to read.
    * @return the temperature in Celsius */
   private double readTemperature() {
-    if(jTextFieldT.getText().length() <=0) {return Double.NaN;}
+    if(jLabelTemperature.getText().length() <=0) {return Double.NaN;}
     double w;
-    try{w = Double.parseDouble(jTextFieldT.getText());
+    try{w = Double.parseDouble(jLabelTemperature.getText());
         w = Math.min(1000,Math.max(w, -50));
         } //try
     catch (NumberFormatException nfe) {
-        if(!jTextFieldT.getText().equals("NaN")) {
+        if(!jLabelTemperature.getText().equals("NaN")) {
             out.println("Error reading Temperature:"+nl+"   "+nfe.toString());
         }
         w = Double.NaN;
     } //catch
     return w;
   } //readTemperature()
+
+  /** Reads the value in <code>jLabelPressure</code>.
+   * Checks that it is within 1 to 10000 bar. It returns "NaN"
+   * (not_a_number) if there is no pressure to read.
+   * @return the pressure in bar */
+  private double readPressure() {
+    if(jLabelPressure.getText().length() <=0) {return Double.NaN;}
+    double w;
+    try{w = Double.parseDouble(jLabelPressure.getText());
+        w = Math.min(10000,Math.max(w, 1));
+        } //try
+    catch (NumberFormatException nfe) {
+        if(!jLabelPressure.getText().equals("NaN")) {
+            out.println("Error reading Pressure:"+nl+"   "+nfe.toString());
+        }
+        w = Double.NaN;
+    } //catch
+    return w;
+  } //readPressure()
 //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="showErrMsgBx">
@@ -2952,14 +2948,19 @@ void showMsg(Exception ex) {
         } //for i
         if(!peGiven) {diag.Eh = false;}
     }
-    //--- temperature ------------------------
+    //--- temperature & pressure ------------------------
     diag.temperature = readTemperature();
-    if(Double.isNaN(diag.temperature) && diag.Eh) {
-        String msg = "\"Error: Need to plot Eh values but no temperature is given.";
-        showErrMsgBx(msg,1);
-        setCursorDef();
-        restoreMenus(true);
-        return;
+    diag.pressure = readPressure();
+    if(Double.isNaN(diag.temperature)){
+        String msg = "";
+        if(diag.Eh) {msg = "\"Error: Need to plot Eh values but no temperature is given.";}
+        else if(calcActCoeffs)  {msg = "\"Error: activity coefficient calculations required but no temperature is given.";}
+        if(!msg.isEmpty()) {
+            showErrMsgBx(msg,1);
+            setCursorDef();
+            restoreMenus(true);
+            return;            
+        }
     }
     if(diag.Eh) {peEh = (ln10*8.3144126d*(diag.temperature+273.15d)/96484.56d);} else {peEh = Double.NaN;}
     // decide if the temperature should be displayed in the diagram
@@ -2977,7 +2978,7 @@ void showMsg(Exception ex) {
     jLabelNbrPText.setEnabled(false);
     if(dbg) {out.println(" "+nSteps1+" caculation points"+nl+
             "ionic strength = "+ionicStrength+nl+
-            "temperature = "+(float)diag.temperature+nl+
+            "temperature = "+(float)diag.temperature+", pressure = "+(float)diag.pressure+nl+
             "max relative mass-balance tolerance = "+(float)tolHalta);}
 
     // ---------------------------------------
@@ -3401,6 +3402,7 @@ public class HaltaTask extends javax.swing.SwingWorker<Boolean, Integer> {
     private javax.swing.JCheckBox jCheckTable;
     private javax.swing.JComboBox jComboBoxModel;
     private javax.swing.JComboBox jComboBoxTol;
+    private javax.swing.JLabel jLabelBar;
     private javax.swing.JLabel jLabelData;
     private javax.swing.JLabel jLabelHD;
     private javax.swing.JLabel jLabelHeight;
@@ -3408,12 +3410,15 @@ public class HaltaTask extends javax.swing.SwingWorker<Boolean, Integer> {
     private javax.swing.JLabel jLabelIonicStrM;
     private javax.swing.JLabel jLabelModel;
     private javax.swing.JLabel jLabelNbrPText;
+    private javax.swing.JLabel jLabelP;
     private javax.swing.JLabel jLabelPltFile;
     private javax.swing.JLabel jLabelPointsNbr;
+    private javax.swing.JLabel jLabelPressure;
     private javax.swing.JLabel jLabelProgress;
     private javax.swing.JLabel jLabelStatus;
     private javax.swing.JLabel jLabelT;
     private javax.swing.JLabel jLabelTC;
+    private javax.swing.JLabel jLabelTemperature;
     private javax.swing.JLabel jLabelTol;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JMenuItem jMenuCancel;
@@ -3446,7 +3451,6 @@ public class HaltaTask extends javax.swing.SwingWorker<Boolean, Integer> {
     private javax.swing.JTextField jTextFieldDataFile;
     private javax.swing.JTextField jTextFieldIonicStgr;
     private javax.swing.JTextField jTextFieldPltFile;
-    private javax.swing.JTextField jTextFieldT;
     // End of variables declaration//GEN-END:variables
 
 } // class SED

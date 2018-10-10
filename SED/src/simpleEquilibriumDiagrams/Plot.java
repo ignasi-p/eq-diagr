@@ -7,7 +7,7 @@ import lib.kemi.graph_lib.GraphLib;
 
 /** Methods to create a chemical equilibrium diagram.
  * <br>
- * Copyright (C) 2014-2016 I.Puigdomenech.
+ * Copyright (C) 2014-2018 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -725,14 +725,30 @@ if(sed.dbg) {
         g.sym(headColumnX, yP, heightAx, t, 0, -1, false);
     } // if ionicStrength != NaN & !=0
 
-    // ---- Temperature
+    // ---- Temperature + Pressure (in the heading)
     if(!Double.isNaN(diag.temperature) && diag.temperature > -1.e-6) {
-        g.setLabel("-- Temperature --");
+        if(Double.isNaN(diag.pressure) || diag.pressure < 1.02) {
+            g.setLabel("-- Temperature --");
+        } else {g.setLabel("-- Temperature and Pressure --");}
         g.setPen(-1);
         t = String.format(engl,"t=%3d~C",Math.round((float)diag.temperature));
-        w = 2.7; // 7 for program PREDOM
-        g.sym((float)(xMx+w*heightAx), (0.1f*heightAx), heightAx, t, 0, -1, false);
-    } //if temperature_InCommandLine >0
+        if(!Double.isNaN(diag.pressure) && diag.pressure > 1.02) {
+            if(diag.pressure < 220.64) {
+                t = t + String.format(java.util.Locale.ENGLISH,", p=%.2f bar",diag.pressure);
+            } else {
+                if(diag.pressure <= 500) {t = t + String.format(", p=%.0f bar",diag.pressure);}
+                else {t = t + String.format(java.util.Locale.ENGLISH,", p=%.1f kbar",(diag.pressure/1000.));}
+            }
+        }
+        yP = yP + 2f*heightAx;
+        headRow++;
+        if(headRow == headRowMax) {
+            headColumnX = headColumnX + (33f*heightAx);
+            yP = yMx + 3f*heightAx;  // = yMx + 2.5f*heightAx in PREDOM
+        }
+        if(yP > (yPMx + 0.1f*heightAx)) {headColumnX = (0.5f*heightAx); yPMx = yP;}
+        g.sym(headColumnX, yP, heightAx, t, 0, -1, false);
+    } //if temperature >0
 
     // ---- Title
     if(diag.title != null && diag.title.trim().length() > 0) {
