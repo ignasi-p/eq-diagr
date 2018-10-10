@@ -4,6 +4,11 @@
   <NonVisualComponents>
     <Component class="javax.swing.ButtonGroup" name="buttonGroupDebug">
     </Component>
+    <Component class="javax.swing.JLabel" name="jLabel2">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabel2"/>
+      </Properties>
+    </Component>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenuFile">
@@ -199,7 +204,7 @@
                       <Component id="jPanelActC" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="73" max="32767" attributes="0"/>
+                      <EmptySpace pref="80" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -499,14 +504,14 @@
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="jPanelT" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jCheckActCoeff" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jCheckActCoeff" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jPanelT" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="18" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -518,16 +523,12 @@
                                   <Component id="jCheckActCoeff" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                                  <Component id="jPanelT" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="6" max="32767" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                                  <Component id="jPanel5" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jPanelT" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="33" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -609,20 +610,29 @@
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                               <Component id="jLabelT" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="jTextFieldT" min="-2" pref="42" max="-2" attributes="1"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabelTemperature" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabelTC" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
+                              <Component id="jLabelP" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabelPressure" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabelBar" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="85" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jTextFieldT" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabelT" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabelTC" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelP" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelPressure" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelBar" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelTemperature" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -631,29 +641,39 @@
                     <Component class="javax.swing.JLabel" name="jLabelT">
                       <Properties>
                         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                          <ComponentRef name="jTextFieldT"/>
+                          <ComponentRef name="default"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="&lt;html&gt;tempe&lt;u&gt;r&lt;/u&gt;ature&lt;/html&gt;"/>
+                        <Property name="text" type="java.lang.String" value="&lt;html&gt;temperature =&lt;/html&gt;"/>
                         <Property name="enabled" type="boolean" value="false"/>
                       </Properties>
-                    </Component>
-                    <Component class="javax.swing.JTextField" name="jTextFieldT">
-                      <Properties>
-                        <Property name="horizontalAlignment" type="int" value="4"/>
-                        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;The temperature is needed either to calculate Debye-H&#xfc;ckel constants&lt;br&gt;&#xa;in activity coefficient models, or to calculate Eh values&lt;br&gt;&#xa;from pe: Eh = pe*(ln(10)*R*T)/F&lt;br&gt;&#xa;Value must be between 0 and 300 (in Celsius)&lt;/html&gt;"/>
-                        <Property name="enabled" type="boolean" value="false"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldTActionPerformed"/>
-                        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldTFocusGained"/>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldTFocusLost"/>
-                        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldTKeyPressed"/>
-                        <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldTKeyTyped"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabelTC">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="&#xb0;C"/>
+                        <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xb0;C&lt;/html&gt;"/>
+                        <Property name="enabled" type="boolean" value="false"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelP">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="&lt;html&gt;pressure =&lt;/html&gt;"/>
+                        <Property name="enabled" type="boolean" value="false"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelPressure">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="88.36"/>
+                        <Property name="enabled" type="boolean" value="false"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelBar">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="&lt;html&gt; bar&lt;/html&gt;"/>
+                        <Property name="enabled" type="boolean" value="false"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelTemperature">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="25"/>
                         <Property name="enabled" type="boolean" value="false"/>
                       </Properties>
                     </Component>
@@ -680,7 +700,7 @@
                               <Component id="jLabelModel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jComboBoxModel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="31" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>

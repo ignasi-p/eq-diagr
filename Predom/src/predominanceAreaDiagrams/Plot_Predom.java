@@ -7,7 +7,7 @@ import lib.kemi.interpolate.Interpolate;
 
 /** Methods to create a chemical equilibrium diagram.
  * <br>
- * Copyright (C) 2014-2016 I.Puigdomenech.
+ * Copyright (C) 2014-2018 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -594,13 +594,10 @@ boolean xMolar, yMolar;
         pred.showMsg("Error: Neutral pH line requested but temperature NOT available.",0);
       } else {
         double pHn;
-        try {pHn = n_pH(diag.temperature);}
+        try {pHn = n_pH((float)diag.temperature, (float)diag.pressure);}
         catch (Chem.ChemicalParameterException ex) {
-            pred.showMsg(ex);  pHn = -1;
+            pred.showMsg(ex);  pHn = -10;
         }
-        catch (Interpolate.RationalInterpolationException ex) {
-            pred.showMsg(ex);  pHn = -1;
-         }
         if(pHn > 0) {
           g.setLabel("-- DOT LINE: neutral pH --"); g.moveToDrawTo(0, 0, 0);
           g.setPen(3);
@@ -630,11 +627,8 @@ boolean xMolar, yMolar;
         pred.showMsg("Error: temperature NOT available in a pH/(pe or Eh) diagram.",0);
       } else {
         double O2lgK;
-        try {O2lgK = O2_logK(diag.temperature);}
+        try {O2lgK = O2_logK((float)diag.temperature, (float)diag.pressure);}
         catch (Chem.ChemicalParameterException ex) {
-            pred.showMsg(ex);  O2lgK = -1;
-        }
-        catch (Interpolate.RationalInterpolationException ex) {
             pred.showMsg(ex);  O2lgK = -1;
         }
         if(O2lgK > 0) {
@@ -744,14 +738,38 @@ boolean xMolar, yMolar;
         g.sym(headColumnX, yP, heightAx, t, 0, -1, false);
     } // if ionicStrength != NaN & !=0
 
-    // ---- Temperature
+    // ---- Temperature in the bottom right corner
+    //if(!Double.isNaN(diag.temperature) && diag.temperature > -1.e-6) {
+    //    g.setLabel("-- Temperature --");
+    //    g.setPen(-1);
+    //    t = String.format(engl,"t=%3d~C",Math.round((float)diag.temperature));
+    //    w = 7; // 2.7 for program SED
+    //    g.sym((float)(xMx+w*heightAx), (0.1f*heightAx), heightAx, t, 0, -1, false);
+    //} //if temperature_InCommandLine >0
+    // ---- Temperature + Pressure (in the heading)
     if(!Double.isNaN(diag.temperature) && diag.temperature > -1.e-6) {
-        g.setLabel("-- Temperature --");
+        if(Double.isNaN(diag.pressure) || diag.pressure < 1.02) {
+            g.setLabel("-- Temperature --");
+        } else {g.setLabel("-- Temperature and Pressure --");}
         g.setPen(-1);
         t = String.format(engl,"t=%3d~C",Math.round((float)diag.temperature));
-        w = 7; // 2.7 for program SED
-        g.sym((float)(xMx+w*heightAx), (0.1f*heightAx), heightAx, t, 0, -1, false);
-    } //if temperature_InCommandLine >0
+        if(!Double.isNaN(diag.pressure) && diag.pressure > 1.02) {
+            if(diag.pressure < 220.64) {
+                t = t + String.format(java.util.Locale.ENGLISH,", p=%.2f bar",diag.pressure);
+            } else {
+                if(diag.pressure <= 500) {t = t + String.format(", p=%.0f bar",diag.pressure);}
+                else {t = t + String.format(java.util.Locale.ENGLISH,", p=%.1f kbar",(diag.pressure/1000.));}
+            }
+        }
+        yP = yP + 2f*heightAx;
+        headRow++;
+        if(headRow == headRowMax) {
+            headColumnX = headColumnX + (33f*heightAx);
+            yP = yMx + 2.5f*heightAx;  // = yMx + 3f*heightAx in SED
+        }
+        if(yP > (yPMx + 0.1f*heightAx)) {headColumnX = (0.5f*heightAx); yPMx = yP;}
+        g.sym(headColumnX, yP, heightAx, t, 0, -1, false);
+    } //if temperature >0
 
     yP = yPMx;
     headColumnX = (float)(0.5d*heightAx);
@@ -778,33 +796,46 @@ boolean xMolar, yMolar;
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="n_pH(temperature)">
-/** returns the neutral pH at the temperature "t" (in Celsius)
- * @param t temperature in Celsius
+/** Returns the neutral pH at the temperature "tC" (in Celsius)
+ * @param tC temperature in Celsius
+ * @param pBar pressure in bar
  * @return neutral pH at the temperature t
- * @throws chem.Chem.ChemicalParameterException
- * @throws diverse.Div.RationalInterpolationException */
-private double n_pH(double t)
-        throws Chem.ChemicalParameterException,
-        Interpolate.RationalInterpolationException {
-    return (double)n_pH((float)t);
-}
-/** returns the neutral pH at the temperature "t" (in Celsius)
- * @param t temperature in Celsius
- * @return neutral pH at the temperature t
- * @throws chem.Chem.ChemicalParameterException
- * @throws diverse.Div.RationalInterpolationException  */
-private float n_pH(float t)
-        throws Chem.ChemicalParameterException,
-        Interpolate.RationalInterpolationException {
-  float[] temp = { 0f,   25f,    60f,    100f,   150f,   200f,   250f,   300f,  350f};
-  float[] logK ={14.949f,14.000f,13.038f,12.271f,11.658f,11.325f,11.216f,11.39f,11.93f};
-  if(t < 0 || t > 350) {
+ * @throws chem.Chem.ChemicalParameterException  */
+private float n_pH(float tC, float pBar) throws Chem.ChemicalParameterException {
+  final float NAN = Float.NaN;
+  float[][] logK = new float[5][];
+  //                      0      25        50     100      150    200     250     300     350    400     450     500     550     600
+  logK[0] = new float[]{14.94f, 13.995f, 13.27f, 12.26f, 11.63f, 11.28f, 11.17f, 11.30f, 11.83f, NAN,    NAN,    NAN,    NAN,    NAN};
+  logK[1] = new float[]{14.71f, 13.81f, 13.10f, 12.10f, 11.46f, 11.09f, 10.91f, 10.91f, 11.11f, 11.36f, 12.19f,  NAN,    NAN,    NAN};
+  logK[2] = new float[]{14.51f, 13.63f, 12.94f, 11.95f, 11.31f, 10.92f, 10.70f, 10.62f, 10.66f, 10.81f, 11.07f, 11.46f, 11.98f, 12.56f};
+  logK[3] = new float[]{13.83f, 13.05f, 12.40f, 11.45f, 10.81f, 10.39f, 10.11f,  9.94f,  9.86f,  9.84f,  9.87f,  9.95f, 10.06f, 10.22f};
+  logK[4] = new float[]{13.42f, 12.56f, 11.95f, 11.03f, 10.41f,  9.98f,  9.68f,  9.49f,  9.36f,  9.30f,  9.26f,  9.27f,  9.32f,  9.39f};
+
+  if(tC < 0 || tC > 600) {
       throw new Chem.ChemicalParameterException (nl+
-              "Error in procedure \"n_pH\":"+
-              "  temperature = "+t+"°C (min=0, max=350).");
+              "Error in procedure \"n_pH\":  temperature = "+tC+"°C (min=0, max=600).");
   }
-  float npH = Interpolate.rationalInterpolation(temp, logK, t) / 2f;
-  if(pred.dbg) {out.println("--- n_pH("+t+") = "+npH);}
+  if(pBar < 1 || pBar > 5000) {
+      throw new Chem.ChemicalParameterException (nl+
+              "Error in procedure \"n_pH\":  pressure = "+pBar+" bar (min=1, max=5000).");
+  }
+  if(pBar < 220.6){
+      if(tC > 374) {
+        throw new Chem.ChemicalParameterException (nl+
+              "Error in procedure \"n_pH\":"+
+              "  t = "+tC+", p = "+pBar+" bar (at (p < 221 bar) t must be < 374C).");
+      }
+  } else if(pBar <600) {
+      if(tC > 450) {
+        throw new Chem.ChemicalParameterException (nl+
+              "Error in procedure \"n_pH\":"+
+              "  t = "+tC+", p = "+pBar+" bar (at (p > 221 and p < 600) t must be < 450C).");
+      }
+  }
+  float npH = Interpolate.interpolate3D(tC, pBar, logK) / 2f;
+
+  if(pred.dbg) {out.println("--- n_pH("+tC+","+pBar+") = "+npH);}
+
   return npH;
 }
 //</editor-fold>
@@ -813,35 +844,47 @@ private float n_pH(float t)
 /** returns the logK for reaction [O2(g) + 4H+ + 4e- = 2H2O(l)]
  * at the temperature "t" (in Celsius). Note: logK=4pH+4pe, and
  * for reaction [H2(g) = 2H+ + 2e-] logK=0  at every temperature.
- * @param t temperature in Celsius
+ * @param tC temperature in Celsius
+ * @param pBar pressure in bar
  * @return logK value at the temperature t
  * @throws chem.Chem.ChemicalParameterException
  * @throws diverse.Div.RationalInterpolationException */
-private double O2_logK(double t)
-        throws Chem.ChemicalParameterException,
-        Interpolate.RationalInterpolationException {
-    return (double)O2_logK((float)t);
-}
-/** returns the neutral pH at the temperature "t" (in Celsius)
- * @param t temperature in Celsius
- * @return neutral pH at the temperature t
- * @throws chem.Chem.ChemicalParameterException
- * @throws diverse.Div.RationalInterpolationException  */
-private float O2_logK(float t)
-        throws Chem.ChemicalParameterException,
-        Interpolate.RationalInterpolationException {
-  float[] temp = { 0f,   25f,    60f,    100f,   150f,   200f,   250f,   300f,  350f};
-  float[] logK ={92.269f,83.091f,72.588f,63.038f,53.685f,46.348f,40.445f,35.60f,31.58f};
-  if(t < 0 || t > 350) {
+private float O2_logK(float tC, float pBar) throws Chem.ChemicalParameterException {
+  final float NAN = Float.NaN;
+  float[][] logK = new float[5][];
+  //                      0      25        50     100      150    200     250     300     350    400     450     500     550     600
+  logK[0] = new float[]{92.28f, 83.10f, 75.36f, 63.04f, 53.69f, 46.35f, 40.45f, 35.60f, 31.56f,  NAN,    NAN,    NAN,    NAN,    NAN};
+  logK[1] = new float[]{91.94f, 82.79f, 75.07f, 62.79f, 53.45f, 46.13f, 40.25f, 35.42f, 31.40f, 28.01f, 25.13f,  NAN,    NAN,    NAN};
+  logK[2] = new float[]{91.60f, 82.48f, 74.78f, 62.53f, 53.22f, 45.92f, 40.04f, 35.22f, 31.19f, 27.79f, 24.88f, 22.37f, 20.19f, 18.27f};
+  logK[3] = new float[]{90.33f, 81.30f, 73.68f, 61.55f, 52.33f, 45.09f, 39.26f, 34.47f, 30.47f, 27.08f, 24.17f, 21.65f, 19.44f, 17.50f};
+  logK[4] = new float[]{89.41f, 80.18f, 72.64f, 60.63f, 51.49f, 44.32f, 38.54f, 33.79f, 29.82f, 26.46f, 23.56f, 21.06f, 18.87f, 16.93f};
+  if(tC < 0 || tC > 600) {
       throw new Chem.ChemicalParameterException (nl+
-              "Error in procedure \"O2_line\":"+
-              "  temperature = "+t+"°C (min=0, max=350).");
+              "Error in procedure \"O2_line\":  temperature = "+tC+"°C (min=0, max=600).");
   }
-  float O2lgK = Interpolate.rationalInterpolation(temp, logK, t);
-  if(pred.dbg) {out.println("--- O2_logK("+t+") = "+O2lgK);}
+  if(pBar < 1 || pBar > 5000) {
+      throw new Chem.ChemicalParameterException (nl+
+              "Error in procedure \"O2_line\":  pressure = "+pBar+" bar (min=1, max=5000).");
+  }
+  if(pBar < 220.6){
+      if(tC > 374) {
+        throw new Chem.ChemicalParameterException (nl+
+              "Error in procedure \"O2_line\":"+
+              "  t = "+tC+", p = "+pBar+" bar (at (p < 221 bar) t must be < 374C).");
+      }
+  } else if(pBar <600) {
+      if(tC > 450) {
+        throw new Chem.ChemicalParameterException (nl+
+              "Error in procedure \"O2_line\":"+
+              "  t = "+tC+", p = "+pBar+" bar (at (p > 221 and p < 600) t must be < 450C).");
+      }
+  }
+  float O2lgK = Interpolate.interpolate3D(tC, pBar, logK);
+  
+  if(pred.dbg) {out.println("--- O2_logK("+tC+","+pBar+") = "+O2lgK);}
+
   return O2lgK;
 }
 //</editor-fold>
-
 
 }// class Plot_Predom
