@@ -596,6 +596,7 @@ public class FrameDBmain extends javax.swing.JFrame {
                 disclaimerFrame = null;
                 // set this window visible, set the minimum size and the location
                 bringToFront();
+                System.out.println("    disclaimer accepted.");
                 disclaimerAccepted();
             } // done()
             }.execute(); // this returns inmediately,
@@ -1908,11 +1909,16 @@ public class FrameDBmain extends javax.swing.JFrame {
             //---- read the elements/components for the databases
             LibDB.getElements(this, pc.dbg, pd.dataBasesList, pd.elemComp);
             pd.foundH2O = false;
-            for(int i=0; i < pd.elemComp.size(); i++) {
-              if(Util.isWater(pd.elemComp.get(i)[1])) {pd.foundH2O = true; break;}
+            for (String[] elemComp : pd.elemComp) {
+                if (Util.isWater(elemComp[1])) {pd.foundH2O = true; break;}
             }
             //---- show which elements have data
             setupFrame();
+            int i = modelSelectedComps.size()-1;
+            while(i>0) {
+                componentClick(i);
+                i = modelSelectedComps.size()-1;
+            }
         }
         dbND.dispose();
         dbND = null;
@@ -2663,8 +2669,8 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
   }
   private void componentClick(int index) {
     if(index <0 || index >= modelSelectedComps.size()) {return;}
-    if(pc.dbg) {System.out.println("componentClick index="+index);}
-    String species = modelSelectedComps.get(index).toString();
+    String species = modelSelectedComps.get(index).toString(); 
+    if(pc.dbg) {System.out.println("componentClick index="+index+" species = \""+species+"\"");}
     if(Util.isProton(species)) {
         if(!askRemoveSpecies(species)) {return;}
     } // H+?

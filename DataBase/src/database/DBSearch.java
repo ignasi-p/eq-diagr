@@ -10,7 +10,7 @@ import lib.huvud.ProgramConf;
 
 /** Search reactions in the databases.
  * <br>
- * Copyright (C) 2018 I.Puigdomenech.
+ * Copyright (C) 2016-2018 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -320,7 +320,7 @@ If redox And RedoxAsk Then  */
         // For example, if the components selected
         // are Fe+2 and e-,  the database search will
         // find Fe+3 as a new component and another
-        // database earch is needed including Fe+3
+        // database search is needed including Fe+3
         // --------------------------------
         if(n_selectedComps_0 != selectedComps.size()) {
             nLoops++;
@@ -372,7 +372,7 @@ If redox And RedoxAsk Then  */
                           //add the equilibrium constant of rRedox(rdxC)
                           cplx.constant = cplx.constant + n1 * rcomp.constant;
                           for(int i = 0; i < cplx.a.length; i++) {
-                                cplx.a[i] = cplx.a[i] + n1 * rcomp.a[i];
+                                if(cplx.a[i] != Complex.EMPTY && rcomp.a[i] != Complex.EMPTY) {cplx.a[i] = cplx.a[i] + n1 * rcomp.a[i];}
                           }
                           cplx.tMax = Math.min(cplx.tMax,rcomp.tMax);
                           //add all stoichiometric coefficients of rRedox(rDxC)
