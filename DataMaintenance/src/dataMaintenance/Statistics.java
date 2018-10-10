@@ -2,7 +2,6 @@ package dataMaintenance;
 
 import lib.common.MsgExceptn;
 import lib.common.Util;
-import lib.database.Complex;
 import lib.database.CheckDatabases;
 import lib.database.ProgramDataDB;
 import lib.huvud.Div;
@@ -39,7 +38,6 @@ public class Statistics extends javax.swing.JFrame {
   private final SortedListModel sortedModelCompsUnknown = new SortedListModel();
   private final SortedListModel sortedModelNameWoutNumber = new SortedListModel();
   private final SortedListModel sortedModelNumberWoutName = new SortedListModel();
-  private final SortedListModel sortedModelHConflict = new SortedListModel();
   private final SortedListModel sortedModelChargeError = new SortedListModel();
 
   private final javax.swing.border.Border defBorder;
@@ -139,7 +137,6 @@ public class Statistics extends javax.swing.JFrame {
     sortedModelCompsUnknown.clear();
     sortedModelNameWoutNumber.clear();
     sortedModelNumberWoutName.clear();
-    sortedModelHConflict.clear();
     sortedModelChargeError.clear();
     parent.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     if(!startStatistics()) {closeWindow();}
@@ -180,10 +177,6 @@ public class Statistics extends javax.swing.JFrame {
         jLabelNumbWoutName = new javax.swing.JLabel();
         jScrollNumbWoutName = new javax.swing.JScrollPane();
         jListNumbWoutName = new javax.swing.JList();
-        jPanel3 = new javax.swing.JPanel();
-        jLabelHConflict = new javax.swing.JLabel();
-        jScrollHConflict = new javax.swing.JScrollPane();
-        jListHConflict = new javax.swing.JList();
         jPanel4 = new javax.swing.JPanel();
         jLabelChargeError = new javax.swing.JLabel();
         jScrollChargeError = new javax.swing.JScrollPane();
@@ -241,7 +234,7 @@ public class Statistics extends javax.swing.JFrame {
                 .addComponent(jCheckBoxDebugFrame)
                 .addGap(73, 73, 73)
                 .addComponent(jLabelWait)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
         jPanelCheckBoxLayout.setVerticalGroup(
             jPanelCheckBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -407,38 +400,6 @@ public class Statistics extends javax.swing.JFrame {
                 .addComponent(jScrollNumbWoutName))
         );
 
-        jLabelHConflict.setLabelFor(jListHConflict);
-        jLabelHConflict.setText("<html>Reactions having<br>proton-nbr. in conflict<br>with H+ stoich.coef.</html>");
-
-        jListHConflict.setModel(sortedModelHConflict);
-        jListHConflict.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jListHConflictFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jListHConflictFocusLost(evt);
-            }
-        });
-        jScrollHConflict.setViewportView(jListHConflict);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelHConflict, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollHConflict, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jLabelHConflict, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollHConflict, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-        );
-
         jLabelChargeError.setLabelFor(jListChargeError);
         jLabelChargeError.setText("<html>Reactions with<br>charge<br>imbalance</html>");
 
@@ -508,33 +469,28 @@ public class Statistics extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jSeparator1)
+                        .addContainerGap())
+                    .addComponent(jPanelErrs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanelErrs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabelComps)
-                                            .addComponent(jScrollPaneComps, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jPanelTot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jPanelCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabelComps)
+                                    .addComponent(jScrollPaneComps, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jPanelTot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanelCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -549,7 +505,7 @@ public class Statistics extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPaneComps, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelErrs, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -557,7 +513,6 @@ public class Statistics extends javax.swing.JFrame {
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -627,19 +582,6 @@ public class Statistics extends javax.swing.JFrame {
         jScrollNumbWoutName.setBorder(defBorder);
     }//GEN-LAST:event_jListNumbWoutNameFocusLost
 
-    private void jListHConflictFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jListHConflictFocusGained
-        jScrollHConflict.setBorder(highlightedBorder);
-        if(sortedModelHConflict.getSize()>0) {
-            int i = Math.max(0, jListHConflict.getSelectedIndex());
-            jListHConflict.setSelectedIndex(i);
-            jListHConflict.ensureIndexIsVisible(i);
-        }
-    }//GEN-LAST:event_jListHConflictFocusGained
-
-    private void jListHConflictFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jListHConflictFocusLost
-        jScrollHConflict.setBorder(defBorder);
-    }//GEN-LAST:event_jListHConflictFocusLost
-
     private void jListChargeErrorFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jListChargeErrorFocusGained
         jScrollChargeError.setBorder(highlightedBorder);
         if(sortedModelChargeError.getSize()>0) {
@@ -702,7 +644,6 @@ public class Statistics extends javax.swing.JFrame {
     }
     jLabelNameWoutNumb.setForeground(clr);
     jLabelNumbWoutName.setForeground(clr);
-    jLabelHConflict.setForeground(clr);
     jLabelChargeError.setForeground(clr);
     jLabelCompsUnknown.setForeground(clr);
     if(enable) {
@@ -716,8 +657,6 @@ public class Statistics extends javax.swing.JFrame {
     jListNameWoutNumb.setBackground(clr);
     jListNumbWoutName.setEnabled(enable);
     jListNumbWoutName.setBackground(clr);
-    jListHConflict.setEnabled(enable);
-    jListHConflict.setBackground(clr);
     jListChargeError.setEnabled(enable);
     jListChargeError.setBackground(clr);
     jListCompsUnk.setEnabled(enable);
@@ -745,47 +684,9 @@ public class Statistics extends javax.swing.JFrame {
     jListComps.setEnabled(show);
     jListNameWoutNumb.setEnabled(show);
     jListNumbWoutName.setEnabled(show);
-    jListHConflict.setEnabled(show);
     jListChargeError.setEnabled(show);
     jListCompsUnk.setEnabled(show);
   } //showJPanelTot(show)
-//</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="reactString(Complex)">
-  /** Returns a String representation of the reaction such as:<pre>
-   * "<code>Fe 2+;1;;;e-;-1;;;;;;;0;</code>"</pre>
-   * Equivalent to <code>Complex.toString</code>, except that (1) the product name,
-   * the logK and the reference are excluded, and (2) the reactants are sorted.
-   * That is, it returns only the reaction (sorted).
-   * If the product name starts with "@" this method returns an empty String ("").
-   * @param cmplx the complex
-   * @return a text representing the reaction
-   * @see Complex#toString() Complex.toString  */
-    private static String reactString(Complex cmplx) {
-    if(cmplx == null) {return "";}
-    //if(cmplx.name.startsWith("@")) {return text.toString();}
-    if(cmplx.name.startsWith("@")) {return "";}
-    Complex c;
-    try {c = (Complex)cmplx.clone();}
-    catch(CloneNotSupportedException cex) {return "";}
-    // -- exclude water?
-    //for(int ic =0; ic < Complex.NDIM; ic++) {
-    //  if(Util.isWater(c.component[ic])) {c.component[ic] = ""; c.numcomp[ic] = 0; break;}
-    //}
-    StringBuilder text = new StringBuilder();  
-    //text.append(Complex.encloseInQuotes(c.name)); text.append(";");
-    Complex.sortReactants(c);
-    for(int ic =0; ic < Complex.NDIM; ic++) {
-      if(c.component[ic] == null || c.component[ic].length()<=0
-              // || Util.isWater(c.component[ic])
-              || Math.abs(c.numcomp[ic]) < 0.001) {text.append(";;"); continue;}
-      text.append(Complex.encloseInQuotes(c.component[ic])); text.append(";");
-      text.append(Util.formatDbl4(c.numcomp[ic]).trim()); text.append(";");
-    }
-    if(Math.abs(c.proton) >=0.001) {text.append(Util.formatDbl4(c.proton).trim());}
-    text.append(";");
-    return text.toString();
-  } //reactString(cmplx)
 //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="startStatistics">
@@ -930,12 +831,6 @@ public class Statistics extends javax.swing.JFrame {
             treeSet = new java.util.TreeSet<String>(lists.coefWithoutReactant);
             for(String t : treeSet) {outputPW.println(" "+t);}
         }
-        if(lists.protonConflict.size() >0) {
-            outputPW.println(nl+"Error: reactions having a confict between stoich.coeff for H+"+nl+
-                                  "    and the nbr-protons:");
-            treeSet = new java.util.TreeSet<String>(lists.protonConflict);
-            for(String t : treeSet) {outputPW.println(" "+t);}
-        }
         if(lists.chargeImbalance.size() >0) {
             outputPW.println(nl+"Error: reactions with charge imbalance:");
             treeSet = new java.util.TreeSet<String>(lists.chargeImbalance);
@@ -973,7 +868,9 @@ public class Statistics extends javax.swing.JFrame {
         }
 
         // -- References
-        if(pd.references != null) {
+        if(pd.references == null) {
+            outputPW.println(nl+"No reference file found.");
+        } else {
             if(lists.refsNotFnd != null && !lists.refsNotFnd.isEmpty()) {
                 outputPW.println(nl+"Error: citations with no references:");
                 java.util.Collections.sort(lists.refsNotFnd,String.CASE_INSENSITIVE_ORDER);
@@ -1036,9 +933,6 @@ public class Statistics extends javax.swing.JFrame {
         for (String r : lists.chargeImbalance) {
             sortedModelChargeError.add(r);
         }
-        for (String r : lists.protonConflict) {
-            sortedModelHConflict.add(r);
-        }
         for (String r : lists.reactantsUnknown) {
             sortedModelCompsUnknown.add(r);
         }
@@ -1065,7 +959,6 @@ public class Statistics extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelComps;
     private javax.swing.JLabel jLabelCompsUnknown;
     private javax.swing.JLabel jLabelErr;
-    private javax.swing.JLabel jLabelHConflict;
     private javax.swing.JLabel jLabelN;
     private javax.swing.JLabel jLabelNa;
     private javax.swing.JLabel jLabelNaFiles;
@@ -1079,12 +972,10 @@ public class Statistics extends javax.swing.JFrame {
     private javax.swing.JList jListChargeError;
     private javax.swing.JList jListComps;
     private javax.swing.JList jListCompsUnk;
-    private javax.swing.JList jListHConflict;
     private javax.swing.JList jListNameWoutNumb;
     private javax.swing.JList jListNumbWoutName;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelCheckBox;
@@ -1092,7 +983,6 @@ public class Statistics extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelTot;
     private javax.swing.JScrollPane jScrollChargeError;
     private javax.swing.JScrollPane jScrollCompsUnk;
-    private javax.swing.JScrollPane jScrollHConflict;
     private javax.swing.JScrollPane jScrollNameWoutNumb;
     private javax.swing.JScrollPane jScrollNumbWoutName;
     private javax.swing.JScrollPane jScrollPaneComps;

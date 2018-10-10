@@ -28,7 +28,7 @@ import lib.huvud.SortedProperties;
  * 
  * @author Ignasi Puigdomenech */
 public class DataMaintenance extends javax.swing.JFrame {
-  private static final String VERS = "2018-July-25";
+  private static final String VERS = "2018-Oct-10";
   /** all instances will use the same redirected frame */
   private static RedirectedFrame msgFrame = null;
   private final ProgramDataDB pd = new ProgramDataDB();
@@ -1317,7 +1317,7 @@ public class DataMaintenance extends javax.swing.JFrame {
           java.io.DataInputStream dis = null;
           boolean binary, added, removed, found;
           String msg;
-          int db = 0;
+          int db = 0, nTot;
           publish(0);
           jLabelNbr.setText("0");   jLabelNbr.setVisible(true);
           java.util.ArrayList<Complex> toRemove = new java.util.ArrayList<Complex>();
@@ -1401,15 +1401,16 @@ public class DataMaintenance extends javax.swing.JFrame {
                   } else {
                       //name does not start with "@": add complex...
                       //check if the components are in the list of possible components
-                      msg = Complex.checkComplex(complex);
-                      for(int i=0; i < Complex.NDIM; i++) {
-                        if(complex.component[i] != null && complex.component[i].length() >0) {
+                      msg = complex.check();
+                      nTot = Math.min(complex.reactionComp.size(),complex.reactionCoef.size());
+                      for(int i=0; i < nTot; i++) {
+                        if(complex.reactionComp.get(i) != null && complex.reactionComp.get(i).length() >0) {
                             found = false;
                             for(int j=0; j < eComp.size(); j++) {
-                                if(complex.component[i].equals(eComp.get(j)[1])) {found = true; break;}
+                                if(complex.reactionComp.get(i).equals(eComp.get(j)[1])) {found = true; break;}
                             } //for j
                             if(!found) {
-                                String t = "Component \""+complex.component[i]+"\" in complex \""+complex.name+"\""+nl+"not found in the element-files.";
+                                String t = "Component \""+complex.reactionComp.get(i)+"\" in complex \""+complex.name+"\""+nl+"not found in the element-files.";
                                 if(msg == null || msg.length() <= 0) {msg = t;} else {msg = msg +nl+ t;}
                             }//not found
                         }
@@ -1435,7 +1436,7 @@ public class DataMaintenance extends javax.swing.JFrame {
                           oldCmplx = datIt.next();
                           if(Complex.sameNameAndStoichiometry(oldCmplx, complex) ||
                                 (Util.nameCompare(oldCmplx.name, complex.name)
-                                && (!Complex.isRedox(oldCmplx) || !Complex.isRedox(complex)))
+                                && (!oldCmplx.isRedox() || !complex.isRedox()))
                                 ) { toRemove.add(oldCmplx); }
                       }
                       if(!toRemove.isEmpty()) {
@@ -1463,7 +1464,7 @@ public class DataMaintenance extends javax.swing.JFrame {
                       }
                   } //starts with "@"?
                   cmplxNbr++;
-                } //while - loopComplex:
+                } //while - loopComplex
                 } catch (Exception ex) {System.out.println("An exception occurred."); return null;}
                 converted++;
                 try{br.close();} catch (java.io.IOException ex) {System.err.println("Error "+ex.toString()); return null;}
@@ -1542,23 +1543,24 @@ public class DataMaintenance extends javax.swing.JFrame {
             ds = new java.io.DataOutputStream(new java.io.FileOutputStream(fileCmplxSave));
             cmplxNbr = 0;
             System.out.println("total nbr of reactions: "+dataList.size());
-            double nTot = (double)dataList.size();
+            double w = (double)dataList.size();
             for (java.util.Iterator<Complex> datIt = dataList.iterator(); datIt.hasNext(); ) {
               if(!working) {return null;} //this will go to finally
-              publish((int)(100*(double)cmplxNbr/nTot));
+              publish((int)(100*(double)cmplxNbr/w));
               jLabelNbr.setText(String.valueOf(cmplxNbr));
               complex = datIt.next();
               LibDB.writeBinCmplx(ds,complex);
               ds.flush();
 //try{Thread.sleep(1);} catch (InterruptedException ex) {}
               //mark the components that are used as "needed"
+              nTot = Math.min(complex.reactionComp.size(),complex.reactionCoef.size());
               loopNDIM:
-              for(int j=0; j<Complex.NDIM; j++) {
-                  if(Math.abs(complex.numcomp[j]) < 0.0001 ||
-                     complex.component[j] == null || complex.component[j].length() <=0) {continue;}
+              for(int j=0; j < nTot; j++) {
+                  if((Math.abs(complex.reactionCoef.get(j)) < 0.0001) ||
+                     complex.reactionComp.get(j) == null || complex.reactionComp.get(j).length() <=0) {continue;}
                   fnd = false;
                   for(int i = 0; i < eCompSize; i++) {
-                    if(eComp.get(i)[1].equals(complex.component[j])) {
+                    if(eComp.get(i)[1].equals(complex.reactionComp.get(j))) {
                         // only components (metals or ligands) that are used
                         // will be saved in the elements file
                         eCompUsed[i] = true;
@@ -1566,7 +1568,7 @@ public class DataMaintenance extends javax.swing.JFrame {
                         //no "break": a component (ligand) might be in under several elements
                     }
                   }//for i              
-                  if(!fnd) {MsgExceptn.exception("--- Component: "+complex.component[j]+" in complex "+complex.name+nl+" not found in the element files.");}
+                  if(!fnd) {MsgExceptn.exception("--- Component: "+complex.reactionComp.get(j)+" in complex "+complex.name+nl+" not found in the element files.");}
               }//for j
               cmplxNbr++;
             } //for datIt-Iterator
