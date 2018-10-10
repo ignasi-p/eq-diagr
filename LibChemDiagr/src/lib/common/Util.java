@@ -337,6 +337,13 @@ public class Util {
   //-------------------
 
   //<editor-fold defaultstate="collapsed" desc="areEqualDoubles(w1, w2)">
+  /** Compares two doubles using "Double.compare". If they are not equal
+   * then checks if they are equal within 1e-7*(min(w1,w2)).
+   * 
+   * @param w1
+   * @param w2
+   * @return true if both doubles are equal
+   */
   public static boolean areEqualDoubles(double w1, double w2) {
     if(Double.compare(w1, w2) == 0) {return true;}
     // check if one is NaN or infinite and the other not

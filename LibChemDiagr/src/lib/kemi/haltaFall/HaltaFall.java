@@ -725,8 +725,7 @@ public void haltaCalc()
     if(c.dbg >=ERR_DEBUG_FASTA_4) {
         out.println("--- haltaCalc at Slingor; nva="+nva+", nfall="+nfall+"; nvaf="+nvaf);
         printArrays(true,false); //print iva[], ivaBra[], ivaNov[]
-        if(nvaf>0) {printArraysFasta(false,false,false,false,false, true, false,false);} //print ivaf[]
-        if(nfall>0) {printArraysFasta(false,false, true, false,false,false,false,false);} //print fall[]
+        if(nvaf>0) {printArraysFasta(true, false,false,false,false, true, false,false);} //print ifall and ivaf[]
     }
 
     for(rva =0; rva < nva; rva++) {

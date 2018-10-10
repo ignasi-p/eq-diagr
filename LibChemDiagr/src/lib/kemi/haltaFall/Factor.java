@@ -211,11 +211,11 @@ private void beginFactor(Chem c, String path1, String path2, String path3) {
  * inidividual ion activity coefficients will be stored
  * @see lib.kemi.chem.Chem.Diagr#activityCoeffsModel
  *                                              Chem.Diagr.activityCoeffsModel
- * @throws lib.kemi.interpolate.Interpolate.RationalInterpolationException
+ * @throws IllegalArgumentException
  * @throws lib.kemi.haltaFall.Factor.ActivityCoefficientDataException
  * @throws lib.kemi.haltaFall.Factor.SITdataException */
 public void factor(double[] C, double[] lnf)
-    throws ActivityCoefficientDataException, SITdataException, Interpolate.RationalInterpolationException {
+        throws IllegalArgumentException, ActivityCoefficientDataException, SITdataException {
   boolean tChanged, iChanged;
   //-----------------------------------------------------------
   // This procedure uses the variables:
@@ -1121,14 +1121,11 @@ private void setEpsilon(int row, int col, float val0, float val1, float val2) {
 /** Prints the equations for the model used to calculate the log of the
  * activity coefficients.
  * @param verbose if false a single line is printed
- * @throws lib.kemi.interpolate.Interpolate.RationalInterpolationException
+ * @throws IllegalArgumentException
  * @throws lib.kemi.haltaFall.Factor.SITdataException
- * @throws lib.kemi.readDataLib.ReadDataLib.ReadDataLibException 
- */
+ * @throws lib.kemi.readDataLib.ReadDataLib.ReadDataLibException  */
 public void factorPrint(boolean verbose)
-        throws Interpolate.RationalInterpolationException,
-            SITdataException,
-            ReadDataLib.ReadDataLibException {
+        throws IllegalArgumentException, SITdataException, ReadDataLib.ReadDataLibException {
   if(verbose) {out.println(dashLine);}
   if(dataNotSupplied || diag.activityCoeffsModel < 0) { // ideal solution
     if(verbose) {out.println(
@@ -1338,9 +1335,8 @@ public static boolean isGasOrLiquid(String t0) {
 /** A-gamma
  * @param t temperature in Celsius
  * @return value of A-gamma at that temperature
- * @throws lib.kemi.interpolate.Interpolate.RationalInterpolationException 
- */
-private float Ag(float t) throws Interpolate.RationalInterpolationException {
+ * @throws IllegalArgumentException  */
+private float Ag(float t) throws IllegalArgumentException {
   float[] temp = {0f,5f,10f,15f,20f,25f,30f,35f,40f,45f,50f,55f,60f,65f,
     70f,75f,80f,85f,90f,95f,100f,105f,110f,115f,120f,125f,130f,135f,
     140f,145f,150f,155f,160f,165f,170f,175f,180f,185f,190f,195f,200f,
@@ -1360,7 +1356,7 @@ private float Ag(float t) throws Interpolate.RationalInterpolationException {
     0.8099f,0.8387f,0.8697f,0.8860f,0.9030f,0.9391f,0.9785f,1.0218f,//200-260
     1.0699f,1.0960f,1.1238f,1.1850f,1.2555f,1.4943f,1.9252f};  //270-350
   if(t < 0 || t > 350) {return Float.NaN;}
-  float Ag = Interpolate.rationalInterpolation(temp, A, t);
+  float Ag = Interpolate.interpolate(temp, A, t);
   return Ag;
 } //Ag(t)
 // </editor-fold>
@@ -1369,9 +1365,8 @@ private float Ag(float t) throws Interpolate.RationalInterpolationException {
 /** Bγ
  * @param t temperature in Celsius
  * @return value of B-gamma at that temperature
- * @throws lib.kemi.interpolate.Interpolate.RationalInterpolationException 
- */
-private float Bg(float t) throws Interpolate.RationalInterpolationException {
+ * @throws IllegalArgumentException */
+private float Bg(float t) throws IllegalArgumentException  {
   float[] temp = {0f,5f,10f,15f,20f,25f,30f,35f,40f,45f,50f,55f,60f,65f,
     70f,75f,80f,85f,90f,95f,100f,105f,110f,115f,120f,125f,130f,135f,
     140f,145f,150f,155f,160f,165f,170f,175f,180f,185f,190f,195f,200f,
@@ -1391,7 +1386,7 @@ private float Bg(float t) throws Interpolate.RationalInterpolationException {
     0.3655f,0.3681f,0.3707f,0.3721f,0.3734f,0.3762f,0.3792f,0.3822f, //200-260
     0.3855f,0.3871f,0.3889f,0.3926f,0.3965f,0.4085f,0.4256f}; //270-350
   if(t < 0 || t > 350) {return Float.NaN;}
-  float Bg = Interpolate.rationalInterpolation(temp, B, t);
+  float Bg = Interpolate.interpolate(temp, B, t);
   return Bg;
 } //Bg(t)
 // </editor-fold>
@@ -1400,10 +1395,9 @@ private float Bg(float t) throws Interpolate.RationalInterpolationException {
 /** bγ for NaCl
  * @param t temperature in Celsius
  * @return value of b-gamma for NaCl at that temperature
- * @throws lib.kemi.interpolate.Interpolate.RationalInterpolationException 
+ * @throws IllegalArgumentException
  */
-private float bgNaCl(float t)
-        throws Interpolate.RationalInterpolationException {
+private float bgNaCl(float t) throws IllegalArgumentException {
   float[] temp = {0f,25f,50f,75f,100f,125f,150f,175f,200f,
     225f,250f,275f,300f,325f,350f};
   // from Table A-2 in Oelkers and Helgeson (1990) (p.737)
@@ -1413,7 +1407,7 @@ private float bgNaCl(float t)
   float[] b ={0.041f,0.064f,0.074f,0.077f,0.076f,0.072f,0.065f,0.056f,0.046f,
     0.033f,0.017f,-0.003f,-0.029f,-0.063f,-0.114f};
   if(t < 0 || t > 350) {return Float.NaN;}
-  float bg = Interpolate.rationalInterpolation(temp, b, t);
+  float bg = Interpolate.interpolate(temp, b, t);
   return bg;
 } //bgNaCl(t)
 // </editor-fold>
@@ -1422,10 +1416,8 @@ private float bgNaCl(float t)
 /** g-function (solvent contribution to the effective ionic radii),
  * @param t temperature in Celsius
  * @return the value of "g" at that temperature
- * @throws lib.kemi.interpolate.Interpolate.RationalInterpolationException 
- */
-private float gT(float t)
-        throws Interpolate.RationalInterpolationException {
+ * @throws IllegalArgumentException */
+private float gT(float t) throws IllegalArgumentException {
   float[] temp = {175f,200f,225f,250f,275f,300f,325f,350f};
   // Table H-8 in Tanger and Helgeson (1988) (p.92)
   // Tanger IV, J. C. and Helgeson, H. C.,
@@ -1438,7 +1430,7 @@ private float gT(float t)
   if(t > 350) {return Float.NaN;}
   float gt = 0f;
   if(t <=175) {return gt;}
-  gt = Interpolate.rationalInterpolation(temp, g, t);
+  gt = Interpolate.interpolate(temp, g, t);
   return gt;
 }
 // </editor-fold>

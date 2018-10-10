@@ -6,7 +6,7 @@ import lib.kemi.chem.Chem;
 /** Write a data file.
  * The data to write must be stored in an instance of class Chem.
  *
- * Copyright (C) 2015-2016 I.Puigdomenech.
+ * Copyright (C) 2015-2018 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -121,6 +121,13 @@ public static void writeChemSyst (Chem ch,
     } else {outputFile.format(engl, "%s, ",namn.ident[i]);}
     ix = i - cs.Na;
     if(logB.length()>0) {logB.delete(0, logB.length());}
+    if(Double.isNaN(cs.lBeta[ix])) {
+        throw new WriteChemSystArgsException(nl+
+                    "Error: species \""+namn.ident[i]+"\" has logK = Not-a-Number."+nl+
+                    "   in \"writeChemSyst\","+nl+
+                    "   while writing the data file"+nl+
+                    "   \""+tmpFileName+"\"");
+    }
     logB.append(Util.formatDbl3(cs.lBeta[ix]));
     //make logB occupy at least 10 chars: padding with space
     j = 10 - logB.length();

@@ -17,6 +17,6 @@ package lib;
  * 
  * @author Ignasi Puigdomenech */ 
 public class Version { 
-    static final String VERSION = "2018-08-17"; 
+    static final String VERSION = "2018-10-09"; 
     public static String version() {return VERSION;} 
 } 
