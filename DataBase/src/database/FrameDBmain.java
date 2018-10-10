@@ -26,7 +26,7 @@ import lib.huvud.Splash;
  * along with this program.  If not, see http://www.gnu.org/licenses/
  * @author Ignasi Puigdomenech */
 public class FrameDBmain extends javax.swing.JFrame {
-  static final String VERS = "2018-July-25";
+  static final String VERS = "2018-Oct-10";
   /** all instances will use the same redirected frame */
   static RedirectedFrame msgFrame = null;
 
@@ -115,8 +115,8 @@ public class FrameDBmain extends javax.swing.JFrame {
   javax.swing.DefaultListModel<String> modelSelectedComps = new javax.swing.DefaultListModel<>();
   javax.swing.DefaultListModel<String> modelComplexes = new javax.swing.DefaultListModel<>();
 
-
-  private DBSearch hs;
+  /** An object that performs searches reactions in the databases */
+  private DBSearch srch;
 
   /** when ending the program (through window "ExitDialog"):
    * does the user want to send the data file to "Diagram"? */
@@ -182,11 +182,20 @@ public class FrameDBmain extends javax.swing.JFrame {
   //<editor-fold defaultstate="collapsed" desc="setTitle()">
   private void setTitle() {
     String title = "Hydrochemical logK Database";
-    if(pd.temperature <=22.5 || pd.temperature >=27.5) {
-        String t = "Temperature = " + String.format("%.0f 'C",pd.temperature);
+    String t;
+    if(pd.temperature_C <=22.5 || pd.temperature_C >=27.5) {
+        t = "Temperature = " + String.format("%.0f 'C",pd.temperature_C);
         //title = title + "   -   " + t;
         jLabelTemperature.setText(t);
     } else {jLabelTemperature.setText(" ");}
+    if(pd.pressure_bar >1.1) {
+        if(pd.pressure_bar < lib.database.IAPWSF95.CRITICAL_pBar) {
+            t = "Pressure = " + String.format(java.util.Locale.ENGLISH,"%.2f bar",pd.pressure_bar);
+        } else {
+            t = "Pressure = " + String.format("%.0f bar",pd.pressure_bar);
+        }
+        jLabelPressure.setText(t);
+    } else {jLabelPressure.setText(" ");}
     this.setTitle(title);    
   }
 
@@ -555,6 +564,12 @@ public class FrameDBmain extends javax.swing.JFrame {
     // System.out.println("--- configureOptionPane();");
     Util.configureOptionPane();
 
+    if(pd.temperatureAllowHigher) {
+        jMenuItemTemperature.setText("set Temperature & pressure");
+    } else {
+        jMenuItemTemperature.setText("set Temperature");
+    }
+
     prepareButtons();
     setTitle();
     pack();
@@ -720,6 +735,7 @@ public class FrameDBmain extends javax.swing.JFrame {
         jButton102 = new javax.swing.JButton();
         jButton103 = new javax.swing.JButton();
         jLabelTemperature = new javax.swing.JLabel();
+        jLabelPressure = new javax.swing.JLabel();
         jPanelBottom = new javax.swing.JPanel();
         jPanelLower = new javax.swing.JPanel();
         jLabelAvailableComp = new javax.swing.JLabel();
@@ -1424,6 +1440,15 @@ public class FrameDBmain extends javax.swing.JFrame {
         });
         jPanelPeriodicT.add(jLabelTemperature, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 10, -1, -1));
 
+        jLabelPressure.setText("Pressure = 1.014 bar");
+        jLabelPressure.setToolTipText("");
+        jLabelPressure.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabelPressureMouseClicked(evt);
+            }
+        });
+        jPanelPeriodicT.add(jLabelPressure, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, -1, -1));
+
         jPanelTable.add(jPanelPeriodicT, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 510, -1));
 
         jPanelBottom.setLayout(new java.awt.CardLayout());
@@ -1651,7 +1676,7 @@ public class FrameDBmain extends javax.swing.JFrame {
         jMenuOptions.setEnabled(false);
 
         jMenuItemTemperature.setMnemonic('T');
-        jMenuItemTemperature.setText("set Temperature");
+        jMenuItemTemperature.setText("set Temperature & pressure");
         jMenuItemTemperature.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemTemperatureActionPerformed(evt);
@@ -2178,7 +2203,7 @@ public class FrameDBmain extends javax.swing.JFrame {
             if(p.y < r.y || p.y > r.y+r.height) {i=-1;}
             String rt;
             if(i>=0) {
-                rt = Complex.reactionTextWithLogK(hs.dat.get(i), pd.temperature);
+                rt = srch.dat.get(i).reactionTextWithLogK(pd.temperature_C, pd.pressure_bar);
             } else {
                 rt = " ";
             }
@@ -2206,7 +2231,8 @@ public class FrameDBmain extends javax.swing.JFrame {
                 jPopupMenu.show(jListComplexes, evt.getX(), evt.getY());
             }
             else if(evt.getClickCount() >1) {
-                ShowDetailsDialog dd = new ShowDetailsDialog(this, true, hs.dat.get(i), pd.references);
+                ShowDetailsDialog dd = new ShowDetailsDialog(this, true, srch.dat.get(i),
+                        pd.temperature_C, pd.pressure_bar, pd.references);
                 dd.setVisible(true);
             }
         }//if i>=0
@@ -2242,12 +2268,19 @@ public class FrameDBmain extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuAdvH2OActionPerformed
 
     private void jMenuItemTemperatureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemTemperatureActionPerformed
-      SetTempDialog tDialog = new SetTempDialog(dbf, true, pc, pd);
+      SetTempPressDialog tDialog = new SetTempPressDialog(dbf, true, pc, pd);
       setTitle();
-      if(pc.dbg) {System.out.println("--- temperature changed to = "+pd.temperature);}
-      if(hs != null) {
-          hs.temperature = pd.temperature;
-          if(pc.dbg) {System.out.println("setting temperature of search results = "+hs.temperature);}
+      if(pc.dbg) {
+          System.out.println("--- temperature changed to = "+pd.temperature_C+nl+
+                             "      pressure to = "+(float)pd.pressure_bar);
+      }
+      if(srch != null) {
+          srch.temperature_C = pd.temperature_C;
+          srch.pressure_bar = pd.pressure_bar;
+          if(pc.dbg) {
+              System.out.println("setting temperature of search results = "+srch.temperature_C+
+                      ", pressure = "+srch.pressure_bar);
+          }
       }
     }//GEN-LAST:event_jMenuItemTemperatureActionPerformed
 
@@ -2256,20 +2289,28 @@ public class FrameDBmain extends javax.swing.JFrame {
       lastReactionInFocus = index;
       if(pc.dbg) {System.out.println("jMenuItemData("+index+")");}
       if(index <0 || index >= modelComplexes.size()) {return;}
-      if(pc.dbg) {System.out.println("Show data(s) for: \""+hs.dat.get(index).name.trim()+"\"");}
-      ShowDetailsDialog dd = new ShowDetailsDialog(this, true, hs.dat.get(index), pd.references);
+      if(pc.dbg) {System.out.println("Show data(s) for: \""+srch.dat.get(index).name.trim()+"\"");}
+      ShowDetailsDialog dd = new ShowDetailsDialog(this, true, srch.dat.get(index),
+              pd.temperature_C, pd.pressure_bar, pd.references);
       dd.setVisible(true);
     }//GEN-LAST:event_jMenuItemDataActionPerformed
 
     private void jLabelTemperatureMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelTemperatureMouseClicked
       if(evt.getClickCount() >1  // double-click
-              && (pd.temperature <24.99 || pd.temperature >25.01)) {
-        pd.temperature = 25;
+              && (pd.temperature_C <24.99 || pd.temperature_C >25.01
+              || pd.pressure_bar >1.02)) {
+        pd.temperature_C = 25;
+        pd.pressure_bar = 1.;
         setTitle();
-        if(pc.dbg) {System.out.println("--- temperature changed to = "+pd.temperature);}
-        if(hs != null) {
-          hs.temperature = pd.temperature;
-          if(pc.dbg) {System.out.println("setting temperature of search results = "+hs.temperature);}
+        if(pc.dbg) {
+            System.out.println("--- temperature changed to = "+pd.temperature_C+", p = "+(float)pd.pressure_bar+" bar");
+        }
+        if(srch != null) {
+            srch.temperature_C = pd.temperature_C;
+            srch.pressure_bar = pd.pressure_bar;
+            if(pc.dbg) {
+              System.out.println("    setting temperature of search results = "+srch.temperature_C+", p = "+srch.pressure_bar+" bar");
+            }
         }
       }
     }//GEN-LAST:event_jLabelTemperatureMouseClicked
@@ -2313,6 +2354,26 @@ public class FrameDBmain extends javax.swing.JFrame {
         AskSolids askSolids = new AskSolids(this, true, pc, pd, askingBeforeSearch);
         askSolids.start();
     }//GEN-LAST:event_jMenuAdvSolidsActionPerformed
+
+    private void jLabelPressureMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelPressureMouseClicked
+      if(evt.getClickCount() >1  // double-click
+              && (pd.temperature_C <24.99 || pd.temperature_C >25.01
+              || pd.pressure_bar >1.02)) {
+        pd.temperature_C = 25;
+        pd.pressure_bar = 1.;
+        setTitle();
+        if(pc.dbg) {
+            System.out.println("--- temperature changed to = "+pd.temperature_C+", p = "+(float)pd.pressure_bar+" bar");
+        }
+        if(srch != null) {
+            srch.temperature_C = pd.temperature_C;
+            srch.pressure_bar = pd.pressure_bar;
+            if(pc.dbg) {
+              System.out.println("    setting temperature of search results = "+srch.temperature_C+", p = "+srch.pressure_bar+" bar");
+            }
+        }
+      }
+    }//GEN-LAST:event_jLabelPressureMouseClicked
 
     //</editor-fold>
 
@@ -2579,9 +2640,9 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
     if(pc.dbg) {System.out.println("complexClick index="+index);}
     String species = modelComplexes.get(index).toString();
     if(!askRemoveSpecies(species)) {return;}
-    if(Util.isSolid(species)) {hs.nf--;} else {hs.nx--;}
+    if(Util.isSolid(species)) {srch.nf--;} else {srch.nx--;}
     modelComplexes.remove(index);
-    hs.dat.remove(index);
+    srch.dat.remove(index);
     //jListComplexes.clearSelection();
     //jMenuExit.setText("Search and Exit");
     jMenuExit.setEnabled(true);
@@ -2820,6 +2881,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
 
   //<editor-fold defaultstate="collapsed" desc="read-write INI file">
 
+  //<editor-fold defaultstate="collapsed" desc="readIni()">
   /** Reads program settings saved when the program was previously closed.
    * Exceptions are reported both to the console (if there is one) and to a dialog.<br>
    * Reads the ini-file in:<ul>
@@ -2987,6 +3049,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
         } else {fileIniUser = null;}
     }
   } // readIni()
+  //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="readIni2">
   /**
@@ -3063,10 +3126,15 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
             pd.redoxP = Boolean.parseBoolean(propertiesIni.getProperty("Redox_P"));
             pd.includeH2O = Boolean.parseBoolean(propertiesIni.getProperty("H2O"));
             pd.diagramProgr = propertiesIni.getProperty("diagramProgram");
-            try{pd.temperature = Double.parseDouble(propertiesIni.getProperty("Temperature"));}
-            catch (NullPointerException e) {pd.temperature = 25;}
-            catch (NumberFormatException e) {pd.temperature = 25;
-                System.out.println("Error reading temperature in \"ini\"-file; setting temperature = 25.");
+            try{pd.temperature_C = Double.parseDouble(propertiesIni.getProperty("Temperature"));}
+            catch (NullPointerException e) {pd.temperature_C = 25;}
+            catch (NumberFormatException e) {pd.temperature_C = 25;
+                System.out.println("Error reading temperature in \"ini\"-file; setting temperature = 25 C.");
+            }
+            try{pd.pressure_bar = Double.parseDouble(propertiesIni.getProperty("Pressure"));}
+            catch (NullPointerException e) {pd.pressure_bar = 1;}
+            catch (NumberFormatException e) {pd.pressure_bar = 1;
+                System.out.println("Error reading pressure in \"ini\"-file; setting pressure = 1 bar.");
             }
             try{advancedMenu = Boolean.parseBoolean(propertiesIni.getProperty("advancedMenu"));}
             catch (NullPointerException e) {advancedMenu = false;}
@@ -3197,9 +3265,10 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
     //  each time these windows are loaded
 
     pd.allSolids = Math.min(3, Math.max(0, pd.allSolids));
-    double maxT;
-    if(pd.temperatureAllowHigher) {maxT = 350.001;} else {maxT = 100.001;}
-    pd.temperature = Math.min(maxT, Math.max(-0.00001, pd.temperature));
+    double maxT, maxP;
+    if(pd.temperatureAllowHigher) {maxT = 600; maxP = 5000;} else {maxT = 100; maxP = 1.0142;}
+    pd.temperature_C = Math.min(maxT, Math.max(-0.00001, pd.temperature_C));
+    pd.pressure_bar = Math.min(maxP, Math.max(1, pd.pressure_bar));
     laf = Math.min(2,Math.max(0,laf));
     System.out.println(LINE);
     System.out.flush();
@@ -3250,7 +3319,8 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
       // set the default path to the "current directory" (from where the program is started)
       pc.setPathDef(); // set Default Path = User Directory
       pd.temperatureAllowHigher = false;
-      pd.temperature = 25;
+      pd.temperature_C = 25;
+      pd.pressure_bar = 1;
       pd.allSolidsAsk = false;
       // 0=include all solids; 1=exclude (cr); 2=exclude (c); 3=exclude (cr)&(c)
       pd.allSolids = 0;
@@ -3279,6 +3349,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
     } // iniDefaults()
   //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="saveIni(file)">
   /** Save program settings.
    * Exceptions are reported both to the console (if there is one) and to a dialog */
   private boolean saveIni(java.io.File f) {
@@ -3325,7 +3396,8 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
     propertiesIni.setProperty("All_Solids_Ask", String.valueOf(pd.allSolidsAsk));
     propertiesIni.setProperty("All_Solids", String.valueOf(pd.allSolids));
     propertiesIni.setProperty("Temperature_Allow_Higher", String.valueOf(pd.temperatureAllowHigher));
-    propertiesIni.setProperty("Temperature", Util.formatNumAsInt(pd.temperature).trim());
+    propertiesIni.setProperty("Temperature", Util.formatNumAsInt(pd.temperature_C).trim());
+    propertiesIni.setProperty("Pressure", Util.formatNumAsInt(pd.pressure_bar).trim());
     propertiesIni.setProperty("Redox_Ask", String.valueOf(pd.redoxAsk));
     propertiesIni.setProperty("Redox_N", String.valueOf(pd.redoxN));
     propertiesIni.setProperty("Redox_S", String.valueOf(pd.redoxS));
@@ -3374,8 +3446,9 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
     } //finally
     return ok;
   } // saveIni()
+  //</editor-fold>
 
-    //</editor-fold>
+  //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="searchReactions(exit)">
   private void searchReactions(final boolean exit) {
@@ -3427,187 +3500,142 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
         modelComplexes.clear();
     }
 
-    javax.swing.SwingWorker srch = new javax.swing.SwingWorker<Boolean, Void>() {
-    private boolean searchError;
-    private boolean temperatureCorrectionsPossible;
-    @Override
-    public Boolean doInBackground() {
-        //do we need to search the databases?
-        if(!needToSearch) {
-            setCursorDef();
-            return true;
-        } else {
-            searchError = false;
-            if(pc.dbg) {System.out.println("---- new search");}
-
-            try{
-                hs = new DBSearch(pc,pd);
-                setCursorDef();
-                // the results of the search are stored in "hs.dat"
-                hs.searchComplexes(dbf);
-                javax.swing.SwingUtilities.invokeLater(new Runnable() {@Override public void run() {
-                    jMenuExit.setText("Exit");
-                    jMenuExit.setEnabled(true);
-                    jMenuSearch.setEnabled(true);
-                }}); //invokeLater(Runnable)
-            }
-            catch (DBSearch.SearchException ex) {
-                MsgExceptn.showErrMsg(dbf, ex.getMessage(), 1);
-                searchError = true;
-                hs = null;
-                return false; //this will go to finally
-            }
-            finally {
-                javax.swing.SwingUtilities.invokeLater(new Runnable() {@Override public void run() {
-                    menuOptionsEnable(true);
-                    jMenuExit.setEnabled(true);
-                    java.awt.CardLayout cl = (java.awt.CardLayout)dbf.jPanelBottom.getLayout();
-                    cl.show(dbf.jPanelBottom,"cardLower");
-                    //jListComplexes.requestFocusInWindow();
-                }}); //invokeLater(Runnable)
-                searchingComplexes = false;
-            }
-            temperatureCorrectionsPossible = true;
-            if(!searchError) {
-                for(int i = 0; i < hs.dat.size(); i++) {modelComplexes.addElement(hs.dat.get(i).name);}
-                // ---
-                // ---  Temperature corrections?
-                // ---
-                boolean fnd = false;
-                if(hs.temperature < 24.99 || hs.temperature > 25.01) {
-                    java.util.ArrayList<String> items = new java.util.ArrayList<String>();
-                    long cnt = 0;
-                    // Is there enthalpy data for all reactions?
-                    for(int ix=0; ix < hs.nx+hs.nf; ix++) {
-                        if(hs.dat.get(ix).deltH == Complex.EMPTY) {
-                            if(!fnd) {System.out.println("--------- Temperature extrapolations"); fnd = true;}
-                            System.out.println("species \""+hs.dat.get(ix).name+"\": missing enthalpy.");
-                            items.add(hs.dat.get(ix).name);
-                            cnt++;
-                        }
-                    }
-                    if(cnt >0) {
-                        System.out.println("---------");
-                        //javax.swing.DefaultListModel aModel = new javax.swing.DefaultListModel(); // java 1.6
-                        javax.swing.DefaultListModel<String> aModel = new javax.swing.DefaultListModel<>();
-                        java.util.Iterator<String> iter = items.iterator();
-                        while(iter.hasNext()) {aModel.addElement(iter.next());}
-                        String msg = "<html><b>Error:</b><br>"+
-                            "Temperature extrapolations from 25 to "+
-                                        String.format("%.0f",hs.temperature)+"°C are requested,<br>"+
-                            "but enthalpy values are missing for the following species:</html>";
-                        javax.swing.JLabel aLabel = new javax.swing.JLabel(msg);
-                        // javax.swing.JList aList = new javax.swing.JList(aModel); // java 1.6
-                        javax.swing.JList<String> aList = new javax.swing.JList<>(aModel);
-                        aList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-                        aList.setVisibleRowCount(5);
-                        javax.swing.JScrollPane aScrollPane = new javax.swing.JScrollPane();
-                        aScrollPane.setViewportView(aList);
-                        aList.setFocusable(false);
-                        javax.swing.JLabel endLabel = new javax.swing.JLabel("Please change the temperature to 25°C in the menu \"Options\".");
-                        Object[] o = {aLabel, aScrollPane, endLabel};
-                        javax.swing.JOptionPane.showMessageDialog(dbf, o, "Temperature extrapolations",
-                                        javax.swing.JOptionPane.ERROR_MESSAGE);
-                        temperatureCorrectionsPossible = false;
-                    } else {
-                        temperatureCorrectionsPossible = true;
-                        javax.swing.JOptionPane.showMessageDialog(dbf,
-                            "Note:"+nl+
-                            "Equilibrium constants will be"+nl+
-                            "extrapolated from 25 to "+Util.formatNumAsInt(hs.temperature)+"°C"+nl+
-                            "when you save the data file.",
-                            "Selected Temperature = "+Util.formatNumAsInt(hs.temperature),
-                            javax.swing.JOptionPane.WARNING_MESSAGE);
-                    } // cnt >0?
-                } // temp != 25
-            } // searchError?
-            if(searchError || !temperatureCorrectionsPossible) {
-                final boolean se = searchError;
-                //javax.swing.SwingUtilities.invokeLater(new Runnable() {@Override public void run() {
-                    jMenuExit.setEnabled(true);
-                    jMenuSearch.setEnabled(true);
-                    if(se) {
-                        jMenuExit.setText("Search and Exit");
-                        jScrollPaneComplexes.setVisible(false);
-                        jLabel_cr_solids.setText(" ");
-                        jLabelComplexes.setVisible(false);
-                    } else {
-                        jMenuExit.setText("Exit");
-                    }
-                //}});
-                if(searchError) {
-                    hs = null;
-                    if(pc.dbg) {System.out.println("---- new search end with error.");}
-                }
-                setCursorDef();
-                return false;
-            }
-            if(pc.dbg) {System.out.println("---- new search end.");}
-            doneSomeWork = true;
-        } //needToSearch
-        return true;
-    } // doInBackground()
-    @Override protected void done() {
-        if(needToSearch) {
-            if(isCancelled()) {
-                if(pc.dbg) {System.out.println("--- SwingWorker cancelled.");}
-                return;
-            }
-            if(searchError) {
-                if(pc.dbg) {System.out.println("--- Search error.");}
-                return;
-            }
-            if(!temperatureCorrectionsPossible) {
-                if(pc.dbg) {System.out.println("--- Temperature Corrections NOT Possible.");}
-                return;
-            }
-        }
-        if(!exit) {return;}
-        if(pc.dbg) {System.out.println("--- exit ...");}
-        exitCancel = true;
-        send2Diagram = false;
-        ExitDialog exitDialog = new ExitDialog(dbf, true, pc, pd, hs);
-        if(exitCancel) {
-            if(pc.dbg) {System.out.println("--- Exit cancelled");}
-            return;
-        }
-        if(send2Diagram) {
-            if(pd.diagramProgr == null) {
-                MsgExceptn.exception("Error \"pd.diagramProgr\" is null."); return;
-            }
-            if(outputDataFile == null || outputDataFile.length() <=0) {
-                System.out.println("   outputDataFile name is empty!?");
-                return;
-            }
-            if(pc.dbg) {System.out.println("Sending file to the diagram-making program");}
-
-            final String diagramProg = LibDB.getDiagramProgr(pd.diagramProgr);
-            if(diagramProg == null || diagramProg.trim().length()<=0) {
-                String t = "Error: could not find the diagram-making program:"+nl;
-                if(pd.diagramProgr != null) {t = t+"    \""+pd.diagramProgr+"\"";}
-                else {t = t +"    \"null\"";}
-                MsgExceptn.exception(t);
-                javax.swing.JOptionPane.showMessageDialog(dbf, t, pc.progName,javax.swing.JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            setCursorWait();
-            Thread hlp = new Thread() {@Override public void run(){
-                String[] argsDiagram = new String[]{"\""+outputDataFile+"\""};
-                boolean waitForCompletion = false;
-                lib.huvud.RunProgr.runProgramInProcess(null,diagramProg,argsDiagram,waitForCompletion,pc.dbg,pc.pathAPP);
-                try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
-                catch (InterruptedException e) {}
-                setCursorDef();
-            }};//new Thread
-            hlp.start();
-
-        } //if send2Diagram
-        doneSomeWork = false;
-        if(pc.dbg) {System.out.println("--- SwingWorker done.");}
-        end_program();
-    } // done()
-    }; // SwingWorker srch
-    srch.execute();
+    javax.swing.SwingWorker srchWorker; 
+      srchWorker = new javax.swing.SwingWorker<Boolean, Void>() {
+          private boolean searchError;
+          private boolean temperatureCorrectionsPossible;
+          @Override
+          public Boolean doInBackground() {
+              //do we need to search the databases?
+              if(!needToSearch) {
+                  setCursorDef();
+                  return true;
+              } else {
+                  searchError = false;
+                  if(pc.dbg) {System.out.println("---- new search");}
+                  
+                  try{
+                      srch = new DBSearch(pc,pd);
+                      setCursorDef();
+                      // the results of the search are stored in "srch.dat"
+                      srch.searchComplexes(dbf);
+                      javax.swing.SwingUtilities.invokeLater(new Runnable() {@Override public void run() {
+                          jMenuExit.setText("Exit");
+                          jMenuExit.setEnabled(true);
+                          jMenuSearch.setEnabled(true);
+                      }}); //invokeLater(Runnable)
+                  }
+                  catch (DBSearch.SearchException ex) {
+                      MsgExceptn.showErrMsg(dbf, ex.getMessage(), 1);
+                      searchError = true;
+                      srch = null;
+                      return false; //this will go to finally
+                  }
+                  finally {
+                      javax.swing.SwingUtilities.invokeLater(new Runnable() {@Override public void run() {
+                          menuOptionsEnable(true);
+                          jMenuExit.setEnabled(true);
+                          java.awt.CardLayout cl = (java.awt.CardLayout)dbf.jPanelBottom.getLayout();
+                          cl.show(dbf.jPanelBottom,"cardLower");
+                          //jListComplexes.requestFocusInWindow();
+                      }}); //invokeLater(Runnable)
+                      searchingComplexes = false;
+                  }
+                  temperatureCorrectionsPossible = true;
+                  if(!searchError) {
+                      for (Complex dat : srch.dat) {modelComplexes.addElement(dat.name);}
+                      // ---
+                      // ---  Temperature corrections?
+                      // ---
+                      temperatureCorrectionsPossible = DBSearch.checkTemperature(srch, dbf, true);
+                  } // searchError?
+                  if(searchError || !temperatureCorrectionsPossible) {
+                      final boolean se = searchError;
+                      //javax.swing.SwingUtilities.invokeLater(new Runnable() {@Override public void run() {
+                      jMenuExit.setEnabled(true);
+                      jMenuSearch.setEnabled(true);
+                      if(se) {
+                          jMenuExit.setText("Search and Exit");
+                          jScrollPaneComplexes.setVisible(false);
+                          jLabel_cr_solids.setText(" ");
+                          jLabelComplexes.setVisible(false);
+                      } else {
+                          jMenuExit.setText("Exit");
+                      }
+                      //}});
+                      if(searchError) {
+                          srch = null;
+                          if(pc.dbg) {System.out.println("---- new search end with error.");}
+                      }
+                      setCursorDef();
+                      return false;
+                  }
+                  if(pc.dbg) {System.out.println("---- new search end.");}
+                  doneSomeWork = true;
+              } //needToSearch
+              return true;
+          } // doInBackground()
+          @Override protected void done() {
+              if(needToSearch) {
+                  if(isCancelled()) {
+                      if(pc.dbg) {System.out.println("--- SwingWorker cancelled.");}
+                      return;
+                  }
+                  if(searchError) {
+                      if(pc.dbg) {System.out.println("--- Search error.");}
+                      return;
+                  }
+                  if(!temperatureCorrectionsPossible) {
+                      if(pc.dbg) {System.out.println("--- Temperature Corrections NOT Possible.");}
+                      return;
+                  }
+              }
+              if(!exit) {return;}
+              if(pc.dbg) {System.out.println("--- exit ...");}
+              exitCancel = true;
+              send2Diagram = false;
+              ExitDialog exitDialog = new ExitDialog(dbf, true, pc, pd, srch);
+              if(exitCancel) {
+                  if(pc.dbg) {System.out.println("--- Exit cancelled");}
+                  return;
+              }
+              if(send2Diagram) {
+                  if(pd.diagramProgr == null) {
+                      MsgExceptn.exception("Error \"pd.diagramProgr\" is null."); return;
+                  }
+                  if(outputDataFile == null || outputDataFile.length() <=0) {
+                      System.out.println("   outputDataFile name is empty!?");
+                      return;
+                  }
+                  if(pc.dbg) {System.out.println("Sending file to the diagram-making program");}
+                  
+                  final String diagramProg = LibDB.getDiagramProgr(pd.diagramProgr);
+                  if(diagramProg == null || diagramProg.trim().length()<=0) {
+                      String t = "Error: could not find the diagram-making program:"+nl;
+                      if(pd.diagramProgr != null) {t = t+"    \""+pd.diagramProgr+"\"";}
+                      else {t = t +"    \"null\"";}
+                      MsgExceptn.exception(t);
+                      javax.swing.JOptionPane.showMessageDialog(dbf, t, pc.progName,javax.swing.JOptionPane.ERROR_MESSAGE);
+                      return;
+                  }
+                  setCursorWait();
+                  Thread hlp = new Thread() {@Override public void run(){
+                      String[] argsDiagram = new String[]{"\""+outputDataFile+"\""};
+                      boolean waitForCompletion = false;
+                      lib.huvud.RunProgr.runProgramInProcess(null,diagramProg,argsDiagram,waitForCompletion,pc.dbg,pc.pathAPP);
+                      try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+                      catch (InterruptedException e) {}
+                      setCursorDef();
+                  }};//new Thread
+                  hlp.start();
+                  
+              } //if send2Diagram
+              doneSomeWork = false;
+              if(pc.dbg) {System.out.println("--- SwingWorker done.");}
+              end_program();
+          } // done()
+      };
+    srchWorker.execute();
   } //searchReactions(exit)
   //</editor-fold>
 
@@ -3949,6 +3977,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
     private javax.swing.JLabel jLabelMid;
     private javax.swing.JLabel jLabelNow;
     private javax.swing.JLabel jLabelNowLoop;
+    private javax.swing.JLabel jLabelPressure;
     private javax.swing.JLabel jLabelRight;
     private javax.swing.JLabel jLabelTemperature;
     protected javax.swing.JLabel jLabel_cr_solids;

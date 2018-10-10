@@ -3,13 +3,14 @@ package database;
 import lib.common.MsgExceptn;
 import lib.common.Util;
 import lib.database.Complex;
+import lib.database.IAPWSF95;
 import lib.database.LibDB;
 import lib.database.ProgramDataDB;
 import lib.huvud.ProgramConf;
 
-/** Search reactions in the databases .
+/** Search reactions in the databases.
  * <br>
- * Copyright (C) 2016 I.Puigdomenech.
+ * Copyright (C) 2018 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,9 +30,9 @@ public class DBSearch {
   /** the search results: complexes and solids found in the database search */
   java.util.ArrayList<Complex> dat = new java.util.ArrayList<Complex>();
   /** temperature in degrees Celsius */
-  double temperature = 25;
+  double temperature_C = 25;
   /** pressure in bar */
-  double pressure = 1;
+  double pressure_bar = 25;
   /** number of components (soluble and solid) */
   int na;
   /** number of soluble complexes */
@@ -108,10 +109,12 @@ public class DBSearch {
     this.pc = programConf;
     if(programData == null) {throw new SearchException("Error: programDataDB = null in \"DBSearch\" constructor");}
     this.pd = programData;
-    this.temperature = pd.temperature;
+    this.temperature_C = pd.temperature_C;
+    this.pressure_bar = pd.pressure_bar;
   }
 
   //<editor-fold defaultstate="collapsed" desc="searchComplexes">
+
  /** Searches the databases for reactions fitting the components selected by the user
   * and specified in the selectedComps[] list. If the electron "e-" is selected,
   * the databases may have to be scanned repeated times if new redox components
@@ -135,6 +138,7 @@ public class DBSearch {
     }
     boolean found;
 
+    try{
     if(pc.dbg) {System.out.println(FrameDBmain.LINE+nl+"--- Searching reactions");}
 
 
@@ -162,7 +166,7 @@ public class DBSearch {
         MsgExceptn.exception("Error in \"searchComplexes\":"+nl+
                 "the number of solid components does not match!");
     }
-
+    } catch (Exception ex) {throw new SearchException(Util.stack2string(ex));}
 // todo ?
 /* advanced option: exclude some redox reactions?
 If redox And RedoxAsk Then  */
@@ -190,11 +194,12 @@ If redox And RedoxAsk Then  */
     //    if HS- and e- are selected
     // The list with these components/complexes is kept in comps_X[]
     // --------------- Redox loop: new components ----------------------------------
+    try{
     if(redox) {
       boolean excluded;
       String[] elemComp; String selCompName; String el;
-      for(int i =0; i< selectedComps.size(); i++) {
-        selCompName = selectedComps.get(i).toString();
+      for(String selComp : selectedComps) {
+        selCompName = selComp.toString();
         for(int k0 =0; k0< pd.elemComp.size(); k0++) { //loop through all components in the database (CO3-2,SO4-2,HS-,etc)
           elemComp = pd.elemComp.get(k0);
           if(Util.nameCompare(elemComp[1],selCompName)) { //got the component selected by the user
@@ -216,8 +221,8 @@ If redox And RedoxAsk Then  */
                         // if it is not, it must be considered as a possible redox component
                         found = false;
                         if(comps.size()>0) {
-                            for(int j=0; j < comps.size(); j++) {
-                              if(Util.nameCompare(elemComp[1],comps.get(j))) {found = true; break;}
+                            for(String t : comps) {
+                              if(Util.nameCompare(elemComp[1],t)) {found = true; break;}
                             } //for j
                         }
                         if(!found) {comps.add(elemComp[1]);}
@@ -226,8 +231,8 @@ If redox And RedoxAsk Then  */
                         //if it is not, it must be considered as a possible redox component
                         found = false;
                         if(comps_X.size() >0) {
-                            for(int j=0; j < comps_X.size(); j++) {
-                              if(Util.nameCompare(elemComp[1],comps_X.get(j))) {found = true; break;}
+                            for(String t : comps_X) {
+                              if(Util.nameCompare(elemComp[1],t)) {found = true; break;}
                             } //for j
                         }
                         if(!found) {comps_X.add(elemComp[1]);}
@@ -237,7 +242,7 @@ If redox And RedoxAsk Then  */
               } //for k1;  list of all available components
           } //if elemComp[1] = selCompName
         } //for k0;  list of all available components
-      } //for i;   all selected components
+      } // for all selected components
       if(pc.dbg) {
         int n = comps.size();
         System.out.println("--- Possible new redox components:"+nl+"  comps[] size:"+n);
@@ -248,6 +253,7 @@ If redox And RedoxAsk Then  */
         if(comps.size() > 0 || n > 0) {System.out.println("---");}
       }
     } //if redox
+    } catch (Exception ex) {throw new SearchException(Util.stack2string(ex));}
     //-------- end of make lists for redox systems ----------
 
     // --------------------------------------------------
@@ -255,6 +261,7 @@ If redox And RedoxAsk Then  */
     //   loop searching database for redox systems
     //   (for non-redox systems the loop is run only once)
     // --------------------------------------------------
+    try{
     while(true) {
 
         // ---------------------------------------------
@@ -285,27 +292,27 @@ If redox And RedoxAsk Then  */
         //                     those selected originally by the user and
         //                     the new ones found in the database search.
         int n_selectedComps_0 = selectedComps.size();
-        for(int i=0; i < dat.size(); i++) {
-            if(Complex.isRedox(dat.get(i))) {
+        for(Complex cplx : dat) {
+            if(cplx.isRedox()) {
                 found = false;
-                String t1 = dat.get(i).name;
-                for(int j=0; j < comps.size(); j++) {
-                    if(Util.nameCompare(t1,comps.get(j))) {
+                String t1 = cplx.name;
+                for(String t2 : comps) {
+                    if(Util.nameCompare(t1,t2)) {
                         //found a complex (e g Fe+3) which is a component
                         //   check that it is not already selected
                         found = true;
-                        for(int k=0; k < selectedComps.size(); k++) {
-                            if(Util.nameCompare(t1,selectedComps.get(k))) {found = false; break;}
+                        for(String t3 : selectedComps) {
+                            if(Util.nameCompare(t1,t3)) {found = false; break;}
                         } //for k
                         break;
                     }
                 } //for j
                 if(found) {
                     selectedComps.add(t1);
-                    rRedox.add(dat.get(i));
+                    rRedox.add(cplx);
                 } //if found
             } //if ePresent
-        } //for i
+        } //for cplx
 
         // --------------------------------
         // If new redox components have been found,
@@ -321,6 +328,7 @@ If redox And RedoxAsk Then  */
         }
         break;
     } //while
+    } catch (Exception ex) {throw new SearchException(Util.stack2string(ex));}
     // --------------------------------
     //   end loops searching database
     //   for redox systems
@@ -335,113 +343,76 @@ If redox And RedoxAsk Then  */
     // a new redox component Fe+3 is found, and
     // to the reaction: Fe+3 - H+ = FeOH+2
     // one must add:    Fe+2 - e- = Fe+3    etc
+    try{
     if(rRedox.size() > 0) {
         double n1, n2, np, rdx_dH, rdx_dCp;
-        int rdxC, fnd;
-                Complex cplx;
-        boolean hPresent;
+        int rdxC, fnd, nTot;
         String lComp, lComp2;
         boolean needsMore;
-        for(int i=0; i < dat.size(); i++) { // loop through all Complexes
+        Complex rcomp;
+        for(Complex cplx: dat) { // loop through all Complexes
             // because cplx is a reference to an object of type Complex in the ArrayList,
             // any change to cplx changes the object in the ArrayList (dat)
-            cplx = dat.get(i);
             while (true) {
                 needsMore = false;
-                for(int ic=0; ic < Complex.NDIM; ic++) {
-                    lComp = cplx.component[ic];
+                np = 0;
+                nTot = Math.min(cplx.reactionComp.size(),cplx.reactionCoef.size());
+                for(int ic=0; ic < nTot; ic++) {
+                    lComp = cplx.reactionComp.get(ic);
                     if(lComp != null && lComp.length() >0) {
-                      n1 = cplx.numcomp[ic];
-                      np = cplx.proton;
+                      n1 = cplx.reactionCoef.get(ic);
+                      if(Util.isProton(lComp)) {np = n1;}
                       rdxC = -1; //is this component a new redox component ?
                       for(int ir=0; ir < rRedox.size(); ir++) {
                           if(Util.nameCompare(rRedox.get(ir).name, lComp)) {rdxC = ir; break;}
                       }//for ir
-                      if(rdxC > -1) { //it has a redox component: make corrections
+                      if(rdxC > -1) { //it has a redox component: Make corrections
                           needsMore = true;
-                          //add the equilibrium constant of rRedox(rDxC)
-                          cplx.constant = cplx.constant + n1 * rRedox.get(rdxC).constant;
-                          rdx_dH = rRedox.get(rdxC).deltH;
-                          rdx_dCp = rRedox.get(rdxC).deltCp;
-                          if(!Double.isNaN(cplx.deltH) && cplx.deltH != Complex.EMPTY
-                                  && !Double.isNaN(rdx_dH) && rdx_dH != Complex.EMPTY) {
-                             cplx.deltH = cplx.deltH + n1 * rdx_dH;}
-                          if(!Double.isNaN(cplx.deltCp) && cplx.deltCp != Complex.EMPTY
-                                  && !Double.isNaN(rdx_dCp) && rdx_dCp != Complex.EMPTY) {
-                             cplx.deltCp = cplx.deltCp + n1 * rdx_dCp;}
+                          rcomp = rRedox.get(rdxC);
+                          //add the equilibrium constant of rRedox(rdxC)
+                          cplx.constant = cplx.constant + n1 * rcomp.constant;
+                          for(int i = 0; i < cplx.a.length; i++) {
+                                cplx.a[i] = cplx.a[i] + n1 * rcomp.a[i];
+                          }
+                          cplx.tMax = Math.min(cplx.tMax,rcomp.tMax);
                           //add all stoichiometric coefficients of rRedox(rDxC)
-                          cplx.component[ic] = "";
-                          cplx.numcomp[ic] = 0;
-                          hPresent = false;
-                          for(int irr=0; irr < Complex.NDIM; irr++) {
-                              lComp2 = rRedox.get(rdxC).component[irr];
-                              if(lComp2 != null && lComp2.length() > 0) {
-                                  n2 = rRedox.get(rdxC).numcomp[irr];                                  
-                                  fnd = -1;
-                                  for(int ic2=0; ic2<Complex.NDIM; ic2++) {
-                                      if(Util.nameCompare(cplx.component[ic2], lComp2)) {
-                                          fnd = ic2;
-                                          cplx.numcomp[ic2] = cplx.numcomp[ic2] + n1 * n2;
-                                          break;
-                                      }
-                                  }//for ic2
-                                  if(fnd < 0) {
-                                      for(int ic2=0; ic2<Complex.NDIM; ic2++) {
-                                          if(cplx.component[ic2].length() <=0) {
-                                              fnd = ic2; cplx.component[ic2] = lComp2;
-                                              if(Util.isProton(lComp2)) {
-                                                  cplx.numcomp[ic2] = np + n1 * n2;
-                                              } else {
-                                                  cplx.numcomp[ic2] = n1 * n2;
-                                              }//if "H+"
-                                              break;
-                                          }//if component[ic2] = ""
-                                      }//for ic2
-                                  }//if fnd <0
-                                  if(Util.isProton(lComp2)) {
-                                      hPresent = true; cplx.proton = np + n1 * n2;
-                                  } else {
-                                      if(fnd < 0) {
-                                          
-                                          String msg = "Internal program error."+nl+nl+
-                                                "Species \""+cplx.name+"\", component \""+lComp+"\""+nl+
-                                                "correcting for \""+lComp2+"\""+nl+nl+
-                                                "Please report this to the author of this software.";
-                                          throw new SearchException(msg);
-                                      }//if fnd<0
-                                  }//if "H+"
-                              }//if lComp2
-                          }//for irr
-                          n2 = rRedox.get(rdxC).proton;
-                          if(!hPresent && Math.abs(n2) >0.001) { //make correction for "protons"
-                              lComp2 = "H+";
+                          cplx.reactionComp.set(ic,"");
+                          cplx.reactionCoef.set(ic,0.);
+                          for(int irr=0;
+                                  irr < Math.min(rcomp.reactionComp.size(),rcomp.reactionCoef.size());
+                                  irr++) {
+                              lComp2 = rcomp.reactionComp.get(irr);
+                              if(lComp2 == null || lComp2.length() <= 0) {continue;}
+                              n2 = rcomp.reactionCoef.get(irr);                                  
                               fnd = -1;
-                              for(int ic2=0; ic2 < Complex.NDIM; ic2++) {
-                                  if(cplx.component[ic2].equals(lComp2)) {
-                                      fnd = ic2;
-                                      cplx.numcomp[ic2] = cplx.numcomp[ic2] + n1 * n2;
-                                      break;
+                              for(int ic2=0;
+                                          ic2<Math.min(cplx.reactionComp.size(), cplx.reactionCoef.size());
+                                          ic2++) {
+                                  if(Util.nameCompare(cplx.reactionComp.get(ic2), lComp2)) {
+                                    fnd = ic2;
+                                    cplx.reactionCoef.set(ic2, cplx.reactionCoef.get(ic2) + n1 * n2);
+                                    break;
                                   }
                               }//for ic2
-                              cplx.proton = cplx.proton + n1 * n2;
                               if(fnd < 0) {
-                                  for(int ic2=0; ic2 < Complex.NDIM; ic2++) {
-                                      if(cplx.component[ic2].length() <= 0) {
-                                          cplx.component[ic2] = lComp2;
-                                          cplx.numcomp[ic2] = cplx.proton;
-                                          break;
-                                      }
-                                  }//for ic2
+                                cplx.reactionComp.add(lComp2);
+                                if(Util.isProton(lComp2)) {
+                                    cplx.reactionCoef.add(np + n1 * n2);
+                                } else {
+                                    cplx.reactionCoef.add(n1 * n2);
+                                }//if "H+"
                               }//if fnd <0
-                          }// if !hPresent && abs(rRedox.get(rdxC).proton) >0.001
-
+                          }//for irr
                       }//if rDxC>-1
                     }//if lComp
                 } //for ic
                 if(!needsMore) {break;}
             } //while true
+            System.out.println(cplx.toString());
+            System.out.println(cplx.sortReactants().toString());
         }//for i (loop through all Complexes)
     } //iv sd.rRedox.size() > 0
+    } catch (Exception ex) {throw new SearchException(Util.stack2string(ex));}
 
     // ------- End of: Perform corretions for
     //         new redox components.
@@ -454,9 +425,91 @@ If redox And RedoxAsk Then  */
 
     if(pc.dbg) {System.out.println("--- Search reactions ended.");}
   } //searchComplexes
-
   //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="checkTemperature">
+  /** Checks that for a given search (srch), where the temperature and
+   * pressure are specified, each reaction has data that allows the calculation
+   * of logK at the given temperature and pressure. If any of the reactions does
+   * not have data, a message is displayed to the user, "false" is returned (not OK).
+   * If all the reactions have adequate temperature-pressure data, "true" is returned (OK).
+   * 
+   * @param srch a search engine object, where the temperature and pressure are specified
+   * @param parent a window to anchor messages
+   * @param warning if true a "note" message will be displayed telling the user
+   * that temperature extrapolations will be made
+   * @return true if there are no problems with the temperature-pressure extrpolations,
+   * false if some of the reactions do not have data at the required temperature
+   */
+  public static boolean checkTemperature(DBSearch srch, java.awt.Container parent, boolean warning) {
+    boolean fnd = false, temperatureCorrectionsPossible = true;
+    if(srch.temperature_C > 24.9 && srch.temperature_C < 25.1) {return temperatureCorrectionsPossible;}
+    if(srch.nx+srch.nf < 1) {
+        MsgExceptn.exception("Programming error: checking temperature before \"searchComplexes\".");
+        return temperatureCorrectionsPossible;
+    }
+    java.util.ArrayList<String> items = new java.util.ArrayList<String>();
+    // Is there T-P data for all reactions?
+    long cnt = 0;
+    for(int ix=0; ix < srch.nx+srch.nf; ix++) {
+        if(srch.temperature_C > srch.dat.get(ix).tMax || 
+                Double.isNaN(srch.dat.get(ix).logKatTandP(srch.temperature_C, srch.pressure_bar))) {
+            if(!fnd) {
+                System.out.println("--------- Temperature extrapolations to "
+                    +String.format("%.0f",srch.temperature_C)+" C, pressure = "+
+                    String.format(java.util.Locale.ENGLISH,"%.2f",srch.pressure_bar)+" bar");
+                fnd = true;
+            }
+            System.out.println("species \""+srch.dat.get(ix).name+
+                    "\": missing T-P data, max temperature = "+
+                    String.format("%.0f",srch.dat.get(ix).tMax));
+            items.add(srch.dat.get(ix).name);
+            cnt++;
+        }
+    }
+    if(cnt >0) {
+        System.out.println("---------");
+        //javax.swing.DefaultListModel aModel = new javax.swing.DefaultListModel(); // java 1.6
+        javax.swing.DefaultListModel<String> aModel = new javax.swing.DefaultListModel<>();
+        java.util.Iterator<String> iter = items.iterator();
+        while(iter.hasNext()) {aModel.addElement(iter.next());}
+        String msg = "<html><b>Error:</b><br>"+
+                    "Temperature extrapolations from 25 to "+
+                    String.format("%.0f",srch.temperature_C)+"°C<br>(pressure = ";
+        if(srch.pressure_bar > IAPWSF95.CRITICAL_pBar) {msg = msg + Util.formatNumAsInt(srch.pressure_bar);}
+        else {msg = msg + String.format(java.util.Locale.ENGLISH,"%.2f",srch.pressure_bar);}
+        msg = msg + " bar) are requested,<br>but temperature-pressure data"+
+                    " are missing<br>for the following species:</html>";
+        javax.swing.JLabel aLabel = new javax.swing.JLabel(msg);
+        // javax.swing.JList aList = new javax.swing.JList(aModel); // java 1.6
+        javax.swing.JList<String> aList = new javax.swing.JList<>(aModel);
+        aList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        aList.setVisibleRowCount(5);
+        javax.swing.JScrollPane aScrollPane = new javax.swing.JScrollPane();
+        aScrollPane.setViewportView(aList);
+        aList.setFocusable(false);
+        javax.swing.JLabel endLabel = new javax.swing.JLabel("Please change the temperature in the menu \"Options\".");
+        Object[] o = {aLabel, aScrollPane, endLabel};
+        javax.swing.JOptionPane.showMessageDialog(parent, o, "Temperature extrapolations",
+                                        javax.swing.JOptionPane.ERROR_MESSAGE);
+        temperatureCorrectionsPossible = false;
+    } else { // cnt <= 0
+        temperatureCorrectionsPossible = true;
+        if(warning) {
+            String msg = "Note:"+nl+"Equilibrium constants will be"+nl+
+                    "extrapolated from 25 to "+Util.formatNumAsInt(srch.temperature_C)+"°C"+nl+"(pressure ";
+            if(srch.pressure_bar > IAPWSF95.CRITICAL_pBar) {msg = msg + Util.formatNumAsInt(srch.pressure_bar);}
+            else {msg = msg + String.format(java.util.Locale.ENGLISH,"%.2f",srch.pressure_bar);}
+            msg = msg + " bar)"+nl+"when you save the data file.";
+            javax.swing.JOptionPane.showMessageDialog(parent,msg,
+                    "Selected Temperature = "+Util.formatNumAsInt(srch.temperature_C),
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+        } // if warning
+    } // cnt >0?
+    return temperatureCorrectionsPossible;
+  }
+  //</editor-fold>
+  
   //<editor-fold defaultstate="collapsed" desc="private methods">
 
   //<editor-fold defaultstate="collapsed" desc="scanDataBases">
@@ -487,25 +540,26 @@ If redox And RedoxAsk Then  */
 
             //---- make some primitive consistency checks, in case of a text file
             if(binaryOrText == 1 && nLoops ==1) {
-                msg = Complex.checkComplex(rr);
-                for(i=0; i < Complex.NDIM; i++) {
+                msg = rr.check();
+                for(String s : rr.reactionComp) {
                     //check if the component is in the list of possible components
-                    if(rr.component[i] != null && rr.component[i].length() >0) {
+                    if(s != null && s.length() >0) {
                         found = false;
                         String[] elemComp;
                         for(j=0; j < pd.elemComp.size(); j++) {
                             elemComp = pd.elemComp.get(j);
-                            if(Util.nameCompare(rr.component[i],elemComp[1])) {found = true; break;}
+                            if(Util.nameCompare(s,elemComp[1])) {found = true; break;}
                         } //for j
                         if(!found) {
-                            t = "Component \""+rr.component[i]+"\" in complex \""+rr.name+"\""+nl+"not found in the element-files.";
+                            t = "Component \""+s+"\" in complex \""+rr.name+"\""+nl+"not found in the element-files.";
                             if(msg.length() > 0) {msg = msg +nl+ t;} else {msg = t;}
                         }//not found
                     }
                 }//for i
                 if(msg != null) {
+                    int nTot = Math.min(rr.reactionComp.size(),rr.reactionCoef.size());
                     System.out.println("---- Error \""+msg+"\""+nl+"      for complex \""+rr.name+"\", logK="+rr.constant+", ref.=\""+rr.reference+"\"");
-                    for(i=0; i< Complex.NDIM; i++) {System.out.print(" "+rr.component[i]+" "+rr.numcomp[i]+";");}
+                    for(i=0; i< nTot; i++) {System.out.print(" "+rr.reactionComp.get(i)+" "+rr.reactionCoef.get(i)+";");}
                     System.out.println();
                         Object[] opt = {"OK", "Cancel"};
                         answer = javax.swing.JOptionPane.showOptionDialog(dbF,
@@ -530,8 +584,8 @@ If redox And RedoxAsk Then  */
                 boolean include = true;
                 if(redox) { //does this complex involve "e-" ?
                     boolean ePresent = false;
-                    for(int ic=0; ic < Complex.NDIM; ic++) {
-                        if(Util.isElectron(rr.component[ic])) {ePresent = true; break;}
+                    for(String s : rr.reactionComp) {
+                        if (Util.isElectron(s)) {ePresent = true; break;}
                     }
                     if(ePresent) {
                       //does the user want to exclude this complex/component from redox equilibria?
@@ -562,15 +616,15 @@ If redox And RedoxAsk Then  */
                         ////The complex was not in the RRedox-list:
                         ////Should it be excluded because the user does not want
                         ////    redox equilibria for this element?
-                        ////This is done with the function  "isRedox" (= true if the component
+                        ////This is done with the function  "isRedoxComp" (= true if the component
                         ////    only contains one element and H/O.
-                        ////    For example: SO4-2 contains only "S" isRedox=true;
-                        ////    but for Fe(SO4)2- isRedox=false)
+                        ////    For example: SO4-2 contains only "S" isRedoxComp=true;
+                        ////    but for Fe(SO4)2- isRedoxComp=false)
                         //boolean exclude = false;
-                        //if(isRedox("C", rr.name) && !pd.redoxC) {exclude = true;}
-                        //if(isRedox("N", rr.name) && !pd.redoxN) {exclude = true;}
-                        //if(isRedox("S", rr.name) && !pd.redoxS) {exclude = true;}
-                        //if(isRedox("P", rr.name) && !pd.redoxP) {exclude = true;}
+                        //if(isRedoxComp("C", rr.name) && !pd.redoxC) {exclude = true;}
+                        //if(isRedoxComp("N", rr.name) && !pd.redoxN) {exclude = true;}
+                        //if(isRedoxComp("S", rr.name) && !pd.redoxS) {exclude = true;}
+                        //if(isRedoxComp("P", rr.name) && !pd.redoxP) {exclude = true;}
                         //if(exclude) {include = false;}
 
                       } //if include
@@ -647,8 +701,8 @@ If redox And RedoxAsk Then  */
                             i = 0;
                             do{ //while (i < (nx+nf))    --- loop through all reactions
                                 found = false;
-                                for(int ic=0; ic < Complex.NDIM; ic++) { //formed by the component to delete?
-                                  if(Util.nameCompare(dat.get(i).component[ic],rr.name)) {found = true; break;}
+                                for(String s : dat.get(i).reactionComp) {
+                                    if(Util.nameCompare(s,rr.name)) {found = true; break;}
                                 }
                                 if(found) {
                                     dat.remove(i);
@@ -788,16 +842,14 @@ If redox And RedoxAsk Then  */
         if(complex.name.startsWith("@")) {return complex;}
         // --- is this a species formed from the selected components?
         protonPresent = false;
-        for(int i=0; i < Complex.NDIM; i++) {
-            if(complex.component[i].length() <=0 ||
-               Util.isWater(complex.component[i])) {continue;} //H2O
-            if(!isComponentSelected(complex.component[i]) &&
-               Math.abs(complex.numcomp[i]) >0.001) {continue loopComplex;}
-            if(Util.isProton(complex.component[i])) {protonPresent = true;}
+        int nTot = Math.min(complex.reactionComp.size(),complex.reactionCoef.size());
+        for(int i=0; i < nTot; i++) {
+            if(complex.reactionComp.get(i) == null || complex.reactionComp.get(i).length() <=0 ||
+               Util.isWater(complex.reactionComp.get(i))) {continue;} //H2O
+            if(!isComponentSelected(complex.reactionComp.get(i)) &&
+               Math.abs(complex.reactionCoef.get(i)) >0.0001) {continue loopComplex;}
+            if(Util.isProton(complex.reactionComp.get(i))) {protonPresent = true;}
         } //for i
-        if(!protonPresent && Math.abs(complex.proton) > 0.001 &&
-           !isComponentSelected("H+") &&
-           !isComponentSelected("H +")) {continue;} // loopComplex
         // all components are selected: select complex
         return complex;
       } //while (true)  --- loopComplex:
@@ -830,7 +882,7 @@ If redox And RedoxAsk Then  */
   } //isComponentSelected
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="isRedox(element, component)">
+  //<editor-fold defaultstate="collapsed" desc="isRedoxComp(element, component)">
   /** For a given component, and one of its elements:
    * is this a component which might be involved in redox equilibria?
    * This is used to warn the user of a possible problem in the choice of components.
@@ -840,7 +892,7 @@ If redox And RedoxAsk Then  */
    * then return <code>true</code>. Examples: Fe+2, CrO4-2, H2PO4-
    * (return <code>true</code> for the elements Fe, Cr and P),
    * while for CN- return <code>false</code>. */
-  static boolean isRedox(String element, String component) {
+  private static boolean isRedoxComp(String element, String component) {
       StringBuilder comp = new StringBuilder(component);
       //---If it does not contain the element in the name, it is not a redox couple
       int i = component.indexOf(element);
@@ -935,7 +987,7 @@ If redox And RedoxAsk Then  */
             //  the formula-of-the-component ("CN-"), and
             //  the name-of-the-component ("cyanide")
             el = elemComp[0]; //get the element corresponding to the component: e.g. "S" for SO4-2
-            if(!isRedox(el, selCompName)) {break;} // k0
+            if(!isRedoxComp(el, selCompName)) {break;} // k0
             if(!pd.redoxAsk || redox) {
                 if(el.equals("N") && !pd.redoxN) {break;} // k0
                 else if(el.equals("P") && !pd.redoxP) {break;} // k0
@@ -948,7 +1000,7 @@ If redox And RedoxAsk Then  */
               elemComp = pd.elemComp.get(k1);
               if(elemComp[0].equals(el)) { //got the right element
                   if(!Util.nameCompare(elemComp[1],selCompName)) { //look at all other components with the same element
-                      if(isRedox(el, elemComp[1])) {
+                      if(isRedoxComp(el, elemComp[1])) {
                         // this component also "is redox".
                         // For example, the user selected SO4-2 and this component is HS-
                         // check if this redox component has also been selected by the user
@@ -977,7 +1029,7 @@ If redox And RedoxAsk Then  */
                             System.out.println("Answer: Continue anyway");
                           } //if elemComp[1] = dbF.modelSelectedComps[k2]
                         } //for k2
-                      }//isRedox(el, elemComp[1])
+                      }//isRedoxComp(el, elemComp[1])
                   }//elemComp[1] != selCompName
               }//elemComp[0] = el
             } //for k1

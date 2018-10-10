@@ -96,7 +96,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemTemperature">
               <Properties>
                 <Property name="mnemonic" type="int" value="84"/>
-                <Property name="text" type="java.lang.String" value="set Temperature"/>
+                <Property name="text" type="java.lang.String" value="set Temperature &amp; pressure"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemTemperatureActionPerformed"/>
@@ -1981,6 +1981,20 @@
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
                   <AbsoluteConstraints x="190" y="10" width="-1" height="-1"/>
+                </Constraint>
+              </Constraints>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabelPressure">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Pressure = 1.014 bar"/>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabelPressureMouseClicked"/>
+              </Events>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="190" y="30" width="-1" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>

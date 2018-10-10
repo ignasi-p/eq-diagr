@@ -3,6 +3,7 @@ package database;
 import lib.common.MsgExceptn;
 import lib.common.Util;
 import lib.database.Complex;
+import lib.database.IAPWSF95;
 import lib.database.LibDB;
 import lib.database.ProgramDataDB;
 import lib.huvud.ProgramConf;
@@ -52,7 +53,6 @@ public class ExitDialog extends javax.swing.JDialog {
     pd = pd0;
     dbF = (FrameDBmain)parent;
     hs = hs0;
-System.out.println("hs.temperature="+(float)hs.temperature);
     // ----
     dbF.setCursorDef();
     setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -289,44 +289,9 @@ System.out.println("hs.temperature="+(float)hs.temperature);
           MsgExceptn.exception("Error in \"saveDataFile\": null argument");
           return false;
       }
-      boolean fnd = false;
       // Is there enthalpy data?
-      if(srch.temperature < 24.99 || srch.temperature > 25.01) {
-        java.util.ArrayList<String> items = new java.util.ArrayList<String>();
-        long cnt = 0;
-        for(int ix=0; ix < srch.nx+srch.nf; ix++) {
-            if(srch.dat.get(ix).deltH == Complex.EMPTY) {
-                if(!fnd) {System.out.println("--------- Temperature extrapolations"); fnd = true;}
-                System.out.println("species \""+srch.dat.get(ix).name+"\": missing enthalpy.");
-                items.add(srch.dat.get(ix).name);
-                cnt++;
-            }
-        }
-        if(cnt >0) {
-            System.out.println("---------");
-            javax.swing.DefaultListModel<String> aModel = new javax.swing.DefaultListModel<>();
-            //javax.swing.DefaultListModel aModel = new javax.swing.DefaultListModel(); // java 1.6
-            java.util.Iterator<String> iter = items.iterator();
-            while(iter.hasNext()) {aModel.addElement(iter.next());}
-            String msg = "<html><b>Error:</b><br>"
-                    + "Temperature extrapolations from 25 to "+String.format("%.0f",srch.temperature)+"°C are required,<br>"
-                    +"but enthalpy values are missing for the following species:</html>";
-            javax.swing.JLabel aLabel = new javax.swing.JLabel(msg);
-            // javax.swing.JList aList = new javax.swing.JList(aModel); // java 1.6
-            javax.swing.JList<String> aList = new javax.swing.JList<>(aModel);
-            aList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-            aList.setVisibleRowCount(5);
-            javax.swing.JScrollPane aScrollPane = new javax.swing.JScrollPane();
-            aScrollPane.setViewportView(aList);
-            aList.setFocusable(false);
-            javax.swing.JLabel endLabel = new javax.swing.JLabel("Please change the temperature to 25°C in the menu \"Options\".");
-            Object[] o = {aLabel, aScrollPane, endLabel};
-            javax.swing.JOptionPane.showMessageDialog(this, o,
-                    "Temperature extrapolations",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-      } // temperature?
+      if(!DBSearch.checkTemperature(srch, this, false)) {return false;};
+
       String defaultName;
       if(dbF.outputDataFile != null) {defaultName = dbF.outputDataFile;} else {defaultName = "";}
       String fn = Util.getSaveFileName(this, pc.progName,
@@ -371,8 +336,8 @@ System.out.println("hs.temperature="+(float)hs.temperature);
 
       if(pc.dbg) {System.out.println("---- Saving file \""+fn+"\".");}
       String m = ",   /DATABASE (HYDRA)";
-      if(!Double.isNaN(srch.temperature)) {m = m + ", t="+Util.formatDbl3(srch.temperature);}
-      if(!Double.isNaN(srch.pressure)) {m = m + ", p="+Util.formatDbl3(srch.pressure);}
+      if(!Double.isNaN(srch.temperature_C)) {m = m + ", t="+Util.formatDbl3(srch.temperature_C);}
+      if(!Double.isNaN(srch.pressure_bar)) {m = m + ", p="+Util.formatDbl3(srch.pressure_bar);}
       //if requested: add water
       if(pd.includeH2O) {
           dbF.modelSelectedComps.add((srch.na - srch.solidC), "H2O");
@@ -387,44 +352,49 @@ System.out.println("hs.temperature="+(float)hs.temperature);
       } //for i
 
       outputFile.flush();
-      int j, jc;
+      int j, jc, nTot;
+      Complex cmplx;
       StringBuilder logB = new StringBuilder();
       for(int ix=0; ix < srch.nx+srch.nf; ix++) {
-        if(srch.dat.get(ix).name.length()<=19) {
-            outputFile.format(engl, "%-19s,  ",srch.dat.get(ix).name);
-        } else {outputFile.format(engl, "%s,  ",srch.dat.get(ix).name);}
+        cmplx = srch.dat.get(ix);
+        if(cmplx.name.length()<=19) {
+            outputFile.format(engl, "%-19s,  ",cmplx.name);
+        } else {outputFile.format(engl, "%s,  ",cmplx.name);}
         if(logB.length()>0) {logB.delete(0, logB.length());}
-        double lgK = Complex.constCp(srch.dat.get(ix).constant, srch.dat.get(ix).deltH, srch.dat.get(ix).deltCp, srch.temperature);
+        double lgK = cmplx.logKatTandP(srch.temperature_C, srch.pressure_bar);
+        if(Double.isNaN(lgK)) {
+          String msg = "Error in \"saveDataFile\","+nl+
+                    "   species \""+cmplx.name+"\"  has logK = Not-a-Number."+nl+
+                    "   while writing data file:"+nl+
+                    "   \""+fn+"\"";
+          MsgExceptn.exception(msg);
+          javax.swing.JOptionPane.showMessageDialog(this, msg, pc.progName,javax.swing.JOptionPane.ERROR_MESSAGE);
+          return false;
+        }
         logB.append(Util.formatDbl3(lgK));
         //make logB occupy at least 9 chars: padding with space
         j = 9 - logB.length();
         if(j>0) {for(int k=0;k<j;k++) {logB.append(' ');}}
         else {logB.append(' ');} //add at least one space
         outputFile.print(logB.toString());
+        boolean fnd;
         for(jc = 0; jc < srch.na; jc++) {
             fnd = false;
-            for(int jdat=0; jdat < Complex.NDIM; jdat++) {
-                if(srch.dat.get(ix).component[jdat].equals(dbF.modelSelectedComps.get(jc))) {
-                    outputFile.print(Util.formatDbl4(srch.dat.get(ix).numcomp[jdat]));
+            nTot = Math.min(cmplx.reactionComp.size(), cmplx.reactionCoef.size());
+            for(int jdat=0; jdat < nTot; jdat++) {
+                if(cmplx.reactionComp.get(jdat).equals(dbF.modelSelectedComps.get(jc))) {
+                    outputFile.print(Util.formatDbl4(cmplx.reactionCoef.get(jdat)));
                     if(jc < srch.na-1) {outputFile.print(" ");}
                     fnd = true; break;
                 }
             } //for jdat
             if(!fnd) {
-                if(Util.isProton(dbF.modelSelectedComps.get(jc).toString()) && 
-                        Math.abs(srch.dat.get(ix).proton) > 0.001) {
-                    fnd = true;
-                    outputFile.print(Util.formatDbl4(srch.dat.get(ix).proton));
-                    if(jc < srch.na-1) {outputFile.print(" ");}
-                }
-            } //!fnd
-            if(!fnd) {
                 outputFile.print(" 0");
                 if(jc < srch.na-1) {outputFile.print(" ");}
             }
         }//for jc
-        if(srch.dat.get(ix).comment != null && srch.dat.get(ix).comment.length() >0) {
-            outputFile.print(" /"+srch.dat.get(ix).comment);
+        if(cmplx.comment != null && cmplx.comment.length() >0) {
+            outputFile.print(" /"+cmplx.comment);
         }
         outputFile.println();
       }//for ix

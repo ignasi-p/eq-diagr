@@ -21,14 +21,24 @@ import lib.huvud.ProgramConf;
  * along with this program.  If not, see http://www.gnu.org/licenses/
  * 
  * @author Ignasi Puigdomenech */
-public class SetTempDialog extends javax.swing.JDialog {
+public class SetTempPressDialog extends javax.swing.JDialog {
   // Note: for java 1.6 jComboBox must not have type,
   //       for java 1.7 jComboBox must be <String>
+  
+  private boolean loading = true;
   private ProgramConf pc;
   private final ProgramDataDB pd;
   private final FrameDBmain dbF;
   private final java.awt.Dimension windowSize; // = new java.awt.Dimension(185,185);
-  private double temperature;
+  private double temperature_C;
+  private double pressure_bar;
+  private final String[] pSat = new String[] {"Psat","500","1000","2000","3000","4000","5000"};
+  private final String[] noPsat =  new String[] {"500","1000","2000","3000","4000","5000"};
+  private final String[] tAll = new String[] {"0","10","20","25","30","40","50","75","100","125","150","175","200","225","250","275","300","325","350","400","450","500","550","600"};
+  //private final String[] t450 = new String[] {"0","10","20","25","30","40","50","75","100","125","150","175","200","225","250","275","300","325","350","400","450"};
+  private final String[] t100 = new String[] {"0","5","10","15","20","25","30","35","40","50","60","70","75","80","90","100"};
+  /** New-line character(s) to substitute "\n" */
+  private static final String nl = System.getProperty("line.separator");
 
   //<editor-fold defaultstate="collapsed" desc="Constructor">
   /** Creates new form SetTempDialog
@@ -36,7 +46,7 @@ public class SetTempDialog extends javax.swing.JDialog {
    * @param modal
    * @param pc0
    * @param pd0  */
-  public SetTempDialog(java.awt.Frame parent, boolean modal,
+  public SetTempPressDialog(java.awt.Frame parent, boolean modal,
             ProgramConf pc0,
             ProgramDataDB pd0
           ) {
@@ -78,14 +88,14 @@ public class SetTempDialog extends javax.swing.JDialog {
     getRootPane().getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).put(f1KeyStroke,"F1");
     javax.swing.Action f1Action = new javax.swing.AbstractAction() {
         @Override public void actionPerformed(java.awt.event.ActionEvent e) {
-            SetTempDialog.this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+            SetTempPressDialog.this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
             Thread hlp = new Thread() {@Override public void run(){
                 String[] a = {"DB_0_Main_htm"};
                 lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
                 try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
                 catch (InterruptedException e) {}
-                SetTempDialog.this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-            }};//new Thread
+                SetTempPressDialog.this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            }   };//new Thread
             hlp.start();
         }};
     getRootPane().getActionMap().put("F1", f1Action);
@@ -122,19 +132,35 @@ public class SetTempDialog extends javax.swing.JDialog {
     this.setLocation(Math.min(screenSize.width-this.getWidth()-20,left),
                      Math.min(screenSize.height-this.getHeight()-20, top));
     windowSize = new java.awt.Dimension(this.getWidth(),this.getHeight());
-    if(pd.temperatureAllowHigher) { // up to 350 C
+    temperature_C = pd.temperature_C;
+    pressure_bar = pd.pressure_bar;
+    if(pd.temperatureAllowHigher) { // up to 600 C
         //jComboBoxT.setModel(new javax.swing.DefaultComboBoxModel( // java 1.6
-        jComboBoxT.setModel(new javax.swing.DefaultComboBoxModel<String>(
-          new String[] {"0","5","10","15","20","25","30","35","50","75","100","125","150","175","200","225","250","275","300","325","350"}));
+//        if(pressure_bar == 500) {
+//            jComboBoxT.setModel(new javax.swing.DefaultComboBoxModel<String>(t450));
+//        } else {
+            jComboBoxT.setModel(new javax.swing.DefaultComboBoxModel<String>(tAll));
+//        }
+        jComboBoxP.setEnabled(true);
     } else { // only 0 to 100 C
         // jComboBoxT.setModel(new javax.swing.DefaultComboBoxModel( // java 1.6
-        jComboBoxT.setModel(new javax.swing.DefaultComboBoxModel<String>(
-          new String[] {"0","5","10","15","20","25","30","35","40","50","60","70","75","80","90","100"}));
+        jComboBoxT.setModel(new javax.swing.DefaultComboBoxModel<String>(t100));
+        jComboBoxP.setEnabled(false);
     }
-    temperature = pd.temperature;
-    if(pc.dbg) { System.out.println("---- temperature = "+temperature);}
+    if(temperature_C > 350) {
+        jComboBoxP.setModel(new javax.swing.DefaultComboBoxModel<String>(noPsat));
+    } else {
+        jComboBoxP.setModel(new javax.swing.DefaultComboBoxModel<String>(pSat));
+    }
     set_temp_inComboBox();
+    set_press_inComboBox();
+    if(pc.dbg) {
+        System.out.println("---- SetTempPressDialog"+nl+
+                           "     temperature = "+temperature_C+nl+
+                           "     pressure = "+pressure_bar);
+    }
     pack();
+    loading = false;
     setVisible(true);
   }
   //</editor-fold>
@@ -148,11 +174,14 @@ public class SetTempDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jComboBoxT = new javax.swing.JComboBox<String>();
-        jLabelDegrees = new javax.swing.JLabel();
         jButtonOK = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jComboBoxT = new javax.swing.JComboBox<String>();
+        jLabelDegrees = new javax.swing.JLabel();
+        jLabelT = new javax.swing.JLabel();
+        jComboBoxP = new javax.swing.JComboBox<String>();
+        jLabelP = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -163,23 +192,6 @@ public class SetTempDialog extends javax.swing.JDialog {
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
-            }
-        });
-
-        jComboBoxT.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "5", "10", "15", "20", "25", "30", "35", "40", "50", "60", "70", "75", "80", "90", "100" }));
-        jComboBoxT.setSelectedIndex(5);
-        jComboBoxT.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxTActionPerformed(evt);
-            }
-        });
-
-        jLabelDegrees.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabelDegrees.setText("°C");
-        jLabelDegrees.setToolTipText("double-click to set T=25'C");
-        jLabelDegrees.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabelDegreesMouseClicked(evt);
             }
         });
 
@@ -199,22 +211,85 @@ public class SetTempDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/database/images/Termometer.gif"))); // NOI18N
+        jComboBoxT.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "5", "10", "15", "20", "25", "30", "35", "40", "50", "60", "70", "75", "80", "90", "100" }));
+        jComboBoxT.setSelectedIndex(5);
+        jComboBoxT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxTActionPerformed(evt);
+            }
+        });
+
+        jLabelDegrees.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabelDegrees.setLabelFor(jComboBoxT);
+        jLabelDegrees.setText("°C");
+        jLabelDegrees.setToolTipText("double-click to set T=25'C");
+        jLabelDegrees.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabelDegreesMouseClicked(evt);
+            }
+        });
+
+        jLabelT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/database/images/Termometer.gif"))); // NOI18N
+
+        jComboBoxP.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Psat", "500", "1000", "2000", "3000", "4000", "5000" }));
+        jComboBoxP.setToolTipText("Psat = vapor-liquid equilibrium (saturation) pressure");
+        jComboBoxP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxPActionPerformed(evt);
+            }
+        });
+
+        jLabelP.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabelP.setText("bar");
+        jLabelP.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabelPMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabelT)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jComboBoxT, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxP, 0, 65, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelDegrees)
+                    .addComponent(jLabelP))
+                .addContainerGap(40, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBoxT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelDegrees))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBoxP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelP))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabelT)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jComboBoxT, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelDegrees))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
                         .addComponent(jButtonOK)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonCancel)))
@@ -223,19 +298,12 @@ public class SetTempDialog extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBoxT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelDegrees))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonCancel)
-                            .addComponent(jButtonOK)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(jLabel1)))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonOK)
+                    .addComponent(jButtonCancel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -261,20 +329,80 @@ public class SetTempDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_formComponentResized
 
     private void jComboBoxTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTActionPerformed
-      temperature =  Double.parseDouble(jComboBoxT.getSelectedItem().toString());
+      if(loading) {return;}
+      double old;
+      temperature_C =  Double.parseDouble(jComboBoxT.getSelectedItem().toString());
+      if(temperature_C > lib.database.IAPWSF95.CRITICAL_TC) {
+        jComboBoxP.setModel(new javax.swing.DefaultComboBoxModel<String>(noPsat));
+        if(temperature_C <= 450 && pressure_bar < 500) {pressure_bar = 500;}
+        if(temperature_C > 450 && pressure_bar < 1000) {pressure_bar = 1000;}
+      } else { // temperature <= 373
+        jComboBoxP.setModel(new javax.swing.DefaultComboBoxModel<String>(pSat));
+        if(pressure_bar < 500) {
+            pressure_bar = Math.max(1.,lib.database.IAPWSF95.pSat(temperature_C));
+        }
+      }
+      set_press_inComboBox();
     }//GEN-LAST:event_jComboBoxTActionPerformed
 
     private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
-      pd.temperature = temperature;
+      int answer;
+      if(pressure_bar == 500 && temperature_C > 450) {
+          System.out.println("ButtonOK: Pbar = "+pressure_bar+", tC = "+temperature_C);
+          answer = javax.swing.JOptionPane.showConfirmDialog(this,
+                  "<html><b>Note:</b> at 500 bar the temperature<br>"
+                    +"range is limited to 0 - 450C°C.<br><br>"
+                    +"Change the pressure to 1000 bar?</html>",
+                  pc.progName, javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                                    javax.swing.JOptionPane.WARNING_MESSAGE);
+          if(answer != javax.swing.JOptionPane.OK_OPTION) {
+              System.out.println("Answer: Cancel");
+              return;
+          }
+          pressure_bar = 1000;
+      }
+      pd.temperature_C = temperature_C;
+      pd.pressure_bar = pressure_bar;
       closeWindow();
     }//GEN-LAST:event_jButtonOKActionPerformed
 
     private void jLabelDegreesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelDegreesMouseClicked
         if(evt.getClickCount() >1) { // double-click
-            temperature = 25;
-            jComboBoxT.setSelectedIndex(5);
+            temperature_C = 25;
+            for(int i = 0; i < jComboBoxT.getItemCount();i++) {
+                if(jComboBoxT.getItemAt(i).equals("25")) {jComboBoxT.setSelectedIndex(i); break;}
+            }
         }
     }//GEN-LAST:event_jLabelDegreesMouseClicked
+
+    private void jComboBoxPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPActionPerformed
+        if(loading) {return;}
+        double pOld = pressure_bar;
+        String s = jComboBoxP.getSelectedItem().toString();
+        if(s.equalsIgnoreCase("psat")) {
+            temperature_C = Math.min(350, temperature_C);
+            pressure_bar = Math.max(1.,lib.database.IAPWSF95.pSat(temperature_C));
+            set_temp_inComboBox();
+        }
+        else {pressure_bar =  Double.parseDouble(s);}
+        if(pressure_bar != 500 && pOld == 500) {
+            jComboBoxT.setModel(new javax.swing.DefaultComboBoxModel<String>(tAll));
+            set_temp_inComboBox();
+        }
+//        if(pressure_bar == 500 && pOld != 500) {
+//            temperature_C = Math.min(450, temperature_C);
+//            jComboBoxT.setModel(new javax.swing.DefaultComboBoxModel<String>(t450));
+//            set_temp_inComboBox();
+//        }
+    }//GEN-LAST:event_jComboBoxPActionPerformed
+
+    private void jLabelPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelPMouseClicked
+        if(temperature_C > 350) {return;}
+        if(evt.getClickCount() >1) { // double-click
+            jComboBoxP.setSelectedIndex(0);
+            pressure_bar = Math.max(1.,lib.database.IAPWSF95.pSat(temperature_C));
+        }
+    }//GEN-LAST:event_jLabelPMouseClicked
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="Methods">
@@ -285,19 +413,18 @@ public class SetTempDialog extends javax.swing.JDialog {
   } // closeWindow()
 
 //<editor-fold defaultstate="collapsed" desc="set_temp_inComboBox">
-/** find the closest item in the tolerances combo box and select it */
+/** find the closest item in the temperature combo box and select it */
   private void set_temp_inComboBox() {
-    double w0;
-    double w1;
+    double w0, w1;
     int listItem =0;
     int listCount = jComboBoxT.getItemCount();
     for(int i =1; i < listCount; i++) {
       w0 = Double.parseDouble(jComboBoxT.getItemAt(i-1).toString());
       w1 = Double.parseDouble(jComboBoxT.getItemAt(i).toString());
-      if(temperature <= w0 && i==1) {listItem = 0; break;}
-      if(temperature >= w1 && i==(listCount-1)) {listItem = (listCount-1); break;}
-      if(temperature > w0 && temperature <=w1) {
-        if(Math.abs(temperature-w0) < Math.abs(temperature-w1)) {
+      if(temperature_C <= w0 && i==1) {listItem = 0; break;}
+      if(temperature_C >= w1 && i==(listCount-1)) {listItem = (listCount-1); break;}
+      if(temperature_C > w0 && temperature_C <=w1) {
+        if(Math.abs(temperature_C-w0) < Math.abs(temperature_C-w1)) {
             listItem = i-1;
         } else {
             listItem = i;
@@ -309,6 +436,35 @@ public class SetTempDialog extends javax.swing.JDialog {
   } //set_tol_inComboBox()
 //</editor-fold>
 
+//<editor-fold defaultstate="collapsed" desc="set_press_inComboBox">
+/** find the closest item in the pressure combo box and select it */
+  private void set_press_inComboBox() {
+    if(pressure_bar < lib.database.IAPWSF95.CRITICAL_pBar) {jComboBoxP.setSelectedIndex(0); return;}
+    int min = 1;
+    if(jComboBoxP.getItemAt(0).toString().equalsIgnoreCase("pSat")) {
+        if(pressure_bar < lib.database.IAPWSF95.CRITICAL_pBar) {jComboBoxP.setSelectedIndex(0); return;}
+        min = 2;
+    }
+    double w0, w1;
+    int listItem =0;
+    int listCount = jComboBoxP.getItemCount();
+    for(int i = min; i < listCount; i++) {
+      w0 = Double.parseDouble(jComboBoxP.getItemAt(i-1).toString());
+      w1 = Double.parseDouble(jComboBoxP.getItemAt(i).toString());
+      if(pressure_bar <= w0 && i == min) {listItem = min-1; break;}
+      if(pressure_bar >= w1 && i == (listCount-1)) {listItem = (listCount-1); break;}
+      if(pressure_bar > w0 && pressure_bar <=w1) {
+        if(Math.abs(pressure_bar-w0) < Math.abs(pressure_bar-w1)) {
+            listItem = i-1;
+        } else {
+            listItem = i;
+        }
+        break;
+      }
+    } //for i
+    jComboBoxP.setSelectedIndex(listItem);
+  } //set_tol_inComboBox()
+//</editor-fold>
 
   //</editor-fold>
 
@@ -316,8 +472,11 @@ public class SetTempDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonOK;
+    private javax.swing.JComboBox<String> jComboBoxP;
     private javax.swing.JComboBox<String> jComboBoxT;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelDegrees;
+    private javax.swing.JLabel jLabelP;
+    private javax.swing.JLabel jLabelT;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
