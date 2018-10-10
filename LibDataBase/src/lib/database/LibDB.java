@@ -647,8 +647,8 @@ static { // static initializer
             cmplx.a = Complex.deltaToA(cmplx.constant, deltaH, deltaCp);
             cmplx.tMax = 25.;
             if(deltaH != Complex.EMPTY) {
-                cmplx.tMax = 75.;
-                if(deltaCp != Complex.EMPTY) {cmplx.tMax = 150.;}
+                cmplx.tMax = 100.;
+                if(deltaCp != Complex.EMPTY) {cmplx.tMax = 200.;}
             }
         }
         nowReading.replace(0, nowReading.length(), "reactant nbr.1 or nbr of reactants for `"+cmplx.name+"´");

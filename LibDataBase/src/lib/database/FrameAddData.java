@@ -3794,8 +3794,8 @@ public class FrameAddData extends javax.swing.JFrame {
         newC.a = Complex.deltaToA(newC.constant, deltaH, deltaCp);
         newC.tMax = 25.;
         if(deltaH != Complex.EMPTY) {
-            newC.tMax = 75.;
-            if(deltaCp != Complex.EMPTY) {newC.tMax = 150.;}
+            newC.tMax = 100.;
+            if(deltaCp != Complex.EMPTY) {newC.tMax = 200.;}
         }
     } // if not analytic or lookUp
     String txt;

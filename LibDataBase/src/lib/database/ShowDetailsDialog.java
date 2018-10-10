@@ -125,8 +125,7 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
             jLabel4.setVisible(false);
             jLabelDeltaCp.setVisible(false);
             jLabelDeltaH.setVisible(false);
-            int i = 6; if(species.tMax > 350) {i = 10;}
-            jLabel3.setText("<html>A "+i+"-parameter function is used<br>to evaluate logK(t,p).</html>");
+            jLabel3.setText("<html>A 6-parameter function is used<br>to evaluate logK(t,p).</html>");
         } else if(species.lookUp) {
             // look-up table of logK values
             jLabel4.setVisible(false);

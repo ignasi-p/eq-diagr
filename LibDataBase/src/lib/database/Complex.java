@@ -70,12 +70,12 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * @see lib.database.Complex#lookUp lookUp
    * @see lib.database.Complex#tMax tMax */
   public float[][] logKarray;
-  /** The higherst temperature limit for the temperature extrapolations.
+  /** The higherst temperature limit (Celsius) for the temperature extrapolations.
    * If no <b>analytic</b> equation has been given (that is,
    * if <b>analytic</b> = false) then: tMax = 25 if values for
-   * enthalpy and heat capacity have not been given, tMax = 75
+   * enthalpy and heat capacity have not been given, tMax = 100
    * if enthalpy has been given but not the heat capacity, and
-   * tMax = 150 if both enthalpy and heat capacity have been given
+   * tMax = 200 if both enthalpy and heat capacity have been given
    * for this reaction.
    * @see lib.database.Complex#a a[]
    * @see lib.database.Complex#analytic analytic
@@ -495,18 +495,24 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * @param logK0 the log10 of the equilibrium constant at 25C
    * @param deltaH the enthalpy change for the reaction in kJ/mol
    * @param deltaCp the heat capacity change for the reaction in J/(K mol)
-   * @return the values of the <b>a[]</b> parameters: all zero except<br>
+   * @return the values of the <b>a[]</b> parameters: all EMPTY except<br>
    *  a[0] = logK + deltaH*1000/(R T0 ln(10)) − deltaCp /(R ln(10)) (1 + ln(T0))<br>
    *  a[2] = -deltaH*1000/(R ln(10)) + deltaCp T0 /(R ln(10)) 
    *  a[3] = deltaCp /R<br>
    * where R is the gas constant, and T0 is the reference temperature (298.15 K).
+   * These values are obtained from<pre>
+   * logK(T) = logK(T0) - (deltaH/(R ln(10)))((1/T)-(1/T0))-(deltaCp/(R ln(10)))(1-(T0/T)+ln(10)*log(T0/T))
+   * logK(T) = logK(T0) + deltaH/(R T0 ln(10)) - deltaCp/(R ln(10))(1+ln(T0))
+   *       +(- deltaH/(R ln(10)) + deltaCp T0 /(R ln(10))) / T
+   *       +(deltaCp/R) log10(T)</pre>
+   * 
    * @see lib.database.Complex#anaytic analytic
    * @see lib.database.Complex#a a[]
    * @see lib.database.Complex#aToDeltaH(double[]) aToDeltaH
    * @see lib.database.Complex#tMax tMax */
   public static double[] deltaToA(final double logK0, final double deltaH, final double deltaCp) {
       double[] a = new double[6];
-      for (int i=0; i < a.length; i++) {a[i] = EMPTY;}
+      for(int i=0; i < a.length; i++) {a[i] = EMPTY;}
       a[0] = logK0;
       if(Double.isNaN(deltaH) || deltaH == EMPTY) {return a;}
       a[0] = a[0] + deltaH*1000/(R_LN10*T0);
@@ -679,7 +685,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
                     } else {return c;}
                     n++;
                     c.tMax = 25.;
-                    if(deltaH != EMPTY) {c.tMax = 75.; if(deltaCp != EMPTY) {c.tMax = 150.;}}
+                    if(deltaH != EMPTY) {c.tMax = 100.; if(deltaCp != EMPTY) {c.tMax = 200.;}}
                     c.a = deltaToA(c.constant, deltaH, deltaCp);
                 } else { // look-up Table
                     nowReading.replace(0, nowReading.length(), "Max-temperature");
@@ -1017,8 +1023,8 @@ public class Complex implements Comparable<Complex>, Cloneable {
   * @see lib.database.Complex#lookUp lookUp
   * @see lib.database.Complex#logKarray logKarray  */
   public double logKatTandP(final double tC0, final double pBar) {
-    if(Double.isNaN(tC0) || Double.isNaN(pBar) || Double.isNaN(tMax)
-             || tMax == EMPTY || tMax < 24.9) {return Double.NaN;}
+    if(Double.isNaN(tC0) || Double.isNaN(pBar)) {return Double.NaN;}
+    this.tMax = Math.min(600,Math.max(25, this.tMax));
     if(tC0 > this.tMax+0.0001) {return Double.NaN;}
     double tC = Math.max(tC0,0.01); // triple point of water
     if(tC < 373.946) { // crtitical point of water
@@ -1101,12 +1107,10 @@ public class Complex implements Comparable<Complex>, Cloneable {
    */
   private static double analyticExpression(Complex cmplx, final double tC, final double pBar) {
     if(Double.isNaN(cmplx.constant) || cmplx.constant == EMPTY
-            || Double.isNaN(tC) || Double.isNaN(pBar)
-            || Double.isNaN(cmplx.tMax) || cmplx.tMax == EMPTY || cmplx.tMax < 24.9) {
-        return Double.NaN;
-    }
+            || Double.isNaN(tC) || Double.isNaN(pBar)) {return Double.NaN;}
     if(tC>24.999 && tC<25.001) {return cmplx.constant;}
     if(Double.isNaN(cmplx.a[0]) || cmplx.a[0] == EMPTY) {return Double.NaN;}
+    cmplx.tMax = Math.min(600,Math.max(25, cmplx.tMax));
     if(tC > cmplx.tMax+0.0001) {return Double.NaN;}
     final double tK = Math.max(0.01,tC)+273.15; // triple point of water
     double logK = cmplx.a[0];

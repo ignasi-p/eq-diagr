@@ -596,7 +596,7 @@ public class DBnamesDialog extends javax.swing.JDialog {
         return;
     }
     //--- OK?
-    if(!LibDB.isDBnameOK(this, dbn, pc.dbg)) {System.out.println("--- isDBnameOK("+dbn+") = false"); return;}
+    if(!LibDB.isDBnameOK(this, dbn, pc.dbg)) {System.out.println("--- isDBnameOK("+dbn+") = false"); setCursorDef(); return;}
     java.io.File dbf = new java.io.File(dbn);
     try {dbn = dbf.getCanonicalPath();}
     catch(java.io.IOException ex) {
@@ -620,6 +620,7 @@ public class DBnamesDialog extends javax.swing.JDialog {
                 "for database: \""+dbf.getName()+"\"."+nl+nl+
                 "The database can NOT be used.";
             MsgExceptn.showErrMsg(this, msg, 1);
+            setCursorDef();
             return;
         }
     }  else { // not binary database
@@ -685,7 +686,6 @@ public class DBnamesDialog extends javax.swing.JDialog {
     //---
     updateDBnames();
 
-    setCursorDef();
     jListDBnames.requestFocusInWindow();
     for(int i=0; i < dBnamesModel.size(); i++) {
         if(dBnamesModel.get(i).equals(dbn)) {
@@ -695,6 +695,7 @@ public class DBnamesDialog extends javax.swing.JDialog {
         }
     }
     jButtonOK.requestFocusInWindow();
+    setCursorDef();
   } //dBnames_Click
   //</editor-fold>
 
@@ -703,7 +704,7 @@ public class DBnamesDialog extends javax.swing.JDialog {
    * @return "null" if the user cancels the opertion; a file name otherwise. */
   private String getDBFileName() {
     // Ask the user for a file name using a Open File dialog
-    this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+    setCursorWait();
     String dbFileName;
     dbFileName = Util.getOpenFileName(this, pc.progName, true,
               "Select a database file:", 2, null, pathDatabaseFiles.toString());
