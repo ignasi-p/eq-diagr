@@ -543,11 +543,12 @@ public class FrameSingleComponent extends javax.swing.JFrame {
         return;
     }
     setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+    jButtonSearch.setEnabled(false);
     final String choosenComp = jComboBox.getItemAt(i).toString();
-    final boolean isH = Util.isProton(choosenComp);
     try {hs = new LibSearch(pd.dataBasesList);}
     catch (LibSearch.LibSearchException ex) {
         MsgExceptn.exception(ex.toString());
+        jButtonSearch.setEnabled(true);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         return;}
     jLabelFound.setText("Checking species:");
@@ -559,6 +560,7 @@ public class FrameSingleComponent extends javax.swing.JFrame {
     n = 0;
     int j;
     boolean fnd;
+    double coef1;
     Complex cmplx = null;
     String errMsg = null;
 
@@ -599,11 +601,12 @@ public class FrameSingleComponent extends javax.swing.JFrame {
               } //while
         } else { // does not start with "@"
             fnd = false;
-            for(j =0; j < Complex.NDIM; j++) {
-                if(cmplx.component[j].equals(choosenComp) &&
-                        Math.abs(cmplx.numcomp[j]) > 0.0001) {fnd = true; break;}
+            int nTot = Math.min(cmplx.reactionComp.size(), cmplx.reactionCoef.size());
+            for(j =0; j < nTot; j++) {
+                coef1 = cmplx.reactionCoef.get(j);
+                if(cmplx.reactionComp.get(j).equals(choosenComp) &&
+                        Math.abs(coef1) > 0.0001) {fnd = true; break;}
             } //for i
-            if(isH && Math.abs(cmplx.proton) > 0.0001) {fnd = true;}
             if(fnd) {
                 n++;
                 javax.swing.SwingUtilities.invokeLater(new Runnable() {@Override public void run() {
@@ -648,9 +651,11 @@ public class FrameSingleComponent extends javax.swing.JFrame {
           jList.setFocusable(false);
       }
       jScrollPaneList.validate();
+      jButtonSearch.setEnabled(true);
       FrameSingleComponent.this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }           });
-  }     };//new Thread
+    }
+    }); // invokeLater
+  }};//new Thread
   srch.start();  //any statements placed below are executed inmediately
 
   } // doSearch

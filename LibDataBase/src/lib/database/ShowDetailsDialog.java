@@ -4,7 +4,7 @@ import lib.common.Util;
 
 /** Show the data in the databases for a single reaction.
  * <br>
- * Copyright (C) 2014-2015 I.Puigdomenech.
+ * Copyright (C) 2014-2018 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,10 +32,12 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
    * @param parent
    * @param modal
    * @param species
+   * @param tC temperature in degrees Celsius
+   * @param pBar pressure in bar
    * @param references
    */
   public ShowDetailsDialog(java.awt.Frame parent, boolean modal,
-          Complex species,
+          Complex species, double tC, double pBar,
           References references) {
       super(parent, modal);
       initComponents();
@@ -93,16 +95,60 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
     jTextAreaRefs.setText("");
     //----
 
-    jLabelReaction.setText(Complex.reactionText(species));
-    if(species == null || Double.isNaN(species.constant) || species.constant == Complex.EMPTY) {
+    if(species == null) {
+        jLabelReaction.setText("\"null\"");
         jLabellogK.setText(" (empty)");
-    } else {jLabellogK.setText(Util.formatDbl3(species.constant));}
-    if(species == null || Double.isNaN(species.deltH) || species.deltH == Complex.EMPTY) {
         jLabelDeltaH.setText(" (empty)");
-    } else {jLabelDeltaH.setText(Util.formatDbl3(species.deltH));}
-    if(species == null || Double.isNaN(species.deltCp) || species.deltCp == Complex.EMPTY) {
         jLabelDeltaCp.setText(" (empty)");
-    } else {jLabelDeltaCp.setText(Util.formatDbl3(species.deltCp));}
+    } else {
+        double w;
+        jLabelReaction.setText(species.reactionText());
+        if(Double.isNaN(species.constant) || species.constant == Complex.EMPTY) {
+            jLabellogK.setText(" (empty)");
+        } else {jLabellogK.setText(Util.formatDbl3(species.constant));}
+        if(!Double.isNaN(tC) && !Double.isNaN(pBar)
+                && (tC<24.9 || tC > 25.1 || pBar > 1.1)) {
+            w = species.logKatTandP(tC, pBar);
+            if(!Double.isNaN(w) && w != Complex.EMPTY) {
+                if(pBar < lib.database.IAPWSF95.CRITICAL_pBar) {
+                    jLabellogKTP.setText("<html>log <i>K</i>°("+Util.formatNumAsInt(tC).trim()+","+
+                        String.format(java.util.Locale.ENGLISH,"%.2f bar",pBar)+") = "+Util.formatDbl3(w)+"</html>");
+                } else {
+                    jLabellogKTP.setText("<html>log <i>K</i>°("+Util.formatNumAsInt(tC).trim()+","+
+                        String.format("%.0f bar",pBar)+") = "+Util.formatDbl3(w)+"</html>");
+                }
+            } else {jLabellogKTP.setText("<html>log <i>K</i>°("+Util.formatNumAsInt(tC).trim()+","+
+                        Util.formatNumAsInt((float)pBar).trim()+") = ??</html>");}
+        } else {jLabellogKTP.setVisible(false);}
+        if(species.analytic) {
+            // analytic equation
+            jLabel4.setVisible(false);
+            jLabelDeltaCp.setVisible(false);
+            jLabelDeltaH.setVisible(false);
+            int i = 6; if(species.tMax > 350) {i = 10;}
+            jLabel3.setText("<html>A "+i+"-parameter function is used<br>to evaluate logK(t,p).</html>");
+        } else if(species.lookUp) {
+            // look-up table of logK values
+            jLabel4.setVisible(false);
+            jLabelDeltaCp.setVisible(false);
+            jLabelDeltaH.setVisible(false);
+            jLabel3.setText("<html>A look-up table is used<br>to interpolate logK(t,p).</html>");
+        } else {
+            // delta-H and delta-Cp
+            w = species.getDeltaH();
+            if(w == Complex.EMPTY) {
+                jLabelDeltaH.setText(" (empty)");
+            } else {jLabelDeltaH.setText(Util.formatDbl3(w));}
+            w = species.getDeltaCp();
+            if(w == Complex.EMPTY) {
+                jLabelDeltaCp.setText(" (empty)");
+            } else {jLabelDeltaCp.setText(Util.formatDbl3(w));}
+        }
+        w = species.tMax;
+        if(Double.isNaN(w) || w == Complex.EMPTY || w <25) {w = 25.;}
+        jLabelTmax.setText("<html>Max temperature for extrapolation of logK = "+
+                    String.format("%.0f",w)+"&deg;C</html>");
+    }
 
     if(species != null && species.reference != null && species.reference.trim().length() > 0) {
         String refs = species.reference.trim();
@@ -122,6 +168,7 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
 
     windowSize = this.getSize();
     loading = false;
+    pack();
     jButtonOK.requestFocusInWindow();
 
   } // constructor
@@ -140,13 +187,14 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
         jLabel0 = new javax.swing.JLabel();
         jLabelReaction = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        jLabellogK25 = new javax.swing.JLabel();
         jLabellogK = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabelDeltaH = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabelDeltaCp = new javax.swing.JLabel();
+        jLabelTmax = new javax.swing.JLabel();
+        jLabellogKTP = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabelComments = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -180,64 +228,68 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
 
         jLabelReaction.setText("A + B = C");
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel1.setText("<html>Data at 25&deg;C:</html>");
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel2.setText("<html>log <i>K</i>&deg; =</html>");
+        jLabellogK25.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabellogK25.setLabelFor(jLabellogK);
+        jLabellogK25.setText("<html>log <i>K</i>&deg; (25&deg;C) =</html>");
 
         jLabellogK.setText("-10.000");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel3.setLabelFor(jLabelDeltaH);
         jLabel3.setText("<html>&#916;<i>H</i>&deg; =</html>");
 
         jLabelDeltaH.setText("-10.000");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setLabelFor(jLabelDeltaCp);
         jLabel4.setText("<html>&#916;<i>C<sub>p</sub></i>&deg;=</html>");
 
         jLabelDeltaCp.setText("-10.000");
+
+        jLabelTmax.setText("<html>Max temperature for extrapolation of logK = 25&deg;C</html>");
+
+        jLabellogKTP.setText("logK(32,8.64) = -10.000");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabellogK))
+                        .addComponent(jLabelDeltaCp))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabellogK25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelDeltaCp)
-                            .addComponent(jLabelDeltaH))))
-                .addContainerGap(87, Short.MAX_VALUE))
+                        .addComponent(jLabellogK)
+                        .addGap(49, 49, 49)
+                        .addComponent(jLabellogKTP))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelDeltaH)))
+                .addContainerGap(54, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabelTmax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabellogK))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabellogK25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabellogK)
+                    .addComponent(jLabellogKTP))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelDeltaH))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelDeltaCp)))
+                    .addComponent(jLabelDeltaCp))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelTmax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -281,29 +333,30 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPaneRefs, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabelRefText)
-                                .addGap(256, 256, 256)
-                                .addComponent(jButtonOK)))
-                        .addContainerGap())
+                        .addComponent(jLabelRefText)
+                        .addGap(242, 242, 242)
+                        .addComponent(jButtonOK)
+                        .addGap(24, 24, 24))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPaneRefs)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelRefCit))
-                            .addComponent(jLabel0)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jLabelReaction))
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelComments)))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel0)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addComponent(jLabelReaction))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabelComments))
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabelRefCit)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -323,11 +376,11 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
                     .addComponent(jLabel5)
                     .addComponent(jLabelRefCit))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelRefText)
-                    .addComponent(jButtonOK))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonOK, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabelRefText))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneRefs, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPaneRefs, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -393,8 +446,6 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButtonOK;
     private javax.swing.JLabel jLabel0;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -405,7 +456,10 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabelReaction;
     private javax.swing.JLabel jLabelRefCit;
     private javax.swing.JLabel jLabelRefText;
+    private javax.swing.JLabel jLabelTmax;
     private javax.swing.JLabel jLabellogK;
+    private javax.swing.JLabel jLabellogK25;
+    private javax.swing.JLabel jLabellogKTP;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPaneRefs;
     private javax.swing.JTextArea jTextAreaRefs;

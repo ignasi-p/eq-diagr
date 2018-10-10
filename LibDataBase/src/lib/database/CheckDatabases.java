@@ -51,8 +51,6 @@ public class CheckDatabases {
     public java.util.HashSet<String> coefWithoutReactant;
     /** reactions  (product name) with charge imbalance */
     public java.util.HashSet<String> chargeImbalance;
-    /** reactions (product name) with H+ conflict */
-    public java.util.HashSet<String> protonConflict;
     /** reaction products present in two or more different reactions */
     public java.util.TreeSet<String> duplProductsSet;
     /** duplicate reactions (with the same reaction product) */
@@ -104,7 +102,6 @@ public class CheckDatabases {
     lists.reactantWithoutCoef = new java.util.HashSet<String>();
     lists.coefWithoutReactant = new java.util.HashSet<String>();
     lists.chargeImbalance = new java.util.HashSet<String>();
-    lists.protonConflict = new java.util.HashSet<String>();    
     lists.duplProductsSet = new java.util.TreeSet<String>();
     lists.duplReactionsSameProdctSet = new java.util.TreeSet<String>();
     lists.duplReactionsDifProductSet = new java.util.TreeSet<String>();
@@ -137,7 +134,7 @@ public class CheckDatabases {
             return false;
         }
     }
-    int nH, i, j;
+    int i, j;
     boolean fnd, ok, isRedoxReaction;
     Complex cmplx;
     String product, reaction;
@@ -184,8 +181,8 @@ public class CheckDatabases {
         fistComplex = false;
         if(cmplx == null) {break;} // last complex
         if(cmplx.name.startsWith("@")) {product = cmplx.name.substring(1);} else {product = cmplx.name;}
-        reaction = reactString(cmplx); // if it starts with "@" the reaction is "" (empty)
-        isRedoxReaction = Complex.isRedox(cmplx);
+        reaction = cmplx.sortedReactionString(); // if it starts with "@" the reaction is "" (empty)
+        isRedoxReaction = cmplx.isRedox();
 
         for(String[] r : lists.productsReactionsSet) {
             // -- find out duplicate reaction products having different reactions
@@ -236,45 +233,41 @@ public class CheckDatabases {
         // --
         if(cmplx.name.startsWith("@")) {continue;}
         // -- list all reactions with a reactant with no coefficients
-        for(i=0; i<Complex.NDIM; i++) {
-              if(cmplx.component[i] != null && cmplx.component[i].trim().length()>0
-                      && Math.abs(cmplx.numcomp[i]) < 0.001) {
-                  lists.reactantWithoutCoef.add(cmplx.name);
-                  break;
+        int nTot = Math.min(cmplx.reactionComp.size(),cmplx.reactionCoef.size());
+        for(i=0; i < nTot; i++) {
+              if(cmplx.reactionComp.get(i) != null && cmplx.reactionComp.get(i).trim().length()>0) {
+                  if(Math.abs(cmplx.reactionCoef.get(i)) < 0.0001) {
+                    lists.reactantWithoutCoef.add(cmplx.name);
+                    break;
+                  }
               }
         }
         // -- find reactions with a coefficnet with no reactant name
-        for(i=0; i<Complex.NDIM; i++) {
-            if(Math.abs(cmplx.numcomp[i]) >= 0.001
-                      && (cmplx.component[i] == null || cmplx.component[i].trim().length() <=0)) {
+        for(i=0; i < nTot; i++) {
+            if(Math.abs(cmplx.reactionCoef.get(i)) >= 0.0001
+                    && (cmplx.reactionComp.get(i) == null || cmplx.reactionComp.get(i).trim().length() <=0)) {
                   lists.coefWithoutReactant.add(cmplx.name);
                   break;
             }
         }
         // -- find reactions not charge balanced
-        if(!Complex.isChargeBalanced(cmplx)) {lists.chargeImbalance.add(cmplx.name);}
+        if(!cmplx.isChargeBalanced()) {lists.chargeImbalance.add(cmplx.name);}
 
-        // -- list reactants; keep track of H+
-        nH = -1;
-        for(i =0; i < Complex.NDIM; i++) {
-            if(cmplx.component[i] == null || cmplx.component[i].trim().length() <=0) {continue;}
-            if(Util.isProton(cmplx.component[i])) {nH = i;}
-            if(lists.reactantsSet.containsKey(cmplx.component[i])) {
-                j = lists.reactantsSet.get(cmplx.component[i]);
-                lists.reactantsSet.put(cmplx.component[i],j+1);
+        // -- list reactants
+        for(i =0; i < nTot; i++) {
+            if(cmplx.reactionComp.get(i) == null || cmplx.reactionComp.get(i).trim().length() <=0) {continue;}
+            if(lists.reactantsSet.containsKey(cmplx.reactionComp.get(i))) {
+                j = lists.reactantsSet.get(cmplx.reactionComp.get(i));
+                lists.reactantsSet.put(cmplx.reactionComp.get(i),j+1);
             } else {
-                lists.reactantsSet.put(cmplx.component[i],1);
+                lists.reactantsSet.put(cmplx.reactionComp.get(i),1);
             }
-        }
-        // -- find reactions with error in H+
-        if(nH >=0 && !Util.areEqualDoubles(cmplx.proton, cmplx.numcomp[nH])) {
-            lists.protonConflict.add(cmplx.name);
         }
 
         // -- find out if the reactants are in the name of the product
         //<editor-fold defaultstate="collapsed" desc="is reactant in product name?">
-        for(i =0; i < Complex.NDIM; i++) {
-            String t = cmplx.component[i];
+        for(i =0; i < nTot; i++) {
+            String t = cmplx.reactionComp.get(i);
             if(t == null || t.length() <=0) {continue;}
             if(Util.isElectron(t) || Util.isProton(t) || Util.isWater(t))  {continue;}
             t = Util.bareNameOf(t);
@@ -325,7 +318,7 @@ public class CheckDatabases {
             if(!ok && t.equals("HS")) {ok = cmplx.name.contains("S");}
             if(!ok && (t.equals("SO4") || t.equals("SO3") || t.equals("S2O3"))) {ok = cmplx.name.contains("S");}
             if(!ok) {
-                lists.itemsNames.add(cmplx.name+"  does not contain  "+cmplx.component[i]);
+                lists.itemsNames.add(cmplx.name+"  does not contain  "+cmplx.reactionComp.get(i));
             }
         }
         //</editor-fold>
@@ -388,43 +381,6 @@ public class CheckDatabases {
     return true;
   }
   //</editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="reactString(Complex)">
-  /** Returns a String representation of the reaction such as:<pre>
-   * "<code>Fe 2+;1;;;e-;-1;;;;;;;0;</code>"</pre>
-   * Equivalent to <code>Complex.toString</code>, except that (1) the product name,
-   * the logK and the reference are excluded, and (2) the reactants are sorted.
-   * That is, it returns only the reaction (sorted).
-   * If the product name starts with "@" this method returns an empty String ("").
-   * @param cmplx the complex
-   * @return a text representing the reaction
-   * @see Complex#toString() Complex.toString  */
-    private static String reactString(Complex cmplx) {
-    if(cmplx == null) {return "";}
-    //if(cmplx.name.startsWith("@")) {return text.toString();}
-    if(cmplx.name.startsWith("@")) {return "";}
-    Complex c;
-    try {c = (Complex)cmplx.clone();}
-    catch(CloneNotSupportedException cex) {return "";}
-    // -- exclude water?
-    //for(int ic =0; ic < Complex.NDIM; ic++) {
-    //  if(Util.isWater(c.component[ic])) {c.component[ic] = ""; c.numcomp[ic] = 0; break;}
-    //}
-    StringBuilder text = new StringBuilder();  
-    //text.append(Complex.encloseInQuotes(c.name)); text.append(";");
-    Complex.sortReactants(c);
-    for(int ic =0; ic < Complex.NDIM; ic++) {
-      if(c.component[ic] == null || c.component[ic].length()<=0
-              // || Util.isWater(c.component[ic])
-              || Math.abs(c.numcomp[ic]) < 0.001) {text.append(";;"); continue;}
-      text.append(Complex.encloseInQuotes(c.component[ic])); text.append(";");
-      text.append(Util.formatDbl4(c.numcomp[ic]).trim()); text.append(";");
-    }
-    if(Math.abs(c.proton) >=0.001) {text.append(Util.formatDbl4(c.proton).trim());}
-    text.append(";");
-    return text.toString();
-  } //reactString(cmplx)
-//</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="displayDatabaseErrors">
  /** display errors in dialogs conatining two buttons (ok and cancel).

@@ -255,6 +255,7 @@ public class FrameAddData extends javax.swing.JFrame {
         jMenuAddReact.doClick();
     }
     parent.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    pd.msgFrame.setCursorDef();
     loading = false;
 
   } //start
@@ -267,6 +268,7 @@ public class FrameAddData extends javax.swing.JFrame {
     if(i < 0 || i >= boxes.size()) {return;}
     javax.swing.JComboBox<String> jcb_i = boxes.get(i); // javax.swing.JComboBox jcb_i = boxes.get(i); // java 1.6
     if(jcb_i.getSelectedItem() == null) {return;}
+    //if(dbg) {System.out.println("--- ComboBox_Click("+i+")");}
     String ti = jcb_i.getSelectedItem().toString();
     if(ti.length()>0) {
         if(texts[i].getText().length() <=0) {texts[i].setText("1");}
@@ -309,6 +311,7 @@ public class FrameAddData extends javax.swing.JFrame {
         int i = getI(evt);
         if(i < 0) {return;}
         //buttons[i].setBorder(buttonBorder);
+        //if(dbg) {System.out.println("--- ComboBox("+i+") lost focus");}
         ComboBox_Click(i);
         rearrangeReaction();
         update_newC();
@@ -369,6 +372,7 @@ public class FrameAddData extends javax.swing.JFrame {
         }
         catch (NumberFormatException ex) {i=-1;}
         if(i < 0 || i >= texts.length) {return;}
+        //if(dbg) {System.out.println("--- TextFieldActionListener("+i+")");}
         validateReactionCoeff(i);
         rearrangeReaction();
         update_newC();
@@ -385,6 +389,7 @@ public class FrameAddData extends javax.swing.JFrame {
     @Override public void focusLost(java.awt.event.FocusEvent evt) {
         int i = getI(evt);
         if(i < 0 || i >= texts.length) {return;}
+        //if(dbg) {System.out.println("--- TextField("+i+") lost focus");}
         validateReactionCoeff(i);
         update_newC();
     } //focusLost
@@ -412,6 +417,7 @@ public class FrameAddData extends javax.swing.JFrame {
     @Override public void keyReleased(java.awt.event.KeyEvent evt) {
         //int i = getI(evt);
         //if(i < 0 || i >= texts.length) {return;}
+        //if(dbg) {System.out.println("--- TextFieldKeyListener");}
         update_newC();
     } //keyReleased
     @Override public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -491,18 +497,20 @@ public class FrameAddData extends javax.swing.JFrame {
         jTextFieldComplex = new javax.swing.JTextField();
         jLabelCharge = new javax.swing.JLabel();
         jPanelReaction2 = new javax.swing.JPanel();
-        jLabelLogK = new javax.swing.JLabel();
-        jTextFieldLogK = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jTextFieldDeltH = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jTextFieldDeltCp = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jTextFieldComment = new javax.swing.JTextField();
         jLabelRef = new javax.swing.JLabel();
         jTextFieldRef = new javax.swing.JTextField();
+        jLabelNote = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabelLogK = new javax.swing.JLabel();
+        jTextFieldLogK = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jTextFieldDeltH = new javax.swing.JTextField();
+        jLabelKJmol = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jTextFieldDeltCp = new javax.swing.JTextField();
+        jLabelJKmol = new javax.swing.JLabel();
         jButtonSaveReac = new javax.swing.JButton();
         jPanelComponent = new javax.swing.JPanel();
         jLabelComp = new javax.swing.JLabel();
@@ -531,7 +539,7 @@ public class FrameAddData extends javax.swing.JFrame {
         jListComps = new javax.swing.JList();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
-        jMenuFileShow = new javax.swing.JMenuItem();
+        jMenuFileShowFile = new javax.swing.JMenuItem();
         jMenuFileSave = new javax.swing.JMenuItem();
         jMenuFileExit = new javax.swing.JMenuItem();
         jMenuAdd = new javax.swing.JMenu();
@@ -763,6 +771,58 @@ public class FrameAddData extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jLabel1.setLabelFor(jTextFieldComment);
+        jLabel1.setText("Comment:");
+
+        jTextFieldComment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldCommentActionPerformed(evt);
+            }
+        });
+        jTextFieldComment.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldCommentFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldCommentFocusLost(evt);
+            }
+        });
+        jTextFieldComment.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldCommentKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldCommentKeyReleased(evt);
+            }
+        });
+
+        jLabelRef.setLabelFor(jTextFieldRef);
+        jLabelRef.setText("Reference(s):");
+
+        jTextFieldRef.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldRefActionPerformed(evt);
+            }
+        });
+        jTextFieldRef.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextFieldRefFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldRefFocusLost(evt);
+            }
+        });
+        jTextFieldRef.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldRefKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldRefKeyReleased(evt);
+            }
+        });
+
+        jLabelNote.setText("<html><b>Note:</b> Temperature variation<br>\nof logK uses a power-series<br>expression.</html>");
+
         jLabelLogK.setLabelFor(jTextFieldLogK);
         jLabelLogK.setText("log K° (25°C) =");
 
@@ -819,7 +879,7 @@ public class FrameAddData extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("kJ/mol");
+        jLabelKJmol.setText("kJ/mol");
 
         jLabel4.setText("<html>&#916;<i>C<sub>p</sub></i>&deg;=</html>");
 
@@ -848,57 +908,50 @@ public class FrameAddData extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setText("J/(K mol)");
+        jLabelJKmol.setText("J/(K mol)");
 
-        jLabel1.setLabelFor(jTextFieldComment);
-        jLabel1.setText("Comment:");
-
-        jTextFieldComment.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldCommentActionPerformed(evt);
-            }
-        });
-        jTextFieldComment.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextFieldCommentFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextFieldCommentFocusLost(evt);
-            }
-        });
-        jTextFieldComment.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextFieldCommentKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextFieldCommentKeyReleased(evt);
-            }
-        });
-
-        jLabelRef.setLabelFor(jTextFieldRef);
-        jLabelRef.setText("Reference(s):");
-
-        jTextFieldRef.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldRefActionPerformed(evt);
-            }
-        });
-        jTextFieldRef.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextFieldRefFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextFieldRefFocusLost(evt);
-            }
-        });
-        jTextFieldRef.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextFieldRefKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextFieldRefKeyReleased(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabelLogK))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jTextFieldDeltCp, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelJKmol))
+                    .addComponent(jTextFieldLogK, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jTextFieldDeltH, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelKJmol)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelLogK)
+                    .addComponent(jTextFieldLogK, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldDeltH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelKJmol))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldDeltCp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelJKmol)))
+        );
 
         javax.swing.GroupLayout jPanelReaction2Layout = new javax.swing.GroupLayout(jPanelReaction2);
         jPanelReaction2.setLayout(jPanelReaction2Layout);
@@ -916,45 +969,19 @@ public class FrameAddData extends javax.swing.JFrame {
                             .addComponent(jTextFieldComment)
                             .addComponent(jTextFieldRef)))
                     .addGroup(jPanelReaction2Layout.createSequentialGroup()
-                        .addGroup(jPanelReaction2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelReaction2Layout.createSequentialGroup()
-                                .addComponent(jLabelLogK)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldLogK, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanelReaction2Layout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldDeltH, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3))
-                            .addGroup(jPanelReaction2Layout.createSequentialGroup()
-                                .addGap(42, 42, 42)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldDeltCp, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel5)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addComponent(jLabelNote, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanelReaction2Layout.setVerticalGroup(
             jPanelReaction2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelReaction2Layout.createSequentialGroup()
-                .addGroup(jPanelReaction2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldLogK, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelLogK))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanelReaction2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextFieldDeltH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelReaction2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldDeltCp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addContainerGap()
+                .addGroup(jPanelReaction2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelNote, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanelReaction2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextFieldComment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -981,28 +1008,32 @@ public class FrameAddData extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanelReactionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelReactionLayout.createSequentialGroup()
-                        .addGroup(jPanelReactionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelReaction)
-                            .addComponent(jPanelReaction1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(49, Short.MAX_VALUE))
-                    .addGroup(jPanelReactionLayout.createSequentialGroup()
-                        .addComponent(jPanelReaction2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonSaveReac)
+                        .addComponent(jLabelReaction)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelReactionLayout.createSequentialGroup()
+                        .addGroup(jPanelReactionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanelReactionLayout.createSequentialGroup()
+                                .addComponent(jPanelReaction1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelReactionLayout.createSequentialGroup()
+                                .addComponent(jPanelReaction2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButtonSaveReac)))
                         .addGap(18, 18, 18))))
         );
         jPanelReactionLayout.setVerticalGroup(
             jPanelReactionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelReactionLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jLabelReaction)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanelReaction1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelReactionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButtonSaveReac)
-                    .addComponent(jPanelReaction2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanelReactionLayout.createSequentialGroup()
+                        .addComponent(jLabelReaction)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanelReaction1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jPanelReaction2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanelReaction, "cardReaction");
@@ -1100,7 +1131,7 @@ public class FrameAddData extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabelLinked))
                             .addComponent(jTextFieldCompDescr))))
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(113, Short.MAX_VALUE))
         );
         jPanelComponentLayout.setVerticalGroup(
             jPanelComponentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1123,7 +1154,7 @@ public class FrameAddData extends javax.swing.JFrame {
                     .addComponent(jLabelElems))
                 .addGap(34, 34, 34)
                 .addComponent(jButtonSaveComp)
-                .addContainerGap(160, Short.MAX_VALUE))
+                .addContainerGap(152, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanelComponent, "cardComponent");
@@ -1169,6 +1200,14 @@ public class FrameAddData extends javax.swing.JFrame {
         jListReact.setCellRenderer(new ComplexListCellRenderer());
         jListReact.setName("jListReact"); // NOI18N
         jListReact.setVisibleRowCount(6);
+        jListReact.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jListReactFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jListReactFocusLost(evt);
+            }
+        });
         jListReact.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jListReactMouseClicked(evt);
@@ -1180,22 +1219,14 @@ public class FrameAddData extends javax.swing.JFrame {
                 jListReactMouseReleased(evt);
             }
         });
-        jListReact.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jListReactValueChanged(evt);
-            }
-        });
-        jListReact.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jListReactFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jListReactFocusLost(evt);
-            }
-        });
         jListReact.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jListReactKeyPressed(evt);
+            }
+        });
+        jListReact.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jListReactValueChanged(evt);
             }
         });
         jScrollPaneReact.setViewportView(jListReact);
@@ -1218,7 +1249,7 @@ public class FrameAddData extends javax.swing.JFrame {
             .addGroup(jPanelReactionsLayout.createSequentialGroup()
                 .addComponent(jLabelReact)
                 .addGap(4, 4, 4)
-                .addComponent(jScrollPaneReact, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+                .addComponent(jScrollPaneReact, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelReactionText))
         );
@@ -1274,7 +1305,7 @@ public class FrameAddData extends javax.swing.JFrame {
             .addGroup(jPanelCompsLayout.createSequentialGroup()
                 .addComponent(jLabelComps)
                 .addGap(4, 4, 4)
-                .addComponent(jScrollPaneComps))
+                .addComponent(jScrollPaneComps, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanelFilesLayout = new javax.swing.GroupLayout(jPanelFiles);
@@ -1295,7 +1326,7 @@ public class FrameAddData extends javax.swing.JFrame {
                     .addGroup(jPanelFilesLayout.createSequentialGroup()
                         .addGap(160, 160, 160)
                         .addComponent(jLabelHelp)
-                        .addGap(0, 49, Short.MAX_VALUE)))
+                        .addGap(0, 104, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanelFilesLayout.setVerticalGroup(
@@ -1319,14 +1350,14 @@ public class FrameAddData extends javax.swing.JFrame {
         jMenuFile.setMnemonic('f');
         jMenuFile.setText("File");
 
-        jMenuFileShow.setMnemonic('o');
-        jMenuFileShow.setText("Show File contents");
-        jMenuFileShow.addActionListener(new java.awt.event.ActionListener() {
+        jMenuFileShowFile.setMnemonic('o');
+        jMenuFileShowFile.setText("Show File contents");
+        jMenuFileShowFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuFileShowActionPerformed(evt);
+                jMenuFileShowFileActionPerformed(evt);
             }
         });
-        jMenuFile.add(jMenuFileShow);
+        jMenuFile.add(jMenuFileShowFile);
 
         jMenuFileSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         jMenuFileSave.setMnemonic('v');
@@ -1453,6 +1484,7 @@ public class FrameAddData extends javax.swing.JFrame {
 
     private void jTextFieldLogKFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldLogKFocusLost
         validateLogK();
+        //if(dbg) {System.out.println("--- jTextFieldLogKFocusLost");}
         update_newC();
     }//GEN-LAST:event_jTextFieldLogKFocusLost
 
@@ -1522,7 +1554,7 @@ public class FrameAddData extends javax.swing.JFrame {
             try{c = Complex.fromString(t);}
             catch (Complex.ReadComplexException ex) {MsgExceptn.exception(ex.toString());}
             if(c != null) {
-                jLabelReactionText.setText(Complex.reactionTextWithLogK(c,25));
+                jLabelReactionText.setText(c.reactionTextWithLogK(25,1));
                 jLabelReactionText.setForeground(fC);
                 jLabelHelp.setText("Press [Del] to delete; double-click or Alt-E to edit");
             }
@@ -1615,14 +1647,14 @@ public class FrameAddData extends javax.swing.JFrame {
                     if(dbg) {MsgExceptn.msg("modelComplexes.get("+i+") not instanceof ModelComplexesItem at \"jListReactValueChanged\""+nl+"    t = \""+t+"\"");}
                 }
                 Complex c = null;
-                try{c = Complex.fromString(t);}
-                catch (Complex.ReadComplexException ex) {MsgExceptn.exception(ex.toString());}
-                if(c != null) {
-                    jLabelReactionText.setText(Complex.reactionTextWithLogK(c,25));
-                    jLabelReactionText.setForeground(fC);
-                    //if(fC != null && fC == vermilion) {jLabelReactionText.setText("<html>"+jLabelReactionText.getText()+"  (<b>NOT</b> charge balanced)</html>");}
-                    jLabelHelp.setText("Press [Del] to delete; double-click or Alt-E to edit");
-                }
+                try{c = Complex.fromString(t);
+                    if(c != null) {
+                        jLabelReactionText.setText(c.reactionTextWithLogK(25,1));
+                        jLabelReactionText.setForeground(fC);
+                        //if(fC != null && fC == vermilion) {jLabelReactionText.setText("<html>"+jLabelReactionText.getText()+"  (<b>NOT</b> charge balanced)</html>");}
+                        jLabelHelp.setText("Press [Del] to delete; double-click or Alt-E to edit");
+                    }
+                } catch (Complex.ReadComplexException ex) {MsgExceptn.exception(ex.toString());}
             } //value != null
         } else { //i<0
             jLabelReactionText.setText(" ");
@@ -1680,18 +1712,22 @@ public class FrameAddData extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldRefKeyPressed
 
     private void jTextFieldRefActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldRefActionPerformed
+        //if(dbg) {System.out.println("--- jTextFieldRefActionPerformed");}
         update_newC();
     }//GEN-LAST:event_jTextFieldRefActionPerformed
 
     private void jTextFieldRefFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldRefFocusLost
+        //if(dbg) {System.out.println("--- jTextFieldRefFocusLost");}
         update_newC();
     }//GEN-LAST:event_jTextFieldRefFocusLost
 
     private void jTextFieldComplexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldComplexActionPerformed
+        //if(dbg) {System.out.println("--- jTextFieldComplexActionPerformed");}
         update_newC();
     }//GEN-LAST:event_jTextFieldComplexActionPerformed
 
     private void jTextFieldComplexFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldComplexFocusLost
+        //if(dbg) {System.out.println("--- jTextFieldComplexFocusLost");}
         update_newC();
     }//GEN-LAST:event_jTextFieldComplexFocusLost
 
@@ -1902,14 +1938,17 @@ public class FrameAddData extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldCompDescrKeyReleased
 
     private void jTextFieldComplexKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldComplexKeyReleased
+        //if(dbg) {System.out.println("--- jTextFieldComplexKeyReleased");}
         update_newC();
     }//GEN-LAST:event_jTextFieldComplexKeyReleased
 
     private void jTextFieldRefKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldRefKeyReleased
+        //if(dbg) {System.out.println("--- jTextFieldRefKeyReleased");}
         update_newC();
     }//GEN-LAST:event_jTextFieldRefKeyReleased
 
     private void jTextFieldLogKKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldLogKKeyReleased
+        //if(dbg) {System.out.println("--- jTextFieldLogKKeyReleased");}
         update_newC();
     }//GEN-LAST:event_jTextFieldLogKKeyReleased
 
@@ -1959,13 +1998,15 @@ public class FrameAddData extends javax.swing.JFrame {
       String refKeys = cmplx.reference.trim();
       if(pc.dbg) {System.out.println("Show reference(s) for: \""+cmplx.name+"\""+nl+
               "   ref: \""+cmplx.reference.trim()+"\"");}
-      ShowDetailsDialog sd = new ShowDetailsDialog(this, true, cmplx, pd.references);
+      ShowDetailsDialog sd = new ShowDetailsDialog(this, true, cmplx,
+              pd.temperature_C, pd.pressure_bar, pd.references);
       jListReact.requestFocusInWindow();
       jListReact.setSelectedIndex(index);
     }//GEN-LAST:event_jMenuItemDetailsActionPerformed
 
     private void jMenuAddReactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuAddReactActionPerformed
       if(!loading && jPanelComponent.isShowing()) {
+          //if(dbg) {System.out.println("--- jMenuAddReactActionPerformed");}
           if(jMenuFileSave.isEnabled()) {
               if(!discardChanges()) {
                   jTextAreaFiles.requestFocusInWindow();
@@ -1991,15 +2032,16 @@ public class FrameAddData extends javax.swing.JFrame {
       jMenuFileSave.setEnabled(false);
       jButtonSaveReac.setEnabled(false);
       jButtonSaveComp.setEnabled(false);
-      jMenuFileShow.setEnabled(true);
+      jMenuFileShowFile.setEnabled(true);
       texts[0].requestFocusInWindow();
     }//GEN-LAST:event_jMenuAddReactActionPerformed
 
     private void jMenuAddCompActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuAddCompActionPerformed
       if(!loading && jPanelReaction.isShowing()) {
+          //if(dbg) {System.out.println("--- jMenuAddCompActionPerformed");}
           update_newC();
           if(jMenuFileSave.isEnabled()) {
-            if(!Complex.isChargeBalanced(newC)) {
+            if(!newC.isChargeBalanced()) {
                 if(!noChargeBalanceQuestion(newC.name)) {
                     jTextFieldComplex.requestFocusInWindow();
                     return;
@@ -2032,16 +2074,16 @@ public class FrameAddData extends javax.swing.JFrame {
       jMenuAddReact.setEnabled(true);
       jMenuAddComp.setEnabled(false);
       jMenuAddShow.setEnabled(true);
-      jMenuFileShow.setEnabled(true);
+      jMenuFileShowFile.setEnabled(true);
       jTextFieldCompName.requestFocusInWindow();
     }//GEN-LAST:event_jMenuAddCompActionPerformed
 
     private void jMenuAddShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuAddShowActionPerformed
-      if(dbg) {System.out.println("-- jMenuAddShow ActionPerformed (evt)");}
       if(!loading && jPanelReaction.isShowing()) {
+        if(dbg) {System.out.println("-- jMenuAddShow ActionPerformed (evt)");}
         update_newC();
         if(jMenuFileSave.isEnabled()) {
-            if(!Complex.isChargeBalanced(newC)) {
+            if(!newC.isChargeBalanced()) {
                 if(!noChargeBalanceQuestion(newC.name)) {
                     jTextFieldComplex.requestFocusInWindow();
                     return;
@@ -2065,7 +2107,7 @@ public class FrameAddData extends javax.swing.JFrame {
             }
         }
       }
-      if(dbg) {System.out.println("-- jMenuAddShow");}
+      //if(dbg) {System.out.println("-- jMenuAddShow");}
       cl = (java.awt.CardLayout)getContentPane().getLayout();
       cl.show(getContentPane(),"cardFiles");
       jLabelReactionText.setText(" ");
@@ -2078,7 +2120,7 @@ public class FrameAddData extends javax.swing.JFrame {
       jMenuAddReact.setEnabled(true);
       jMenuAddComp.setEnabled(true);
       jMenuAddShow.setEnabled(false);
-      jMenuFileShow.setEnabled(false);
+      jMenuFileShowFile.setEnabled(false);
       final java.io.File f = new java.io.File(addFile);
       final java.io.File fe = new java.io.File(addFileEle);
       if(f.exists() || fe.exists()) {
@@ -2100,9 +2142,9 @@ public class FrameAddData extends javax.swing.JFrame {
       }
     }//GEN-LAST:event_jMenuAddShowActionPerformed
 
-    private void jMenuFileShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuFileShowActionPerformed
+    private void jMenuFileShowFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuFileShowFileActionPerformed
         jMenuAddShow.doClick();
-    }//GEN-LAST:event_jMenuFileShowActionPerformed
+    }//GEN-LAST:event_jMenuFileShowFileActionPerformed
 
     private void jMenuFileSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuFileSaveActionPerformed
         if(jPanelReaction.isShowing()) {jButtonSaveReac.doClick();}
@@ -2185,22 +2227,27 @@ public class FrameAddData extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldCommentKeyPressed
 
     private void jTextFieldCommentKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldCommentKeyReleased
+        //if(dbg) {System.out.println("--- jTextFieldCommentKeyReleased");}
         update_newC();
     }//GEN-LAST:event_jTextFieldCommentKeyReleased
 
     private void jTextFieldDeltHKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDeltHKeyReleased
+        //if(dbg) {System.out.println("--- jTextFieldDeltHKeyReleased");}
         update_newC();
     }//GEN-LAST:event_jTextFieldDeltHKeyReleased
 
     private void jTextFieldDeltCpKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDeltCpKeyReleased
+        //if(dbg) {System.out.println("--- jTextFieldDeltCpKeyReleased");}
         update_newC();
     }//GEN-LAST:event_jTextFieldDeltCpKeyReleased
 
     private void jTextFieldCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCommentActionPerformed
+        //if(dbg) {System.out.println("--- jTextFieldCommentActionPerformed");}
         update_newC();
     }//GEN-LAST:event_jTextFieldCommentActionPerformed
 
     private void jTextFieldCommentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldCommentFocusLost
+        //if(dbg) {System.out.println("--- jTextFieldCommentFocusLost");}
         update_newC();
     }//GEN-LAST:event_jTextFieldCommentFocusLost
 
@@ -2231,11 +2278,13 @@ public class FrameAddData extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldDeltCpFocusGained
 
     private void jTextFieldDeltHFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldDeltHFocusLost
+        //if(dbg) {System.out.println("--- jTextFieldDeltHFocusLost");}
         validateDeltH();
         update_newC();
     }//GEN-LAST:event_jTextFieldDeltHFocusLost
 
     private void jTextFieldDeltCpFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldDeltCpFocusLost
+        //if(dbg) {System.out.println("--- jTextFieldDeltCpFocusLost");}
         validateDeltCp();
         update_newC();
     }//GEN-LAST:event_jTextFieldDeltCpFocusLost
@@ -2251,7 +2300,7 @@ public class FrameAddData extends javax.swing.JFrame {
         if(jPanelReaction.isShowing()) {
             update_newC();
             if(jMenuFileSave.isEnabled()) {
-                if(!Complex.isChargeBalanced(newC)) {if(!noChargeBalanceQuestion(newC.name)) {return;}}
+                if(!newC.isChargeBalanced()) {if(!noChargeBalanceQuestion(newC.name)) {return;}}
                 if(!discardChanges()) {return;}
             }
         } else { //jPanelReaction is not showing
@@ -2339,7 +2388,7 @@ public class FrameAddData extends javax.swing.JFrame {
       jTextAreaFiles.setBackground(clr);
       jListReact.setBackground(clr);
       jListComps.setBackground(clr);
-      jMenuFileShow.setEnabled(enable);
+      jMenuFileShowFile.setEnabled(enable);
       jMenuFileSave.setEnabled(enable);
       jMenuAddReact.setEnabled(enable);
       jMenuAddComp.setEnabled(enable);
@@ -2760,39 +2809,38 @@ public class FrameAddData extends javax.swing.JFrame {
         String line;
         Complex c;
         java.util.ArrayList<String> items = new java.util.ArrayList<String>();
-        while ((line = br.readLine()) != null){
+        while(true){
+            try{c = lib.database.LibDB.getTxtComplex(br);}
+            catch (LibDB.EndOfFileException ex) {break;}
+            catch (LibDB.ReadTxtCmplxException ex) {showErr(ex.getMessage()+nl+"Line discarded!",0);continue;}
             cmplxNbr++;
-            if(line.trim().length()<=0 || line.toUpperCase().startsWith("COMPLEX")) {continue;}
-            try{c = Complex.fromString(line);}
-            catch (Complex.ReadComplexException ex) {
-                showErr(ex.getMessage()+nl+"Line discarded!",0);
-                continue;
-            }
-            if(c == null) {
-                showErr("Error: empty reaction product in line"+nl+"   "+line+nl+"Line discarded!",0);
-                continue;
-            }
             if(!c.name.startsWith("@")) {
-                for(int j=0; j < Complex.NDIM; j++) {
-                  if(((c.component[j] != null && c.component[j].length()>0) && Math.abs(c.numcomp[j]) < 0.001)
-                      || (Math.abs(c.numcomp[j]) >= 0.001) && (c.component[j] == null || c.component[j].length() <=0)) {
-                        c.component[j] ="";
-                        c.numcomp[j] = 0;
+                int j=0, nTot = Math.min(c.reactionComp.size(),c.reactionCoef.size());
+                while(j < nTot) {
+                  if((c.reactionComp.get(j) != null && c.reactionComp.get(j).length()>0
+                              && Math.abs(c.reactionCoef.get(j)) < 0.0001)
+                          || (Math.abs(c.reactionCoef.get(j)) >= 0.0001
+                              && (c.reactionComp.get(j) == null || c.reactionComp.get(j).length() <=0))) {
+                      c.reactionComp.remove(j);
+                      c.reactionCoef.remove(j);
+                      nTot--;
+                      continue;
                   }
-                } //for j
+                  j++;
+                } // while
             } //if not starts with "@"
             items.add(c.toString());
-        } //while
-        //java.util.Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
+        }
+        //java.util.Collections.sortReactants(items, String.CASE_INSENSITIVE_ORDER);
         java.util.Iterator<String> iter = items.iterator();
         while(iter.hasNext()) {
             String cLine = iter.next();
             try{c = Complex.fromString(cLine);}
             catch (Complex.ReadComplexException ex) {c = null; MsgExceptn.exception(ex.getMessage());}
             if(c == null) {continue;}
-            //Complex.sortReactants(c);
+            //c.sortReactants();
             final ModelComplexesItem o;
-            if(Complex.isChargeBalanced(c)) {
+            if(c.isChargeBalanced()) {
                 o = new ModelComplexesItem(cLine, java.awt.Color.BLACK);
             } else {
                 o = new ModelComplexesItem(cLine, vermilion);
@@ -2829,22 +2877,21 @@ public class FrameAddData extends javax.swing.JFrame {
     String msg = "";
     if(!newC.name.startsWith("@")) {
         boolean ok = false;
-        for(int i=0; i < Complex.NDIM; i++) {
-            if(newC.component[i] != null && newC.component[i].length() >0 &&
-                    Math.abs(newC.numcomp[i]) >= 0.001) {ok = true; break;}
+        int nTot = Math.min(newC.reactionComp.size(),newC.reactionCoef.size());
+        for(int i=0; i < nTot; i++) {
+            if(newC.reactionComp.get(i) != null && newC.reactionComp.get(i).length() >0
+                    && Math.abs(newC.reactionCoef.get(i)) >= 0.0001) {ok = true; break;}
         } //for i
         if(!ok) {
             showErr("At least one reactant is needed in the reaction"+nl+
                 "for the formation of the complex \""+newC.name+"\"",-1);
             return;
         }
-        for(int i=0; i < Complex.NDIM; i++) {
-            if(newC.component[i] != null && newC.component[i].length() >0 &&
-                    Math.abs(newC.numcomp[i]) < 0.001) {
+        for(int i=0; i < nTot; i++) {
+            if(newC.reactionComp.get(i) != null && newC.reactionComp.get(i).length() >0
+                    && Math.abs(newC.reactionCoef.get(i)) < 0.0001) {
                 showErr("The stoichiometric coefficient"+nl+
-                        "for reactant \""+newC.component[i]+"\" may not be zero!"+nl+nl+
-                        "Either enter a number or select"+nl+
-                        "the \"empty\" reactant instead of \""+newC.component[i]+"\".",-1);
+                        "for reactant \""+newC.reactionComp.get(i)+"\" may not be zero!",-1);
                 return;
             }
         } //for i
@@ -2853,7 +2900,7 @@ public class FrameAddData extends javax.swing.JFrame {
                     "for the complex \""+newC.name+"\"",-1);
             return;
         }
-        if(!Complex.isChargeBalanced(newC)) {
+        if(!newC.isChargeBalanced()) {
             noChargeBalanceWarning(newC.name);
             return;
         }
@@ -2873,13 +2920,13 @@ public class FrameAddData extends javax.swing.JFrame {
         msg = msg + "Replace existing reaction for \""+
               newC.name+"\""+nl+
               "with"+nl+
-              Complex.reactionTextWithLogK(newC,25);
+              newC.reactionTextWithLogK(25,1);
         replaceComplex = true;
     } else {
-        msg = msg + "Add reaction?"+nl+
-              Complex.reactionTextWithLogK(newC,25)+nl+" ";
+        msg = msg + "Add reaction?"+nl+newC.reactionTextWithLogK(25,1)+nl+" ";
         replaceComplex = false;
     }
+    if(dbg) {System.out.println("----- "+msg+"    [Yes] [No]");}
     Object[] opt = {"Yes", "Cancel"};
     int m = javax.swing.JOptionPane.showOptionDialog(this, msg,
                 pc.progName, javax.swing.JOptionPane.YES_NO_OPTION,
@@ -2912,7 +2959,10 @@ public class FrameAddData extends javax.swing.JFrame {
 
     newC = new Complex();
     try {oldNewC = (Complex)newC.clone();}
-    catch (CloneNotSupportedException ex) {MsgExceptn.exception("Error "+ex.toString()+nl+"  in Complex.clone().");}
+    catch (CloneNotSupportedException ex) {
+        MsgExceptn.exception("Error "+ex.toString()+nl+"  in Complex.clone().");
+        oldNewC = null;
+    }
     updateJPanelReaction(newC);
     jLabelReaction.setText("New reaction:");
     jMenuFileSave.setEnabled(false);
@@ -3027,6 +3077,7 @@ public class FrameAddData extends javax.swing.JFrame {
  * @return true if the user wants to discard changes; false otherwise */
   private boolean discardChanges() {
     bringToFront();
+    if(jPanelReaction.isShowing() && newC != null && oldNewC != null && newC.isEqualTo(oldNewC)) {return true;}
     String msg = "Save changes?"+nl+nl+
                  "Press [Cancel] and then [Save] to keep changes;"+nl+
                  "or choose [Discard] to reject changes.";
@@ -3136,10 +3187,11 @@ public class FrameAddData extends javax.swing.JFrame {
           try{c =  Complex.fromString(line);}
           catch (Complex.ReadComplexException ex) {MsgExceptn.exception(ex.getMessage());}
           if(c != null && c.name != null && c.name.length() >0) {
-            for(int j=0; j < Complex.NDIM; j++) {
-              if(c.component[j] == null || c.component[j].length() <=0
-                        || Math.abs(c.numcomp[j]) < 0.001) {continue;}
-              if(reactant.equals(c.component[j])) {return true;}
+            int nTot = Math.min(c.reactionComp.size(),c.reactionCoef.size());
+            for(int j=0; j < nTot; j++) {
+              if(c.reactionComp.get(j) == null || c.reactionComp.get(j).length() <=0
+                        || Math.abs(c.reactionCoef.get(j)) < 0.0001) {continue;}
+              if(reactant.equals(c.reactionComp.get(j))) {return true;}
             }//for j
           }
       } //if line != null
@@ -3183,9 +3235,10 @@ public class FrameAddData extends javax.swing.JFrame {
 
   //<editor-fold defaultstate="collapsed" desc="jListReact_click()">
   private void jListReact_click() {
-    if(dbg) {System.out.println("-- jListReact_click()");}
+    if(dbg) {System.out.println(nl+"--- jListReact_click()");}
     int i = jListReact.getSelectedIndex();
-    if(i >= 0 && i < modelComplexes.getSize()) {
+    if(i < 0 || i >= modelComplexes.getSize()) {jMenuAddReact.doClick();}
+    else {
         String dataLine = null;
         Object value = modelComplexes.get(i);
         if(value != null) {
@@ -3198,22 +3251,23 @@ public class FrameAddData extends javax.swing.JFrame {
             if(c !=  null) {
             //check that all reactants for this reaction are in the list of available components
             boolean fnd;
-            for(int j=0; j < Complex.NDIM; j++) {
-                if(c.component[j] == null || c.component[j].length() <=0
-                        || Math.abs(c.numcomp[j]) < 0.001) {continue;}
+            int nTot = Math.min(c.reactionComp.size(), c.reactionCoef.size());
+            for(int j=0; j < nTot; j++) {
+                if(c.reactionComp.get(j) == null || c.reactionComp.get(j).length() <=0
+                        || Math.abs(c.reactionCoef.get(j)) < 0.0001) {continue;}
                 fnd = false;
                 for(String t : componentsAdd) {
-                    if(t.equals(c.component[j])) {fnd = true; break;}
+                    if(t.equals(c.reactionComp.get(j))) {fnd = true; break;}
                 } //for
                 if(!fnd) {
                     java.io.File eF = new java.io.File(addFileEle);
-                    showErr("Error:  component \""+c.component[j]+"\""+nl+
+                    showErr("Error:  component \""+c.reactionComp.get(j)+"\""+nl+
                             "for species \""+c.name+"\""+nl+
                             "can not be found."+nl+nl+
                             "You must save the component first.",-1);
                     jMenuAddComp.doClick();
                     try{
-                        jTextFieldCompName.setText(c.component[j]);
+                        jTextFieldCompName.setText(c.reactionComp.get(j));
                         jTextFieldCompDescr.setText("");
                         jLabelLinked.setText("");
                         oldComponentName = "";
@@ -3227,15 +3281,26 @@ public class FrameAddData extends javax.swing.JFrame {
                     return;
                 }//if !fnd
             }//for j
+            if(c.reactionComp.size() > boxes.size()) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "The reaction for \""+c.name+"\" can not be edited here"+nl+
+                    "because it has more than "+boxes.size()+" reactants."+nl+
+                    "Please use a text editor to change this reaction.",
+                    pc.progName, javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
             jMenuAddReact.doClick();
             newC = c;
             try{oldNewC = (Complex)newC.clone();}
-            catch (CloneNotSupportedException ex) {MsgExceptn.exception("Error "+ex.toString()+nl+"  in Complex.clone().");}
+            catch (CloneNotSupportedException ex) {
+                MsgExceptn.exception("Error "+ex.toString()+nl+"  in Complex.clone().");
+                oldNewC = null;
+            }
             jLabelReaction.setText("Edit reaction:");
-            updateJPanelReaction(newC);
+            updateJPanelReaction(newC);            
             } // if c != null
         } //if dataLine != null
-    } else {jMenuAddReact.doClick();}
+    }
   } //jListReact_click()
   //</editor-fold>
 
@@ -3385,7 +3450,7 @@ public class FrameAddData extends javax.swing.JFrame {
             items.add(compName);
         } //if !fnd
     }//for i
-    // sort the list alphabetically and update the "model"
+    // sortReactants the list alphabetically and update the "model"
     java.util.Collections.sort(items,String.CASE_INSENSITIVE_ORDER);
     java.util.Iterator<String> iter = items.iterator();
     while(iter.hasNext()) {
@@ -3443,7 +3508,6 @@ public class FrameAddData extends javax.swing.JFrame {
         boxes.set(i, jcb_i);
       }//for i
     } while (!good);
-    if(fo < 0) {return;}
     //set focus to the new focus owner
     if(fo >=0) {
         jcb_i = boxes.get(fo);
@@ -3498,12 +3562,19 @@ public class FrameAddData extends javax.swing.JFrame {
                 continue;
             }
             if(c.name.startsWith("@")) {continue;}
-            for(int j=0; j < Complex.NDIM; j++) {
-                if(c.component[j] != null && c.component[j].length()<=0) {c.numcomp[j] = 0; continue;}
-                if(Math.abs(c.numcomp[j]) < 0.001) {c.component[j] = ""; continue;}
+            int nTot = Math.min(c.reactionComp.size(), c.reactionCoef.size());
+            int j = 0;
+            while(j < nTot) {
+                if((c.reactionComp.get(j) != null && c.reactionComp.get(j).length()<=0)
+                            || Math.abs(c.reactionCoef.get(j)) < 0.0001) {
+                    c.reactionComp.remove(j);
+                    c.reactionCoef.remove(j);
+                    nTot--;
+                    continue;
+                }
                 // is this reactant in the list?
                 for(int i = 0; i < elemCompAdd.size(); i++) {
-                    if(c.component[j].equals(elemCompAdd.get(i)[1])) {
+                    if(c.reactionComp.get(j).equals(elemCompAdd.get(i)[1])) {
                         found[i] = true;
                         //can not break: one must go through all "elemCompAdd" because
                         // some reactants will be listed with two elements
@@ -3511,7 +3582,8 @@ public class FrameAddData extends javax.swing.JFrame {
                         //break; 
                     }
                 } //for i
-            } //for j
+                j++;
+            } // while
         } //while
     } //try
     catch (java.io.IOException ex) {
@@ -3589,6 +3661,10 @@ public class FrameAddData extends javax.swing.JFrame {
 /** Show a Complex data in the jPanelReaction */
   private void updateJPanelReaction(Complex c) {
     if(dbg) {System.out.println("-- updateJPanelReaction("+c.name+")");}
+    int nTot = Math.min(c.reactionComp.size(),c.reactionCoef.size());
+    if(nTot > boxes.size()) {
+        System.out.println("updateJPanelReaction("+c.name+"): too many reactants (>"+boxes.size()+"); quitting.");
+    }
     editingReaction = true;
     // --- update the combo boxes
     update_componentsAdd();
@@ -3613,29 +3689,51 @@ public class FrameAddData extends javax.swing.JFrame {
     if(c.constant !=  Complex.EMPTY) {
         jTextFieldLogK.setText(Util.formatNumAsInt(c.constant));
     } else {jTextFieldLogK.setText("");}
-    if(c.deltH !=  Complex.EMPTY) {
-        jTextFieldDeltH.setText(Util.formatNumAsInt(c.deltH));
-    } else {jTextFieldDeltH.setText("");}
-    if(c.deltCp !=  Complex.EMPTY) {
-        jTextFieldDeltCp.setText(Util.formatNumAsInt(c.deltCp));
-    } else {jTextFieldDeltCp.setText("");}    
+    double w;
+    if(c.analytic || c.lookUp) {
+        // analytic equation or lookUp table
+        jTextFieldDeltH.setText("");
+        jTextFieldDeltH.setEnabled(false);
+        jLabelKJmol.setText("");
+        jTextFieldDeltCp.setText("");
+        jTextFieldDeltCp.setEnabled(false);
+        jLabelJKmol.setText("");
+        jLabelNote.setVisible(true);
+        if(c.lookUp) {jLabelNote.setText("<html><b>Note:</b> logK values at different<br>temperatures are given<br>in a look-up table.</html>");}
+        else {jLabelNote.setText("<html><b>Note:</b> Temperature variation<br> of logK uses a power-series<br>expression.</html>");}
+    } else {
+        // delta-H and delta-Cp
+        jLabelKJmol.setText("kJ/mol");
+        jLabelJKmol.setText("J/(K mol)");
+        jTextFieldDeltH.setEnabled(true);
+        jTextFieldDeltCp.setEnabled(true);
+        jLabelNote.setVisible(false);
+        w = c.getDeltaH();
+        if(w !=  Complex.EMPTY) {
+            jTextFieldDeltH.setText(Util.formatNumAsInt(w));
+        } else {jTextFieldDeltH.setText("");}
+        w = c.getDeltaCp();
+        if(w !=  Complex.EMPTY) {
+            jTextFieldDeltCp.setText(Util.formatNumAsInt(w));
+        } else {jTextFieldDeltCp.setText("");}
+    }
     jTextFieldComment.setText(c.comment);
     jTextFieldRef.setText(c.reference);
     int fnd;
-    for(int i = 0; i < Complex.NDIM; i++) {
+    for(int i = 0; i < nTot; i++) {
         javax.swing.JComboBox<String> jcb = boxes.get(i); // javax.swing.JComboBox jcb = boxes.get(i); // java 1.6
-        if(c.component[i] != null && c.component[i].length() >0) {
+        if(c.reactionComp.get(i) != null && c.reactionComp.get(i).length() >0) {
             fnd = -1;
             for(int j=0; j < jcb.getItemCount(); j++) {
-                if(c.component[i].equals(jcb.getItemAt(j))) {fnd = j; break;}
+                if(c.reactionComp.get(i).equals(jcb.getItemAt(j))) {fnd = j; break;}
             } //for j
             if(fnd > -1) {
                 jcb.setSelectedIndex(fnd);
-                if(Math.abs(c.numcomp[i]) >= 0.001) {
-                    texts[i].setText(Util.formatNumAsInt(c.numcomp[i]));
+                if(Math.abs(c.reactionCoef.get(i)) >= 0.001) {
+                    texts[i].setText(Util.formatNumAsInt(c.reactionCoef.get(i)));
                 } else {texts[i].setText("1");}
             } else {
-                MsgExceptn.exception("Programming error? Component "+c.component[i]+nl+"not found in combo box");
+                MsgExceptn.exception("Programming error? Component "+c.reactionComp.get(i)+nl+"not found in combo box");
                 jcb.setSelectedIndex(0);
                 texts[i].setText("");
             }//if fnd
@@ -3645,7 +3743,7 @@ public class FrameAddData extends javax.swing.JFrame {
         }
         boxes.set(i, jcb);
     } //for i
-    if(!Complex.isChargeBalanced(c)) {
+    if(!c.isChargeBalanced()) {
         jLabelCharge.setText("<html>Reaction is <b>NOT</b> charge balanced</html>");
         jLabelCharge.setForeground(vermilion);
         jMenuFileSave.setEnabled(true);
@@ -3677,41 +3775,49 @@ public class FrameAddData extends javax.swing.JFrame {
             newC.constant = Complex.EMPTY;
         }
     } else {newC.constant = Complex.EMPTY;}
-    if(!jTextFieldDeltH.getText().equals("")) {
-        try {newC.deltH = Double.parseDouble(jTextFieldDeltH.getText());}
-        catch (NumberFormatException ex) {
-            //System.err.println("Error reading double from \""+jTextFieldLogK.getText()+"\"");
-            newC.deltH = Complex.EMPTY;
-        }
-    } else {newC.deltH = Complex.EMPTY;}
-    if(!jTextFieldDeltCp.getText().equals("")) {
-        try {newC.deltCp = Double.parseDouble(jTextFieldDeltCp.getText());}
-        catch (NumberFormatException ex) {
-            //System.err.println("Error reading double from \""+jTextFieldLogK.getText()+"\"");
-            newC.deltCp = Complex.EMPTY;
-        }
-    } else {newC.deltCp = Complex.EMPTY;}
-    int jProton = -1;
-    for (int i=0; i < Complex.NDIM; i++) {
-        javax.swing.JComboBox<String> jcb = boxes.get(i); // javax.swing.JComboBox jcb = boxes.get(i); // java 1.6
-        newC.component[i] = jcb.getSelectedItem().toString();
-        if(newC.component[i] == null) {newC.component[i] = "";}
-        if(newC.component[i].length() >0) {
-            try {newC.numcomp[i] = Double.parseDouble(texts[i].getText());}
+    if(!newC.analytic && !newC.lookUp) {
+        double deltaH, deltaCp;
+        if(!jTextFieldDeltH.getText().equals("")) {
+            try {deltaH = Double.parseDouble(jTextFieldDeltH.getText());}
             catch (NumberFormatException ex) {
-                    //System.err.println("Error reading double from \""+texts[i].getText()+"\"");
-                    newC.component[i] = ""; newC.numcomp[i] =0;
+            //System.err.println("Error reading double from \""+jTextFieldLogK.getText()+"\"");
+            deltaH = Complex.EMPTY;
             }
-            if(Util.isProton(newC.component[i])) {jProton = i;}
-        } else {newC.numcomp[i] =0;}
+        } else {deltaH = Complex.EMPTY;}
+        if(!jTextFieldDeltCp.getText().equals("")) {
+            try {deltaCp = Double.parseDouble(jTextFieldDeltCp.getText());}
+            catch (NumberFormatException ex) {
+            //System.err.println("Error reading double from \""+jTextFieldLogK.getText()+"\"");
+            deltaCp = Complex.EMPTY;
+            }
+        } else {deltaCp = Complex.EMPTY;}
+        newC.a = Complex.deltaToA(newC.constant, deltaH, deltaCp);
+        newC.tMax = 25.;
+        if(deltaH != Complex.EMPTY) {
+            newC.tMax = 75.;
+            if(deltaCp != Complex.EMPTY) {newC.tMax = 150.;}
+        }
+    } // if not analytic or lookUp
+    String txt;
+    newC.reactionComp.clear();
+    newC.reactionCoef.clear();
+    for (int i=0; i < boxes.size(); i++) {
+        javax.swing.JComboBox<String> jcb = boxes.get(i); // javax.swing.JComboBox jcb = boxes.get(i); // java 1.6
+        txt = jcb.getSelectedItem().toString();
+        if(txt == null || txt.trim().length() <=0) {continue;} 
+        newC.reactionComp.add(txt);
+        try {newC.reactionCoef.add(Double.parseDouble(texts[i].getText()));}
+        catch (NumberFormatException ex) {
+                    //System.err.println("Error reading double from \""+texts[i].getText()+"\"");
+                    newC.reactionComp.remove(newC.reactionComp.size()-1);
+        }
     }//for i
-    if(jProton > -1) {newC.proton = newC.numcomp[jProton];} else {newC.proton = 0;}
     newC.reference = jTextFieldRef.getText();
     newC.comment = jTextFieldComment.getText();
     //newC.comment = "";
-    boolean ok = Complex.isChargeBalanced(newC);
+    boolean ok = newC.isChargeBalanced();
     // if there has been a change: enable the Save button
-    if(newC.isEqualTo(oldNewC) && ok) { //no changes?
+    if(oldNewC != null && newC.isEqualTo(oldNewC) && ok) { //no changes?
         jMenuFileSave.setEnabled(false);
         jButtonSaveReac.setEnabled(false);
     } else {
@@ -3904,9 +4010,7 @@ private class ComplexListCellRenderer implements javax.swing.ListCellRenderer {
     private javax.swing.JComboBox<String> jComboBoxElems;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabelCharge;
     private javax.swing.JLabel jLabelComp;
     private javax.swing.JLabel jLabelCompDescr;
@@ -3915,8 +4019,11 @@ private class ComplexListCellRenderer implements javax.swing.ListCellRenderer {
     private javax.swing.JLabel jLabelElems;
     private javax.swing.JLabel jLabelFiles;
     private javax.swing.JLabel jLabelHelp;
+    private javax.swing.JLabel jLabelJKmol;
+    private javax.swing.JLabel jLabelKJmol;
     private javax.swing.JLabel jLabelLinked;
     private javax.swing.JLabel jLabelLogK;
+    private javax.swing.JLabel jLabelNote;
     private javax.swing.JLabel jLabelPlus1;
     private javax.swing.JLabel jLabelPlus3;
     private javax.swing.JLabel jLabelPlus5;
@@ -3937,7 +4044,7 @@ private class ComplexListCellRenderer implements javax.swing.ListCellRenderer {
     private javax.swing.JMenu jMenuFile;
     private javax.swing.JMenuItem jMenuFileExit;
     private javax.swing.JMenuItem jMenuFileSave;
-    private javax.swing.JMenuItem jMenuFileShow;
+    private javax.swing.JMenuItem jMenuFileShowFile;
     private javax.swing.JMenu jMenuHelp;
     private javax.swing.JMenuItem jMenuHelpHlp;
     private javax.swing.JMenuItem jMenuItemCancel;
@@ -3945,6 +4052,7 @@ private class ComplexListCellRenderer implements javax.swing.ListCellRenderer {
     private javax.swing.JMenuItem jMenuItemDetails;
     private javax.swing.JMenuItem jMenuItemEdit;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelComponent;
     private javax.swing.JPanel jPanelComps;
     private javax.swing.JPanel jPanelFiles;

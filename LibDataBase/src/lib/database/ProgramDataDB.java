@@ -22,10 +22,14 @@ import lib.huvud.RedirectedFrame;
  * 
  * @author Ignasi Puigdomenech */
 public class ProgramDataDB {    
-  /** the temperature, used both to calculate ionic strength effects, that is,
-   * to calculate activity coefficients, and to calculate values of the
-   * redox potential, Eh, from the pe-values */
-  public double temperature = 25;
+  /** the temperature (Celsius), used both to extrapolate equilibrium constants,
+   * to calculate ionic strength effects (that is, to calculate activity
+   * coefficients), and to calculate values of the redox potential, Eh,
+   * from the pe-values */
+  public double temperature_C = 25;
+  /** the pressure (bar), used to calculate values of the
+   * equilibrium constants */
+  public double pressure_bar = 25;
   /** if <code>true</code> then it will be possible to choose temperatures
    * up to 350 C in the program Database. */
   public boolean temperatureAllowHigher = false;

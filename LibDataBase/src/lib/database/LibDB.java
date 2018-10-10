@@ -7,7 +7,7 @@ import lib.huvud.Div;
 
 /** Some procedures used witin this package.
  * <br>
- * Copyright (C) 2015-2017 I.Puigdomenech.
+ * Copyright (C) 2015-2018 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ public class LibDB {
   public static String[] elementName = new String[113];
   /** e-, H, He, Li ... */
   public static String[] elementSymb = new String[113];
-  private static String ELEMS_COMPS = "ElemsComps";
   /** New-line character(s) to substitute "\n" */
   private static final String nl = System.getProperty("line.separator");
   private static final String SLASH = java.io.File.separator;
@@ -560,20 +559,23 @@ static { // static initializer
           throws ReadTxtCmplxException, EndOfFileException  {
     if(br == null) {return null;}
     Complex cmplx;
-    String line;
+    String line, line2;
     try{
         while ((line = br.readLine()) != null){
             if(line.trim().length()<=0 || line.trim().toUpperCase().startsWith("COMPLEX")
                     || line.trim().startsWith("/")) {continue;}
-            try{
-                cmplx = Complex.fromString(line);
-            } catch (Complex.ReadComplexException ex) {
-                throw new ReadTxtCmplxException(ex.getMessage());
+            if(line.toLowerCase().contains("lookup")) { // lookUpTable
+                for(int i = 0; i < 5; i++) {
+                    line2 = br.readLine();
+                    if(line2 != null) {line = line + nl + line2;}
+                }
             }
+            try{cmplx = Complex.fromString(line);}
+            catch (Complex.ReadComplexException ex) {throw new ReadTxtCmplxException(ex.getMessage());}
             if(cmplx != null) {return cmplx;}
         } // while
     }
-    catch (java.io.IOException ex) {throw new ReadTxtCmplxException(ex.getMessage());}
+    catch (java.io.IOException ex) {throw new ReadTxtCmplxException(ex.toString());}
     //if(line == null) 
     throw new EndOfFileException();
   } //getTxtComplex(rd)
@@ -590,26 +592,7 @@ static { // static initializer
         throw new WriteTxtCmplxException(nl+"Error: empty cmplx name in \"writeTxtComplex\"");
     }
     try {
-        pw.print(cmplx.name+";");
-        pw.print(Util.formatDbl3(cmplx.constant).trim()+";");
-        // a value of zero (< 1E-4) in delta-H or delta-Cp is taken to be "empty"
-        if(cmplx.deltH != Complex.EMPTY && Math.abs(cmplx.deltH) >= 0.0001) {
-            pw.print(Util.formatDbl3(cmplx.deltH).trim());
-        }
-        pw.print(";");
-        if(cmplx.deltCp != Complex.EMPTY && Math.abs(cmplx.deltCp) >= 0.0001) {
-            pw.print(Util.formatDbl3(cmplx.deltCp).trim());
-        }
-        pw.print(";");
-        for(int i=0; i < Complex.NDIM; i++) {
-            pw.print(cmplx.component[i]+";");
-            if(Math.abs(cmplx.numcomp[i]) >= 0.001) {pw.print(Util.formatDbl4(cmplx.numcomp[i]).trim());}
-            pw.print(";");
-        }
-        pw.print(Util.formatDbl4(cmplx.proton).trim());
-        pw.print(";");
-        pw.print(cmplx.reference);
-        if(cmplx.comment.length() >0) {pw.print(" /"+cmplx.comment);}
+        pw.print(cmplx.toString());
         pw.println();
     } catch (Exception ex) {
         throw new WriteTxtCmplxException(nl+"Error: "+ex.getMessage()+nl+" in \"writeTxtComplex\"");
@@ -627,6 +610,10 @@ static { // static initializer
             throws ReadBinCmplxException {
     if(dis == null) {return null;}
     Complex cmplx = new Complex();
+    String txt;
+    int nTot, nr;
+    boolean thereisHplus = false;
+    double n_H, deltaH, deltaCp;
     StringBuilder nowReading = new StringBuilder();
     nowReading.replace(0, nowReading.length(), "Name of complex");
     try{
@@ -634,21 +621,81 @@ static { // static initializer
         if(cmplx.name == null) {throw new ReadBinCmplxException(nl+"Error: complex name = \"null\".");}
         nowReading.replace(0, nowReading.length(), "logK for `"+cmplx.name+"´");
         cmplx.constant = dis.readDouble();
-        nowReading.replace(0, nowReading.length(), "delta-H for `"+cmplx.name+"´");
-        cmplx.deltH = dis.readDouble();
-        nowReading.replace(0, nowReading.length(), "delta-Cp for `"+cmplx.name+"´");
-        cmplx.deltCp = dis.readDouble();
-        for(int i=0; i < Complex.NDIM; i++) {
-            nowReading.replace(0, nowReading.length(), "reactant nbr."+(i+1)+" for `"+cmplx.name+"´");
-            cmplx.component[i] = dis.readUTF();
-            nowReading.replace(0, nowReading.length(), "stoichiometric coeff. nbr."+(i+1)+" for `"+cmplx.name+"´");
-            cmplx.numcomp[i] = dis.readDouble();
+        nowReading.replace(0, nowReading.length(), "delta-H for `"+cmplx.name+"´ (or \"analytic - lookUp\" flag)");
+        deltaH = dis.readDouble();
+        if(deltaH == Complex.ANALYTIC) {
+            // analytic equation
+            cmplx.analytic = true;
+            cmplx.lookUp = false;
+            nowReading.replace(0, nowReading.length(), "max temperature for `"+cmplx.name+"´");
+            cmplx.tMax = dis.readDouble();
+            for(int i = 0; i < cmplx.a.length; i++) {
+                nowReading.replace(0, nowReading.length(), "parameter a[+"+i+"] for `"+cmplx.name+"´");
+                cmplx.a[i] = dis.readDouble();
+            }
+        } else if(deltaH == Complex.LOOKUP) {
+            // look-up table
+            cmplx.lookUp = true;
+            cmplx.analytic = false;
+            nowReading.replace(0, nowReading.length(), "max temperature for `"+cmplx.name+"´");
+            cmplx.tMax = dis.readDouble();
+        } else { // delta-H and delta-Cp
+            cmplx.analytic = false;
+            cmplx.lookUp = false;
+            nowReading.replace(0, nowReading.length(), "delta-Cp for `"+cmplx.name+"´");
+            deltaCp = dis.readDouble();
+            cmplx.a = Complex.deltaToA(cmplx.constant, deltaH, deltaCp);
+            cmplx.tMax = 25.;
+            if(deltaH != Complex.EMPTY) {
+                cmplx.tMax = 75.;
+                if(deltaCp != Complex.EMPTY) {cmplx.tMax = 150.;}
+            }
         }
-        nowReading.replace(0, nowReading.length(), "nbr H+ for `"+cmplx.name+"´");
-        cmplx.proton = dis.readDouble();
+        nowReading.replace(0, nowReading.length(), "reactant nbr.1 or nbr of reactants for `"+cmplx.name+"´");
+        txt = dis.readUTF();
+        try {nTot = Integer.parseInt(txt);} catch (Exception ex) {nTot = -1;}
+        if(nTot <= 0) { // nTot < 0  ---- old format ----
+            nr = 0;
+            for(int i=0; i < Complex.NDIM; i++) {
+                if(i>0) { 
+                    nowReading.replace(0, nowReading.length(), "reactant nbr."+(i+1)+" for `"+cmplx.name+"´");
+                    txt = dis.readUTF();
+                }
+                if(txt.trim().isEmpty()) {dis.readDouble(); continue;}
+                cmplx.reactionComp.add(txt);
+                nr++;
+                nowReading.replace(0, nowReading.length(), "stoichiometric coeff. nbr."+(i+1)+" for `"+cmplx.name+"´");
+                cmplx.reactionCoef.add(dis.readDouble());
+                if(Util.isProton(cmplx.reactionComp.get(nr-1))) {
+                    thereisHplus = true;
+                    n_H = cmplx.reactionCoef.get(nr-1);
+                }
+            } // for i
+            nowReading.replace(0, nowReading.length(), "nbr H+ for `"+cmplx.name+"´");
+            n_H = dis.readDouble();
+            if(!thereisHplus && Math.abs(n_H) > 0.00001) {cmplx.reactionComp.add("H+"); cmplx.reactionCoef.add(n_H);}
+        } else { // nTot >0  ---- new format ----
+            for(int i=0; i < nTot; i++) {
+                nowReading.replace(0, nowReading.length(), "reactant nbr."+(i+1)+" for `"+cmplx.name+"´");
+                cmplx.reactionComp.add(dis.readUTF());
+                nowReading.replace(0, nowReading.length(), "stoichiometric coeff. nbr."+(i+1)+" for `"+cmplx.name+"´");
+                cmplx.reactionCoef.add(dis.readDouble());
+            }
+        }
         nowReading.replace(0, nowReading.length(), "reference for `"+cmplx.name+"´");
         cmplx.reference = dis.readUTF();
         cmplx.comment = dis.readUTF();
+        if(cmplx.lookUp) { // read look-up table
+            for(int i=0; i < cmplx.logKarray.length; i++) {
+                cmplx.logKarray[i] = new float[14];
+                for(int j=0; j < cmplx.logKarray[i].length; j++) {cmplx.logKarray[i][j]=Float.NaN;}
+                if(i == 0) {nr = 9;} else if(i == 1) {nr = 11;} else {nr = 14;}
+                for(int j=0; j < nr; j++) {
+                    nowReading.replace(0, nowReading.length(), "logKarray["+i+"]["+j+"] for `"+cmplx.name+"´");
+                    cmplx.logKarray[i][j] = dis.readFloat();
+                }
+            }
+        }
     }
     catch (java.io.EOFException eof) {return null;}
     catch (IOException ex) {
@@ -672,21 +719,36 @@ static { // static initializer
     try{
       ds.writeUTF(cmplx.name);
       ds.writeDouble(cmplx.constant);
-      // a value of zero (< 1E-4) in delta-H or delta-Cp is taken to be "empty"
-      if(cmplx.deltH != Complex.EMPTY) {
-          ds.writeDouble(cmplx.deltH);
-      } else {ds.writeDouble(Complex.EMPTY);}
-      if(cmplx.deltCp != Complex.EMPTY) {
-            ds.writeDouble(cmplx.deltCp);
-      } else {ds.writeDouble(Complex.EMPTY);}
-      for(int i = 0; i < Complex.NDIM; i++) {
-        ds.writeUTF(cmplx.component[i]);
-        ds.writeDouble(cmplx.numcomp[i]);
+      if(cmplx.analytic) {
+          // analytic equation
+          ds.writeDouble(Complex.ANALYTIC);
+          ds.writeDouble(cmplx.tMax);
+          for(int i = 0; i < cmplx.a.length; i++) {ds.writeDouble(cmplx.a[i]);}
+      } else if(cmplx.lookUp) {
+          // look-up Table
+          ds.writeDouble(Complex.LOOKUP);
+          ds.writeDouble(cmplx.tMax);
+      } else {
+          // delta-H and delta-Cp
+          ds.writeDouble(cmplx.getDeltaH());
+          ds.writeDouble(cmplx.getDeltaCp());
       }
-      ds.writeDouble(cmplx.proton);
+      int nTot = Math.min(cmplx.reactionComp.size(),cmplx.reactionCoef.size());
+      ds.writeUTF(String.valueOf(nTot));
+      for(int i = 0; i < nTot; i++) {
+        ds.writeUTF(cmplx.reactionComp.get(i));
+        ds.writeDouble(cmplx.reactionCoef.get(i));
+      }
       ds.writeUTF(cmplx.reference);
       if(cmplx.comment != null && cmplx.comment.length() >=0) {ds.writeUTF(cmplx.comment);}
       else {ds.writeUTF("");}
+      if(cmplx.lookUp) { // write look-up Table
+          int nr;
+          for(int i=0; i < cmplx.logKarray.length; i++) {
+            if(i == 0) {nr = 9;} else if(i == 1) {nr = 11;} else {nr = 14;}
+            for(int j=0; j < nr; j++) {ds.writeFloat(cmplx.logKarray[i][j]);}
+          }
+      }
     } catch (java.io.IOException ex) {throw new WriteBinCmplxException(nl+"Error: "+ex.getMessage()+nl+"in \"writeBinCmplx\"");}
   } //writeBinCmplx(DataOutputStream, complex)
   // </editor-fold>

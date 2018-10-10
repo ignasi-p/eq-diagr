@@ -391,16 +391,18 @@ public class AddDataElem {
             try {c = Complex.fromString(line);}
             catch (Complex.ReadComplexException ex) {MsgExceptn.msg(ex.getMessage()); break;}
             if(c == null) {continue;}
-            for(int i=0; i < Complex.NDIM; i++) { // take each reactant
-                if(c.component[i] != null && c.component[i].length()>0 && Math.abs(c.numcomp[i]) >=0.001) {
+            int nTot = Math.min(c.reactionComp.size(),c.reactionCoef.size());
+            for(int i=0; i < nTot; i++) { // take each reactant
+                if(c.reactionComp.get(i) != null && c.reactionComp.get(i).length()>0
+                        && Math.abs(c.reactionCoef.get(i)) >=0.0001) {
                     fnd = false;
                     for (int j=0; j < elemCompAdd.size(); j++) { // search in data from "addFileEle"
-                        if(elemCompAdd.get(j)[1].equals(c.component[i])) {fnd = true; break;}
+                        if(elemCompAdd.get(j)[1].equals(c.reactionComp.get(i))) {fnd = true; break;}
                     } //for j
                     if(!fnd) { // if not found in "addFileEle"
                         // search in other open databases
                         for(int j=0; j < elemComp.size(); j++) {
-                            if(elemComp.get(j)[1].equals(c.component[i])) {
+                            if(elemComp.get(j)[1].equals(c.reactionComp.get(i))) {
                                 there = false;
                                 for(String t : items) {if(t.equals(elemComp.get(j)[1])) {there = true; break;}}
                                 if(!there) {items.add(elemComp.get(j)[1]);}

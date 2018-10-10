@@ -663,7 +663,7 @@ public class DBnamesDialog extends javax.swing.JDialog {
         System.out.println("--- displayDatabaseErrors: NOT OK for file: "+dbn);
         setCursorDef();
         return;
-    } //#?#
+    }
 
     //--- add new name to list
     //    check that the name is not already in the list
@@ -789,10 +789,12 @@ public class DBnamesDialog extends javax.swing.JDialog {
   private void setCursorWait() {
     setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
     jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+    jListDBnames.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
   }
   private void setCursorDef() {
     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    jListDBnames.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
   }
 
   //</editor-fold>
