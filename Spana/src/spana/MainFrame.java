@@ -31,7 +31,7 @@ import lib.kemi.graph_lib.DiagrPaintUtility;
 public class MainFrame extends javax.swing.JFrame {
   // Note: for java 1.6 jComboBox must not have type,
   //       for java 1.7 jComboBox must be <String>
-  static final String VERS = "2018-Aug-14";
+  static final String VERS = "2018-Oct-10";
   /** all program instances will use the same redirected frame */
   private static RedirectedFrame msgFrame = null;
 

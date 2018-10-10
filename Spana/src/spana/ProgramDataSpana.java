@@ -45,6 +45,8 @@ public class ProgramDataSpana {
    * to calculate activity coefficients, and to calculate values of the
    * redox potential (Eh) from  pe-values */
   public double temperature = Double.NaN;
+  /** the pressure in bar, displayed in the diagram */
+  public double pressure = Double.NaN;
   /** Model to calculate activity coefficents:<ul>
    * <li> &lt;0 for ideal solutions (all activity coefficients = 1)
    * <li> =0 Davies eqn.

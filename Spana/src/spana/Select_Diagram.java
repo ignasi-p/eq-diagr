@@ -2309,6 +2309,7 @@ public class Select_Diagram extends javax.swing.JFrame {
       pd.SED_tableOutput = jCheckBoxTableOut.isSelected();
       pd.ionicStrength = diag.ionicStrength;
       if(jTextFieldT.isEnabled()) {pd.temperature = diag.temperature;}
+      pd.pressure = diag.pressure;
       pd.aquSpeciesOnly = jCheckBoxAqu.isSelected();
       pd.reversedConcs = jCheckBoxRev.isSelected();
       pd.drawNeutralPHinPourbaix = jCheckBoxDrawPHline.isSelected();
@@ -2726,11 +2727,21 @@ private boolean checkChanges() {
     }
   } //if not changed
   if(!changed) {
-    if(!Double.isNaN(diag.temperature) | !Double.isNaN(diag0.temperature)) {
-      if((!Double.isNaN(diag.temperature) & Double.isNaN(diag0.temperature)) ||
-         (Double.isNaN(diag.temperature) & !Double.isNaN(diag0.temperature)) ||
+    if(!Double.isNaN(diag.temperature) || !Double.isNaN(diag0.temperature)) {
+      if((!Double.isNaN(diag.temperature) && Double.isNaN(diag0.temperature)) ||
+         (Double.isNaN(diag.temperature) && !Double.isNaN(diag0.temperature)) ||
          diag.temperature != diag0.temperature) {
           if(pc.dbg) {System.out.println("Temperature changed.");}
+          changed = true;
+      }
+    }
+  } //if not change
+  if(!changed) {
+    if(!Double.isNaN(diag.pressure) || !Double.isNaN(diag0.pressure)) {
+      if((!Double.isNaN(diag.pressure) && Double.isNaN(diag0.pressure)) ||
+         (Double.isNaN(diag.pressure) && !Double.isNaN(diag0.pressure)) ||
+         diag.pressure != diag0.pressure) {
+          if(pc.dbg) {System.out.println("Pressure changed.");}
           changed = true;
       }
     }
@@ -2896,15 +2907,15 @@ private boolean checkChanges() {
       if(Double.isNaN(td.x1)) {td.x1 = 0;}
       if(Double.isNaN(td.x2)) {td.x2 = 0;}
       if(td.x1 != 0) {
-          if(Math.abs((td.x1-td.x2)/td.x1) <= 0.0001) {
+          if(td.x2 != 0 && Math.abs((td.x1-td.x2)/td.x1) <= 0.00001) {
               td.x2 = td.x1 + td.x1*0.001; done = true;}
       }
       if(!done && td.x2 != 0) {
-          if(Math.abs((td.x1-td.x2)/td.x2) <= 0.0001) {
+          if(td.x1 != 0 && Math.abs((td.x1-td.x2)/td.x2) <= 0.00001) {
               td.x2 = td.x1 + td.x1*0.001; done = true;}
       }
       if(!done) {
-          if(Math.abs(td.x1-td.x2) <= 0.0001) {td.x2 = 1;}
+          if(Math.abs(td.x1-td.x2) <= 1e-26) {td.x2 = 1;}
       }
   } // checkForEqual(TwoDoubles)
 //</editor-fold>
@@ -4054,6 +4065,13 @@ private void diagramType_Click() {
     temperatureGivenInInputFile = !Double.isNaN(w);
     diag.temperature = w;
     jTextFieldT.setText(Util.formatNum(diag.temperature));
+    //--- pressure written as a comment in the data file?
+    try {w = rd.getPressure();}
+    catch (ReadDataLib.DataReadException ex) {
+        MsgExceptn.exception(nl+ex.getMessage());
+        w = Double.NaN;
+    }
+    diag.pressure = w;
 
     // get number of gases
     nbrGases = 0;
