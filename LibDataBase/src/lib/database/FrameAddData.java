@@ -2806,7 +2806,6 @@ public class FrameAddData extends javax.swing.JFrame {
     java.io.BufferedReader br = null;
     try{
         br = new java.io.BufferedReader(new java.io.FileReader(afF));
-        String line;
         Complex c;
         java.util.ArrayList<String> items = new java.util.ArrayList<String>();
         while(true){
@@ -3552,13 +3551,13 @@ public class FrameAddData extends javax.swing.JFrame {
         br = new java.io.BufferedReader(new java.io.FileReader(afF));
         String line;
         Complex c;
-        while ((line = br.readLine()) != null){
+        while (true){
             lineNbr++;
-            if(line.trim().length()<=0 || line.toUpperCase().startsWith("COMPLEX")) {continue;}
-            try{c = Complex.fromString(line);}
-            catch (Complex.ReadComplexException ex) {MsgExceptn.msg(ex.getMessage()); continue;}
-            if(c == null) {
-                MsgExceptn.msg("Error reading reaction in line:"+nl+"   "+line);
+            try{c = lib.database.LibDB.getTxtComplex(br);}
+            catch (LibDB.EndOfFileException ex) {break;}
+            catch (LibDB.ReadTxtCmplxException ex) {
+                String msg = ex.toString()+nl+"reading complex "+lineNbr+nl+"in file: \""+addFile+"\"";
+                MsgExceptn.exception("Error "+msg+nl+"    Complex discarded!");
                 continue;
             }
             if(c.name.startsWith("@")) {continue;}

@@ -381,16 +381,19 @@ public class AddDataElem {
     java.io.BufferedReader br = null;
     try{
         br = new java.io.BufferedReader(new java.io.FileReader(afF));
-        String line;
         Complex c;
         boolean fnd, there;
         // read the reaction-file "addFile"
-        while ((line = br.readLine()) != null){
+        while (true){
             cmplxNbr++;
-            if(line.length()<=0 || line.toUpperCase().startsWith("COMPLEX") || line.startsWith("@")) {continue;}
-            try {c = Complex.fromString(line);}
-            catch (Complex.ReadComplexException ex) {MsgExceptn.msg(ex.getMessage()); break;}
-            if(c == null) {continue;}
+            try{c = lib.database.LibDB.getTxtComplex(br);}
+            catch (LibDB.EndOfFileException ex) {break;}
+            catch (LibDB.ReadTxtCmplxException ex) {
+                String msg = ex.toString()+nl+"reading complex "+cmplxNbr+nl+"in file: \""+addFile+"\"";
+                MsgExceptn.exception("Error "+msg+nl+"    Complex discarded!");
+                break;
+            }
+            if(c.name.startsWith("@")) {continue;}
             int nTot = Math.min(c.reactionComp.size(),c.reactionCoef.size());
             for(int i=0; i < nTot; i++) { // take each reactant
                 if(c.reactionComp.get(i) != null && c.reactionComp.get(i).length()>0

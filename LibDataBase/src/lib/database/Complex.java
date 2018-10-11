@@ -37,7 +37,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
   public boolean analytic;
   /** if <b>true</b>, a look-up table of logK values (logKarray[][])
    * is used to interpolate values of logK at the desired temperature
-   * and pressure; if <b>false</b> then the either an analytic power series
+   * and pressure; if <b>false</b> then either an analytic power series
    * expression is used, or the values of detla-H (enthalpy) and delta-Cp
    * (heat capacity) for the reaction have been given, or are empty.
    * @see lib.database.Complex#analytic analytic
@@ -54,10 +54,9 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * @see lib.database.Complex#tMax tMax */
   public double[] a;
   /** A grid of logK values, from which values are interpolated at the
-   * desired temperature and pressure; the first index is the pressure
-   * and temperatures is the second index.  The logK values at provided
-   * at the temperatures (degrees Celsius) and pressures (in bar) given
-   * in the following table:
+   * desired temperature and pressure; pressure is the first index (0 to 4)
+   * and temperatures is the second index (0 to 13).  The temperature
+   * (degrees Celsius) and pressure (bar) grid is in the following table:
    * <pre>
    * t=  0, 25, 50,  100,  150,  200,  250,  300,  350,400,450,500,550,600C
    * p=  1,  1,  1, 1.01, 4.76, 15.6, 39.8, 85.9,  165,300, - , - , - , -
@@ -65,7 +64,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
    *    1k, 1k, 1k,   1k,   1k,   1k,   1k,   1k,   1k, 1k, 1k, 1k, 1k, 1k
    *    3k, 3k, 3k,   3k,   3k,   3k,   3k,   3k,   3k, 3k, 3k, 3k, 3k, 3k
    *    5k, 5k, 5k,   5k,   5k,   5k,   5k,   5k,   5k, 5k, 5k, 5k, 5k, 5k</pre>
-   * <b>Note:</b> provide Double.NaN (Not-a-Number) where no data is available,
+   * <b>Note:</b> use Double.NaN (Not-a-Number) where no data is available,
    * for example at temperatures above 400C and pressures below 300bar.
    * @see lib.database.Complex#lookUp lookUp
    * @see lib.database.Complex#tMax tMax */
@@ -488,6 +487,41 @@ public class Complex implements Comparable<Complex>, Cloneable {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="deltaToA(logK0,deltaH,deltaCp)">
+  /** Sets "lookUp"=true and sets values to logKarray at pSat (the saturated
+   * vapor-liquid pressure) for temperatures between 0 and 350 C.
+   * The values of logKarray are calculated using the <b>a[]</b>-parameters
+   * for the logK(t) equation<br>
+   * (log K(t)= a[0] + a[1] T + a[2]/T +  a[3] log10(T)  + a[4] / T^2 + a[5] T^2)<br>
+   * where T is the temperature in Kelvin. The value of "tMax" is set to a
+   * maximum value of 350.
+   * 
+   * @see lib.database.Complex#analytic analytic
+   * @see lib.database.Complex#a a
+   * @see lib.database.Complex#lookUp lookUp
+   * @see lib.database.Complex#deltaToA(double, double, double) deltaToA
+   * @see lib.database.Complex#logKatTandP(double, double) logKatTandP
+   * @see lib.database.Complex#logKarray logKarray
+   */
+  public void toLookUp() {
+      if(lookUp) {return;}
+      if(logKarray == null) {logKarray = new float[5][];}
+      for(int i=0; i < logKarray.length; i++) {
+          if(logKarray[i] == null) {
+            logKarray[i] = new float[14];
+            for(int j=0; j < logKarray[i].length; j++) {logKarray[i][j] = Float.NaN;}
+          }
+      }
+      double[] t = new double[]{0, 25, 50,  100, 150, 200, 250, 300, 350};
+      for(int j=0; j < t.length; j++) {
+          logKarray[0][j] = (float)logKatTpSat(t[j]);
+          if(!Float.isNaN(logKarray[0][j])) {tMax = Math.max(t[j], tMax);}
+      }
+      tMax = Math.max(25,Math.min(350, tMax));
+      lookUp = true;
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="deltaToA(logK0,deltaH,deltaCp)">
   /** returns the <b>a[]</b>-parameters for the logK(t) equation<br>
    * (log K(t)= a[0] + a[1] T + a[2]/T +  a[3] log10(T)  + a[4] / T^2 + a[5] T^2)<br>
    * where T is the temperature in Kelvin, equivalent to the given values of
@@ -541,8 +575,6 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * @see lib.database.Complex#tMax tMax */
   public double getDeltaH() {
       double deltaH;
-      if(analytic || lookUp  || Double.isNaN(a[0]) || Double.isNaN(a[1]) || Double.isNaN(a[2])
-              || Double.isNaN(a[3]) || Double.isNaN(a[4]) || Double.isNaN(a[5])) {return EMPTY;}
       if(a[0] == EMPTY || a[2] == EMPTY) {return EMPTY;}
       deltaH = 0.;
       if(a[1] != EMPTY && a[1] != 0.) {deltaH = a[1]*T0*T0;}
@@ -570,8 +602,6 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * @see lib.database.Complex#tMax tMax */
   public double getDeltaCp() {
       double deltaCp;
-      if(analytic || lookUp || Double.isNaN(a[0]) || Double.isNaN(a[1]) || Double.isNaN(a[2])
-              || Double.isNaN(a[3]) || Double.isNaN(a[4]) || Double.isNaN(a[5])) {return EMPTY;}
       if(a[0] == EMPTY || a[2] == EMPTY || a[3] == EMPTY) {return EMPTY;}
       deltaCp = 0.;
       if(a[1] != EMPTY && a[1] != 0.) {deltaCp = 2.*a[1]*T0;}
@@ -608,7 +638,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
         }
     StringBuilder nowReading = new StringBuilder();
     java.util.ArrayList<String> aList;
-    int i,nr, n, line = -1;
+    int i,j,nr, n, line = -1;
     String t;
     double deltaH, deltaCp;
     Complex c = new Complex();
@@ -628,7 +658,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
         n = 0;
         //System.out.println("line = "+text);
         if(c.lookUp) { // this means that this is not the first line
-            //System.out.println("line="+line);
+            //System.out.println("line nr="+line);
             c.logKarray[line-1] = new float[14];
             try{
                 for(i = 0; i < c.logKarray[line-1].length; i++) {
@@ -636,7 +666,11 @@ public class Complex implements Comparable<Complex>, Cloneable {
                     if(n < aList.size()) {
                         if(aList.get(n).length() >0) {c.logKarray[line-1][i] = Float.parseFloat(aList.get(n));}
                         else {c.logKarray[line-1][i] = Float.NaN;}
-                    } else {return c;}
+                    } else {
+                        throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                            "missing data in line: "+text+nl+
+                            "while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+                    }
                     n++;
                 } // for a[i]
             } catch (NumberFormatException ex) {
@@ -648,7 +682,10 @@ public class Complex implements Comparable<Complex>, Cloneable {
         } // if c.lookUp
         try{
             nowReading.replace(0, nowReading.length(), "name");
-            if(n < aList.size()) {c.name = aList.get(n);} else {return c;}
+            if(n < aList.size()) {c.name = aList.get(n);} else {
+                throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                            "missing reaction product name in line: \""+text+"\"");
+            }
             if(c.name.equalsIgnoreCase("COMPLEX")) {return null;}
             if(c.name.length() <=0) {
                 for (i=1; i<aList.size(); i++) { // check that the reaction is empty. Comments are OK
@@ -665,7 +702,10 @@ public class Complex implements Comparable<Complex>, Cloneable {
             if(n < aList.size()) {
                 if(aList.get(n).length() >0) {c.constant = Double.parseDouble(aList.get(n));
                 } else {c.constant = EMPTY;}
-            } else {return c;}
+            } else {
+                throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                    "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+            }
             n++;
             nowReading.replace(0, nowReading.length(), "delta-H or \"analytic\"");
             if(n < aList.size()) {
@@ -674,7 +714,10 @@ public class Complex implements Comparable<Complex>, Cloneable {
                     if(t.equalsIgnoreCase("analytic") || t.equalsIgnoreCase("-analytic")) {c.analytic = true;}
                     if(t.toLowerCase().startsWith("lookup") || t.toLowerCase().startsWith("-lookup")) {c.lookUp = true;}
                 }
-            } else {return c;}
+            } else {
+                throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                    "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+            }
             n++;
             if(!c.analytic) {
                 if(!c.lookUp) { // not analytic and not look-up table
@@ -682,7 +725,10 @@ public class Complex implements Comparable<Complex>, Cloneable {
                     nowReading.replace(0, nowReading.length(), "delta-Cp");
                     if(n < aList.size()) {
                         if(aList.get(n).length() >0) {deltaCp = Double.parseDouble(aList.get(n));} else {deltaCp = EMPTY;}
-                    } else {return c;}
+                    } else {
+                        throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                            "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+                    }
                     n++;
                     c.tMax = 25.;
                     if(deltaH != EMPTY) {c.tMax = 100.; if(deltaCp != EMPTY) {c.tMax = 200.;}}
@@ -692,7 +738,10 @@ public class Complex implements Comparable<Complex>, Cloneable {
                     c.tMax = 25.;
                     if(n < aList.size()) {
                         if(aList.get(n).length() >0) {c.tMax = Double.parseDouble(aList.get(n));}
-                    } else {return c;}
+                    } else {
+                        throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                            "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+                    }
                     n++;            
                 } // lookUp?
             } else { // analytic
@@ -700,90 +749,126 @@ public class Complex implements Comparable<Complex>, Cloneable {
                 c.tMax = 25.;
                 if(n < aList.size()) {
                     if(aList.get(n).length() >0) {c.tMax = Double.parseDouble(aList.get(n));}
-                } else {return c;}
+                } else {
+                    throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                        "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+                }
                 n++;
                 for(i = 0; i < c.a.length; i++) {
                     nowReading.replace(0, nowReading.length(), "parameter a["+i+"]");
                     if(n < aList.size()) {
                         if(aList.get(n).length() >0) {c.a[i] = Double.parseDouble(aList.get(n));
-                        } else {c.a[i] = 0.;}
-                    } else {return c;}
+                        } else {c.a[i] = EMPTY;}
+                    } else {
+                        throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                        "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+                    }
                     n++;
                 } // for a[i]
             } // analytic
             double n_H = 0;
-            boolean thereisHplus = false;
+            boolean thereisHplus = false, foundReactant;
             c.reactionComp.clear();
             c.reactionCoef.clear();
             int nTot;
             nowReading.replace(0, nowReading.length(), "name of 1st reactant or nbr of reactants in reaction");
-            if(n < aList.size()) {t = aList.get(n);} else {return c;}
+            if(n < aList.size()) {t = aList.get(n);} else {
+                throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                    "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+            }
             n++;
-            try{nTot = Integer.parseInt(t);} catch (NumberFormatException ex) {nTot = -1;}
+            if(t.trim().length() > 0) {
+                try{nTot = Integer.parseInt(t);} catch (NumberFormatException ex) {nTot = -1;}
+            } else {nTot = -1;}
             if(nTot <= 0) { //  ---- old format ----
                 nr = 0;
                 for(i =0; i < NDIM; i++) {
                     if(i >0) {
                         nowReading.replace(0, nowReading.length(), "name of reactant["+(i+1)+"]");
-                        if(n < aList.size()) {t = aList.get(n);} else {return c;}
+                        if(n < aList.size()) {t = aList.get(n);} else {
+                            throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                                "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+                        }
                         n++;
                     }
+                    foundReactant = false;
                     if(!t.isEmpty()) {
                         nr++;
                         c.reactionComp.add(t);
-                        nowReading.replace(0, nowReading.length(), "number for reactant["+(i+1)+"]");
-                        if(n < aList.size()) {
-                            if(aList.get(n).length() >0) {
-                                c.reactionCoef.add(Double.parseDouble(aList.get(n)));
-                            } else {c.reactionCoef.add(0.);}
-                        } else {return c;}
-                        if(Util.isProton(c.reactionComp.get(nr-1))) {thereisHplus = true; n_H = c.reactionCoef.get(nr-1);}
+                        foundReactant = true;
+                    }
+                    nowReading.replace(0, nowReading.length(), "coefficient for reactant["+(i+1)+"]");
+                    if(n < aList.size()) {
+                        if(foundReactant) {
+                            if(aList.get(n).length() >0) {c.reactionCoef.add(Double.parseDouble(aList.get(n)));} else {c.reactionCoef.add(0.);}
+                        }
+                    } else {
+                            throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                                "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
                     }
                     n++;
+                    if(nr > 1 && Util.isProton(c.reactionComp.get(nr-1))) {thereisHplus = true; n_H = c.reactionCoef.get(nr-1);}
                 } //for i
                 nowReading.replace(0, nowReading.length(), "number of H+");
                 if(n < aList.size()) {
                     if(aList.get(n).length() >0) {
                         n_H = Double.parseDouble(aList.get(n));
                     }
-                } else {return c;}
+                } else {
+                    throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                        "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+                }
                 n++;
                 if(!thereisHplus && Math.abs(n_H) > 0.00001) {c.reactionComp.add("H+"); c.reactionCoef.add(n_H);}
             } else { // nTot >0  ---- new format ----
                 for(i =0; i < nTot; i++) {
                     nowReading.replace(0, nowReading.length(), "name of reactant["+(i+1)+"]");
-                    if(n < aList.size()) {c.reactionComp.add(aList.get(n));} else {return c;}
+                    if(n < aList.size()) {c.reactionComp.add(aList.get(n));} else {
+                        throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                            "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+                    }
                     n++;
-                    nowReading.replace(0, nowReading.length(), "number for reactant["+(i+1)+"]");
+                    nowReading.replace(0, nowReading.length(), "coefficient for reactant["+(i+1)+"]");
                     if(n < aList.size()) {
                         if(aList.get(n).length() >0) {
                             c.reactionCoef.add(Double.parseDouble(aList.get(n)));
                         } else {c.reactionCoef.add(0.);}
-                    } else {return c;}
+                    } else {
+                        throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                            "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+                    }
                     n++;
                 } //for i
             } // new format?
-            nowReading.replace(0, nowReading.length(), "reference");
-            if(n < aList.size()) {c.reference = aList.get(n);} else {return c;}
+        } catch (NumberFormatException ex) {
+            throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                    ex.toString()+nl+"in line: "+text+nl+
+                    "while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+        }
+        nowReading.replace(0, nowReading.length(), "reference");
+        if(n < aList.size()) {c.reference = aList.get(n);} else {
+                throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                    "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
+        }
+        n++;
+        while (n  < aList.size()) {
+            c.reference = c.reference +","+ aList.get(n);
             n++;
-            while (n  < aList.size()) {
-                c.reference = c.reference +","+ aList.get(n);
-                n++;
-            }
-            //System.out.println("\""+c.name+"\", ref="+c.reference);
-            // remove ";" or "," at the beginning
-            while (true) {
-                if(c.reference.startsWith(";") || c.reference.startsWith(",")) {
-                    c.reference = c.reference.substring(1).trim();
-                } else {break;}
-            }
-            c.reference = c.reference.trim();
-            if(c.reference.startsWith("/")) {
+        }
+        //System.out.println("\""+c.name+"\", ref="+c.reference);
+        // remove ";" or "," at the beginning
+        while (true) {
+            if(c.reference.startsWith(";") || c.reference.startsWith(",")) {
+                c.reference = c.reference.substring(1).trim();
+            } else {break;}
+        }
+        c.reference = c.reference.trim();
+        if(c.reference.startsWith("/")) {
                 c.comment = c.reference.substring(1).trim();
                 c.reference = "";
-            } else {
+        } else {
                 int commentStart = c.reference.length();
-                int j = c.reference.indexOf(";/");
+                j = c.reference.indexOf(";/");
                 if(j > -1 && j < commentStart) {commentStart = j;}
                 j = c.reference.indexOf(",/");
                 if(j > -1 && j < commentStart) {commentStart = j;}
@@ -793,15 +878,18 @@ public class Complex implements Comparable<Complex>, Cloneable {
                     c.comment = c.reference.substring((commentStart+2), c.reference.length()).trim();
                     c.reference = c.reference.substring(0, commentStart).trim();
                 }
-            }
-        } catch (NumberFormatException ex) {
-            throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
-                    ex.toString()+nl+"in line: "+text+nl+
-                    "while reading "+nowReading.toString()+"");
         }
     } // for(String text: lines)
+    if(c.lookUp) {
+        for(i = 0; i < c.logKarray.length; i++) {
+            if(c.logKarray[i] == null) {
+                throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                    "missing line "+(i+1)+" of logK look-up table for \""+c.name+"\"");
+            }
+        }
+    }
     return c;
-  } //fromString
+  } // fromString
   public static class ReadComplexException extends Exception {
     public ReadComplexException() {super();}
     public ReadComplexException(String txt) {super(txt);}
@@ -823,23 +911,17 @@ public class Complex implements Comparable<Complex>, Cloneable {
     if(this.name.startsWith("@")) {return text.toString();}
     if(this.constant != EMPTY) {text.append(Util.formatDbl3(this.constant).trim());}
     text.append(";");
-    if(!this.analytic) {
-        if(!this.lookUp) {
-            w = this.getDeltaH();
-            if(w != EMPTY) {text.append(Util.formatDbl3(w).trim());}
-            text.append(";");
-            w = this.getDeltaCp();
-            if(w != EMPTY) {text.append(Util.formatDbl3(w).trim());}
-            text.append(";");
-        } else { // if look-up table
-            text.append("lookUpTable;");
-            if(this.tMax == EMPTY || this.tMax < 0) {this.tMax = 25.;}
-            text.append(Util.formatNumAsInt(this.tMax).trim());
-            text.append(";");
+    // If there is no second row of logKarray, it means that the look-up-table
+    // (if it is not null) has been constructed from array a[].
+    boolean thereIsLookUpTable = false;
+    if(this.logKarray[1] != null) {
+        for(int j = 0; j < this.logKarray[1].length; j++) {
+            if(!Float.isNaN(this.logKarray[1][j])) {thereIsLookUpTable = true; break;}
         }
-    } else { // if analytic
+    }
+    if(this.analytic) {
         text.append("analytic;");
-        if(this.tMax == EMPTY || this.tMax < 0) {this.tMax = 25.;}
+        if(this.tMax == EMPTY || this.tMax < 25) {this.tMax = 25.;}
         text.append(Util.formatNumAsInt(this.tMax).trim());
         text.append(";");
         for (int i = 0; i < this.a.length; i++) {
@@ -848,6 +930,18 @@ public class Complex implements Comparable<Complex>, Cloneable {
             }
             text.append(";");
         }
+    } else if(this.lookUp && thereIsLookUpTable) {
+        text.append("lookUpTable;");
+        if(this.tMax == EMPTY || this.tMax < 25) {this.tMax = 25.;}
+        text.append(Util.formatNumAsInt(this.tMax).trim());
+        text.append(";");
+    } else { // delta-H and delta-Cp
+        w = this.getDeltaH();
+        if(w != EMPTY) {text.append(Util.formatDbl3(w).trim());}
+        text.append(";");
+        w = this.getDeltaCp();
+        if(w != EMPTY) {text.append(Util.formatDbl3(w).trim());}
+        text.append(";");
     }
     int nTot = Math.min(this.reactionComp.size(),this.reactionCoef.size());
     text.append(Integer.toString(nTot));
@@ -871,21 +965,23 @@ public class Complex implements Comparable<Complex>, Cloneable {
         t = this.reference;
     }
     text.append(encloseInQuotes(t));
-    if(this.lookUp) {
+    if(this.lookUp && thereIsLookUpTable) {
         for(int i = 0; i < this.logKarray.length; i++) {
-            if(this.logKarray[i] != null) {
-                text.append(nl);
-                for(int j = 0; j < this.logKarray[i].length; j++) {
-                    if(!Double.isNaN(this.logKarray[i][j])) {
-                        text.append(Util.formatDbl3(this.logKarray[i][j]));
-                    } else {text.append("NaN");}
-                    text.append(";");
-                }
+            text.append(nl);
+            if(this.logKarray[i] == null) {
+                this.logKarray[i] = new float[14];
+                for(int j = 0; j < this.logKarray[i].length; j++) {this.logKarray[i][j] = Float.NaN;}
+            }
+            for(int j = 0; j < this.logKarray[i].length; j++) {
+                if(!Float.isNaN(this.logKarray[i][j])) {
+                    text.append(Util.formatDbl3(this.logKarray[i][j]));
+                } else {text.append("NaN");}
+                text.append(";");
             }
         }
     }
     return text.toString();
-  } //toString()
+  } // toString()
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="sortedReactionString()">
@@ -1007,16 +1103,47 @@ public class Complex implements Comparable<Complex>, Cloneable {
   } //reactionText
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="logKatTandP()">
+  //<editor-fold defaultstate="collapsed" desc="logKatTpSat(tC)">
+ /** Returns the logK value at the requested temperature (below the
+  * critical point) and at the saturated liquid-vapor pressure (pSat).
+  * @param tC0 the temperature in degrees Celsius
+  * @return the logK value at the requested temperature and pSat.
+  * It returns NaN (not-a-number) if the logK value can not be calculated,
+  * or if the temperature is either NaN or above the critical point
+  * or higher than tMax
+  * @see lib.database.Complex#tMax tMax
+  * @see lib.database.Complex#analytic analytic
+  * @see lib.database.Complex#a a
+  * @see lib.database.Complex#lookUp lookUp
+  * @see lib.database.Complex#logKarray logKarray  */
+  public double logKatTpSat(final double tC0) {
+    if(Double.isNaN(tC0)) {return Double.NaN;}
+    this.tMax = Math.min(600,Math.max(25, this.tMax));
+    if(tC0 > this.tMax+0.0001) {return Double.NaN;}
+    double tC = Math.max(tC0,0.01); // triple point of water
+    if(tC >= 373.946) {return Double.NaN;} // crtitical point of water
+    if(this.lookUp)  {
+        if(logKarray[0] == null) {return Double.NaN;}
+        //   t=  0, 25, 50, 100, 150, 200, 250, 300, 350 C
+        float[] logK = new float[9];
+        System.arraycopy(logKarray[0], 0, logK, 0, logK.length);
+        return lib.kemi.interpolate.Interpolate.interpolate2D((float)tC, logK);
+    } else {
+        return analyticExpression(this, tC);
+    }
+  }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="logKatTandP(tC,pBar)">
  /** Returns the logK value at the requested temperature and pressure
-  * if it can be calculated (temperature below tMax, t-P not in the vapor
-  * region or in the low-density region). 
+  * if it can be calculated. 
   * @param tC0 the temperature in degrees Celsius
   * @param pBar the pressure in bar
   * @return the logK value at the requested temperature and pressure.
-  * It returns NaN (not-a-number) if the logK value can not be calculated,
-  * or if either the temperature, the pressure, or tMax are NaNs, or if
-  * tMax is less than 25C.
+  * It returns NaN (not-a-number) if (a) the logK value can not be calculated
+  * (t-P in the vapor region or in the low-density region) or (b) if either
+  * the temperature or the pressure are NaNs, or (c) if tC0 is higher than tMax,
+  * or (d) if lookUp is false and pBar is larger than 221 bar.
   * @see lib.database.Complex#tMax tMax
   * @see lib.database.Complex#analytic analytic
   * @see lib.database.Complex#a a
@@ -1027,19 +1154,32 @@ public class Complex implements Comparable<Complex>, Cloneable {
     this.tMax = Math.min(600,Math.max(25, this.tMax));
     if(tC0 > this.tMax+0.0001) {return Double.NaN;}
     double tC = Math.max(tC0,0.01); // triple point of water
+    boolean thereIsLookUpTable = false;
+    if(this.logKarray[1] != null) {
+        for(int j = 0; j < this.logKarray[1].length; j++) {
+            if(!Float.isNaN(this.logKarray[1][j])) {thereIsLookUpTable = true; break;}
+        }
+    }
     if(tC < 373.946) { // crtitical point of water
-        double pSat = IAPWSF95.pSat(tC);
-        if(pBar < (pSat-0.01)) {return Double.NaN;} // saturated liquid-vapor pressure
+        double pSat = Math.max(1,IAPWSF95.pSat(tC));
+        if(pBar < (pSat*0.998)) {return Double.NaN;} // below saturated liquid-vapor pressure
+        else if(Math.abs(pBar-pSat) < pSat*0.002) { // pBar = pSat
+            return logKatTpSat(tC);
+        }
     } else if(tC == 373.946) {return Double.NaN;}
     double[] tLimit = new double[]{373.946,400,410,430,440,460,470,490,510,520,540,550,570,580,600};
     double[] pLimit = new double[]{        300,350,400,450,500,550,600,650,700,750,800,850,900,950};
     for(int i = 0; i < (tLimit.length-1); i++) {
         if(tC > tLimit[i] && tC <= tLimit[i+1] && pBar < pLimit[i]) {return Double.NaN;}
     }
-    if(this.lookUp)  {
+    // If there is no second row of logKarray, it means that the look-up-table
+    // (if it is not null) has been constructed from array a[].
+    if(thereIsLookUpTable)  {
         return lib.kemi.interpolate.Interpolate.interpolate3D((float)tC, (float)pBar, this.logKarray);
+    } else {
+        if(pBar > 221) {return Double.NaN;}
+        return analyticExpression(this, tC);
     }
-    else {return analyticExpression(this, tC, pBar);}
   }
 
   //<editor-fold defaultstate="collapsed" desc="Not used: constCp(complex,tC)">
@@ -1090,12 +1230,11 @@ public class Complex implements Comparable<Complex>, Cloneable {
   // */
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="analyticExpression(complex,tC,pBar)">
+  //<editor-fold defaultstate="collapsed" desc="analyticExpression(complex,tC)">
   /** Extrapolates the log10 of an equilibrium constant "logK0" using the
-   * an analytic expression of logK(t,p)
+   * an analytic expression of logK(t)
    * @param cmplx
    * @param tC the temperature (degrees Celsius, between 0 and cmplx.tMax degrees)
-   * @param pBar the pressure (bar)
    * @return the logK(t,p)
    * It returns NaN if either of the input parameters is NaN or if the array
    * "a" is not defined. Returns EMPTY if logK0 = EMPTY.
@@ -1105,21 +1244,22 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * @see lib.database.Complex#tMax tMax
    * @see lib.database.Complex#EMPTY EMPTY
    */
-  private static double analyticExpression(Complex cmplx, final double tC, final double pBar) {
+  private static double analyticExpression(Complex cmplx, final double tC) {
     if(Double.isNaN(cmplx.constant) || cmplx.constant == EMPTY
-            || Double.isNaN(tC) || Double.isNaN(pBar)) {return Double.NaN;}
+            || Double.isNaN(tC)) {return Double.NaN;}
     if(tC>24.999 && tC<25.001) {return cmplx.constant;}
-    if(Double.isNaN(cmplx.a[0]) || cmplx.a[0] == EMPTY) {return Double.NaN;}
-    cmplx.tMax = Math.min(600,Math.max(25, cmplx.tMax));
+    if(cmplx.a[0] == EMPTY) {return Double.NaN;}
+    if(cmplx.tMax == EMPTY || cmplx.tMax < 25) {cmplx.tMax = 25;}
+    cmplx.tMax = Math.min(600,cmplx.tMax);
     if(tC > cmplx.tMax+0.0001) {return Double.NaN;}
     final double tK = Math.max(0.01,tC)+273.15; // triple point of water
     double logK = cmplx.a[0];
     // log K = A0 + A1 T + A2/T +  A3 log(T)  + A4 / T^2 + A5 T^2
-    if(!Double.isNaN(cmplx.a[1]) && cmplx.a[1] != EMPTY && cmplx.a[1] != 0.) {logK = logK + cmplx.a[1]*tK;}
-    if(!Double.isNaN(cmplx.a[2]) && cmplx.a[2] != EMPTY && cmplx.a[2] != 0.) {logK = logK + cmplx.a[2]/tK;}
-    if(!Double.isNaN(cmplx.a[3]) && cmplx.a[3] != EMPTY && cmplx.a[3] != 0.) {logK = logK + cmplx.a[3]*Math.log10(tK);}
-    if(!Double.isNaN(cmplx.a[4]) && cmplx.a[4] != EMPTY && cmplx.a[4] != 0.) {logK = logK + cmplx.a[4]/(tK*tK);}
-    if(!Double.isNaN(cmplx.a[5]) && cmplx.a[5] != EMPTY && cmplx.a[5] != 0.) {logK = logK + cmplx.a[5]*(tK*tK);}
+    if(cmplx.a[1] != EMPTY && cmplx.a[1] != 0.) {logK = logK + cmplx.a[1]*tK;}
+    if(cmplx.a[2] != EMPTY && cmplx.a[2] != 0.) {logK = logK + cmplx.a[2]/tK;}
+    if(cmplx.a[3] != EMPTY && cmplx.a[3] != 0.) {logK = logK + cmplx.a[3]*Math.log10(tK);}
+    if(cmplx.a[4] != EMPTY && cmplx.a[4] != 0.) {logK = logK + cmplx.a[4]/(tK*tK);}
+    if(cmplx.a[5] != EMPTY && cmplx.a[5] != 0.) {logK = logK + cmplx.a[5]*(tK*tK);}
     return logK;
   }
   //</editor-fold>

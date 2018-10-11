@@ -716,6 +716,14 @@ static { // static initializer
     if(cmplx.name == null || cmplx.name.length() <=0) {
         throw new WriteBinCmplxException(nl+"Error: empty cmplx in \"writeBinCmplx\"");
     }
+    // If there is no second row of logKarray, it means that the look-up-table
+    // (if it is not null) has been constructed from array a[].
+    boolean thereIsLookUpTable = false;
+    if(cmplx.logKarray[1] != null) {
+        for(int j = 0; j < cmplx.logKarray[1].length; j++) {
+            if(!Float.isNaN(cmplx.logKarray[1][j])) {thereIsLookUpTable = true; break;}
+        }
+    }
     try{
       ds.writeUTF(cmplx.name);
       ds.writeDouble(cmplx.constant);
@@ -724,7 +732,7 @@ static { // static initializer
           ds.writeDouble(Complex.ANALYTIC);
           ds.writeDouble(cmplx.tMax);
           for(int i = 0; i < cmplx.a.length; i++) {ds.writeDouble(cmplx.a[i]);}
-      } else if(cmplx.lookUp) {
+      } else if(cmplx.lookUp && thereIsLookUpTable) {
           // look-up Table
           ds.writeDouble(Complex.LOOKUP);
           ds.writeDouble(cmplx.tMax);
@@ -742,11 +750,14 @@ static { // static initializer
       ds.writeUTF(cmplx.reference);
       if(cmplx.comment != null && cmplx.comment.length() >=0) {ds.writeUTF(cmplx.comment);}
       else {ds.writeUTF("");}
-      if(cmplx.lookUp) { // write look-up Table
+      if(cmplx.lookUp && thereIsLookUpTable) { // write look-up Table
           int nr;
           for(int i=0; i < cmplx.logKarray.length; i++) {
-            if(i == 0) {nr = 9;} else if(i == 1) {nr = 11;} else {nr = 14;}
-            for(int j=0; j < nr; j++) {ds.writeFloat(cmplx.logKarray[i][j]);}
+              if(cmplx.logKarray[i] == null) {
+                  cmplx.logKarray[i] = new float[14];
+                  for(int j=0; j < cmplx.logKarray[i].length; j++) {cmplx.logKarray[i][j] = Float.NaN;}
+              }
+              for(int j=0; j < cmplx.logKarray[i].length; j++) {ds.writeFloat(cmplx.logKarray[i][j]);}            
           }
       }
     } catch (java.io.IOException ex) {throw new WriteBinCmplxException(nl+"Error: "+ex.getMessage()+nl+"in \"writeBinCmplx\"");}
