@@ -316,8 +316,6 @@ private static java.awt.Point indexer3D(final float tC, final float pBar,
   //</editor-fold>
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="not used">
-
   //<editor-fold defaultstate="collapsed" desc="interpolate2D">
 /** Returns the value of logK at the requested tC, interpolated
  * from the provided array grid, at temperatures 0 to 350 C 
@@ -326,8 +324,7 @@ private static java.awt.Point indexer3D(final float tC, final float pBar,
  * the temperatures {0,25,50,100,150,200,250,300,350}. Absent
  * logK values are set to not-a-number (NaN).
  * @return the value of logK interpolated at the provided tC value */
-/**
-private float interpolate2D(final float tC, final float[] logKarray) {
+public static float interpolate2D(final float tC, final float[] logKarray) {
     //                     index:            0   1   2   3    4    5    6    7    8
     final float[] temperatures = new float[]{0f,25f,50f,100f,150f,200f,250f,300f,350f};
     if(logKarray.length != temperatures.length) {
@@ -404,12 +401,9 @@ private float interpolate2D(final float tC, final float[] logKarray) {
         }
         lgK = lgK + sum;
     }
-    System.out.println("\"interpolate2D\": returns "+lgK);
+    //System.out.println("\"interpolate2D\": returns "+lgK);
     return lgK;
 }
-// */
   //</editor-fold>
-
-//</editor-fold>
 
 }
