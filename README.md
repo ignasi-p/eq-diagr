@@ -83,3 +83,13 @@ Several code parts and programming suggestions are from Réal Gagnon's site [Rea
 The following persons have contributed with ideas and suggestions: Johan Blixt (KTH), Gunnar Eriksson (Umeå),
 Ingmar Grenthe (KTH), Sven-Olof Pettersson (Studsvik) and
 Joachim Zeising (KTH). Many thanks are due to the chemistry teaching staff at KTH: Joan Lind, Gabor Merenyi, Olle Wahlberg, Tom Wallin, Mats Jansson, Märtha Åberg, and many others. And many thanks to all students who helped me in shaping up the software and in finding many bugs!
+
+## Last Updates
+- 2018-Oct - New database formats, including both a power series expression and a look-up table, allow the search and data selection at higher temperatures (up to 600 C) and pressures (up to 5k bar). Chemical equilibrium diagrams may be made for supercritical aqueous. solutions. **To do:** update the help file to document these changes.
+- 2018-Aug - Increased the speed of the calculations. For Windows: improved the java-launchers (exe-files). For MacOS created a script that the user may use to create "apps".
+- 2018-July - Added the possibility to extract data at temperatures above 100°C (by manually changing the ini-file for Database). Added case-insensitive search of reference keys.
+- 2018-April - Improvements in activity coefficients. Improvement in solid phase selection.
+- 2018-March - Removed an error when merging two data-files with solid components. Lowered tolerance when HaltaFall returns "too many iterations"
+- 2017-May - Added changing tolerance when calculating diagrams
+- 2017-Jan - Corrected an error in data-file merging. Added "(a)" and "(ppt)" as types of solid phases
+- 2016-Jan - Revision to speed up the method to select which solid phases precipitate.

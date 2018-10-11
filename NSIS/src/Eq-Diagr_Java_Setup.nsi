@@ -41,7 +41,7 @@ LoadLanguageFile "${NSISDIR}\Contrib\Language files\English.nlf"
 ;Things that need to be extracted on startup
 ; (keep these lines before any File command!)
 ; Use ReserveFile for your own InstallOptions INI files too!
-ReserveFile "${NSISDIR}\Plugins\x86-ansi\InstallOptions.dll"
+ReserveFile "${NSISDIR}\Plugins\x86-unicode\InstallOptions.dll"
 ReserveFile "ini\Eq-Diagr_Setup_InstType.ini"
 ReserveFile "ini\Eq-Diagr_Setup_FileAssn.ini"
 ;--------------------------------
