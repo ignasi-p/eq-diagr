@@ -345,7 +345,7 @@ If redox And RedoxAsk Then  */
     // one must add:    Fe+2 - e- = Fe+3    etc
     try{
     if(rRedox.size() > 0) {
-        double n1, n2, np, rdx_dH, rdx_dCp;
+        double n1, n2, np;
         int rdxC, fnd, nTot;
         String lComp, lComp2;
         boolean needsMore;
@@ -373,6 +373,17 @@ If redox And RedoxAsk Then  */
                           cplx.constant = cplx.constant + n1 * rcomp.constant;
                           for(int i = 0; i < cplx.a.length; i++) {
                                 if(cplx.a[i] != Complex.EMPTY && rcomp.a[i] != Complex.EMPTY) {cplx.a[i] = cplx.a[i] + n1 * rcomp.a[i];}
+                          }
+                          if(cplx.lookUp || rcomp.lookUp) {
+                              if(!cplx.lookUp) {cplx.toLookUp();}
+                              if(!rcomp.lookUp) {rcomp.toLookUp();}
+                              for(int i = 0; i < cplx.logKarray.length; i++) {
+                                for(int j = 0; j < cplx.logKarray[i].length; j++) {
+                                    if(!Float.isNaN(cplx.logKarray[i][j]) && !Float.isNaN(rcomp.logKarray[i][j])) {
+                                        cplx.logKarray[i][j] = cplx.logKarray[i][j] + (float)n1 * rcomp.logKarray[i][j];
+                                    } else {cplx.logKarray[i][j] = Float.NaN;}
+                                }
+                              }
                           }
                           cplx.tMax = Math.min(cplx.tMax,rcomp.tMax);
                           //add all stoichiometric coefficients of rRedox(rDxC)
@@ -452,8 +463,8 @@ If redox And RedoxAsk Then  */
     // Is there T-P data for all reactions?
     long cnt = 0;
     for(int ix=0; ix < srch.nx+srch.nf; ix++) {
-        if(srch.temperature_C > srch.dat.get(ix).tMax || 
-                Double.isNaN(srch.dat.get(ix).logKatTandP(srch.temperature_C, srch.pressure_bar))) {
+        if(srch.temperature_C > srch.dat.get(ix).tMax
+                || Double.isNaN(srch.dat.get(ix).logKatTandP(srch.temperature_C, srch.pressure_bar))) {
             if(!fnd) {
                 System.out.println("--------- Temperature extrapolations to "
                     +String.format("%.0f",srch.temperature_C)+" C, pressure = "+
