@@ -26,7 +26,7 @@ import lib.huvud.Splash;
  * along with this program.  If not, see http://www.gnu.org/licenses/
  * @author Ignasi Puigdomenech */
 public class FrameDBmain extends javax.swing.JFrame {
-  static final String VERS = "2018-Oct-11";
+  static final String VERS = "2018-Nov-10";
   /** all instances will use the same redirected frame */
   static RedirectedFrame msgFrame = null;
 

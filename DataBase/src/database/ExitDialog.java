@@ -3,7 +3,6 @@ package database;
 import lib.common.MsgExceptn;
 import lib.common.Util;
 import lib.database.Complex;
-import lib.database.IAPWSF95;
 import lib.database.LibDB;
 import lib.database.ProgramDataDB;
 import lib.huvud.ProgramConf;
@@ -290,7 +289,7 @@ public class ExitDialog extends javax.swing.JDialog {
           return false;
       }
       // Is there enthalpy data?
-      if(!DBSearch.checkTemperature(srch, this, false)) {return false;};
+      if(!DBSearch.checkTemperature(srch, this, false)) {return false;}
 
       String defaultName;
       if(dbF.outputDataFile != null) {defaultName = dbF.outputDataFile;} else {defaultName = "";}
