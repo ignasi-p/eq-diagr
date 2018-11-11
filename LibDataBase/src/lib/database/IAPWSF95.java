@@ -1,11 +1,13 @@
 package lib.database;
 
-/** A set of routines used to calculate the density of fluid water,
- * using the "H2O" model in:<br>
+/** A set of routines used to calculate<ul>
+ * <li>The density of fluid water, using the "H2O" model in:<br>
  * Wagner, W, Pruß, A (2002) The IAPWS Formulation 1995 for the thermodynamic
  * properties of ordinary water substance for general and scientific use;
  * Journal of Physical and Chemical Reference Data 31, 387–535. DOI: 10.1063/1.1461829.
- * 
+ * </li><li>
+ * The dielectric concstant of water
+ * </li></ul>
  * Copyright (C) 2015-2018 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +34,8 @@ public static final double TRIPLE_POINT_T = 273.16; // K
 public static final double TRIPLE_POINT_TC = 0.01; // K
 /** triple point pressure = 611.657 Pa (= 0.0061 bar) */
 public static final double TRIPLE_POINT_P = 611.657; // Pa
+/** triple point pressure = 0.00611657 bar (= 611.657 Pa) */
+public static final double TRIPLE_POINT_pBar = 0.00611657; // Pa
 /** Critical temperature = 647.096 (+/- 0.01) K  (= 373.946 C) */
 public static final double CRITICAL_T = 647.096; // K
 /** Critical temperature = 373.946 C  (= 647.096 K) */
@@ -42,6 +46,8 @@ public static final double CRITICAL_p = 22.064; // MPa
 public static final double CRITICAL_pBar = 220.64; // bar
 /** Critical densisty = 322 (+/- 3) kg/m3 (= 0.322 g/cm3) */
 public static final double CRITICAL_rho = 322; // kg/m3
+
+//<editor-fold defaultstate="collapsed" desc="private constants">
 /** temperature of melting ice Ih at highest pressure = 251.165 K (at p = 2085.66 bar) */
 private static final double MELTING_T_ICE_Ih_AT_HIGH_P = 251.165;
 /** temperature of melting ice III at highest pressure = 256.164 K (at p = 3501 bar) */
@@ -60,6 +66,228 @@ private static final double MELTING_P_ICE_V_AT_HIGH_P = 632.4;
 private static final double MELTING_P_ICE_VI_AT_HIGH_P = 2216;
 /** the gas constant (kJ/(kg K)) for a molar mass for water = 18.015268 g/mol  */
 private static final double R = 0.46151805;
+// </editor-fold>
+
+//<editor-fold defaultstate="collapsed" desc="A_gamma(tC,pbar)">
+/** Calculates the Debye-Hückel slope as defined in eqn(30) of:<br>
+ * Staples, B.R., Nuttall, R.L., 1977. The activity and osmotic coefficients
+ * of aqueous calcium chloride at 298.15 K. Journal of Physical and Chemical
+ * Reference Data 6, 385–407.
+ * 
+ * @param tC the temperature in degrees Celsius
+ * @param pbar the pressure in bar
+ * @return the Debye-Hückel slope in units of (kg/mol)^0.5
+ * @throws IllegalArgumentException
+ * @throws ArithmeticException 
+ */
+static public double A_gamma(final double tC, final double pbar)
+        throws IllegalArgumentException, ArithmeticException {
+  if(Double.isNaN(tC) || tC < (MELTING_T_ICE_Ih_AT_HIGH_P-T0) || tC > (873.15-T0)) {
+    throw new IllegalArgumentException("\"A_gamma\": input temperature t="+tC+
+             " C, must be >"+(float)(MELTING_T_ICE_Ih_AT_HIGH_P-T0)+" and <"+(873.15-T0));
+  }
+  if(Double.isNaN(pbar) || pbar > 10000. || pbar <= 0.) {
+    throw new IllegalArgumentException("\"A_gamma\": input pressure p="+pbar+
+             " bar, must be >0 and <10000 bar.");
+  }
+  if(tC != 0 || pbar > 1.01326 || pbar < 0.99999) {
+    String msg;
+    msg=isWaterLiquid(tC, pbar);
+    if(!msg.isEmpty()) {throw new IllegalArgumentException("\"A_gamma\": "+msg);}
+  }
+  final double T = tC + T0;
+  // The Debye-Hückel slope is:
+  // ((1000/ln(10))*(2*pi*Na/1000))^0.5
+  //    * (e^2 / (4*pi*ε0*k))^(3/2) * (ρ^0.5 / (ε * T))^3/2
+  // where:
+  // Na = 6.0221367e23 (Avogadro's number)
+  // ε0 = 8.85418782e-12 (permittivity of vacuum)
+  // e = 1.60217733e-19 (elementary charge)
+  // k = 1.380658e-23 (Boltzmann's constant)
+  // ρ = the density of water in g/cm^3
+  // ε = the dielectric constant of water
+  // T = the temperature in Kelvin
+  final double A = 1.8247956e6;
+  double rho = -1, pS, e = -1;
+  if(tC >= 0 && tC <= (CRITICAL_T-T0) && pbar < CRITICAL_pBar) {
+      pS = Math.max(1., pSat(Math.max(TRIPLE_POINT_TC, tC)));
+      if(Math.abs(pbar-pS) <= (pS*0.01)) { // saturated vapor-liquid pressure
+          if(pbar > 1) {rho = rhoSat(tC); e = epsSat(tC);}
+      }
+  }
+  if(rho == -1) {rho = rho(tC,pbar); e = eps(tC, pbar);}
+  return A * Math.sqrt(rho) / Math.pow((e * T),(3./2.));  
+}
+// </editor-fold>
+
+//<editor-fold defaultstate="collapsed" desc="B_gamma(tC,pbar)">
+/** Calculates the Debye-Hückel slope as defined in eqn(35) of:<br>
+ * Staples, B.R., Nuttall, R.L., 1977. The activity and osmotic coefficients of
+ * aqueous calcium chloride at 298.15 K. Journal of Physical and Chemical
+ * Reference Data 6, 385–407.
+ * 
+ * @param tC the temperature in degrees Celsius
+ * @param pbar the pressure in bar
+ * @return the Debye-Hückel parameter "B" in units of ((kg/mol)^0.5 * m^-1)
+ * @throws IllegalArgumentException
+ * @throws ArithmeticException 
+ */
+static public double B_gamma(final double tC, final double pbar)
+        throws IllegalArgumentException, ArithmeticException {
+  if(Double.isNaN(tC) || tC < (MELTING_T_ICE_Ih_AT_HIGH_P-T0) || tC > (873.15-T0)) {
+    throw new IllegalArgumentException("\"B_gamma\": input temperature t="+tC+
+             " C, must be >"+(float)(MELTING_T_ICE_Ih_AT_HIGH_P-T0)+" and <"+(873.15-T0));
+  }
+  if(Double.isNaN(pbar) || pbar > 10000. || pbar <= 0.) {
+    throw new IllegalArgumentException("\"B_gamma\": input pressure p="+pbar+
+             " bar, must be >0 and <10000 bar.");
+  }
+  if(tC != 0 || pbar > 1.01326 || pbar < 0.99999) {
+    String msg;
+    msg=isWaterLiquid(tC, pbar);
+    if(!msg.isEmpty()) {throw new IllegalArgumentException("\"B_gamma\": "+msg);}
+  }
+  final double T = tC + T0;
+  // The Debye-Hückel B constant is:
+  // ((8*pi * Na * e^2 * 1000)
+  //    / (4*pi*ε0*k))^(0.5) * (ρ^0.5 / (ε * T))^0.5 * å
+  // where:
+  // Na = 6.0221367e23 (Avogadro's number)
+  // e = 1.60217733e-19 (elementary charge)
+  // ε0 = 8.85418782e-12 (permittivity of vacuum)
+  // k = 1.380658e-23 (Boltzmann's constant)
+  // ρ = the density of water in g/cm^3
+  // ε = the dielectric constant of water
+  // T = the temperature in Kelvin
+  // å = distance parameter in units of metres
+  final double B = 5.02902116e11;
+  double rho = -1, pS, e = -1;
+  if(tC >= 0 && tC <= (CRITICAL_T-T0) && pbar < CRITICAL_pBar) {
+      pS = Math.max(1., pSat(Math.max(TRIPLE_POINT_TC, tC)));
+      if(Math.abs(pbar-pS) <= (pS*0.01)) { // saturated vapor-liquid pressure
+          if(pbar > 1) {rho = rhoSat(tC); e = epsSat(tC);}
+      }
+  }
+  if(rho == -1) {rho = rho(tC,pbar); e = eps(tC, pbar);}
+  return B * Math.sqrt(rho/(e * T));  
+}
+// </editor-fold>
+
+//<editor-fold defaultstate="collapsed" desc="eps(tC,pbar)">
+/** Returns the static permitivity of water (dielectric constant)
+ * calculated using the equations reported in:<br>
+ * Fernández, D.P., Goodwin, A.R.H., Lemmon, E.W., Levelt Sengers, J.M.H.,
+ * Williams, R.C., 1997. A formulation for the static permittivity of water and
+ * steam at temperatures from 238 K to 873 K at pressures up to 1200 MPa,
+ * including derivatives and Debye–Hückel coefficients.
+ * Journal of Physical and Chemical Reference Data 26, 1125–1166.
+ * https://doi.org/10.1063/1.555997
+ * @param tC the temperature in degrees Celsius
+ * @param pbar the pressure in bar
+ * @return the dielectric constant of water
+ * @throws IllegalArgumentException
+ * @throws ArithmeticException 
+ */
+static public double eps(final double tC, final double pbar)
+        throws IllegalArgumentException, ArithmeticException {
+  if(Double.isNaN(tC) || tC < (MELTING_T_ICE_Ih_AT_HIGH_P-T0) || tC > (873.15-T0)) {
+    throw new IllegalArgumentException("\"eps\": input temperature t="+tC+
+             " C, must be >"+(float)(MELTING_T_ICE_Ih_AT_HIGH_P-T0)+" and <"+(873.15-T0));
+  }
+  if(Double.isNaN(pbar) || pbar > 10000. || pbar <= 0.) {
+    throw new IllegalArgumentException("\"eps\": input pressure p="+pbar+
+             " bar, must be >0 and <10000 bar.");
+  }
+  if(tC != 0 || pbar > 1.01326 || pbar < 0.99999) {
+    String msg;
+    msg=isWaterLiquid(tC, pbar);
+    if(!msg.isEmpty()) {throw new IllegalArgumentException("\"eps\": "+msg);}
+  }
+  // Permittivity of free space (C^2 J^-1 m^-1)
+  final double eps_0 = 1./(4e-7 * Math.PI * Math.pow(299792458,2));
+  // Mean molecular polarizability (C^2 J^-1 m^2)
+  final double alpha = 1.636e-40;
+  // Molecular dipole moment (C m)
+  final double mu = 6.138e-30;
+  // Boltzmann's constant (J K^-1)
+  final double k = 1.380658e-23;
+  // Avogadro's number (mol^-1)
+  final double N_A = 6.0221367e23;
+  // Molar mass of water (kg/mol)
+  final double M_w = 0.018015268;
+  final double[] N = new double[]{
+      0.978224486826,
+      -0.957771379375,
+      0.237511794148,
+      0.714692244396,
+      -0.298217036956,
+      -0.108853472196,
+      0.949327488264e-1,
+      -0.980469816509e-2,
+      0.165167634970e-4,
+      0.937359795772e-4,
+      -0.123179218720e-9};
+  final double N12 = 0.196096504426e-2;
+  final double[] i = new double[]{   1,1,  1, 2,  3,  3, 4,5,6, 7, 10};
+  final double[] j = new double[]{0.25,1,2.5,1.5,1.5,2.5,2,2,5,0.5,10};
+  final double Tc = CRITICAL_T;
+  final double T = tC + T0;
+  final double rho_c = 322 / M_w; // mol/m3
+  final double rho = rho(tC, pbar) * 1000. // // change to kg/m3
+          / M_w; // change to mol/m3
+  double g = 1.;
+  for(int h=0; h < N.length; h++) {
+      g = g + N[h] * Math.pow((rho/rho_c),i[h]) * Math.pow((Tc/T),j[h]);
+  }
+  int h = 0;
+  g = g + N12 * (rho/rho_c) * Math.pow(((T/228.)-1.),-1.2);
+  final double A = N_A * mu*mu * rho * g / (eps_0 * k * T);
+  final double B = N_A * alpha * rho / (3 * eps_0);
+  double w = 9. + 2.*A + 18.*B + A*A + 10.*A*B + 9.*B*B;  
+  double eps = (1.+ A + 5.*B + Math.sqrt(w)) / (4. - 4.*B);
+  return eps;
+}
+// </editor-fold>
+
+//<editor-fold defaultstate="collapsed" desc="epsSat(tC)">
+/** Returns the static permitivity of water (dielectric constant)
+ * at the liquid-vapor saturated pressure, calculated using the
+ * equations reported in:<br>
+ * Fernández, D.P., Goodwin, A.R.H., Lemmon, E.W., Levelt Sengers, J.M.H.,
+ * Williams, R.C., 1997. A formulation for the static permittivity of water and
+ * steam at temperatures from 238 K to 873 K at pressures up to 1200 MPa,
+ * including derivatives and Debye–Hückel coefficients.
+ * Journal of Physical and Chemical Reference Data 26, 1125–1166.
+ * https://doi.org/10.1063/1.555997
+ * 
+ * @param tC the temperature in degrees Celsius
+ * @return the dielectric constant of water
+ * @throws IllegalArgumentException 
+ */
+static public double epsSat(final double tC) throws IllegalArgumentException {
+ if(tC < (TRIPLE_POINT_T-T0-1e-4) || tC >= (CRITICAL_T-T0)) {
+     throw new IllegalArgumentException("\"epsSat\": input temperature tC="+tC+
+             ", must be >="+(float)(TRIPLE_POINT_T-T0)+" and <"+(float)(CRITICAL_T-T0));
+ }
+ final double[] L = new double[]{
+     2.725384249466,
+     1.090337041668,
+     21.45259836736,
+     -47.12759581194,
+     4.346002813555,
+     237.5561886971,
+     -417.7353077397,
+     249.3834003133};
+  final double Tc = CRITICAL_T;
+  final double T = tC + T0;
+  final double theta = Math.pow((1.-(T/Tc)),(1./3.));
+  double epsLiq = 1.;
+  for (int i=0; i < L.length; i++) {
+      epsLiq = epsLiq + L[i] * Math.pow(theta,(i+1.));
+  }
+  return epsLiq * 5.36058;
+}
+// </editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="pSat(tC)">
 /** Returns the saturation pressure (bar) of ordinary water substance, that is,
@@ -69,14 +297,14 @@ private static final double R = 0.46151805;
  * for general and scientific use. Journal of Physical and Chemical Reference
  * Data 31, 387–535. DOI: 10.1063/1.1461829.
  * 
- * @param tC intput temperature in degrees Celsius
+ * @param tC intput temperature in degrees Celsius (larger or equal zero and less than 373.946)
  * @return the pressure in units of bar
  * @throws IllegalArgumentException 
  */
 static public double pSat(final double tC) throws IllegalArgumentException {
- if(tC < (TRIPLE_POINT_T-T0-1e-4) || tC >= (CRITICAL_T-T0)) {
+ if(tC < 0 || tC >= CRITICAL_TC) {
      throw new IllegalArgumentException("\"pSat\": input temperature tC="+tC+
-             ", must be >="+(float)(TRIPLE_POINT_T-T0)+" and <"+(float)(CRITICAL_T-T0));
+             ", must be >= 0 and <"+(float)CRITICAL_TC);
  }
  final double a1 = -7.85951783, a2 = 1.84408259, a3 = -11.7866497, a4 = 22.6807411, a5 = -15.9618719,
               a6 = 1.80122502;
@@ -98,14 +326,14 @@ static public double pSat(final double tC) throws IllegalArgumentException {
  * for general and scientific use. Journal of Physical and Chemical Reference
  * Data 31, 387–535. DOI: 10.1063/1.1461829.
  * 
- * @param tC intput temperature in degrees Celsius
+ * @param tC intput temperature in degrees Celsius (larger or equal zero and less than 373.946)
  * @return the density in units of g/cm3
  * @throws IllegalArgumentException 
  */
 static public double rhoSat(final double tC) throws IllegalArgumentException {
- if(tC < (TRIPLE_POINT_T-T0-1e-4) || tC > (CRITICAL_T-T0+1e-4)) {
+ if(tC < 0 || tC >= CRITICAL_TC) {
     throw new IllegalArgumentException("\"rhoSat\": input temperature tC="+tC+
-             ", must be >="+(float)(TRIPLE_POINT_T-T0)+" and <="+(float)(CRITICAL_T-T0));
+             ", must be >= 0 and <"+(float)CRITICAL_TC);
  }
  final double b1 = 1.99274064, b2 = 1.09965342, b3 = -0.510839303, b4 = -1.75493479,
               b5 = -45.5170352, b6 = -6.74694450e+5;
@@ -145,7 +373,7 @@ static public double rhoSat(final double tC) throws IllegalArgumentException {
   }
   final double pMPa = pbar * 0.1;
   final double tK = tC + T0;
-  if(pMPa < TRIPLE_POINT_P*1e-6) {
+  if(pbar < TRIPLE_POINT_pBar) {
       return "Water exists as either steam or ice-Ih at p = "+pbar+" bar (below the tripple point).";
   }
   if(pMPa <= CRITICAL_p && tK >= TRIPLE_POINT_T && tK <= CRITICAL_T) {
@@ -169,7 +397,7 @@ static public double rhoSat(final double tC) throws IllegalArgumentException {
     } else {
         // the temperature is below the tripple point
         // and the pressure is less than the melting point
-        return "Ice-Ih is the stable phase at t = "+tC+" C and p = "+pbar+" bar.";
+        return "Ice-Ih is the stable phase at t = "+tC+" C and p = "+pbar+" bar (melting pressure: "+(float)p_melt_ice_Ih(tC)+" bar).";
     }
   } else if(pMPa < MELTING_P_ICE_III_AT_HIGH_P) { // ---- Ice III ----
     // pressure above Ice Ih and in the Ice III pressure range
@@ -221,7 +449,7 @@ static private double p_melt_ice_Ih(double tC) throws IllegalArgumentException {
  final double tK = tC + T0;
  final double θ = (tK/TRIPLE_POINT_T);
  double pi = 1.0 + a1*(1.-Math.pow(θ,b1)) + a2*(1.-Math.pow(θ,b2)) + a3*(1.-Math.pow(θ,b3));
- return pi*TRIPLE_POINT_P*1e-5; // convert to bar
+ return pi*TRIPLE_POINT_P*1.e-5; // convert to bar
 }
 /** Returns the melting pressure of ice III, from the boundary with ice Ih
  * (251.165 K) to the boundary with ice V (256.164 K). Uses eqn.(7) in:
@@ -307,7 +535,7 @@ static private double p_melt_ice_VII(double tC) throws IllegalArgumentException 
 // </editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="rho(tC,pbar)">
-/** Calculates the density (kg/m3) of liquid (or supercritical fluid) water
+/** Calculates the density (g/cm3) of liquid (or supercritical fluid) water
  * at a given pressure (bar) and temperature (Celsius) using an iterative
  * procedure and the "H2O" model in:
  * Wagner, W., Pruß, A. (2002) The IAPWS Formulation 1995 for the thermodynamic
@@ -320,7 +548,7 @@ static private double p_melt_ice_VII(double tC) throws IllegalArgumentException 
  * 
  * @param tC the input temperature in degrees Celsius
  * @param pbar the input temperature in bar
- * @return the density (kg/m3) of liquid (or supercritical fluid) water calculated
+ * @return the density (g/cm3) of liquid (or supercritical fluid) water calculated
  * with the equations of Wagner and Pruß, (2002).
  * @throws IllegalArgumentException 
  */
@@ -334,14 +562,16 @@ static public double rho(final double tC, final double pbar)
     throw new IllegalArgumentException("\"rho\": input pressure p="+pbar+
              " bar, must be >0 and <10000 bar.");
   }
-  String msg;
-  msg=isWaterLiquid(tC, pbar);
-  if(!msg.isEmpty()) {throw new IllegalArgumentException("\"rho\": "+msg);}
+  if(tC != 0 || pbar > 1.01326 || pbar < 0.99999) {
+    String msg;
+    msg=isWaterLiquid(tC, pbar);
+    if(!msg.isEmpty()) {throw new IllegalArgumentException("\"rho\": "+msg);}
+  }
 
-  double step = 10, r = 1000, rMax = 2000, rMin = 0, pMax = 1e25, pMin = -1e25, pCalc;
-  double rTop = 2000, rBottom = 0, tolP = pbar*1e-6;
-  if(tC >= (TRIPLE_POINT_T-T0) && tC <= (CRITICAL_T-T0)) {
-      rMin = rhoSat(tC) * 1000; // convert to kg/m3.
+  double step = 0.010, r = 1.000, rMax = 2.000, rMin = 0, pMax = 1e25, pMin = -1e25, pCalc;
+  double rTop = 2.000, rBottom = 0, tolP = pbar*1e-6;
+  if(tC >= 0 && tC <= (CRITICAL_TC) && pbar < CRITICAL_pBar) {
+      rMin = rhoSat(tC); // g/cm3.
       pCalc = pSat(tC);
       if(Math.abs(pbar-pCalc)<=tolP) {return rMin;}
       rBottom = rMin*0.9;
@@ -354,7 +584,7 @@ static public double rho(final double tC, final double pbar)
   // ---- Find two values of rho (rMin and rMax) separated less than 5 units (kg/m3), such
   //      that they give calculated pressures (pMin and pMax) above and below pbar
   int sign, iter = 0, iterMax = 200;
-  while (Math.abs(rMax-rMin) > 5 || pMin < 0) {
+  while (Math.abs(rMax-rMin) > 0.005 || pMin < 0) {
       r = Math.min(Math.max(r, rBottom),rTop);
       if(r>0) {pCalc = p4rhoT(r, tC, false)  * 10.;} // convert MPa to bar
               else {pCalc = 0;}
@@ -367,20 +597,19 @@ static public double rho(final double tC, final double pbar)
           sign = -1;
           if((pCalc-pbar) <= (pMax-pbar)) {pMax = pCalc; rMax = r;}
       }
-      if(dbg) {System.out.println("r="+(float)r+" step="+(float)step+
+      if(dbg) {System.out.println("iter="+iter+" r="+(float)r+" step="+(float)step+
               ", pCalc="+(float)pCalc+", pMin="+(float)pMin+
-              ", pMax="+(float)pMax+", rMin="+(float)rMin+", rMax="+(float)rMax);}
+              ", pMax="+(float)pMax+", rMin="+(float)rMin+", rMax="+(float)rMax+", sign*step = "+(sign*step));}
       if(pMin != -1e25 && pMax != 1e25) {step = 0.5*step;}
       r = r + sign*step;
-  } // while
-  if(iter > iterMax) {
-      throw new ArithmeticException("\"rho("+(float)tC+","+(float)pbar+")\": too many iterations."+
+      if(iter > iterMax) {
+        throw new ArithmeticException("\"rho("+(float)tC+","+(float)pbar+")\": too many iterations."+
               " rhoMin = "+(float)rMin+" at pMin="+(float)pMin+
               ", rhoMax = "+(float)rMax+" at pMax="+(float)pMax);
-  }
-  if(dbg) System.out.println("iter="+iter+", r="+(float)r);
+      }
+  } // while
   // ---- Now use "cord shooting"
-  double rOld = r, tolRho = Math.abs(r*1e-5);
+  double rOld = r, tolRho = Math.abs(r*1e-6);
   iter = 0;
   while(Math.abs(pMax-pMin)>tolP && Math.abs(rMax-rMin)>tolRho) {
     iter++;
@@ -395,28 +624,30 @@ static public double rho(final double tC, final double pbar)
     tolRho = Math.abs(r*1e-5);
     if(Math.abs(r-rOld)<tolRho && Math.abs(pbar-pCalc)<tolP) {break;}
     rOld = r;
-  }
-  if(iter > iterMax) {
+    if(iter > iterMax) {
       throw new ArithmeticException("\"rho\": too many iterations."+
               " rhoMin = "+(float)rMin+" at pMin="+(float)pMin+
               ", rhoMax = "+(float)rMax+" at pMax="+(float)pMax+"; target p="+(float)pbar);
+    }
+    if(dbg) System.out.println("iter="+iter+", r="+(float)r);
   }
-  if(dbg) System.out.println("iter="+iter+", r="+(float)r);
-  return r;
+  return r; // g/cm3
 }
-/** Calculates the pressure (MPa) at a given density (kg/m3) and temperature (Celsius)
+
+//<editor-fold defaultstate="collapsed" desc="p4rhoT(rho,tC,dbg)">
+/** Calculates the pressure (MPa) at a given density (g/cm3) and temperature (Celsius)
  * using the "H2O" model in:
  * Wagner, W., Pruß, A. (2002) The IAPWS Formulation 1995 for the thermodynamic
  * properties of ordinary water substance for general and scientific use.
  * Journal of Physical and Chemical Reference Data 31, 387–535. DOI: 10.1063/1.1461829
  * 
- * @param rho the input density in kg/m3
+ * @param rho_gcm3 the input density in g/cm3
  * @param tC tje input temperature in degrees Celsius
  * @param dbg if true then results of intermediate calculations are printed
  * @return the pressure in MPa
  * @throws IllegalArgumentException 
  */
-static public double p4rhoT(final double rho, final double tC, boolean dbg) throws IllegalArgumentException {
+static private double p4rhoT(final double rho_gcm3, final double tC, boolean dbg) throws IllegalArgumentException {
 //<editor-fold defaultstate="collapsed" desc="(parameters)">
     // the parameters in Table 6.2 of Wagner and Pruß, (2002)
     final double[] n = new double[]{
@@ -674,13 +905,14 @@ static public double p4rhoT(final double rho, final double tC, boolean dbg) thro
     double sum7 = 0, sum51 = 0, sum54 = 0, sum56 = 0;
     double tK = tC + T0;  // absolute temperature
     double τ = CRITICAL_T/tK;  // inverse reduced temperature
+    final double rho = rho_gcm3 * 1000.; // convert to kg/m3
     double δ = rho/CRITICAL_rho;  // reduced density
     // The first equation of Table 6.3 of Wagner and Pruß, (2002):
     //    p = (rho * R * tK) * ( 1 + δ * φr_δ );
     // where φr_δ is the partial derivative of the residual part (φr) of
     // the dimensionless Helmholtz free energy with respect to δ at constant τ
     // This derivative is given as the second expresion in Table 6.5
-    // of Wagner and Pruß, (2002). See also the derivatives of the
+    // of Wagner and Pruß (2002). See also the derivatives of the
     // distance function Δ^b[i] and of the exponential function ψ at the
     // end of that table.
     if(dbg) System.out.println("tK="+tK+", τ="+(float)τ+", δ="+(float)δ);
@@ -721,6 +953,7 @@ static public double p4rhoT(final double rho, final double tC, boolean dbg) thro
     // System.out.println("( 1 + δ * φr_δ )="+( 1 + δ * φr_δ ));
     return p/1000.; // convert to MPa units (the constant R is given in kJ instead of J)
 }
+// </editor-fold>
 // </editor-fold>
 
 }

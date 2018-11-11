@@ -721,7 +721,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
             n++;
             if(!c.analytic) {
                 if(!c.lookUp) { // not analytic and not look-up table
-                    if(t.length() >0) {deltaH = Double.parseDouble(t);} else {deltaH = EMPTY;}
+                    if(t != null && t.length() >0) {deltaH = Double.parseDouble(t);} else {deltaH = EMPTY;}
                     nowReading.replace(0, nowReading.length(), "delta-Cp");
                     if(n < aList.size()) {
                         if(aList.get(n).length() >0) {deltaCp = Double.parseDouble(aList.get(n));} else {deltaCp = EMPTY;}
@@ -807,7 +807,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
                                 "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
                     }
                     n++;
-                    if(nr > 1 && Util.isProton(c.reactionComp.get(nr-1))) {thereisHplus = true; n_H = c.reactionCoef.get(nr-1);}
+                    if(nr > 0 && Util.isProton(c.reactionComp.get(nr-1))) {thereisHplus = true; n_H = c.reactionCoef.get(nr-1);}
                 } //for i
                 nowReading.replace(0, nowReading.length(), "number of H+");
                 if(n < aList.size()) {
