@@ -1,0 +1,45 @@
+
+.SUFFIXES: .nsi .exe
+
+setup=..\..\..\bundles
+dist=..\..\..\dist
+win=..\..\..\Windows-files
+pa=..\..\..\Windows-files\PortableApps_exe
+pa0=PortableApps\Other\Source
+pah=PortableApps\Other\Help\images
+pai=PortableApps\App\AppInfo
+
+s=.\PortableApps\Other\Source
+NSIS=\PortableApps\NSISPortable\App\NSIS\makensisw
+
+{}.nsi{$(win)}.exe:
+  if exist $@  del $@ > nul
+  call $(NSIS) $(*B).nsi
+
+  
+all : $(setup)\Eq-Diagr_Java_Setup-KTH.exe
+
+
+$(setup)\Eq-Diagr_Java_Setup-KTH.exe : makefile_Win-installer disclaimer.txt \
+                                   Eq-Diagr_Java_Setup.nsi Uppdate_AppInfo-ini.nsi \
+                                   ini\*.ini images\*.ico cfg\*.cfg \
+                                   PortableApps\*.html $(pai)\*.ico $(pai)\*.png \
+								   $(pah)\*.gif \
+                                   $(pa0)\*.gif $(pa0)\*.ico $(pa0)\*.ini $(pa0)\*.nsi $(pa0)\*.txt\
+								   $(win)\*.exe $(pa)\*.exe \
+                                   $(dist)\*.jar $(dist)\*.db $(dist)\*.elb $(dist)\*.txt \
+								   $(dist)\*.dta $(dist)\*.plt \
+                                   $(win)\*.exe \
+                                   $(dist)\lib\*.jar $(dist)\lib\*.txt \
+                                   $(dist)\Examples\*.dat $(dist)\Examples\*.plt $(dist)\Examples\*.txt $(dist)\Examples\makefile \
+                                   $(dist)\other_databases\*.db $(dist)\other_databases\*.elb $(dist)\other_databases\*.txt
+  @if exist $(setup)\Uppdate_AppInfo-ini.exe  del $(setup)\Uppdate_AppInfo-ini.exe > nul
+  @if exist Uppdate_AppInfo-ini.exe  del Uppdate_AppInfo-ini.exe > nul
+  call $(NSIS) Uppdate_AppInfo-ini.nsi
+  @if exist Uppdate_AppInfo-ini.exe move /y Uppdate_AppInfo-ini.exe "$(setup)\Uppdate_AppInfo-ini.exe" >nul
+  @$(setup)\Uppdate_AppInfo-ini.exe
+  @del $(setup)\Uppdate_AppInfo-ini.exe > nul
+  @if exist $@  del $@ > nul
+  @if exist $(*B).exe del $(*B).exe > nul
+  call $(NSIS) Eq-Diagr_Java_Setup-KTH.nsi
+  @if exist $(*B).exe move /y $(*B).exe $@ >nul

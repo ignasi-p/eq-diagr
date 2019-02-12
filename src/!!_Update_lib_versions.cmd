@@ -1,4 +1,8 @@
 @echo off
+rem ---- Windows script to create new files "Version.java" in
+rem      the libraries "LibChemDiagr" and "LibDataBase"
+rem      describing the last modification date for each library
+
 REM no prompt
 prompt  $S$H
 echo.-----------------------

@@ -1,4 +1,6 @@
 @echo off
+rem --- Windows script to make the Windows setup file
+
 prompt -$g
 echo.=========================================================================
 echo.   Making Windows "exe"-setup file ...
@@ -107,6 +109,18 @@ if exist "%_bdl_%\Eq-Diagr_Java_Setup.exe" (
 	echo.**** ERROR: file "%_bdl_%\Eq-Diagr_Java_Setup.exe"
 	echo.            was NOT created!
 )
+
+echo ========== running:  nMake -f makefile_Win-installer-KTH
+\bin\nmake -f makefile_Win-installer-KTH /noLogo
+echo ========== nMake finished.
+if exist "%_bdl_%\Eq-Diagr_Java_Setup-KTH.exe" (
+	echo.set-up exe-file is found in folder "bundles"
+) ELSE (
+	echo.**** ERROR: file "%_bdl_%\Eq-Diagr_Java_Setup-KTH.exe"
+	echo.            was NOT created!
+)
+
+
 if "%1"=="" echo.All done.
 
 :xit

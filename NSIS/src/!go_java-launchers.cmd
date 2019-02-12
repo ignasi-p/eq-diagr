@@ -1,4 +1,7 @@
 @echo off
+rem --- Windows script to make java launchers
+rem     (exe-files) for the jar-file
+
 prompt -$g
 
 echo =========================================================================

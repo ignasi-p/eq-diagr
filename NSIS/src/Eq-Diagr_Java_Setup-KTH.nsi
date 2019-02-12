@@ -3,10 +3,10 @@
 ;
 ;--------------------------------
 ; The name of the installer
-Name "Chemical Equilibrium Diagrams (Java)"
-Caption "Chemical Equilibrium Diagrams (java) - ${__DATE__}"
+Name "Chemical Equilibrium Diagrams (Java) (KTH)"
+Caption "Chemical Equilibrium Diagrams (java) - ${__DATE__} - (KTH)"
 Icon "images/Eq-Diagr_Java.ico"
-OutFile "Eq-Diagr_Java_Setup.exe"  ;The file to write
+OutFile "Eq-Diagr_Java_Setup-KTH.exe"  ;The file to write
 
 ; Directories containing the files to be installed
 ; the NSIS scripts directory
@@ -32,10 +32,10 @@ OutFile "Eq-Diagr_Java_Setup.exe"  ;The file to write
 LoadLanguageFile "${NSISDIR}\Contrib\Language files\English.nlf"
 !define /date DATE "%Y.%m.%d.01"
   VIProductVersion "${DATE}"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Chemical Equilibrium Diagrams (Java)"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "Installs Chemical Equilibrium Diagrams (Java)"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Chemical Equilibrium Diagrams (Java) (KTH)"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "Installs Chemical Equilibrium Diagrams (Java) (KTH)"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "(c)I.Puigdomenech 2012-2019"
-  VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Chemical Equilibrium Diagrams (Java)"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Chemical Equilibrium Diagrams (Java) (KTH)"
   VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${__DATE__}"
 ;--------------------------------
 ;Things that need to be extracted on startup
@@ -324,12 +324,14 @@ Section  ""
   File "${S}\Chem_Diagr_Help.jar"
   File "${S}\Reactions.db"
   File "${S}\Reactions.elb"
+  File "${S}\KD1280.db"
+  File "${S}\KD1280.elb"
   File "${S}\References.txt"
   File "${S}\LICENSE"
   File "${S}\README.txt"
   File "${SW}\Database.exe"
   File "${S}\Database.jar"
-  File "ini\.Database.ini"
+  File "/oname=.Database.ini" "ini\.Database_KTH.ini" 
   File "${SW}\DataMaintenance.exe"
   File "${S}\DataMaintenance.jar"
   File "${SW}\AddShowReferences.exe"
@@ -340,7 +342,7 @@ Section  ""
   File "${SW}\Spana.lnk"
   File "${SW}\Spana.exe"
   File "${S}\Spana.jar"
-  File "ini\.Spana.ini"
+  File "/oname=.Spana.ini" "ini\.Spana_KTH.ini" 
   File "${SW}\Predom.exe"
   File "${S}\Predom.jar"
   File "${SW}\SED.exe"
@@ -362,7 +364,7 @@ Section  ""
   SetOutPath "$R0"
   DetailPrint '--- Writing default database in'
   DetailPrint '       "$OUTDIR\.Database.ini"'
-  StrCpy $3 "$OUTDIR\Reactions.db"
+  StrCpy $3 "$OUTDIR\KD1280.db"
   ${WordReplace} "$3" "\" "\\" '+' $3
   ${WordReplace} "$3" ":" "\:" '+' $3
   ${WordReplace} "$3" "!" "\!" '+' $3
@@ -540,6 +542,8 @@ Section "Uninstall"
   Delete "$INSTDIR\Chem_Diagr_Help.jar"
   Delete "$INSTDIR\Reactions.db"
   Delete "$INSTDIR\Reactions.elb"
+  Delete "$INSTDIR\KD1280.db"
+  Delete "$INSTDIR\KD1280.elb"
   Delete "$INSTDIR\References.txt"
   Delete "$INSTDIR\LICENSE"
   Delete "$INSTDIR\README.txt"
@@ -661,7 +665,7 @@ Section "Uninstall"
         DeleteRegKey /ifempty HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.dat\OpenWithProgids"
 
     StrCmp "$Installed_Folder" ""  "No_Installed_Folder"  0
-        StrCpy $9 "$Installed_Folder\REACTIONS.DB"
+        StrCpy $9 "$Installed_Folder\KD1280.DB"
         StrCpy $8 "Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\OpenSaveMRU\DB"
         Call un.DeleteHKCURegistryValue_Data
 
