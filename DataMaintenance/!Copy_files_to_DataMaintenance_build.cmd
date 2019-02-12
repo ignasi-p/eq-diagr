@@ -1,4 +1,7 @@
 @echo off
+rem --- Windows command file to copy files (References.txt, Chem_Diagr_Help.jar, etc)
+rem     to the build directory, in order to test DataMaintenance behaviour within
+rem     Netbeans, during program development
 
 set _4=DataMaintenance
 set _sc_=..\..\trunk

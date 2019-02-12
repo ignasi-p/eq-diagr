@@ -11,7 +11,7 @@ import lib.huvud.SortedProperties;
 
 /** The main frame.
  * <br>
- * Copyright (C) 2015-2018 I.Puigdomenech.
+ * Copyright (C) 2015-2019 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ import lib.huvud.SortedProperties;
  * 
  * @author Ignasi Puigdomenech */
 public class DataMaintenance extends javax.swing.JFrame {
-  private static final String VERS = "2018-Oct-10";
+  private static final String VERS = "2019-Feb-12";
   /** all instances will use the same redirected frame */
   private static RedirectedFrame msgFrame = null;
   private final ProgramDataDB pd = new ProgramDataDB();
@@ -596,7 +596,7 @@ public class DataMaintenance extends javax.swing.JFrame {
         setFrameEnabled(false);
         dbND.setVisible(true); //this will wait for the modal dialog to close
         if(!dbND.cancel) {
-            LibDB.checkDataBasesList(this, pd.dataBasesList, true);
+            LibDB.checkListOfDataBases(this, pd.dataBasesList, null, true);
             //---- read the elements/components for the databases
             LibDB.getElements(this, pc.dbg, pd.dataBasesList, pd.elemComp);
             //---- 
@@ -1130,7 +1130,7 @@ public class DataMaintenance extends javax.swing.JFrame {
             pd.dataBasesList.add(dbName);
         }
     } else {
-      LibDB.checkDataBasesList(this, pd.dataBasesList, true);
+      LibDB.checkListOfDataBases(this, pd.dataBasesList, pc.pathAPP, true);
       nbr = pd.dataBasesList.size();
       if(nbr <=0) { // none of the databases exist.
         msg = "Error: none of the databases in the \"INI\"-file exist.";
