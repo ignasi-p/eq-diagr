@@ -17,7 +17,7 @@ import lib.kemi.readWriteDataFiles.WriteChemSyst;
  * plot information and concentrations for each component are adjusted depending
  * on the new components.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2019 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1381,7 +1381,7 @@ private void checkPlotInfo() {
       if(dbg) {
             System.out.println("concentration for component \""+namn.identC[inew]+"\" not found; setting default conc.");
       }
-      DefaultPlotAndConcs.setDefaultConc(inew, namn.identC[inew], dgrCnew);
+      DefaultPlotAndConcs.setDefaultConc(inew, namn.identC[inew], dgrCnew, pd.kth);
     } //if !found
   } //for inew
 
@@ -1391,7 +1391,7 @@ private void checkPlotInfo() {
 
   //--- check that concentrations in axes (and "main") are varied (or fixed)
   if(dbg) {System.out.println("Checking concentrations for components in axes...");}
-  DefaultPlotAndConcs.checkConcsInAxesAndMain(namn, diagr, dgrC, dbg);
+  DefaultPlotAndConcs.checkConcsInAxesAndMain(namn, diagr, dgrC, dbg, pd.kth);
   if(dbg) {
     System.out.println("Component's concentrations:");
     for(int ic =0; ic < cs.Na; ic++) {
@@ -2357,7 +2357,7 @@ private void component_Click() {
     if(plotInfoGiven && dgrC != null) {
       for(int ic=0; ic < cs.Na; ic++) {
         if(dgrC.hur[ic] <=0) {
-          DefaultPlotAndConcs.setDefaultConc(ic, namn.identC[ic], dgrC);
+          DefaultPlotAndConcs.setDefaultConc(ic, namn.identC[ic], dgrC, pd.kth);
         }//if no concentration range
       }//for ic
     }//if there is plot info

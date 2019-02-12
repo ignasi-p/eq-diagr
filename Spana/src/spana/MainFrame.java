@@ -12,7 +12,7 @@ import lib.kemi.graph_lib.DiagrPaintUtility;
 
 /** The main frame.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2019 I.Puigdomenech.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import lib.kemi.graph_lib.DiagrPaintUtility;
 public class MainFrame extends javax.swing.JFrame {
   // Note: for java 1.6 jComboBox must not have type,
   //       for java 1.7 jComboBox must be <String>
-  static final String VERS = "2018-Oct-10";
+  static final String VERS = "2019-Feb-11";
   /** all program instances will use the same redirected frame */
   private static RedirectedFrame msgFrame = null;
 
@@ -2341,6 +2341,10 @@ public class MainFrame extends javax.swing.JFrame {
         else {laf = 0;}
     }
     catch (NullPointerException e) {laf = 0; pd.drawNeutralPHinPourbaix = false;}
+    try{
+        pd.kth = Boolean.parseBoolean(propertiesIni.getProperty("KTH_settings"));
+    }
+    catch (NullPointerException e) {pd.kth = false;}
     if(pc.dbg) {System.out.println("Finished reading ini-file");}
     System.out.flush();
     checkIniValues();
@@ -2613,6 +2617,7 @@ public class MainFrame extends javax.swing.JFrame {
       pd.diagrConvertEPS = false;
       pd.diagrExportType = FORMAT_NAMES[0];
       pd.diagrExportSize = 1000;
+      pd.kth = false;
 
     } // iniDefaults()
 
@@ -2766,6 +2771,7 @@ public class MainFrame extends javax.swing.JFrame {
     propertiesIni.setProperty("Convert_EPS", String.valueOf(pd.diagrConvertEPS));
     propertiesIni.setProperty("Export_To", pd.diagrExportType);
     propertiesIni.setProperty("Export_Size", String.valueOf(pd.diagrExportSize));
+    propertiesIni.setProperty("KTH_settings", String.valueOf(pd.kth));
 
     System.out.println("Saving ini-file: \""+f.getPath()+"\"");
     java.io.FileOutputStream propertiesIniFile = null;

@@ -1,4 +1,7 @@
 @echo off
+rem --- Windows command file to copy files (database.jar, SED.jar, Predom.jar, etc)
+rem     to the dist directory, in order to test Spana behaviour after building with
+rem     Netbeans, during program development
 
 set _4=Spana
 set _sc_=..\..\trunk

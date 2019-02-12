@@ -15,7 +15,7 @@ import static spana.MainFrame.LINE;
  * make changes to the input file without a text editor. A lot of
  * "intelligence" is used to make life easy for the user.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2019 I.Puigdomenech.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -2963,11 +2963,11 @@ private void checkInputConcs() {
             if(dgrC.cLow[i] <= 20) {
                 dgrC.cLow[i] = logToNoLog(dgrC.cLow[i]);
             } else {
-                dgrC.cLow[i] = 1e-5;
+                if(pd.kth) {dgrC.cLow[i] = 0.01;} else {dgrC.cLow[i] = 1e-5;}
             } // if < 20
           } // if "LTV"
           dgrC.hur[i] = 1; // "T" = "Total conc."
-        } // if "T..."
+        } // if "TV" or "LTV"
         else {
           dgrC.hur[i] = 4; // "LA" = "log (activity)"
           if(Util.isGas(component)) {dgrC.cLow[i] = -3.5;}
@@ -4097,8 +4097,8 @@ private void diagramType_Click() {
         // set default plot type and X-axis component
         DefaultPlotAndConcs.setDefaultPlot(cs, diag, dgrC);
         // set default concentrations for each component
-        DefaultPlotAndConcs.setDefaultConcs(cs, dgrC);
-        DefaultPlotAndConcs.checkConcsInAxesAndMain(namn, diag, dgrC, dbg);
+        DefaultPlotAndConcs.setDefaultConcs(cs, dgrC, pd.kth);
+        DefaultPlotAndConcs.checkConcsInAxesAndMain(namn, diag, dgrC, dbg, pd.kth);
     } // plot information or concentrations missing?
     if(diag.title == null) {diag.title = "";} else {diag.title = Util.rTrim(diag.title);}
 

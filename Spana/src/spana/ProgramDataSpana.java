@@ -5,7 +5,7 @@ import lib.kemi.chem.Chem;
 /** Class to store information on the "Spana" program.
  * The class is used to retrieve data in diverse methods
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2019 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -120,5 +120,9 @@ public class ProgramDataSpana {
   /** if <code>true</code> a neutral pH line (at pH=7 for 25°C)
    * will be drawn in Pourbaix diagrams (Eh/pH diagram) */
   public boolean drawNeutralPHinPourbaix = false;
+  /**  if <code>true</code> special settings will be "on" for students at
+   * the school of chemistry at the Royal Institute of Technology (KTH)
+   * in Stockholm, Sweden. */
+  public boolean kth = false;
   public ProgramDataSpana() {}
 }
