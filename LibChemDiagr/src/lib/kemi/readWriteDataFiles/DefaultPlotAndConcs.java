@@ -7,7 +7,7 @@ import lib.kemi.chem.Chem;
  * for each chemical component, the static methods in this class will assign
  * default values for a plot type and for the concentrations.
  *
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2019 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,13 +85,17 @@ public class DefaultPlotAndConcs {
    * @param diag a reference to an instance of Chem.Diagr
    * @param dgrC a reference to an instance of Chem.DiagrConcs
    * @param dbg if true some "debug" output is printed
+   * @param kth if <code>true</code> deffault total concetration for cationic
+   * components is 0.01 instead of 1e-5. Special settings for students at
+   * the school of chemistry at the Royal Institute of Technology (KTH)
+   * in Stockholm, Sweden.
    * @see DefaultPlotAndConcs#setDefaultConcs setDefaultConcs
    * @see DefaultPlotAndConcs#setDefaultConc(int, java.lang.String, lib.kemi.chem.Chem.DiagrConcs) setDefaultConc */
   public static void checkConcsInAxesAndMain(
           Chem.ChemSystem.NamesEtc namn,
           Chem.Diagr diag,
           Chem.DiagrConcs dgrC,
-          boolean dbg) {
+          boolean dbg, boolean kth) {
     //
     if(dbg) {System.out.println("checkConcsInAxesAndMain - plotType ="+diag.plotType
                     +", compMain ="+diag.compMain+", compX ="+diag.compX+", compY ="+diag.compY);}
@@ -105,7 +109,7 @@ public class DefaultPlotAndConcs {
                 || (dgrC.hur[i] !=1 && dgrC.hur[i] !=4 // concentration is varied
                     && Double.isNaN(dgrC.cHigh[i]))) {
             //if(dbg) {System.out.println("  i="+i+" ("+namn.identC[i]+"), setting defaults.");}
-            setDefaultConc(i, namn.identC[i], dgrC);
+            setDefaultConc(i, namn.identC[i], dgrC, kth);
         }
     } //for i
 
@@ -147,12 +151,17 @@ public class DefaultPlotAndConcs {
    * that components in the axes have varied concentrations.
    * @param cs a reference to an instance of Chem.ChemSystem
    * @param dgrC a reference to an instance of Chem.DiagrConcs
+   * @param kth if <code>true</code> deffault total concetration for cationic
+   * components is 0.01 instead of 1e-5. Special settings for students at
+   * the school of chemistry at the Royal Institute of Technology (KTH)
+   * in Stockholm, Sweden.
    * @see DefaultPlotAndConcs#checkConcsInAxesAndMain checkConcsInAxesAndMain   */
   public static void setDefaultConcs (
-          Chem.ChemSystem cs,
-          Chem.DiagrConcs dgrC) {
+            Chem.ChemSystem cs,
+            Chem.DiagrConcs dgrC,
+            boolean kth) {
     for(int i =0; i < cs.Na; i++) {
-      setDefaultConc(i, cs.namn.identC[i], dgrC);
+      setDefaultConc(i, cs.namn.identC[i], dgrC, kth);
     } //for i
   } //setDefaultConcs (ChemSystem, DiagrConcs)
   // </editor-fold>
@@ -164,16 +173,22 @@ public class DefaultPlotAndConcs {
    * <code>hur</code>, <code>cLow</code> and <code>cHigh</code> are needed
    * @param compName the name of the component, for example "CO3 2-"
    * @param dgrC a reference to an instance of Chem.DiagrConcs
+   * @param kth if <code>true</code> deffault total concetration for cationic
+   * components is 0.01 instead of 1e-5. Special settings for students at
+   * the school of chemistry at the Royal Institute of Technology (KTH)
+   * in Stockholm, Sweden.
    * @see DefaultPlotAndConcs#checkConcsInAxesAndMain checkConcsInAxesAndMain
    * @see DefaultPlotAndConcs#setDefaultConcs setDefaultConcs
    * @see Chem.DiagrConcs#hur hur
    * @see Chem.DiagrConcs#cLow cLow
    * @see Chem.DiagrConcs#cHigh cHigh
    */
-  public static void setDefaultConc (int i, String compName, Chem.DiagrConcs dgrC) {
+  public static void setDefaultConc (int i, String compName, Chem.DiagrConcs dgrC, boolean kth) {
+      // defaults
       dgrC.hur[i] = 1;   //"T" fixed total concentration
       dgrC.cHigh[i] = 0; //not used
-      dgrC.cLow[i] = 1e-5;
+      if(kth) {dgrC.cLow[i] = 0.01;} else {dgrC.cLow[i] = 1e-5;}
+
       //is this e-
       if(Util.isElectron(compName)) {
         dgrC.cLow[i] = -8.5;
