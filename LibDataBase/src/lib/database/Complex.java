@@ -5,7 +5,7 @@ import lib.common.Util;
 /**  Contains data for a "complex": name, stoichiometry, formation equilibrium
  * constant, reference, etc.  May be sorted according to name.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2019 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -486,7 +486,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
   } //sameNameAndStoichiometry
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="deltaToA(logK0,deltaH,deltaCp)">
+  //<editor-fold defaultstate="collapsed" desc="toLookUp()">
   /** Sets "lookUp"=true and sets values to logKarray at pSat (the saturated
    * vapor-liquid pressure) for temperatures between 0 and 350 C.
    * The values of logKarray are calculated using the <b>a[]</b>-parameters
@@ -898,12 +898,79 @@ public class Complex implements Comparable<Complex>, Cloneable {
 
   //<editor-fold defaultstate="collapsed" desc="toString()">
 /** converts a Complex into a String, such as:
- * "<code>Fe 3+;-13.02;;;2;Fe 2+;1;e-;-1;0;Wateq4F /comment</code>"
+ * "<code>Fe 3+;-13.02;;;Fe 2+;1;;;e-;-1;;;;;;;0;Wateq4F /comment</code>"
  * @return the string describing the Complex object
  * @see lib.database.Complex#fromString(java.lang.String) fromString
  */
   @Override
   public String toString() {
+    StringBuilder text = new StringBuilder();
+    double w;
+    text.append(encloseInQuotes(this.name)); text.append(";");
+
+    if(this.name.startsWith("@")) {return text.toString();}
+    if(this.constant != EMPTY) {text.append(Util.formatDbl3(this.constant).trim());}
+    text.append(";");
+    // If there is no second row of logKarray, it means that the look-up-table
+    // (if it is not null) has been constructed from array a[].
+    boolean thereIsLookUpTable = false;
+    if(this.logKarray[1] != null) {
+        for(int j = 0; j < this.logKarray[1].length; j++) {
+            if(!Float.isNaN(this.logKarray[1][j])) {thereIsLookUpTable = true; break;}
+        }
+    }
+    // are there protons involved in the reaction?
+    boolean proton = false;
+    double n_H = 0;
+    int nTot = Math.min(this.reactionComp.size(),this.reactionCoef.size());
+    for(int ic =0; ic < nTot; ic++) {
+      if(this.reactionComp.get(ic) == null || this.reactionComp.get(ic).length()<=0) {continue;}
+      if(Math.abs(this.reactionCoef.get(ic)) < 0.0001) {continue;}
+      if(Util.isProton(this.reactionComp.get(ic))) {n_H = this.reactionCoef.get(ic); proton = true;}
+    }
+    if(nTot > 7 || (nTot == 7 && !proton)  || this.analytic || this.lookUp && thereIsLookUpTable) {
+        System.out.println("toStringShort()...");
+        return this.toStringShort();
+    }
+    // delta-H and delta-Cp
+    w = this.getDeltaH();
+    if(w != EMPTY) {text.append(Util.formatDbl3(w).trim());}
+    text.append(";");
+    w = this.getDeltaCp();
+    if(w != EMPTY) {text.append(Util.formatDbl3(w).trim());}
+    text.append(";");
+    for(int ic =0; ic < 6; ic++) {
+      if(ic >= nTot || this.reactionComp.get(ic) == null || this.reactionComp.get(ic).length()<=0) {
+          text.append(";;");
+          continue;
+      } else {
+          text.append(encloseInQuotes(this.reactionComp.get(ic))); text.append(";");
+      }
+      if(Math.abs(this.reactionCoef.get(ic)) > 0.0001) {
+          text.append(Util.formatDbl4(this.reactionCoef.get(ic)).trim());
+      }
+      text.append(";");
+    }
+    if(Math.abs(n_H) >=0.001) {text.append(Util.formatDbl4(n_H).trim());} text.append(";");
+    String t;
+    if(this.comment != null && this.comment.length() >0) {
+        t = this.reference + " /" + this.comment;
+    } else {
+        t = this.reference;
+    }
+    text.append(encloseInQuotes(t));
+    return text.toString();
+  } // toString()
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="toStringShort()">
+/** converts a Complex into a String, such as:
+ * "<code>Fe 3+;-13.02;;;2;Fe 2+;1;e-;-1;0;Wateq4F / comment</code>"
+ * @return the string describing the Complex object
+ * @see lib.database.Complex#fromString(java.lang.String) fromString
+ */
+  // @Override
+  public String toStringShort() {
     StringBuilder text = new StringBuilder();
     double w;
     text.append(encloseInQuotes(this.name)); text.append(";");
@@ -981,7 +1048,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
         }
     }
     return text.toString();
-  } // toString()
+  } // toStringShort()
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="sortedReactionString()">

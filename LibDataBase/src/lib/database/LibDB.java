@@ -7,7 +7,7 @@ import lib.huvud.Div;
 
 /** Some procedures used witin this package.
  * <br>
- * Copyright (C) 2015-2018 I.Puigdomenech.
+ * Copyright (C) 2015-2019 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,9 @@ public class LibDB {
   public static String[] elementSymb = new String[113];
   /** New-line character(s) to substitute "\n" */
   private static final String nl = System.getProperty("line.separator");
+  /** java.io.File.separator - the system-dependent default name-separator character,
+   * represented as a string for convenience. This string contains a single character,
+   * namely File.separatorChar */
   private static final String SLASH = java.io.File.separator;
 
 static { // static initializer
@@ -482,15 +485,17 @@ static { // static initializer
   } //readElemFileBinary
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="checkDataBasesList">
+  //<editor-fold defaultstate="collapsed" desc="checkListOfDataBases">
   /** Check that the database names are not empty, the files exist
    * and can be read, and that there are no duplicates
    * @param parent
    * @param dataBasesList the databases
+   * @param pathApp the path where the application (jar-file) is located. May be "null"
    * @param dbg ture if warnings and error messages are to be printed */
-  public static synchronized void checkDataBasesList(
+  public static synchronized void checkListOfDataBases(
           java.awt.Component parent,
-          java.util.ArrayList<String> dataBasesList, boolean dbg) {
+          java.util.ArrayList<String> dataBasesList,
+          String pathApp, boolean dbg) {
     if(dataBasesList == null || dataBasesList.size() <=0) {return;}
     //--- check for non-existing files
     int nbr = dataBasesList.size();
@@ -499,7 +504,21 @@ static { // static initializer
     while(i < nbr) {
         dbName = dataBasesList.get(i);
         if(dbName != null && dbName.length() >0) {
-          if(isDBnameOK(parent, dbName, dbg)) {i++; continue;}
+            java.io.File dbf = new java.io.File(dbName);
+            // if the database does not exist, and it is a plain name
+            // (does not contain a "slash"), check if it is found in the
+            // application path
+            if(!dbf.exists() && !dbName.contains(SLASH) && pathApp != null) {
+                String dir = pathApp;
+                if(dir != null && dir.endsWith(SLASH)) {dir = dir.substring(0, dir.length()-1);}
+                dbName = dir + SLASH +  dbName.trim();
+            }
+            if(isDBnameOK(parent, dbName, dbg)) {
+                // replace the name in case the the application path has been added
+                dataBasesList.set(i, dbName);
+                i++;
+                continue;
+            }
         } else {
           if(dbg) {System.out.println("Error: found an empty database name in position "+i);}
         }
@@ -522,11 +541,14 @@ static { // static initializer
             nbr--;
     } //while i < nbr
     } // nbr >1
-  } //checkDataBasesList
+  } //checkListOfDataBases
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="isDBnameOK">
-  /**  Check if a database exists and can be read
+  /**  Check if a database exists and can be read. If the database does not
+   * exist, and it is a plain name (does not contain a "slash"),
+   * and if "pathApp" is not null, check if it is found in the directory
+   * "pathApp" (the application path)
    * @param parent
    * @param dBname a database
    * @param dbg set to <code>true</code> to print error messages to <code>System.err</code>
