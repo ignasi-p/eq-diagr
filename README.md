@@ -7,13 +7,11 @@ A previous software version for Windows (Visual Basic) named (**Medusa/Hydra**) 
  [1]: https://www.kth.se/che/medusa/
 
 ## Download
-All downloads are available in the [releases section][2]. There are thee variants of Chemical Equilibrium Diagrams: multi platform, Windows or MacOS, each version is either a complete zip file or a Windows installer.
+All downloads are available in the [releases section][2]. There are two variants of Chemical Equilibrium Diagrams: multi platform, and Windows, these versions are either a complete zip file or a Windows installer.
 
 - The multi-platform zip-file contains jar-files which may be used under Ubuntu (Linux), Windows or MacOS.
 
 - The Windows setup program contains Windows "exe" files (Java launchers). No administrator rights are needed to install the software. Install either on a computer or as portable software on a USB memory stick.
-
-- The MacOS zip-file contains Mac application bundles.
 
  [2]: https://github.com/ignasi-p/eq-diagr/releases/latest
 
@@ -85,6 +83,7 @@ Ingmar Grenthe (KTH), Sven-Olof Pettersson (Studsvik) and
 Joachim Zeising (KTH). Many thanks are due to the chemistry teaching staff at KTH: Joan Lind, Gabor Merenyi, Olle Wahlberg, Tom Wallin, Mats Jansson, Märtha Åberg, and many others. And many thanks to all students who helped me in shaping up the software and in finding many bugs!
 
 ## Last Updates
+- 2019-Feb - Restored text database format to old format, if possible. Introduced special settings and a special [database][26] for the course on chemical analysis [KD1280][27] at the Royal Institute of Technology (KTH).
 - 2018-Oct - New database formats, including both a power series expression and a look-up table, allow the search and data selection at higher temperatures (up to 600 C) and pressures (up to 5k bar). Chemical equilibrium diagrams may be made for supercritical aqueous. solutions. **To do:** update the help file to document these changes.
 - 2018-Aug - Increased the speed of the calculations. For Windows: improved the java-launchers (exe-files). For MacOS created a script that the user may use to create "apps".
 - 2018-July - Added the possibility to extract data at temperatures above 100°C (by manually changing the ini-file for Database). Added case-insensitive search of reference keys.
@@ -93,3 +92,6 @@ Joachim Zeising (KTH). Many thanks are due to the chemistry teaching staff at KT
 - 2017-May - Added changing tolerance when calculating diagrams
 - 2017-Jan - Corrected an error in data-file merging. Added "(a)" and "(ppt)" as types of solid phases
 - 2016-Jan - Revision to speed up the method to select which solid phases precipitate.
+
+[26]: https://github.com/ignasi-p/eq-diagr-kth/releases/latest
+[27]: https://www.kth.se/student/kurser/kurs/KD1280
