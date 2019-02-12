@@ -1,4 +1,7 @@
 @echo off
+rem --- Windows command file to copy files (Spana.jar, etc) to the
+rem     build directory, in order to test Database behaviour within
+rem     Netbeans, during program development
 
 set _4=DataBase
 set _sc_=..\..\trunk

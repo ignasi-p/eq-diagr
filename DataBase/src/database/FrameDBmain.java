@@ -10,7 +10,7 @@ import lib.huvud.Splash;
 
 /** Main window frame of the Database program.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2019 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import lib.huvud.Splash;
  * along with this program.  If not, see http://www.gnu.org/licenses/
  * @author Ignasi Puigdomenech */
 public class FrameDBmain extends javax.swing.JFrame {
-  static final String VERS = "2018-Nov-10";
+  static final String VERS = "2018-Feb-12";
   /** all instances will use the same redirected frame */
   static RedirectedFrame msgFrame = null;
 
@@ -522,7 +522,16 @@ public class FrameDBmain extends javax.swing.JFrame {
         }
         catch (Exception e) {}
         msg.append("CLASSPATH = ");msg.append(System.getProperty("java.class.path"));msg.append(nl);
-        msg.append("Program to make diagrams = ");msg.append(pd.diagramProgr);
+        msg.append("Program to make diagrams = ");msg.append(pd.diagramProgr);msg.append(nl);
+        int ndb = pd.dataBasesList.size();
+        msg.append(ndb+" database"); if(ndb != 1) {msg.append("s");}
+        if(ndb > 0) {
+            msg.append(":"+nl);
+            for(int i = 0; i < ndb; i++) {
+                msg.append("    "+pd.dataBasesList.get(i));
+                msg.append(nl);
+            }
+        }
         System.out.println(msg);
         System.out.println(LINE);
     } // if dbg
@@ -3248,7 +3257,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
             msg = null;
         }
     } else {
-        LibDB.checkDataBasesList(dbf, pd.dataBasesList, true);
+        LibDB.checkListOfDataBases(dbf, pd.dataBasesList, pc.pathAPP, true);
         nbr = pd.dataBasesList.size();
         if(nbr <=0) {
             msg = "Error:  no database in the INI-file exist";
