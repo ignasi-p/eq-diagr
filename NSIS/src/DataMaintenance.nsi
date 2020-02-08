@@ -8,6 +8,8 @@ Name "DataMaintenance Launcher"
 Caption "DataMaintenance Launcher"
 Icon "images/Data.ico"
 OutFile "DataMaintenance.exe"
+Unicode true
+
 ;--------------------------------
 ;Include Version Information
 LoadLanguageFile "${NSISDIR}\Contrib\Language files\English.nlf"
@@ -90,28 +92,31 @@ Section ""
   Abort
 
   javaNOTinPATH:   ; Java is NOT in PATH, try to find ${JAVAEXE}
+  StrCmp $DBG "true" 0 +2
+  MessageBox MB_OK|MB_TOPMOST "Java not in path..."
   ; get the Java Runtime Environment
   Call GetJRE
   Pop $0
   StrCmp $0 ${JAVAEXE} 0 JRE_OK ; success?
 
-  ; search the directory tree $PROGRAMFILES for file ${JAVAEXE}
-  ; "FindJRE" is a callback function
-  !insertmacro CallFindFiles $PROGRAMFILES ${JAVAEXE} FindJRE
-  StrCmp $0 "" 0 JRE_OK ; success?
-
-  ; not found anywhere...
-  ; use only ${JAVAEXE} (without path) and display error messages
-  StrCpy $0 ${JAVAEXE}
-  ;StrCmp $DBG "true" 0 +2
-  MessageBox MB_OK|MB_ICONSTOP|MB_TOPMOST 'Could NOT find file "${JAVAEXE}" version ${JRE_VERSION} or higher.$\n\
-  searched:$\n  1-  .\jre and .\java directories\
+  StrCmp $DBG "true" 0 +2
+  MessageBox MB_OK|MB_ICONSTOP|MB_TOPMOST 'Could NOT find file "${JAVAEXE}" version ${JRE_VERSION} or higher$\n\
+  in the following:$\n  1-  .\jre and .\java directories\
 		   $\n  2-  ..\jre and ..\java\
 	       $\n  3-  JAVA_HOME environment variable\
 	       $\n  4-  \PortableApps\CommonFiles\Java\
 		   $\n  5-  the Windows registry\
-		   $\n  6-  all "$PROGRAMFILES" subdirectories\
-		   $\nWill try to run Java anyway...'
+		   $\nWill now search all "$PROGRAMFILES" subdirectories ... '
+
+  ; search the directory tree $PROGRAMFILES for file ${JAVAEXE}
+  ; "FindJRE" is a callback function
+  !insertmacro CallFindFiles $PROGRAMFILES ${JAVAEXE} FindJRE
+  StrCmp $0 "" 0 JRE_OK ; success?
+  MessageBox MB_OK|MB_TOPMOST `Java not found in "$PROGRAMFILES" ...`
+
+  ; not found anywhere...
+  ; use only ${JAVAEXE} (without path) and display error messages
+  StrCpy $0 ${JAVAEXE}
   Goto Go_ahead
 
   JRE_OK:
@@ -124,7 +129,7 @@ Section ""
   StrCpy $2 '"$0" -jar "$EXEDIR\${JAR}" $1'
 
   StrCmp $DBG "true" 0 +2
-  MessageBox MB_OK|MB_TOPMOST "ExecWait =$\n $2"
+  MessageBox MB_OK|MB_TOPMOST "ExecWait (last attempt)=$\n $2"
 
   ; wait for return code
   ExecWait "$2" $3
@@ -135,9 +140,9 @@ Section ""
         MessageBox MB_OK|MB_ICONSTOP|MB_TOPMOST `Return code "$3" while running$\r$\n"$2"`
 SectionEnd
 
+Function CheckJREVersion
 ; Pass the "javaw.exe" path by $0
 ; it sets the error flag if the javaw.exe has an old version.
-Function CheckJREVersion
     Push $5
     Push $6
     ; Get the file version of javaw.exe
@@ -166,6 +171,7 @@ Function CheckJREVersion
     Pop $6
 FunctionEnd
 
+Function GetJRE
 ;  Function GetJRE -- returns the full path of a valid java.exe in variable $0
 ;  looks in:
 ;  1 - .\jre and .\java directory (JRE Installed with application)
@@ -175,7 +181,6 @@ FunctionEnd
 ;      ..\java
 ;  4 - the registry
 ;  5 - hopes it is in current dir or PATH
-Function GetJRE
     Push $0
     Push $1
     Push $2
@@ -252,12 +257,12 @@ Function GetJRE
     Exch $0
 FunctionEnd
 
+Function FindJRE
 ; Callback Function Syntax
 ; Do not use $R0-$R6 in the function unless you are saving their old content
 ; Return a "stop" value if you want to stop searching, anything else to continue
 ; Always return a value through the stack (Push) to prevent stack corruption
 ; Do not push values on the stack without poping them later unless it's the return value
-Function FindJRE
 	Pop $0
 	Call CheckJREVersion
 	IfErrors 0 FindJRE_done
@@ -268,6 +273,7 @@ Function FindJRE
 	Push "stop"	
 FunctionEnd
 
+Function FindFiles
 ; from http://nsis.sourceforge.net/Search_For_a_File
 ; This function searches a given directory and all of its subdirectories for a certain file (or directory).
 ; Whenever it finds a match it calls a given callback function. If the callback function returns "stop"
@@ -293,7 +299,6 @@ FunctionEnd
 ;	Exch $0
 ;	Call FindFiles
 ;	!macroend
-Function FindFiles
   Exch $R5 # callback function
   Exch 
   Exch $R4 # file name

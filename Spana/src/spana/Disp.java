@@ -11,7 +11,7 @@ import lib.kemi.graph_lib.GraphLib;
  * The diagram is displayed in a JPanel using the method
  * <code>lib.kemi.graph_lib.DiagrPaintUtility.paintDiagram</code>
  * <br>
- * Copyright (C) 2014-2016 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -495,8 +495,8 @@ public class Disp extends javax.swing.JFrame {
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         Thread hlp = new Thread() {@Override public void run(){
             String[] a = {"S_Diagram_Window_htm"};
-            lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-            try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+            lib.huvud.RunProgr.runProgramInProcess(Disp.this,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
+            try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
             catch (InterruptedException e) {}
             setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         }};//new Thread

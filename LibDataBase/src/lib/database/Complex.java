@@ -1,5 +1,6 @@
 package lib.database;
 
+import lib.kemi.H2O.IAPWSF95;
 import lib.common.Util;
 
 /**  Contains data for a "complex": name, stoichiometry, formation equilibrium
@@ -29,7 +30,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
   /** if <b>true</b>, parameter values (a[]) for an equation describing the
    * logK temperature dependency have been given for this reaction;
    * if <b>false</b> then either a look-up table is used, or
-   * the values of detla-H (enthalpy) and delta-Cp (heat capacity)
+   * the values of delta-H (enthalpy) and delta-Cp (heat capacity)
    * for the reaction have been given, or are empty.
    * @see lib.database.Complex#lookUp lookUp
    * @see lib.database.Complex#a a[]
@@ -69,7 +70,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * @see lib.database.Complex#lookUp lookUp
    * @see lib.database.Complex#tMax tMax */
   public float[][] logKarray;
-  /** The higherst temperature limit (Celsius) for the temperature extrapolations.
+  /** The highest temperature limit (Celsius) for the temperature extrapolations.
    * If no <b>analytic</b> equation has been given (that is,
    * if <b>analytic</b> = false) then: tMax = 25 if values for
    * enthalpy and heat capacity have not been given, tMax = 100
@@ -77,8 +78,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * tMax = 200 if both enthalpy and heat capacity have been given
    * for this reaction.
    * @see lib.database.Complex#a a[]
-   * @see lib.database.Complex#analytic analytic
-   */
+   * @see lib.database.Complex#analytic analytic  */
   public double tMax;
   /** the names of the reactants */
   public java.util.ArrayList<String> reactionComp;
@@ -99,7 +99,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
   public static final double ANALYTIC = -888888.8;
   /** LOOKUP = -888888.8, a value used when reading the enthalpy of reaction
    * from binary databases, to indicate that instead of enthalpy and heat
-   * capacity, an anlytic power series expression is used to represent the
+   * capacity, an analytic power series expression is used to represent the
    * temperature and pressure  variation of loK
    * @see lib.database.Complex#anaytic analytic
    * @see lib.database.Complex#a a[] */
@@ -757,7 +757,9 @@ public class Complex implements Comparable<Complex>, Cloneable {
                 for(i = 0; i < c.a.length; i++) {
                     nowReading.replace(0, nowReading.length(), "parameter a["+i+"]");
                     if(n < aList.size()) {
-                        if(aList.get(n).length() >0) {c.a[i] = Double.parseDouble(aList.get(n));
+                        if(aList.get(n).length() >0) {
+                            nowReading.append(", text:\""+aList.get(n)+"\"");
+                            c.a[i] = Double.parseDouble(aList.get(n));
                         } else {c.a[i] = EMPTY;}
                     } else {
                         throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
@@ -855,7 +857,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
             c.reference = c.reference +","+ aList.get(n);
             n++;
         }
-        //System.out.println("\""+c.name+"\", ref="+c.reference);
+        //   System.out.println("\""+c.name+"\", ref="+c.reference);
         // remove ";" or "," at the beginning
         while (true) {
             if(c.reference.startsWith(";") || c.reference.startsWith(",")) {
@@ -1186,7 +1188,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
   public double logKatTpSat(final double tC0) {
     if(Double.isNaN(tC0)) {return Double.NaN;}
     this.tMax = Math.min(600,Math.max(25, this.tMax));
-    if(tC0 > this.tMax+0.0001) {return Double.NaN;}
+    if(tC0 > this.tMax+0.001) {return Double.NaN;}
     double tC = Math.max(tC0,0.01); // triple point of water
     if(tC >= 373.946) {return Double.NaN;} // crtitical point of water
     if(this.lookUp)  {
@@ -1205,7 +1207,9 @@ public class Complex implements Comparable<Complex>, Cloneable {
  /** Returns the logK value at the requested temperature and pressure
   * if it can be calculated. 
   * @param tC0 the temperature in degrees Celsius
-  * @param pBar the pressure in bar
+  * @param pBar the pressure in bar. At temperatures below 100 C, if pBar is equal
+  * to one, it is assumed that max(pSat,1) is intended, where "pSat" is the steam
+  * saturated pressure. Note that at 100 C pSat is approx. 1.015 bar
   * @return the logK value at the requested temperature and pressure.
   * It returns NaN (not-a-number) if (a) the logK value can not be calculated
   * (t-P in the vapor region or in the low-density region) or (b) if either
@@ -1219,7 +1223,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
   public double logKatTandP(final double tC0, final double pBar) {
     if(Double.isNaN(tC0) || Double.isNaN(pBar)) {return Double.NaN;}
     this.tMax = Math.min(600,Math.max(25, this.tMax));
-    if(tC0 > this.tMax+0.0001) {return Double.NaN;}
+    if(tC0 > this.tMax+0.001) {return Double.NaN;}
     double tC = Math.max(tC0,0.01); // triple point of water
     boolean thereIsLookUpTable = false;
     if(this.logKarray[1] != null) {
@@ -1229,11 +1233,15 @@ public class Complex implements Comparable<Complex>, Cloneable {
     }
     if(tC < 373.946) { // crtitical point of water
         double pSat = Math.max(1,IAPWSF95.pSat(tC));
-        if(pBar < (pSat*0.998)) {return Double.NaN;} // below saturated liquid-vapor pressure
-        else if(Math.abs(pBar-pSat) < pSat*0.002) { // pBar = pSat
+        // if tC <100 and pBar = 1
+        if(tC <= 100.001 && Math.abs(pBar-1)<0.001) {return logKatTpSat(tC);}
+        if(pBar < (pSat*0.998)) {  // below saturated liquid-vapor pressure
+            return Double.NaN;     // pBar is in the gas range
+        } else {
             return logKatTpSat(tC);
         }
     } else if(tC == 373.946) {return Double.NaN;}
+    // if tC > 373.946
     double[] tLimit = new double[]{373.946,400,410,430,440,460,470,490,510,520,540,550,570,580,600};
     double[] pLimit = new double[]{        300,350,400,450,500,550,600,650,700,750,800,850,900,950};
     for(int i = 0; i < (tLimit.length-1); i++) {

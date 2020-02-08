@@ -4,7 +4,7 @@ import lib.database.References;
 
 /** Save references to a reference file.
  *
- * Copyright (C) 2015-2016 I.Puigdomenech.
+ * Copyright (C) 2015-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -302,8 +302,8 @@ public class EditAddRefs extends javax.swing.JFrame {
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
       if(windowSize != null) {
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
+        int w = windowSize.width;
+        int h = windowSize.height;
         if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
         if(this.getWidth()<w){this.setSize(w,this.getHeight());}
       }

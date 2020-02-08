@@ -4,7 +4,7 @@ rem --- Windows script to make the Windows setup file
 prompt -$g
 echo.=========================================================================
 echo.   Making Windows "exe"-setup file ...
-echo.
+echo.=========================================================================
 echo.current working directory:
 cd
 echo.=========================================================================

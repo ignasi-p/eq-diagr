@@ -8,7 +8,7 @@
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
 <project name="AddShowReferences" default="default" basedir=".">
-    <description>Builds, tests, and runs the project SaveReference.</description>
+    <description>Builds, tests, and runs the project AddShowReferences.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 
@@ -71,9 +71,11 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <!--
     <target name="-post-jar">
         <jar update="true" destfile="${dist.jar}">
             <zipfileset src="${libs.swing-layout.classpath}"/>
         </jar>
     </target>
+    -->
 </project>

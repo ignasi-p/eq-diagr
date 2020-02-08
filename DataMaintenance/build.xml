@@ -71,9 +71,11 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <!--
     <target name="-post-jar">
         <jar update="true" destfile="${dist.jar}">
             <zipfileset src="${libs.swing-layout.classpath}"/>
         </jar>
     </target>
+    -->
 </project>

@@ -1,4 +1,4 @@
-package lib.database;
+package lib.kemi.H2O;
 
 /** A set of routines used to calculate<ul>
  * <li>The density of fluid water, using the "H2O" model in:<br>

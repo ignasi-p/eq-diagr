@@ -624,9 +624,14 @@ boolean xMolar, yMolar;
       //   O2(g)  +  4 H+  +  4 e-  =  2 H2O(l)   logK(1)=4pH+4pe
       //   H2(g)  =  2 H+  +  2 e-              (logK(2)=0  at every temp)
       if(Double.isNaN(diag.temperature)) {
-        pred.showMsg("Error: temperature NOT available in a pH/(pe or Eh) diagram.",0);
+        pred.showMsg("Temperature NOT available in a pH/(pe or Eh) diagram.",2);
       } else {
         double O2lgK;
+        if(Double.isNaN(diag.pressure)) {
+            if(diag.temperature >= 0 && diag.temperature < lib.kemi.H2O.IAPWSF95.CRITICAL_TC) {
+                diag.pressure = lib.kemi.H2O.IAPWSF95.pSat(diag.temperature);
+            } else {if(diag.temperature > lib.kemi.H2O.IAPWSF95.CRITICAL_TC) {diag.pressure = 1000;}}
+        }
         try {O2lgK = O2_logK((float)diag.temperature, (float)diag.pressure);}
         catch (Chem.ChemicalParameterException ex) {
             pred.showMsg(ex);  O2lgK = -1;
@@ -851,8 +856,8 @@ private float n_pH(float tC, float pBar) throws Chem.ChemicalParameterException 
  * @throws diverse.Div.RationalInterpolationException */
 private float O2_logK(float tC, float pBar) throws Chem.ChemicalParameterException {
   final float NAN = Float.NaN;
-  float[][] logK = new float[5][];
-  //                      0      25        50     100      150    200     250     300     350    400     450     500     550     600
+  float[][] logK = new float[5][]; // data at P= pSat, 500, 1000, 3000, 5000 bar
+  //                t/C=  0      25        50     100      150    200     250     300     350    400     450     500     550     600
   logK[0] = new float[]{92.28f, 83.10f, 75.36f, 63.04f, 53.69f, 46.35f, 40.45f, 35.60f, 31.56f,  NAN,    NAN,    NAN,    NAN,    NAN};
   logK[1] = new float[]{91.94f, 82.79f, 75.07f, 62.79f, 53.45f, 46.13f, 40.25f, 35.42f, 31.40f, 28.01f, 25.13f,  NAN,    NAN,    NAN};
   logK[2] = new float[]{91.60f, 82.48f, 74.78f, 62.53f, 53.22f, 45.92f, 40.04f, 35.22f, 31.19f, 27.79f, 24.88f, 22.37f, 20.19f, 18.27f};
@@ -870,7 +875,7 @@ private float O2_logK(float tC, float pBar) throws Chem.ChemicalParameterExcepti
       if(tC > 374) {
         throw new Chem.ChemicalParameterException (nl+
               "Error in procedure \"O2_line\":"+
-              "  t = "+tC+", p = "+pBar+" bar (at (p < 221 bar) t must be < 374C).");
+              "  t = "+tC+", p = "+pBar+" bar (at p < 221 bar t must be < 374C).");
       }
   } else if(pBar <600) {
       if(tC > 450) {

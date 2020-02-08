@@ -5,7 +5,7 @@ import lib.huvud.ProgramConf;
 
 /** Temperature dialog.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ public class SetTempPressDialog extends javax.swing.JDialog {
             Thread hlp = new Thread() {@Override public void run(){
                 String[] a = {"DB_0_Main_htm"};
                 lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-                try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+                try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
                 catch (InterruptedException e) {}
                 SetTempPressDialog.this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             }   };//new Thread
@@ -321,8 +321,8 @@ public class SetTempPressDialog extends javax.swing.JDialog {
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
       if(windowSize != null) {
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
+        int w = windowSize.width;
+        int h = windowSize.height;
         if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
         if(this.getWidth()<w){this.setSize(w,this.getHeight());}
       }
@@ -332,14 +332,14 @@ public class SetTempPressDialog extends javax.swing.JDialog {
       if(loading) {return;}
       double old;
       temperature_C =  Double.parseDouble(jComboBoxT.getSelectedItem().toString());
-      if(temperature_C > lib.database.IAPWSF95.CRITICAL_TC) {
+      if(temperature_C > lib.kemi.H2O.IAPWSF95.CRITICAL_TC) {
         jComboBoxP.setModel(new javax.swing.DefaultComboBoxModel<String>(noPsat));
         if(temperature_C <= 450 && pressure_bar < 500) {pressure_bar = 500;}
         if(temperature_C > 450 && pressure_bar < 1000) {pressure_bar = 1000;}
       } else { // temperature <= 373
         jComboBoxP.setModel(new javax.swing.DefaultComboBoxModel<String>(pSat));
         if(pressure_bar < 500) {
-            pressure_bar = Math.max(1.,lib.database.IAPWSF95.pSat(temperature_C));
+            pressure_bar = Math.max(1.,lib.kemi.H2O.IAPWSF95.pSat(temperature_C));
         }
       }
       set_press_inComboBox();
@@ -381,7 +381,7 @@ public class SetTempPressDialog extends javax.swing.JDialog {
         String s = jComboBoxP.getSelectedItem().toString();
         if(s.equalsIgnoreCase("psat")) {
             temperature_C = Math.min(350, temperature_C);
-            pressure_bar = Math.max(1.,lib.database.IAPWSF95.pSat(temperature_C));
+            pressure_bar = Math.max(1.,lib.kemi.H2O.IAPWSF95.pSat(temperature_C));
             set_temp_inComboBox();
         }
         else {pressure_bar =  Double.parseDouble(s);}
@@ -400,7 +400,7 @@ public class SetTempPressDialog extends javax.swing.JDialog {
         if(temperature_C > 350) {return;}
         if(evt.getClickCount() >1) { // double-click
             jComboBoxP.setSelectedIndex(0);
-            pressure_bar = Math.max(1.,lib.database.IAPWSF95.pSat(temperature_C));
+            pressure_bar = Math.max(1.,lib.kemi.H2O.IAPWSF95.pSat(temperature_C));
         }
     }//GEN-LAST:event_jLabelPMouseClicked
   //</editor-fold>
@@ -439,10 +439,10 @@ public class SetTempPressDialog extends javax.swing.JDialog {
 //<editor-fold defaultstate="collapsed" desc="set_press_inComboBox">
 /** find the closest item in the pressure combo box and select it */
   private void set_press_inComboBox() {
-    if(pressure_bar < lib.database.IAPWSF95.CRITICAL_pBar) {jComboBoxP.setSelectedIndex(0); return;}
+    if(pressure_bar < lib.kemi.H2O.IAPWSF95.CRITICAL_pBar) {jComboBoxP.setSelectedIndex(0); return;}
     int min = 1;
     if(jComboBoxP.getItemAt(0).toString().equalsIgnoreCase("pSat")) {
-        if(pressure_bar < lib.database.IAPWSF95.CRITICAL_pBar) {jComboBoxP.setSelectedIndex(0); return;}
+        if(pressure_bar < lib.kemi.H2O.IAPWSF95.CRITICAL_pBar) {jComboBoxP.setSelectedIndex(0); return;}
         min = 2;
     }
     double w0, w1;

@@ -9,8 +9,8 @@
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <Events>
-    <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
     <EventHandler event="componentResized" listener="java.awt.event.ComponentListener" parameters="java.awt.event.ComponentEvent" handler="formComponentResized"/>
+    <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
   </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -152,7 +152,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="jLabelName">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;font size=+1&gt;&lt;b&gt;DataBase&lt;/b&gt;&lt;/font&gt; &amp;nbsp;&amp;nbsp; &#xa9; 2012-2018 &amp;nbsp; I.Puigdomenech&lt;br&gt;&#xa;This program comes with&lt;br&gt;&#xa;ABSOLUTELY NO WARRANTY.&lt;br&gt;&#xa;This is free software, and you may&lt;br&gt;&#xa;redistribute it under the GNU GPL license.&lt;/html&gt;" noResource="true"/>
+        <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;font size=+1&gt;&lt;b&gt;DataBase&lt;/b&gt;&lt;/font&gt; &amp;nbsp;&amp;nbsp; &#xa9; 2012-2020 &amp;nbsp; I.Puigdomenech&lt;br&gt;&#xa;This program comes with&lt;br&gt;&#xa;ABSOLUTELY NO WARRANTY.&lt;br&gt;&#xa;This is free software, and you may&lt;br&gt;&#xa;redistribute it under the GNU GPL license.&lt;/html&gt;" noResource="true"/>
         <Property name="verticalAlignment" type="int" value="1"/>
       </Properties>
     </Component>
@@ -225,7 +225,7 @@
             </Property>
             <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;u&gt;www.kth.se/che/medusa&lt;/u&gt;&lt;/html&gt;" noResource="true"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Handmark&#xf6;r"/>
+              <Color id="Default Cursor"/>
             </Property>
           </Properties>
           <Events>
@@ -239,7 +239,7 @@
             </Property>
             <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;u&gt;sites.google.com/site/chemdiagr/&lt;/u&gt;&lt;/html&gt;" noResource="true"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Handmark&#xf6;r"/>
+              <Color id="Default Cursor"/>
             </Property>
           </Properties>
           <Events>
@@ -300,14 +300,14 @@
         <Component class="javax.swing.JLabel" name="jLabelNetbeansIcon">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/database/images/Netbeans.gif"/>
+              <Image iconType="3" name="/database/images/Netbeans11_24x24.gif"/>
             </Property>
             <Property name="iconTextGap" type="int" value="0"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelNetBeans">
           <Properties>
-            <Property name="text" type="java.lang.String" value="NetBeans IDE 8.0" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="NetBeans IDE 11" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelNetBeans_www">
@@ -317,7 +317,7 @@
             </Property>
             <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;u&gt;netbeans.org&lt;/u&gt;&lt;/html&gt;" noResource="true"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Handmark&#xf6;r"/>
+              <Color id="Default Cursor"/>
             </Property>
           </Properties>
           <Events>

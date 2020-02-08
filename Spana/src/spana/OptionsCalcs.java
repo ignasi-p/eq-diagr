@@ -5,7 +5,7 @@ import lib.kemi.chem.Chem;
 
 /** Options dialog for chemical equilibrium calculations with Haltafall.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,8 +77,8 @@ public class OptionsCalcs extends javax.swing.JFrame {
             OptionsCalcs.this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
             Thread hlp = new Thread() {@Override public void run(){
                 String[] a = {"S_Menu_Prefs_htm_Calcs"};
-                lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-                try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+                lib.huvud.RunProgr.runProgramInProcess(OptionsCalcs.this,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
+                try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
                 catch (InterruptedException e) {}
                 OptionsCalcs.this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             }};//new Thread
@@ -146,6 +146,7 @@ public class OptionsCalcs extends javax.swing.JFrame {
     else {System.out.println("Error: Could not load image = \""+iconName+"\"");}
 
     // --- set up the frame
+    if(pd.jarClassLd) {jRadioButtonLoadJars.setSelected(true);} else {jRadioButtonSeparate.setSelected(true);}
     jCheckBoxCalcsDbg.setSelected(pd.calcDbg);
     // store variables locally so the user can quit without saving
     // debugging in HaltaFall
@@ -218,92 +219,46 @@ public class OptionsCalcs extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jCheckBoxKeep = new javax.swing.JCheckBox();
-        jCheckBoxCalcsDbg = new javax.swing.JCheckBox();
-        jLabelDbgH = new javax.swing.JLabel();
-        jComboBoxDbgH = new javax.swing.JComboBox<String>();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jButton_OK = new javax.swing.JButton();
         jButton_Cancel = new javax.swing.JButton();
-        jLabelTol = new javax.swing.JLabel();
-        jComboBoxTol = new javax.swing.JComboBox<String>();
         jPanel10 = new javax.swing.JPanel();
+        jLabelTol = new javax.swing.JLabel();
+        jComboBoxTol = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jScrollBarMin = new javax.swing.JScrollBar();
         jLabelMinVal = new javax.swing.JLabel();
         jPanelTable = new javax.swing.JPanel();
         jLabelExt = new javax.swing.JLabel();
-        jComboBoxExt = new javax.swing.JComboBox<String>();
+        jComboBoxExt = new javax.swing.JComboBox<>();
         jLabelChar = new javax.swing.JLabel();
-        jComboBoxChar = new javax.swing.JComboBox<String>();
+        jComboBoxChar = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTextF_End = new javax.swing.JTextField();
         jTextF_Start = new javax.swing.JTextField();
+        jPanel3 = new javax.swing.JPanel();
+        jRadioButtonLoadJars = new javax.swing.JRadioButton();
+        jRadioButtonSeparate = new javax.swing.JRadioButton();
+        jPanel1 = new javax.swing.JPanel();
+        jCheckBoxKeep = new javax.swing.JCheckBox();
+        jCheckBoxCalcsDbg = new javax.swing.JCheckBox();
+        jLabelDbgH = new javax.swing.JLabel();
+        jComboBoxDbgH = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
             }
         });
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, " Debugging: ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(51, 0, 255))); // NOI18N
-
-        jCheckBoxKeep.setMnemonic('K');
-        jCheckBoxKeep.setText("Keep windows open after calculations"); // NOI18N
-        jCheckBoxKeep.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxKeepActionPerformed(evt);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
-
-        jCheckBoxCalcsDbg.setMnemonic('W');
-        jCheckBoxCalcsDbg.setText("Write messages in SED & Predom"); // NOI18N
-
-        jLabelDbgH.setLabelFor(jComboBoxDbgH);
-        jLabelDbgH.setText("<html><u>D</u>ebugging in HaltaFall:</html>"); // NOI18N
-        jLabelDbgH.setToolTipText("Default is 1 (show errors)");
-
-        jComboBoxDbgH.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0 - none", "1 - errors only", "2 - errors + results", "3 - errors + results + input", "4 = 3 + output from Fasta", "5 = 4 + output from activity coeffs.", "6 = 5 + lots of output" }));
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBoxKeep)
-                            .addComponent(jCheckBoxCalcsDbg)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBoxDbgH, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelDbgH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jCheckBoxKeep)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxCalcsDbg)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabelDbgH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBoxDbgH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         jButton_OK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/OK_32x32.gif"))); // NOI18N
         jButton_OK.setMnemonic('O');
@@ -333,7 +288,7 @@ public class OptionsCalcs extends javax.swing.JFrame {
         jLabelTol.setText("<html>Max. <u>t</u>olerance for mass-balance eqns. in HaltaFall:</html>"); // NOI18N
         jLabelTol.setToolTipText("default: 1E-5");
 
-        jComboBoxTol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1E-2", "1E-3", "1E-4", "1E-5", "1E-6", "1E-7", "1E-8", "1E-9" }));
+        jComboBoxTol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1E-2", "1E-3", "1E-4", "1E-5", "1E-6", "1E-7", "1E-8", "1E-9" }));
         jComboBoxTol.setToolTipText("default: 1E-4");
 
         jLabel4.setText("Fraction diagrams: threshold for curves:");
@@ -344,17 +299,17 @@ public class OptionsCalcs extends javax.swing.JFrame {
         jScrollBarMin.setToolTipText("default: 3%");
         jScrollBarMin.setValue(0);
         jScrollBarMin.setVisibleAmount(0);
-        jScrollBarMin.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
-            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
-                jScrollBarMinAdjustmentValueChanged(evt);
-            }
-        });
         jScrollBarMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jScrollBarMinFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jScrollBarMinFocusLost(evt);
+            }
+        });
+        jScrollBarMin.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
+            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
+                jScrollBarMinAdjustmentValueChanged(evt);
             }
         });
 
@@ -365,27 +320,6 @@ public class OptionsCalcs extends javax.swing.JFrame {
                 jLabelMinValMouseClicked(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addGap(2, 2, 2)
-                .addComponent(jLabel4)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollBarMin, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabelMinVal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabelMinVal, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jLabel4)
-                .addComponent(jScrollBarMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
 
         jPanelTable.setBorder(javax.swing.BorderFactory.createTitledBorder(null, " Table output in SED: ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(51, 0, 255))); // NOI18N
 
@@ -481,6 +415,123 @@ public class OptionsCalcs extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollBarMin, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelMinVal, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE))
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel10Layout.createSequentialGroup()
+                                .addComponent(jLabelTol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBoxTol, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanelTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelTol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxTol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jScrollBarMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelMinVal))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, " Calculations: ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(51, 0, 255))); // NOI18N
+
+        buttonGroup1.add(jRadioButtonLoadJars);
+        jRadioButtonLoadJars.setMnemonic('L');
+        jRadioButtonLoadJars.setText("Load jar-files in Java Virtual machine");
+
+        buttonGroup1.add(jRadioButtonSeparate);
+        jRadioButtonSeparate.setMnemonic('R');
+        jRadioButtonSeparate.setText("Run jar-files in separate system process");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRadioButtonLoadJars)
+                    .addComponent(jRadioButtonSeparate))
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jRadioButtonLoadJars)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jRadioButtonSeparate))
+        );
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, " Debugging: ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(51, 0, 255))); // NOI18N
+
+        jCheckBoxKeep.setMnemonic('K');
+        jCheckBoxKeep.setText("Keep windows open after calculations"); // NOI18N
+        jCheckBoxKeep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxKeepActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxCalcsDbg.setMnemonic('W');
+        jCheckBoxCalcsDbg.setText("Write messages in SED & Predom"); // NOI18N
+
+        jLabelDbgH.setLabelFor(jComboBoxDbgH);
+        jLabelDbgH.setText("<html><u>D</u>ebugging in HaltaFall:</html>"); // NOI18N
+        jLabelDbgH.setToolTipText("Default is 1 (show errors)");
+
+        jComboBoxDbgH.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0 - none", "1 - errors only", "2 - errors + results", "3 - errors + results + input", "4 = 3 + output from Fasta", "5 = 4 + output from activity coeffs.", "6 = 5 + lots of output" }));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBoxKeep)
+                            .addComponent(jCheckBoxCalcsDbg)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBoxDbgH, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelDbgH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jCheckBoxKeep)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxCalcsDbg)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelDbgH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxDbgH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -491,18 +542,12 @@ public class OptionsCalcs extends javax.swing.JFrame {
                     .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanelTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(26, 26, 26)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton_Cancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton_OK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabelTol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBoxTol, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton_OK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton_Cancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -510,22 +555,18 @@ public class OptionsCalcs extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
+                        .addGap(22, 22, 22)
                         .addComponent(jButton_OK)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton_Cancel))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelTol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBoxTol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanelTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -535,6 +576,7 @@ public class OptionsCalcs extends javax.swing.JFrame {
 
     private void jButton_OKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_OKActionPerformed
 
+        pd.jarClassLd = jRadioButtonLoadJars.isSelected();
         pd.keepFrame = jCheckBoxKeep.isSelected();
         pd.calcDbg = jCheckBoxCalcsDbg.isSelected();
         pd.calcDbgHalta = Integer.parseInt(jComboBoxDbgH.getSelectedItem().toString().substring(0,2).trim());
@@ -567,15 +609,6 @@ public class OptionsCalcs extends javax.swing.JFrame {
         closeWindow();
     }//GEN-LAST:event_formWindowClosing
 
-    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-      if(windowSize != null) {
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
-        if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
-        if(this.getWidth()<w){this.setSize(w,this.getHeight());}
-      }
-    }//GEN-LAST:event_formComponentResized
-
     private void jCheckBoxKeepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxKeepActionPerformed
         checkBoxKeep();
     }//GEN-LAST:event_jCheckBoxKeepActionPerformed
@@ -605,6 +638,15 @@ public class OptionsCalcs extends javax.swing.JFrame {
           jScrollBarMin.setValue(Math.round(0.03f*1000f));
       }
     }//GEN-LAST:event_jLabelMinValMouseClicked
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+      if(windowSize != null) {
+        int w = windowSize.width;
+        int h = windowSize.height;
+        if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
+        if(this.getWidth()<w){this.setSize(w,this.getHeight());}
+      }
+    }//GEN-LAST:event_formComponentResized
 
   //</editor-fold>
 
@@ -664,6 +706,7 @@ public class OptionsCalcs extends javax.swing.JFrame {
   //</editor-fold>
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton_Cancel;
     private javax.swing.JButton jButton_OK;
     private javax.swing.JCheckBox jCheckBoxCalcsDbg;
@@ -684,7 +727,10 @@ public class OptionsCalcs extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanelTable;
+    private javax.swing.JRadioButton jRadioButtonLoadJars;
+    private javax.swing.JRadioButton jRadioButtonSeparate;
     private javax.swing.JScrollBar jScrollBarMin;
     private javax.swing.JTextField jTextF_End;
     private javax.swing.JTextField jTextF_Start;

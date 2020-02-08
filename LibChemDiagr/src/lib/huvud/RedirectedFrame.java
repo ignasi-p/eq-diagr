@@ -18,8 +18,8 @@ import lib.common.Util;
  * The origional author was Real Gagnon (real.gagnon@tactika.com);
  * William Denniss has edited the code, improving its customizability
  *
- * In breif, this class captures all output to the system and prints it in
- * a frame. You can choose weither or not you want to catch errors, log 
+ * In brief, this class captures all output to the system and prints it in
+ * a frame. You can choose whether or not you want to catch errors, log 
  * them to a file and more.
  * For more details, read the constructor method description
  *  

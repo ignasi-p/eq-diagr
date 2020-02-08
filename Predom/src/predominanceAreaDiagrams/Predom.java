@@ -21,7 +21,7 @@ import lib.kemi.readWriteDataFiles.ReadChemSyst;
  * Output messages and errors are written to <code>System.out</code> and
  * <code>.err</code> (the console) and output is directed to a JTextArea as well.
  * <br>
- * Copyright (C) 2014-2018  I.Puigdomenech
+ * Copyright (C) 2014-2020  I.Puigdomenech
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -37,7 +37,7 @@ import lib.kemi.readWriteDataFiles.ReadChemSyst;
  *
  * @author Ignasi Puigdomenech */
 public class Predom extends javax.swing.JFrame {
-    static final String VERS = "2018-Oct-10";
+    static final String VERS = "2020-Feb-03";
     static final String progName = "PREDOM";
 /** variable needed in "main" method */
     private static Predom predomFrame;
@@ -482,10 +482,9 @@ public class Predom extends javax.swing.JFrame {
     // is the temperture missing even if a ionic strength is given?
     if((!Double.isNaN(ionicStrength) && Math.abs(ionicStrength) >1e-10)
             && Double.isNaN(temperature_InCommandLine)) {
-        String msg = "Warning: ionic strength given as command line argument, I="
+        showMsg("Warning: ionic strength given as command line argument, I="
                 +(float)ionicStrength+nl+
-                "    but no temperature is given on the command line.";
-        out.println(msg);
+                "    but no temperature is given on the command line.",2);
     }
     // if the command-line "-i" is not given, set the ionic strength to zero
     if(!calcActCoeffs) {ionicStrength = 0;}
@@ -1251,8 +1250,8 @@ public class Predom extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuFileMakeDActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        int width = Math.round((float)originalSize.getWidth());
-        int height = Math.round((float)originalSize.getHeight());
+        int width = originalSize.width;
+        int height = originalSize.height;
         if(this.getHeight()<height){this.setSize(this.getWidth(), height);}
         if(this.getWidth()<width){this.setSize(width,this.getHeight());}
         if(jTabbedPane.getWidth()>this.getWidth()) {

@@ -3,9 +3,9 @@ package plotPS;
 /** Convert a plt-file to PostScript-format.
  * The input file is assumed to be in the system-dependent default
  * character encoding. The PS file is written in "ISO-8859-1" character
- * encodint (ISO Latin Alphabet No. 1).
+ * encoding (ISO Latin Alphabet No. 1).
  * 
- * If an error occurs, a message is diplayed to the console, and
+ * If an error occurs, a message is displayed to the console, and
  * unless the command line argument -nostop is given, a message box
  * displaying the error is also produced.
  * 

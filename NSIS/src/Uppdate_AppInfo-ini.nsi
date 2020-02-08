@@ -8,6 +8,7 @@
 Name 'Uppdate "AppInfo.ini"'
 Caption 'Uppdate "AppInfo.ini" - ${__DATE__}'
 OutFile "Uppdate_AppInfo-ini.exe"
+Unicode true
 
 ;*** Language
 LoadLanguageFile "${NSISDIR}\Contrib\Language files\English.nlf"

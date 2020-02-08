@@ -21,7 +21,7 @@ import lib.kemi.readWriteDataFiles.ReadChemSyst;
  * Output messages and errors are written to <code>System.out</code> and
  * <code>.err</code> (the console) and output is directed to a JTextArea as well.
  * <br>
- * Copyright (C) 2014-2018  I.Puigdomenech.
+ * Copyright (C) 2014-2020  I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -37,7 +37,7 @@ import lib.kemi.readWriteDataFiles.ReadChemSyst;
  * 
  * @author Ignasi Puigdomenech */
 public class SED extends javax.swing.JFrame {
-    static final String VERS = "2018-Oct-10";
+    static final String VERS = "2020-Feb-03";
     static final String progName = "SED";
 /** variable needed in "main" method */
     private static SED sedFrame;
@@ -585,6 +585,11 @@ public class SED extends javax.swing.JFrame {
         jMenuHelpAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
                 formWindowGainedFocus(evt);
@@ -595,11 +600,6 @@ public class SED extends javax.swing.JFrame {
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
-            }
-        });
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                formComponentResized(evt);
             }
         });
 
@@ -1260,8 +1260,8 @@ public class SED extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckActCoeffActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        int width = Math.round((float)originalSize.getWidth());
-        int height = Math.round((float)originalSize.getHeight());
+        int width = originalSize.width;
+        int height = originalSize.height;
         if(this.getHeight()<height){this.setSize(this.getWidth(), height);}
         if(this.getWidth()<width){this.setSize(width,this.getHeight());}
         if(jTabbedPane.getWidth()>this.getWidth()) {

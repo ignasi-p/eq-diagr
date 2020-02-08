@@ -6,7 +6,7 @@ import lib.kemi.chem.Chem;
 
 /** Dialog to change logK.
  * <br>
- * Copyright (C) 2014-2015 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -414,15 +414,6 @@ public class LogKchange extends javax.swing.JFrame {
         quitDialog();
     }//GEN-LAST:event_formWindowClosing
 
-    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-      if(windowSize != null) {
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
-        if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
-        if(this.getWidth()<w){this.setSize(w,this.getHeight());}
-      }
-    }//GEN-LAST:event_formComponentResized
-
     private void jTextFieldLogKFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldLogKFocusLost
         validateLogK();
     }//GEN-LAST:event_jTextFieldLogKFocusLost
@@ -478,14 +469,23 @@ public class LogKchange extends javax.swing.JFrame {
             setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
             Thread hlp = new Thread() {@Override public void run(){
                 String[] a = {"S_Modify_Chem_System_htm_Deactivate"};
-                lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-                try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+                lib.huvud.RunProgr.runProgramInProcess(LogKchange.this,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
+                try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
                 catch (InterruptedException e) {}
                 setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             }};//new Thread
             hlp.start();
 
     }//GEN-LAST:event_jButtonHelpActionPerformed
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+      if(windowSize != null) {
+        int w = windowSize.width;
+        int h = windowSize.height;
+        if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
+        if(this.getWidth()<w){this.setSize(w,this.getHeight());}
+      }
+    }//GEN-LAST:event_formComponentResized
 
   //</editor-fold>
 

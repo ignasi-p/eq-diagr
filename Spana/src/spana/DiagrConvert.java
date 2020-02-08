@@ -7,7 +7,7 @@ import lib.kemi.graph_lib.GraphLib;
 
 /** Asks the user for parameters to convert a "plt"-file to either pdf or PostScript.
  * <br>
- * Copyright (C) 2014-2016 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -111,8 +111,8 @@ public class DiagrConvert extends javax.swing.JFrame {
             DiagrConvert.this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
             Thread hlp = new Thread() {@Override public void run(){
                 String[] a = {"S_Printing_htm_Convert"};
-                lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-                try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+                lib.huvud.RunProgr.runProgramInProcess(DiagrConvert.this,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
+                try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
                 catch (InterruptedException e) {}
                 DiagrConvert.this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             }};//new Thread
@@ -304,14 +304,14 @@ public class DiagrConvert extends javax.swing.JFrame {
         jButtonDoIt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -845,15 +845,6 @@ public class DiagrConvert extends javax.swing.JFrame {
         closeWindow();
     }//GEN-LAST:event_jButtonDoItActionPerformed
 
-    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-      if(windowSize != null) {
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
-        if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
-        if(this.getWidth()<w){this.setSize(w,this.getHeight());}
-      }
-    }//GEN-LAST:event_formComponentResized
-
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         closeWindow();
     }//GEN-LAST:event_formWindowClosing
@@ -924,6 +915,15 @@ public class DiagrConvert extends javax.swing.JFrame {
         setEPS(jCheckBoxEPS.isSelected());
         redrawDisposition();
     }//GEN-LAST:event_jCheckBoxEPSActionPerformed
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+      if(windowSize != null) {
+        int w = windowSize.width;
+        int h = windowSize.height;
+        if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
+        if(this.getWidth()<w){this.setSize(w,this.getHeight());}
+      }
+    }//GEN-LAST:event_formComponentResized
 
   //</editor-fold>
 

@@ -4,9 +4,9 @@
 # echo "basename: `basename $0`"
 # echo "dirname: `dirname $0`"
 # echo "dirname/readlink: $(dirname $(readlink -f $0))"
-echo "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = ="
+echo "================================================================="
 echo " Makes *.sh and jar-files executable in file: Eq-Diagr_Java.zip"
-echo "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = ="
+echo "================================================================="
 echo " press Enter to continue ..."
 read
 echo " "

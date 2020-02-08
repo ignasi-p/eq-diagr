@@ -5,6 +5,8 @@ Name "Shell32.dll:SHChangeNotify"
 Caption "Shell32.dll :: SHChangeNotify"
 Icon "images/Folder.ico"
 OutFile "ShellChangeNotify.exe"
+Unicode true
+
 ;--------------------------------
 ;Include Version Information
 LoadLanguageFile "${NSISDIR}\Contrib\Language files\English.nlf"

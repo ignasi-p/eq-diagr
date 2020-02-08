@@ -11,7 +11,7 @@ import lib.huvud.SortedProperties;
 
 /** The main frame.
  * <br>
- * Copyright (C) 2015-2019 I.Puigdomenech.
+ * Copyright (C) 2015-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ import lib.huvud.SortedProperties;
  * 
  * @author Ignasi Puigdomenech */
 public class DataMaintenance extends javax.swing.JFrame {
-  private static final String VERS = "2019-Feb-12";
+  private static final String VERS = "2020-Feb-03";
   /** all instances will use the same redirected frame */
   private static RedirectedFrame msgFrame = null;
   private final ProgramDataDB pd = new ProgramDataDB();
@@ -542,8 +542,8 @@ public class DataMaintenance extends javax.swing.JFrame {
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
       if(windowSize != null) {
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
+        int w = windowSize.width;
+        int h = windowSize.height;
         if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
         if(this.getWidth()<w){this.setSize(w,this.getHeight());}
       }
@@ -753,7 +753,7 @@ public class DataMaintenance extends javax.swing.JFrame {
         Thread hlp = new Thread() {@Override public void run(){
             String[] a = {"DB_Databases_htm"};
             lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-            try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+            try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
             catch (InterruptedException e) {}
             setCursorDef();
         }};//new Thread
@@ -1366,7 +1366,7 @@ public class DataMaintenance extends javax.swing.JFrame {
                               javax.swing.JOptionPane.ERROR_MESSAGE);
                       return null;
                   }
-//try{Thread.sleep(1);} catch (InterruptedException ex) {}
+
                   publish((int)(100*(double)cmplxNbr*F_TXT_CMPLX/fLength));
                   jLabelNbr.setText(String.valueOf(cmplxNbr));
                   if(complex == null) {break;} // loopComplex // end-of-file, open next database
@@ -1551,7 +1551,6 @@ public class DataMaintenance extends javax.swing.JFrame {
               complex = datIt.next();
               LibDB.writeBinCmplx(ds,complex);
               ds.flush();
-//try{Thread.sleep(1);} catch (InterruptedException ex) {}
               //mark the components that are used as "needed"
               nTot = Math.min(complex.reactionComp.size(),complex.reactionCoef.size());
               loopNDIM:
@@ -1959,9 +1958,8 @@ public class DataMaintenance extends javax.swing.JFrame {
     setCursorWait();
     Thread hlp = new Thread() {@Override public void run(){
         String[] a = {"S_Batch_htm"};
-        //String[] a = {"SP_Batch_Mode_htm"};
         lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-        try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+        try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
         catch (InterruptedException e) {}
         setCursorDef();
     }};//new Thread

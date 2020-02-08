@@ -6,7 +6,7 @@ import lib.huvud.LicenseFrame;
 
 /** Shows a window frame with "help-about" information, versions, etc.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech
+ * Copyright (C) 2014-2020 I.Puigdomenech
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -155,7 +155,7 @@ public class HelpAbout extends javax.swing.JFrame {
             }
         });
 
-        jLabelName.setText("<html><font size=+1><b>Spana</b></font> &nbsp;&nbsp; © 2012-2018 &nbsp; I.Puigdomenech<br>\nThis program comes with<br>\nABSOLUTELY NO WARRANTY.<br>\nThis is free software, and you may<br>\nredistribute it under the GNU GPL license.</html>"); // NOI18N
+        jLabelName.setText("<html><font size=+1><b>Spana</b></font> &nbsp;&nbsp; © 2012-2020 &nbsp; I.Puigdomenech<br>\nThis program comes with<br>\nABSOLUTELY NO WARRANTY.<br>\nThis is free software, and you may<br>\nredistribute it under the GNU GPL license.</html>"); // NOI18N
         jLabelName.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         jLabelVers.setText(" Program version: 2010-March-30");
@@ -169,7 +169,7 @@ public class HelpAbout extends javax.swing.JFrame {
 
         jLabelJVectClipb_www.setForeground(new java.awt.Color(0, 0, 221));
         jLabelJVectClipb_www.setText("<html><u>sourceforge.net/projects/jvect-clipboard/</u></html>"); // NOI18N
-        jLabelJVectClipb_www.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabelJVectClipb_www.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLabelJVectClipb_www.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabelJVectClipb_wwwMouseClicked(evt);
@@ -188,7 +188,7 @@ public class HelpAbout extends javax.swing.JFrame {
 
         jLabel_wwwKTH.setForeground(new java.awt.Color(0, 0, 221));
         jLabel_wwwKTH.setText("<html><u>www.kth.se/che/medusa</u></html>"); // NOI18N
-        jLabel_wwwKTH.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel_wwwKTH.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLabel_wwwKTH.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel_wwwKTHMouseClicked(evt);
@@ -197,7 +197,7 @@ public class HelpAbout extends javax.swing.JFrame {
 
         jLabel_www.setForeground(new java.awt.Color(0, 0, 221));
         jLabel_www.setText("<html><u>sites.google.com/site/chemdiagr/</u></html>"); // NOI18N
-        jLabel_www.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel_www.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLabel_www.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel_wwwMouseClicked(evt);
@@ -236,13 +236,13 @@ public class HelpAbout extends javax.swing.JFrame {
 
         jPanelNetBeans.setOpaque(false);
 
-        jLabelNetbeansIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Netbeans.gif"))); // NOI18N
+        jLabelNetbeansIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Netbeans11_24x24.gif"))); // NOI18N
 
-        jLabelNetBeans.setText("NetBeans IDE 8.0"); // NOI18N
+        jLabelNetBeans.setText("NetBeans IDE 11"); // NOI18N
 
         jLabelNetBeans_www.setForeground(new java.awt.Color(0, 0, 221));
         jLabelNetBeans_www.setText("<html><u>netbeans.org</u></html>"); // NOI18N
-        jLabelNetBeans_www.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabelNetBeans_www.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLabelNetBeans_www.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabelNetBeans_wwwMouseClicked(evt);
@@ -447,8 +447,8 @@ public class HelpAbout extends javax.swing.JFrame {
 
 private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
     if(windowSize != null) {
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
+        int w = windowSize.width;
+        int h = windowSize.height;
         if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
         if(this.getWidth()<w){this.setSize(w,this.getHeight());}
     }

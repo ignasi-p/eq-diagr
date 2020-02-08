@@ -7,7 +7,7 @@ import lib.huvud.ProgramConf;
 
 /** Add new data.
  * <br>
- * Copyright (C) 2015-2018 I.Puigdomenech.
+ * Copyright (C) 2015-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1453,8 +1453,8 @@ public class FrameAddData extends javax.swing.JFrame {
       if(loading || windowSize == null) {return;}
       int x = this.getX(); int y = this.getY();
       int w = this.getWidth(); int h = this.getHeight();
-      int nw = Math.max(w, Math.round((float)windowSize.getWidth()));
-      int nh = Math.max(h, Math.round((float)windowSize.getHeight()));
+      int nw = Math.max(w, windowSize.width);
+      int nh = Math.max(h, windowSize.height);
       int nx=x, ny=y;
       if(x+nw > LibDB.screenSize.width) {nx = LibDB.screenSize.width - nw;}
       if(y+nh > LibDB.screenSize.height) {ny = LibDB.screenSize.height -nh;}
@@ -2161,7 +2161,7 @@ public class FrameAddData extends javax.swing.JFrame {
         Thread hlp = new Thread() {@Override public void run(){
             String[] a = {"DB_Add_data_htm"};
             lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-            try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+            try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
             catch (InterruptedException e) {}
             setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         }};//new Thread

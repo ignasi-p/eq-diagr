@@ -150,8 +150,6 @@ public class LibSearch {
             }
         } //binaryOrText =1 (Text file)
 
-//try{Thread.sleep(1);} catch (InterruptedException ex) {}
-
         if(complex == null) {break;} // loopComplex // end-of-file, open next database
         return complex;
       } //while (true)  --- loopComplex:

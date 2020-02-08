@@ -4,7 +4,7 @@ import lib.common.MsgExceptn;
 
 /** Show a frame with the program version, acknowledgements, etc
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -112,13 +112,13 @@ public class HelpAboutF extends javax.swing.JFrame {
             }
         });
 
-        jLabel_Name.setText("<html><b><font size=+1>SED</font></b> &nbsp;&nbsp;<b>S</b>imple <b>E</b>quilibrium <b>D</b>iagrams<br>\n© 2015 &nbsp; I.Puigdomenech,<br>\nHaltafall algorithm by Ingri <i>et al</i> (1967).</html>");
+        jLabel_Name.setText("<html><b><font size=+1>SED</font></b> &nbsp;&nbsp;<b>S</b>imple <b>E</b>quilibrium <b>D</b>iagrams<br>\n© 2020 &nbsp; I.Puigdomenech,<br>\nHaltafall algorithm by Ingri <i>et al</i> (1967).</html>");
 
         jLabelVers.setText("LabelVers");
 
         jLabelLicense.setText("<html>This program comes with ABSOLUTELY NO WARRANTY.<br>This is free software, and you are welcome to redistribute it<br>under the GNU GPL license. See file \"GPL.txt\".</html>");
 
-        jLabelJava.setText("<html>Java Standard Edition<br>Development Kit 7 (JDK 1.7)<br>NetBeans IDE 8.0</html>");
+        jLabelJava.setText("<html>Java Standard Edition<br>Development Kit 7 (JDK 1.7)<br>NetBeans IDE</html>");
 
         jLabelPathA.setLabelFor(jLabelPathApp);
         jLabelPathA.setText("Application path:");
@@ -131,7 +131,7 @@ public class HelpAboutF extends javax.swing.JFrame {
 
         jLabel_wwwKTH.setForeground(new java.awt.Color(0, 0, 221));
         jLabel_wwwKTH.setText("<html><u>www.kth.se/che/medusa</u></html>");
-        jLabel_wwwKTH.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel_wwwKTH.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLabel_wwwKTH.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel_wwwKTHMouseClicked(evt);
@@ -140,7 +140,7 @@ public class HelpAboutF extends javax.swing.JFrame {
 
         jLabel_www.setForeground(new java.awt.Color(0, 0, 221));
         jLabel_www.setText("<html><u>sites.google.com/site/chemdiagr/</u></html>");
-        jLabel_www.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel_www.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jLabel_www.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel_wwwMouseClicked(evt);

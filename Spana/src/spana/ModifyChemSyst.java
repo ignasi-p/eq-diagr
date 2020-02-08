@@ -17,7 +17,7 @@ import lib.kemi.readWriteDataFiles.WriteChemSyst;
  * plot information and concentrations for each component are adjusted depending
  * on the new components.
  * <br>
- * Copyright (C) 2014-2019 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -112,8 +112,8 @@ public class ModifyChemSyst extends javax.swing.JFrame {
             ModifyChemSyst.this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
             Thread hlp = new Thread() {@Override public void run(){
                 String[] a = {"S_Modify_Chem_System_htm"};
-                lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-                try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+                lib.huvud.RunProgr.runProgramInProcess(ModifyChemSyst.this,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
+                try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
                 catch (InterruptedException e) {}
                 ModifyChemSyst.this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             }};//new Thread
@@ -253,14 +253,14 @@ public class ModifyChemSyst extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Modify Data File"); // NOI18N
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -844,18 +844,6 @@ public class ModifyChemSyst extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-  //<editor-fold defaultstate="collapsed" desc="Events">
-
-    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-      if(windowSize != null) {
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
-        if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
-        if(this.getWidth()<w){this.setSize(w,this.getHeight());}
-        jLabelReactionSetSize();
-      }
-    }//GEN-LAST:event_formComponentResized
-
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         quitFrame();
     }//GEN-LAST:event_formWindowClosing
@@ -1152,6 +1140,15 @@ public class ModifyChemSyst extends javax.swing.JFrame {
         jLabelReaction.setText(" ");
         jLabelReactionSetSize();
     }//GEN-LAST:event_jPanel1MouseExited
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+      if(windowSize != null) {
+        int w = windowSize.width;
+        int h = windowSize.height;
+        if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
+        if(this.getWidth()<w){this.setSize(w,this.getHeight());}
+      }
+    }//GEN-LAST:event_formComponentResized
 
   //</editor-fold>
 

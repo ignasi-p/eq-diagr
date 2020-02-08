@@ -1,23 +1,39 @@
 package lib.huvud;
 
+import lib.common.MsgExceptn;
+
 /**  A class loader for loading jar files, both local and remote.
  *
- * Copyright (C) 2014 I.Puigdomenech.
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see http://www.gnu.org/licenses/
- * 
- * @author Ignasi Puigdomenech */
+ * Copyright (C) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
+ * Modified by I.Puigdomenech (20014-2020)
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *   - Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *   - Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *
+ *   - Neither the name of Oracle or the names of its
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+ * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 public class JarClassLoader extends java.net.URLClassLoader {
     private final java.net.URL url;
 
@@ -25,7 +41,8 @@ public class JarClassLoader extends java.net.URLClassLoader {
      * @param url the url of the jar file */
     public JarClassLoader(java.net.URL url) {
         super(new java.net.URL[] { url });
-        this.url = url;}
+        this.url = url;
+    }
 
     /** Returns the name of the jar file main class, or null if
      * no "Main-Class" manifest attributes is defined.
@@ -36,40 +53,18 @@ public class JarClassLoader extends java.net.URLClassLoader {
         //The syntax for the URL of a JAR file is:
         //  jar:http://www.zzz.yyy/jarfile.jar!/
         java.net.URL u = new java.net.URL("jar", "", url + "!/");
-        java.net.JarURLConnection uc = (java.net.JarURLConnection)u.openConnection();
+        // modified by I.Puigdomenech to catch cast problems
+        java.net.JarURLConnection uc = null;
+        try{uc = (java.net.JarURLConnection)u.openConnection();}
+        catch (Exception | Error ex) {MsgExceptn.exception(ex.toString());}
+        if(uc == null) {return null;}
         java.util.jar.Attributes attr = uc.getMainAttributes();
-        //return attr != null ? attr.getValue(java.util.jar.Attributes.Name.MAIN_CLASS) : null;
-        if(attr == null) {
-          return null;
-        } else {
-          // add the jar-file url to the "class loader"
-          java.net.URLClassLoader classLoader
-                = (java.net.URLClassLoader) ClassLoader.getSystemClassLoader();
-          // use reflection
-          String msg = null;
-          try {
-              java.lang.reflect.Method method =
-                        java.net.URLClassLoader.class.
-                                getDeclaredMethod("addURL", new Class[] {java.net.URL.class});
-              method.setAccessible(true);
-              method.invoke(classLoader, new Object[] { url });
-              method.setAccessible(false);
-            //System.out.println("added to URLClassLoader: "+url.toString());
-          }
-          catch (NoSuchMethodException ex) {msg = ex.toString();}
-          catch (SecurityException ex) {msg = ex.toString();}
-          catch (IllegalAccessException ex) {msg = ex.toString();}
-          catch (IllegalArgumentException ex) {msg = ex.toString();}
-          catch (java.lang.reflect.InvocationTargetException ex) {msg = ex.toString();}
-          if(msg != null) {System.out.println("Warning - Failed to add to URLClassLoader:"+
-              nl+url.toString()+nl+msg);}
-          return attr.getValue(java.util.jar.Attributes.Name.MAIN_CLASS);
-        }
+        return attr != null ? attr.getValue(java.util.jar.Attributes.Name.MAIN_CLASS) : null;
     }
 
     /** Invokes the application in this jar file given the name of the
      * main class and an array of arguments. The class must define a
-     * static method "main" which takes an array of String arguemtns
+     * static method "main" which takes an array of String arguments
      * and is of return type "void".
      *
      * @param name the name of the main class
@@ -88,9 +83,8 @@ public class JarClassLoader extends java.net.URLClassLoader {
         Class<?> c = findLoadedClass(name); // added by Ignasi Puigdomenech   // added "<?>" (Ignasi Puigdomenech)
         if(c == null) {c = loadClass(name);}
         if(args == null) {args = new String[]{""};} // added by Ignasi Puigdomenech
-        //java.lang.reflect.Method m = c.getMethod("main", new Class[] { args.getClass() });
-        // changed by I.Puigdomenech:
-        java.lang.reflect.Method m = c.getMethod("main", new Class<?>[] { String[].class });
+        // java.lang.reflect.Method m = c.getMethod("main", new Class[] { args.getClass() });
+        java.lang.reflect.Method m = c.getMethod("main", new Class<?>[] { String[].class }); // changed by I.Puigdomenech
         m.setAccessible(true);
         int mods = m.getModifiers();
         if (m.getReturnType() != void.class ||

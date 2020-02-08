@@ -5,7 +5,7 @@ import lib.common.Util;
 
 /** Check for errors in the reactions in a database file.
  * <br>
- * Copyright (C) 2017-2018 I.Puigdomenech.
+ * Copyright (C) 2017-2019 I.Puigdomenech.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -272,51 +272,58 @@ public class CheckDatabases {
             if(Util.isElectron(t) || Util.isProton(t) || Util.isWater(t))  {continue;}
             t = Util.bareNameOf(t);
             ok = cmplx.name.contains(t);
-            if(!ok && t.equals("Hg2")) {ok = cmplx.name.contains("Hg");}
+            if(!ok && (t.equals("Sn(OH)2")|| t.equals("Sn(OH)6")|| t.equals("Sn(OH)5"))) {ok = cmplx.name.contains("Sn");}
+            if(!ok && t.equals("Tl(OH)3")) {ok = cmplx.name.contains("Tl");}
+            if(!ok && (t.equals("Hg2")|| t.equals("Hg(OH)2"))) {ok = cmplx.name.contains("Hg");}
             if(!ok && t.equals("CH3Hg")) {ok = (cmplx.name.contains("Hg") && cmplx.name.contains("CH"));}
-            if(!ok && t.equals("NH3")) {ok = cmplx.name.contains("NH");}
-            if(!ok && t.equals("NH4")) {ok = cmplx.name.contains("NH");}
-            if(!ok && t.equals("NH3") && isRedoxReaction) {ok = cmplx.name.contains("N");}
-            if(!ok && t.equals("NH4") && isRedoxReaction) {ok = cmplx.name.contains("N");}
-            if(!ok && (t.equals("NO2") || t.equals("NO3"))) {ok = cmplx.name.contains("N");}
-            if(!ok && (t.equals("CO3") || t.equals("HCO3") || t.equals("HCOO"))) {ok = cmplx.name.contains("C");}
+            if(!ok && (t.equals("NH3") || t.equals("NH4") || t.equals("N3"))) {ok = cmplx.name.contains("N");}
+            if(!ok && (t.equals("NO2") || t.equals("NO3") || t.equals("N2"))) {ok = cmplx.name.contains("N");}
+            if(!ok && (t.equals("CO3") || t.equals("HCO3")|| t.equals("HCOO")
+                    || t.equals("CH4")|| t.equals("C2H4")|| t.equals("C2H6"))) {ok = cmplx.name.contains("C");}
             if(!ok && (t.equals("MoO4") || t.equals("Mo2O2")
                     || t.equals("Mo2O4") || t.equals("Mo2(OH)2"))) {ok = cmplx.name.contains("Mo");}
+            if(!ok && t.equals("MnO4")) {ok = cmplx.name.contains("Mn");}
             if(!ok && t.equals("WO4")) {ok = cmplx.name.contains("W");}
-            if(!ok && t.equals("CrO4")) {ok = cmplx.name.contains("Cr");}
+            if(!ok && (t.equals("CrO4")|| t.equals("Cr(OH)2"))) {ok = cmplx.name.contains("Cr");}
             if(!ok && t.equals("VO2")) {ok = cmplx.name.contains("V");}
             if(!ok && t.equals("UO2")) {ok = cmplx.name.contains("U");}
             if(!ok && t.equals("AmO2")) {ok = cmplx.name.contains("Am");}
             if(!ok && t.equals("NpO2")) {ok = cmplx.name.contains("Np");}
             if(!ok && t.equals("PuO2")) {ok = cmplx.name.contains("Pu");}
-            if(!ok && t.equals("TcO(OH)2")) {ok = cmplx.name.contains("Tc");}
-            if(!ok && (t.equals("As(OH)3") || t.equals("AsO4")
-                    || t.equals("H3AsO3") || t.equals ("H2AsO3"))) {ok = cmplx.name.contains("As");}
-            if(!ok && (t.equals("Sb(OH)3") || t.equals("Sb(OH)6"))) {ok = cmplx.name.contains("Sb");}
-            if(!ok && (t.equals("Ge(OH)4") || t.equals("Ge(OH)2"))) {ok = cmplx.name.contains("Ge");}
-            if(!ok && (t.equals("Te(OH)4") || t.equals("Te(OH)6") || t.equals("HTe"))) {ok = cmplx.name.contains("Te");}
+            if(!ok && (t.equals("As(OH)3")|| t.equals("AsO4")|| t.equals("H3AsO4")|| t.equals("H3(AsO3)")
+                    || t.equals("H3AsO3")|| t.equals ("H2AsO3")|| t.equals ("H2AsO4"))) {ok = cmplx.name.contains("As");}
+            if(!ok && (t.equals("Sb(OH)3")|| t.equals("Sb(OH)6")|| t.equals("Sb(OH)5"))) {ok = cmplx.name.contains("Sb");}
+            if(!ok && (t.equals("Ge(OH)4")|| t.equals("Ge(OH)2"))) {ok = cmplx.name.contains("Ge");}
+            if(!ok && (t.equals("Te(OH)4")|| t.equals("Te(OH)6")|| t.equals("HTe"))) {ok = cmplx.name.contains("Te");}
             if(!ok && (t.contains("TeO3") || t.contains("TeO4") || t.contains("TeO6"))) {ok = cmplx.name.contains("Te");}
             if(!ok && t.equals("Ta(OH)5")) {ok = cmplx.name.contains("Ta");}
-            if(!ok && t.equals("Nb(OH)5")) {ok = cmplx.name.contains("Nb");}
-            if(!ok && t.equals("PoO") || t.equals("HPo")) {ok = cmplx.name.contains("Po");}
-            if(!ok && t.equals("Si(OH)4") || t.equals("H4SiO4") || t.equals("SiO2")) {ok = cmplx.name.contains("Si");}
+            if(!ok && (t.equals("Nb(OH)5")|| t.equals("Nb(OH)6"))) {ok = cmplx.name.contains("Nb");}
+            if(!ok && (t.equals("PoO") || t.equals("HPo"))) {ok = cmplx.name.contains("Po");}
+            if(!ok && (t.equals("PaO2")|| t.equals("PaOOH"))) {ok = cmplx.name.contains("Pa");}
+            if(!ok && (t.equals("Si(OH)4")|| t.equals("H4SiO4")|| t.equals("H4(SiO4)")|| t.equals("SiO2"))) {ok = cmplx.name.contains("Si");}
             if(!ok && t.equals("OsO4")) {ok = cmplx.name.contains("Os");}
-            if(!ok && t.equals("TcO4")) {ok = cmplx.name.contains("Tc");}
+            if(!ok && (t.equals("TcO4")|| t.equals("TcO(OH)2")|| t.equals("TcO"))) {ok = cmplx.name.contains("Tc");}
             if(!ok && (t.equals("ReO4") || t.equals("Re(OH)4"))) {ok = cmplx.name.contains("Re");}
             if(!ok && (t.equals("RuO4") || t.equals("Ru(OH)2"))) {ok = cmplx.name.contains("Ru");}
-            if(!ok && (t.equals("TiO") || t.equals("Ti(OH)4"))) {ok = cmplx.name.contains("Ti");}
+            if(!ok && (t.equals("TiO") || t.equals("Ti(OH)4")|| t.equals("H4TiO4"))) {ok = cmplx.name.contains("Ti");}
             if(!ok && t.equals("VO")) {ok = cmplx.name.contains("V");}
-            if(!ok && (t.equals("B(OH)3") || t.equals("H3BO3"))) {ok = cmplx.name.contains("B");}
-            if(!ok && (t.equals("PO4") || t.equals("HPO4") || t.equals("H2PO2")
-                    || t.equals("HPO3") || t.equals("P2O6"))) {ok = cmplx.name.contains("P");}
+            if(!ok && (t.equals("B(OH)3")|| t.equals("B(OH)4")|| t.equals("H3BO3")|| t.equals("BH4"))) {ok = cmplx.name.contains("B");}
+            if(!ok && (t.equals("PO4")|| t.equals("HPO4")|| t.equals("H2(PO4)")|| t.equals("H2PO2")
+                    || t.equals("HPO3") || t.equals("P2O6") || t.equals("PH4"))) {ok = cmplx.name.contains("P");}
             if(!ok && t.equals("CNO")) {ok = cmplx.name.contains("CN");}
             if(!ok && (t.equals("BrO") || t.equals("BrO3"))) {ok = cmplx.name.contains("Br");}
-            if(!ok && t.equals("IO3")) {ok = cmplx.name.contains("I");}
             if(!ok && t.equals("H2O2")) {ok = cmplx.name.contains("O2");}
-            if(!ok && (t.equals("H2Se") || t.equals("HSe") || t.equals("SeO4") || t.equals("SeO3")
-                    || t.equals("SeCN"))) {ok = cmplx.name.contains("Se");}
-            if(!ok && t.equals("HS")) {ok = cmplx.name.contains("S");}
-            if(!ok && (t.equals("SO4") || t.equals("SO3") || t.equals("S2O3"))) {ok = cmplx.name.contains("S");}
+            if(!ok && (t.equals("H2Se")|| t.equals("HSe")|| t.equals("SeO4")|| t.equals("SeO3")
+                    || t.equals("HSeO3")|| t.equals("SeCN"))) {ok = cmplx.name.contains("Se");}
+            if(!ok && (t.equals("HS") || t.equals("H2S"))) {ok = cmplx.name.contains("S");}
+            if(!ok && (t.equals("SO4") || t.equals("SO3")|| t.equals("S2O3")|| t.equals("S2O6")
+                    || t.equals("S2O4")|| t.equals("S2O8")|| t.equals("HSO5"))) {ok = cmplx.name.contains("S");}
+            if(!ok && (t.equals("ClO") || t.equals("ClO2")
+                    || t.equals("ClO3") || t.equals("ClO4"))) {ok = cmplx.name.contains("Cl");}
+            if(!ok && (t.equals("Br2") || t.equals("Br3") || t.equals("BrO4"))) {ok = cmplx.name.contains("Br");}
+            if(!ok && (t.equals("I3")|| t.equals("IO")|| t.equals("IO3")|| t.equals("IO4"))) {ok = cmplx.name.contains("I");}
+            if(!ok && t.equals("HAcetate")) {ok = cmplx.name.contains("Acetate");}
+            if(!ok && t.equals("Zr(OH)2")) {ok = cmplx.name.contains("Zr");}
             if(!ok) {
                 lists.itemsNames.add(cmplx.name+"  does not contain  "+cmplx.reactionComp.get(i));
             }

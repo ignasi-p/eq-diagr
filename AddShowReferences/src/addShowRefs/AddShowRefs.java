@@ -6,7 +6,7 @@ import lib.common.Util;
 import lib.database.References;
 
 /**
- * Copyright (C) 2015-2018 I.Puigdomenech.
+ * Copyright (C) 2015-2020 I.Puigdomenech.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ public class AddShowRefs extends javax.swing.JFrame {
             Thread hlp = new Thread() {@Override public void run(){
                 String[] a = {"DB_Supplied_htm"};
                 lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,false,Main.getPathApp());
-                try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+                try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
                 catch (InterruptedException e) {}
                 AddShowRefs.this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             }};//new Thread
@@ -272,8 +272,8 @@ public class AddShowRefs extends javax.swing.JFrame {
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
       if(windowSize != null) {
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
+        int w = windowSize.width;
+        int h = windowSize.height;
         if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
         if(this.getWidth()<w){this.setSize(w,this.getHeight());}
       }

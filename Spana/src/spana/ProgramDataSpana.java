@@ -5,7 +5,7 @@ import lib.kemi.chem.Chem;
 /** Class to store information on the "Spana" program.
  * The class is used to retrieve data in diverse methods
  * <br>
- * Copyright (C) 2014-2019 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,9 +44,9 @@ public class ProgramDataSpana {
   /** the temperature in degrees Celsius, used both to calculate ionic strength effects, that is,
    * to calculate activity coefficients, and to calculate values of the
    * redox potential (Eh) from  pe-values */
-  public double temperature = Double.NaN;
+  public double temperature = 25;
   /** the pressure in bar, displayed in the diagram */
-  public double pressure = Double.NaN;
+  public double pressure = 1;
   /** Model to calculate activity coefficents:<ul>
    * <li> &lt;0 for ideal solutions (all activity coefficients = 1)
    * <li> =0 Davies eqn.
@@ -124,5 +124,10 @@ public class ProgramDataSpana {
    * the school of chemistry at the Royal Institute of Technology (KTH)
    * in Stockholm, Sweden. */
   public boolean kth = false;
+  /**  if <code>true</code> then calculations are run by loading the jar-files
+   * (SED and Predom) into the Java Virtual Machine;  if <code>false</code>
+   * the calculations are run as a separate system process.  Used in class
+   * "Select_Diagram" */
+  public boolean jarClassLd = true;
   public ProgramDataSpana() {}
 }

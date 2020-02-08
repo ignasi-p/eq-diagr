@@ -12,7 +12,7 @@ import lib.kemi.graph_lib.DiagrPaintUtility;
 
 /** The main frame.
  * <br>
- * Copyright (C) 2014-2019 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import lib.kemi.graph_lib.DiagrPaintUtility;
 public class MainFrame extends javax.swing.JFrame {
   // Note: for java 1.6 jComboBox must not have type,
   //       for java 1.7 jComboBox must be <String>
-  static final String VERS = "2019-Feb-11";
+  static final String VERS = "2020-Feb-05";
   /** all program instances will use the same redirected frame */
   private static RedirectedFrame msgFrame = null;
 
@@ -742,8 +742,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
       if(windowSize != null) {
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
+        int w = windowSize.width;
+        int h = windowSize.height;
         if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
         if(this.getWidth()<w){this.setSize(w,this.getHeight());}
       }
@@ -1024,7 +1024,7 @@ public class MainFrame extends javax.swing.JFrame {
       jMenu_Run_Modif.setEnabled(false);
       jMenu_Data_Modif.setEnabled(false);
       jMenu_Data_Edit.setEnabled(false);
-      // ---- Going to wait for another frame: Start a thread
+      // ---- Going to wait for another frame (Select_Diagram): Start a thread
       new javax.swing.SwingWorker<Void,Void>() {
           @Override protected Void doInBackground() throws Exception {
             Select_Diagram selectDiagramWindow = new Select_Diagram(datFile, pc, pd);
@@ -1187,7 +1187,7 @@ public class MainFrame extends javax.swing.JFrame {
         Thread hlp = new Thread() {@Override public void run(){
             String[] a = {"S_0_Main_htm"};
             lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-            try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+            try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
             catch (InterruptedException e) {}
             setCursorDef();
         }};//new Thread
@@ -1382,7 +1382,7 @@ public class MainFrame extends javax.swing.JFrame {
   } // minimize()
 
   void setCursorWait() {
-    if(spf != null) {setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));}
+    if(spf != null) {spf.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));}
     if(msgFrame != null && msgFrame.isShowing()) {
         msgFrame.setCursorWait();
     }
@@ -1391,7 +1391,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
   }
   void setCursorDef() {
-    if(spf != null) {setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));}
+    if(spf != null) {spf.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));}
     if(msgFrame != null && msgFrame.isShowing()) {
         msgFrame.setCursorDef();
     }
@@ -1623,7 +1623,7 @@ public class MainFrame extends javax.swing.JFrame {
     Thread hlp = new Thread() {@Override public void run(){
         String[] a = {"SP_Batch_Mode_htm"};
         lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-        try{Thread.sleep(1500);}  //show the "wait" cursor for 1.5 sec
+        try{Thread.sleep(2000);}  //show the "wait" cursor for 2 sec
         catch (InterruptedException e) {}
         setCursorDef();
     }};//new Thread
@@ -1955,7 +1955,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu_Run_Database.setEnabled(jMenu_Run_Database_setEnabled);
         jMenu_Data_New.setEnabled(jMenu_Data_New_setEnabled);
       }}); //invokeLater(Runnable)
-      try{Thread.sleep(1500);} //show the "wait" cursor for 1.5 sec
+      try{Thread.sleep(2000);} //show the "wait" cursor for 2 sec
       catch (InterruptedException e) {}
       setCursorDef();
     }};
@@ -2227,8 +2227,8 @@ public class MainFrame extends javax.swing.JFrame {
         dispSize.height = Integer.parseInt(propertiesIni.getProperty("Disp_Height"));
         dispLocation.x = Integer.parseInt(propertiesIni.getProperty("Disp_left"));
         dispLocation.y = Integer.parseInt(propertiesIni.getProperty("Disp_top"));
-        diagrPaintUtil.keepAspectRatio = Boolean.parseBoolean(propertiesIni.getProperty("Disp_KeepAspectRatio"));
-        diagrPaintUtil.fixedSize = Boolean.parseBoolean(propertiesIni.getProperty("Disp_FixedSize"));
+        diagrPaintUtil.keepAspectRatio = Boolean.parseBoolean(propertiesIni.getProperty("Disp_KeepAspectRatio","false"));
+        diagrPaintUtil.fixedSize = Boolean.parseBoolean(propertiesIni.getProperty("Disp_FixedSize","false"));
         diagrPaintUtil.fixedSizeWidth = Float.parseFloat(propertiesIni.getProperty("Disp_FixedSizeWidth"));
         diagrPaintUtil.fixedSizeHeight = Float.parseFloat(propertiesIni.getProperty("Disp_FixedSizeHeight"));
         diagrPaintUtil.fontFamily = Integer.parseInt(propertiesIni.getProperty("Disp_FontFamily"));
@@ -2248,7 +2248,7 @@ public class MainFrame extends javax.swing.JFrame {
         txtEditor = propertiesIni.getProperty("txtEditor");
         pathSedPredom = propertiesIni.getProperty("pathSedPredom");
         createDataFileProg = propertiesIni.getProperty("createDataFileProg");
-        pd.advancedVersion = Boolean.parseBoolean(propertiesIni.getProperty("advancedVersion"));
+        pd.advancedVersion = Boolean.parseBoolean(propertiesIni.getProperty("advancedVersion","false"));
         int red, green, blue;
         for(int ii=0; ii < DiagrPaintUtility.MAX_COLOURS; ii++) {
             String[] colrs = propertiesIni.getProperty("Disp_Colour["+ii+"]").split(",");
@@ -2261,11 +2261,11 @@ public class MainFrame extends javax.swing.JFrame {
             diagrPaintUtil.colours[ii] = new java.awt.Color(red,green,blue);
         } // for ii
         diagrPaintUtil.colourType = Integer.parseInt(propertiesIni.getProperty("Disp_ColourType"));
-        diagrPaintUtil.printColour = Boolean.parseBoolean(propertiesIni.getProperty("Disp_PrintColour"));
-        diagrPaintUtil.printHeader = Boolean.parseBoolean(propertiesIni.getProperty("Disp_PrintHeader"));
-        diagrPaintUtil.textWithFonts = Boolean.parseBoolean(propertiesIni.getProperty("Disp_TextWithFonts"));
+        diagrPaintUtil.printColour = Boolean.parseBoolean(propertiesIni.getProperty("Disp_PrintColour","true"));
+        diagrPaintUtil.printHeader = Boolean.parseBoolean(propertiesIni.getProperty("Disp_PrintHeader","true"));
+        diagrPaintUtil.textWithFonts = Boolean.parseBoolean(propertiesIni.getProperty("Disp_TextWithFonts","true"));
         diagrPaintUtil.printPenThickness = Float.parseFloat(propertiesIni.getProperty("Disp_PrintPenThickness"));
-        diagrPaintUtil.useBackgrndColour = Boolean.parseBoolean(propertiesIni.getProperty("Disp_UseBackgrndColour"));
+        diagrPaintUtil.useBackgrndColour = Boolean.parseBoolean(propertiesIni.getProperty("Disp_UseBackgrndColour","false"));
         String[] colrs = propertiesIni.getProperty("Disp_BackgroundColour").split(",");
         if (colrs.length > 0) {red =Integer.parseInt(colrs[0]);} else {red=0;}
         if (colrs.length > 1) {green =Integer.parseInt(colrs[1]);} else {green=0;}
@@ -2275,17 +2275,17 @@ public class MainFrame extends javax.swing.JFrame {
         blue=Math.max(0, Math.min(255, blue));
         diagrPaintUtil.backgrnd = new java.awt.Color(red,green,blue);
         pd.fractionThreshold = Float.parseFloat(propertiesIni.getProperty("Disp_FractionThreshold"));
-        pd.keepFrame = Boolean.parseBoolean(propertiesIni.getProperty("Calc_keepFrame"));
+        pd.keepFrame = Boolean.parseBoolean(propertiesIni.getProperty("Calc_keepFrame","false"));
         pd.SED_nbrSteps = Integer.parseInt(propertiesIni.getProperty("Calc_SED_nbrSteps"));
-        pd.SED_tableOutput = Boolean.parseBoolean(propertiesIni.getProperty("Calc_SED_tableOutput"));
+        pd.SED_tableOutput = Boolean.parseBoolean(propertiesIni.getProperty("Calc_SED_tableOutput","false"));
         pd.Predom_nbrSteps = Integer.parseInt(propertiesIni.getProperty("Calc_Predom_nbrSteps"));
         pd.ionicStrength = Double.parseDouble(propertiesIni.getProperty("Calc_ionicStrength"));
         pd.actCoeffsMethod = Integer.parseInt(propertiesIni.getProperty("Calc_activityCoefficientsMethod"));
         pd.pathSIT = propertiesIni.getProperty("Calc_pathSIT");
-        pd.aquSpeciesOnly = Boolean.parseBoolean(propertiesIni.getProperty("Calc_Predom_aquSpeciesOnly"));
-        pd.reversedConcs = Boolean.parseBoolean(propertiesIni.getProperty("Calc_allowReversedConcRanges"));
-        pd.useEh = Boolean.parseBoolean(propertiesIni.getProperty("Calc_useEh"));
-        pd.calcDbg = Boolean.parseBoolean(propertiesIni.getProperty("Calc_dbg"));
+        pd.aquSpeciesOnly = Boolean.parseBoolean(propertiesIni.getProperty("Calc_Predom_aquSpeciesOnly","false"));
+        pd.reversedConcs = Boolean.parseBoolean(propertiesIni.getProperty("Calc_allowReversedConcRanges","false"));
+        pd.useEh = Boolean.parseBoolean(propertiesIni.getProperty("Calc_useEh","true"));
+        pd.calcDbg = Boolean.parseBoolean(propertiesIni.getProperty("Calc_dbg","false"));
         pd.calcDbgHalta = Integer.parseInt(propertiesIni.getProperty("Calc_dbgHalta"));
         pd.tolHalta = Double.parseDouble(propertiesIni.getProperty("Calc_tolerance"));
         pd.tblExtension = propertiesIni.getProperty("Calc_tableFileExt");
@@ -2305,11 +2305,11 @@ public class MainFrame extends javax.swing.JFrame {
         pd.diagrConvertSizeY = Integer.parseInt(propertiesIni.getProperty("Convert_SizeY"));
         pd.diagrConvertMarginB = Float.parseFloat(propertiesIni.getProperty("Convert_MarginBottom"));
         pd.diagrConvertMarginL = Float.parseFloat(propertiesIni.getProperty("Convert_MarginLeft"));
-        pd.diagrConvertPortrait = Boolean.parseBoolean(propertiesIni.getProperty("Convert_Portrait"));
-        pd.diagrConvertHeader = Boolean.parseBoolean(propertiesIni.getProperty("Convert_Header"));
-        pd.diagrConvertColors = Boolean.parseBoolean(propertiesIni.getProperty("Convert_Colour"));
+        pd.diagrConvertPortrait = Boolean.parseBoolean(propertiesIni.getProperty("Convert_Portrait","true"));
+        pd.diagrConvertHeader = Boolean.parseBoolean(propertiesIni.getProperty("Convert_Header","true"));
+        pd.diagrConvertColors = Boolean.parseBoolean(propertiesIni.getProperty("Convert_Colour","true"));
         pd.diagrConvertFont = Integer.parseInt(propertiesIni.getProperty("Convert_Font"));
-        pd.diagrConvertEPS = Boolean.parseBoolean(propertiesIni.getProperty("Convert_EPS"));
+        pd.diagrConvertEPS = Boolean.parseBoolean(propertiesIni.getProperty("Convert_EPS","false"));
         pd.diagrExportType = propertiesIni.getProperty("Export_To");
         pd.diagrExportSize = Integer.parseInt(propertiesIni.getProperty("Export_Size"));
     } catch (NumberFormatException e) {
@@ -2323,7 +2323,7 @@ public class MainFrame extends javax.swing.JFrame {
         ok = false;
     }
     try {
-        pd.temperature = Double.parseDouble(propertiesIni.getProperty("Calc_temperature"));
+        pd.temperature = Double.parseDouble(propertiesIni.getProperty("Calc_temperature","25"));
     } catch (NumberFormatException e) {
         msg = "Error: \""+e.toString()+"\""+nl+
                          "   while reading INI-file:"+nl+
@@ -2333,18 +2333,28 @@ public class MainFrame extends javax.swing.JFrame {
         if(!this.isVisible()) {this.setVisible(true);}
         javax.swing.JOptionPane.showMessageDialog(spf, msg, pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
     }
+    try {
+        pd.pressure = Double.parseDouble(propertiesIni.getProperty("Calc_pressure","1"));
+    } catch (NumberFormatException e) {
+        msg = "Error: \""+e.toString()+"\""+nl+
+                         "   while reading INI-file:"+nl+
+                         "   \""+f.getPath()+"\""+nl+nl+
+                         "Setting default program parameters.";
+        System.out.println(msg);
+        if(!this.isVisible()) {this.setVisible(true);}
+        javax.swing.JOptionPane.showMessageDialog(spf, msg, pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+    pd.drawNeutralPHinPourbaix = Boolean.parseBoolean(propertiesIni.getProperty("Calc_draw_pH_line","false"));
     try{
-        pd.drawNeutralPHinPourbaix = Boolean.parseBoolean(propertiesIni.getProperty("Calc_draw_pH_line"));
         String s = propertiesIni.getProperty("lookAndFeel").toLowerCase();
         if(s.startsWith("system")) {laf = 1;}
         else if(s.startsWith("cross")) {laf = 2;}
         else {laf = 0;}
     }
     catch (NullPointerException e) {laf = 0; pd.drawNeutralPHinPourbaix = false;}
-    try{
-        pd.kth = Boolean.parseBoolean(propertiesIni.getProperty("KTH_settings"));
-    }
-    catch (NullPointerException e) {pd.kth = false;}
+    pd.kth = Boolean.parseBoolean(propertiesIni.getProperty("KTH_settings","false"));
+    pd.jarClassLd = Boolean.parseBoolean(propertiesIni.getProperty("Calc_load_jar-files","true"));
+
     if(pc.dbg) {System.out.println("Finished reading ini-file");}
     System.out.flush();
     checkIniValues();
@@ -2399,8 +2409,8 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     if(d == null || !d.exists() || !d.isDirectory()) {
-        if(pc.pathAPP != null && pc.pathAPP.trim().length()>0) {
-            pathSedPredom = pc.pathAPP;
+        if(dir != null && dir.trim().length()>0) {
+            pathSedPredom = dir;
         } else {
             pathSedPredom = System.getProperty("user.dir");
         }
@@ -2487,7 +2497,8 @@ public class MainFrame extends javax.swing.JFrame {
     pd.SED_nbrSteps = Math.max(MNSTP, Math.min(MXSTP,pd.SED_nbrSteps));
     pd.Predom_nbrSteps = Math.max(MNSTP, Math.min(MXSTP,pd.Predom_nbrSteps));
     pd.ionicStrength = Math.max(-100, Math.min(1000,pd.ionicStrength));
-    if(!Double.isNaN(pd.temperature)) {pd.temperature = Math.max(-50, Math.min(400,pd.temperature));}
+    if(!Double.isNaN(pd.temperature)) {pd.temperature = Math.max(-50, Math.min(400,pd.temperature));} else {pd.temperature = 25;}
+    if(!Double.isNaN(pd.pressure)) {pd.pressure = Math.max(0, Math.min(10000,pd.pressure));} else {pd.pressure = 1;}
     pd.actCoeffsMethod = Math.max(0, Math.min(2,pd.actCoeffsMethod));
     pd.calcDbgHalta = Math.max(0, Math.min(6,pd.calcDbgHalta));
     pd.tolHalta = Math.max(1e-9, Math.min(0.01, pd.tolHalta));
@@ -2577,7 +2588,8 @@ public class MainFrame extends javax.swing.JFrame {
       if(pc.pathAPP != null && pc.pathAPP.trim().length()>0) {pd.pathSIT = pc.pathAPP;} else {pd.pathSIT = ".";}
       pd.reversedConcs = false;
       pd.drawNeutralPHinPourbaix = false;
-      pd.temperature = Double.NaN;
+      pd.temperature = 25;
+      pd.pressure = 1;
       pd.useEh = true;
       pd.SED_nbrSteps = NSTEPS_DEF;
       pd.SED_tableOutput = false;
@@ -2618,6 +2630,7 @@ public class MainFrame extends javax.swing.JFrame {
       pd.diagrExportType = FORMAT_NAMES[0];
       pd.diagrExportSize = 1000;
       pd.kth = false;
+      pd.jarClassLd = true;
 
     } // iniDefaults()
 
@@ -2701,6 +2714,7 @@ public class MainFrame extends javax.swing.JFrame {
     propertiesIni.setProperty("Calc_allowReversedConcRanges",String.valueOf(pd.reversedConcs));
     propertiesIni.setProperty("Calc_ionicStrength",String.valueOf(pd.ionicStrength));
     propertiesIni.setProperty("Calc_temperature",String.valueOf(pd.temperature));
+    propertiesIni.setProperty("Calc_pressure",String.valueOf(pd.pressure));
     propertiesIni.setProperty("Calc_activityCoefficientsMethod", String.valueOf(pd.actCoeffsMethod));
     propertiesIni.setProperty("Calc_useEh",String.valueOf(pd.useEh));
     propertiesIni.setProperty("Calc_draw_pH_line",String.valueOf(pd.drawNeutralPHinPourbaix));
@@ -2772,6 +2786,7 @@ public class MainFrame extends javax.swing.JFrame {
     propertiesIni.setProperty("Export_To", pd.diagrExportType);
     propertiesIni.setProperty("Export_Size", String.valueOf(pd.diagrExportSize));
     propertiesIni.setProperty("KTH_settings", String.valueOf(pd.kth));
+    propertiesIni.setProperty("Calc_load_jar-files", String.valueOf(pd.jarClassLd));
 
     System.out.println("Saving ini-file: \""+f.getPath()+"\"");
     java.io.FileOutputStream propertiesIniFile = null;

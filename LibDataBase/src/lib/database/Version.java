@@ -1,6 +1,6 @@
 package lib.database; 
 
-/** Copyright (C) 2014-2018 I.Puigdomenech. 
+/** Copyright (C) 2014-2020 I.Puigdomenech. 
  *  
  * This program is free software: you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by 
@@ -17,6 +17,6 @@ package lib.database;
  * 
  * @author Ignasi Puigdomenech */ 
 public class Version { 
-    static final String VERSION = "2019-02-12"; 
+    static final String VERSION = "2020-02-03"; 
     public static String version() {return VERSION;} 
 } 

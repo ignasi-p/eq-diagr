@@ -10,7 +10,7 @@ import lib.huvud.Splash;
 
 /** Main window frame of the Database program.
  * <br>
- * Copyright (C) 2014-2019 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import lib.huvud.Splash;
  * along with this program.  If not, see http://www.gnu.org/licenses/
  * @author Ignasi Puigdomenech */
 public class FrameDBmain extends javax.swing.JFrame {
-  static final String VERS = "2018-Feb-12";
+  static final String VERS = "2020-Feb-03";
   /** all instances will use the same redirected frame */
   static RedirectedFrame msgFrame = null;
 
@@ -189,7 +189,7 @@ public class FrameDBmain extends javax.swing.JFrame {
         jLabelTemperature.setText(t);
     } else {jLabelTemperature.setText(" ");}
     if(pd.pressure_bar >1.1) {
-        if(pd.pressure_bar < lib.database.IAPWSF95.CRITICAL_pBar) {
+        if(pd.pressure_bar < lib.kemi.H2O.IAPWSF95.CRITICAL_pBar) {
             t = "Pressure = " + String.format(java.util.Locale.ENGLISH,"%.2f bar",pd.pressure_bar);
         } else {
             t = "Pressure = " + String.format("%.0f bar",pd.pressure_bar);
@@ -1883,8 +1883,8 @@ public class FrameDBmain extends javax.swing.JFrame {
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
       if(windowSize != null) {
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
+        int w = windowSize.width;
+        int h = windowSize.height;
         if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
         if(this.getWidth()<w){this.setSize(w,this.getHeight());}
       }
@@ -2036,7 +2036,7 @@ public class FrameDBmain extends javax.swing.JFrame {
         Thread hlp = new Thread() {@Override public void run(){
             String[] a = {"DB_0_Main_htm"};
             lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-            try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+            try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
             catch (InterruptedException e) {}
             setCursorDef();
         }};//new Thread
@@ -2335,7 +2335,7 @@ public class FrameDBmain extends javax.swing.JFrame {
         Thread asr = new Thread() {@Override public void run(){
             //---- start the program on a separate process
             lib.huvud.RunProgr.runProgramInProcess(null,"AddShowReferences.jar",null,false,pc.dbg,pc.pathAPP);
-            try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+            try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
             catch (InterruptedException e) {}
             setCursorDef();
         }};//new Thread
@@ -2347,7 +2347,7 @@ public class FrameDBmain extends javax.swing.JFrame {
         Thread dm = new Thread() {@Override public void run(){
             //---- start the program on a separate process
             lib.huvud.RunProgr.runProgramInProcess(null,"DataMaintenance.jar",null,false,pc.dbg,pc.pathAPP);
-            try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+            try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
             catch (InterruptedException e) {}
             setCursorDef();
         }};//new Thread
@@ -2527,7 +2527,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
             Thread hlp = new Thread() {@Override public void run(){
                 String[] a = {"DB_H2O_htm"};
                 lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,dbf.pc.dbg,dbf.pc.pathAPP);
-                try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+                try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
                 catch (InterruptedException e) {}
                 dialog.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                 FrameDBmain.getInstance().setCursorDef();
@@ -2842,7 +2842,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
         Thread hlp = new Thread() {@Override public void run(){
             String[] a = {"S_Batch_htm"};
             lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,dbf.pc.dbg,dbf.pc.pathAPP);
-            try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+            try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
             catch (InterruptedException e) {}
             setCursorDef();
         }};//new Thread
@@ -3638,7 +3638,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
                       String[] argsDiagram = new String[]{"\""+outputDataFile+"\""};
                       boolean waitForCompletion = false;
                       lib.huvud.RunProgr.runProgramInProcess(null,diagramProg,argsDiagram,waitForCompletion,pc.dbg,pc.pathAPP);
-                      try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+                      try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
                       catch (InterruptedException e) {}
                       setCursorDef();
                   }};//new Thread

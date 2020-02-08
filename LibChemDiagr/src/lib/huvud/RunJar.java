@@ -4,8 +4,9 @@ import lib.common.MsgExceptn;
 import lib.common.Util;
 
 /** Has two methods: "runJarLoadingFile" and "jarDone"
+ *  It uses JarClassLoader.
  * <br>
- * Copyright (C) 2014-2016 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,13 +45,14 @@ public class RunJar {
   * This method waits while the daughter application runs in the background
   * using a SwingWorker.
   * @param parent The calling frame, used to link error-message boxes.
-  * The cursor (wait or default) is left un-modified.
+  *               The cursor (wait or default) is left unmodified.
+  *               May be "null".
   * @param jar the name of the jar-file whose "main" method is to be executed
   * @param args arguments to the "main" method of the jar-file
   * @param debug true to output debug information
   * @param path the path of the application calling this procedure.
-  * If no path is given in <code>prgm</code> (the name of the program or jar file to run)
-  * then the application's path is used.
+  *             If no path is given in <code>prgm</code> (the name of the program or jar file to run)
+  *             then the application's path is used.
   * @see #jarDone() jarDone
   * @see RunProgr#runProgramInProcess(java.awt.Component, java.lang.String, java.lang.String[], boolean, boolean, java.lang.String) runProgramInProcess
   */
@@ -107,7 +109,6 @@ public class RunJar {
         MsgExceptn.showErrMsg(parent,msg,1);
         return;
     }
-    if(dbg) {System.out.println("jar file: "+jarFile.getAbsolutePath());}
     // --- jar ok, invoke the "main" method
     //if needed for debugging: sleep some milliseconds (wait)
     //try {Thread.sleep(3000);} catch(Exception ex) {}
@@ -120,6 +121,7 @@ public class RunJar {
         MsgExceptn.showErrMsg(parent,msg,1);
         return;
     }
+    if(dbg) {System.out.println("jar file full path: "+url.getPath());}
     // Create the class loader for the jar file
     jcl = new JarClassLoader(url);
     // Get the application's main class name
@@ -132,20 +134,21 @@ public class RunJar {
         return;
     }
     if(mainClassName == null) {
-    String msg = "Error: the 'Main-Class' manifest attribute"+nl+
+        String msg = "Error: the 'Main-Class' manifest attribute"+nl+
                 "   is Not found in jar file:"+nl+
                 "   \""+jarFileName+"\"";
         MsgExceptn.showErrMsg(parent,msg,1);
         return;
     }
-
     // Invoke application's main class
+    if(dbg) {System.out.println("executing task...");}
     finished = false;
     tsk = new WorkTask();
     tsk.execute(); // this returns inmediately
     // but the SwingWorker proceeds...
 
     waitForTask(); // wait for the SwingWorker to end
+
     /* An alternative method to to execute code <i>after</i> the daughter
      * application has finished, do as follows:<pre>
      *   class MyClass
@@ -224,7 +227,7 @@ private class WorkTask extends javax.swing.SwingWorker<Boolean, String> {
         msg = msg + nl + Util.stack2string(e);
         ok = false;
     }
-    if(msg != null) {System.out.println(msg); System.out.flush();}
+    if(msg != null) {MsgExceptn.exception(msg); System.out.flush();}
     return ok;
   } //doInBackground()
 

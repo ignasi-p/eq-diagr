@@ -3,9 +3,10 @@ package lib.huvud;
 import lib.common.MsgExceptn;
 import lib.common.Util;
 
-/** Has one method: "runProgramInProcess".
+/** Has one method: "runProgramInProcess". It uses a ProcessBuilder to run
+ * the process.
  * <br>
- * Copyright (C) 2014-2016 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,18 +33,19 @@ public class RunProgr {
    * the "main" method in a jar-file. Error messages are printed
    * to "System.err".
    * @param parent The calling frame, used to link error-message boxes.
-   * The cursor (wait or default) is left un-modified.
+   *               The cursor (wait or default) is left unmodified.
+   *               May be "null".
    * @param prgm the name of the program or jar file to run. It can include
-   * a full path. If no path is specified, the directory given in the
-   * <code>path</code> variable is assumed.
+   *             a full path. If no path is specified, the directory given in the
+   *             <code>path</code> variable is assumed.
    * @param a array with the command-line parameters. If needed the user must
-   * enclose individual parameters in quotes.
+   *          enclose individual parameters in quotes.
    * @param waitForCompletion if true the method will wait for the
-   * execution of the program to finish
+   *                          execution of the program to finish
    * @param dbg if true debug information will be written to "System.out"
    * @param path the working directory.
-   * If no path is given in <code>prgm</code> (the name of the program or jar file to run)
-   * then this path is used.
+   *        If no path is given in <code>prgm</code> (the name of the program
+   *        or jar file to run) then this path is used.
    * @return false if an error occurs
    * @see RunJar#runJarLoadingFile(java.awt.Component, java.lang.String, java.lang.String[], boolean, java.lang.String) runJarLoadingFile
    */
@@ -54,14 +56,26 @@ public class RunProgr {
             final boolean dbg,
             String path) {
         if(prgm == null || prgm.trim().length() <=0) {
-            String msg = "Programming Error"+nl+"detected in \"runProgramInProcess\""+nl;
+            String msg = "Programming error detected in \"runProgramInProcess\""+nl;
             if(prgm == null) {
                 msg = msg + "   program or jar file name is \"null\".";
             } else {msg = msg + "   program or jar file name is empty.";}
             MsgExceptn.showErrMsg(parent,msg,1); 
             return false;
         }
-        if(dbg) {System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - -");}
+        if(dbg) {
+            System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - -"+nl+
+                    "runProgramInProcess:"+nl+"  "+prgm);
+            if(a.length>0) {
+                for(int i=0; i < a.length; i++) {System.out.print("  "+a[i]);}
+                System.out.println();
+            }
+            System.out.println("  waitForCompletion = "+waitForCompletion+",  debug = "+dbg);
+            if(path != null && path.trim().length() >0) {
+                System.out.println("  path = "+path);
+            } else {System.out.println("  path = (not given)");}
+            System.out.flush();            
+        }
         //remove enclosing quotes
         if(prgm.length() >2 && prgm.startsWith("\"") && prgm.endsWith("\"")) {
             prgm = prgm.substring(1, prgm.length()-1);
@@ -94,15 +108,21 @@ public class RunProgr {
         if(a == null) {a = new String[0];}
         if(a.length>0) {
                 for (String a1 : a) {
-                    if (a1 != null && a1.length() > 0) {command.add(a1);}
+                    if (a1 != null && a1.length() > 0) {
+                        //remove enclosing quotes: spaces will be taken care by ProcessBuilder
+                        if(a1.length() >2 && a1.startsWith("\"") && a1.endsWith("\"")) {
+                            a1 = a1.substring(1, a1.length()-1);
+                        }
+                        command.add(a1);
+                    }
                 }
         }
         if(dbg) {
-                System.out.println("starting process:");
-                if(a.length>0) {
+            System.out.println("starting process:");
+            if(command.size()>0) { // it should be >0...
                 for(int i=0; i < command.size(); i++) {System.out.println("   "+command.get(i));}
-                System.out.flush();
-                }
+            }
+            System.out.flush();
         }
         ProcessBuilder builder = new ProcessBuilder(command);
         //java.util.Map<String, String> environ = builder.environment();

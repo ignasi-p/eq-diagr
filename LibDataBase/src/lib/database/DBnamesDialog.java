@@ -6,7 +6,7 @@ import lib.huvud.ProgramConf;
 
 /**  Allows the user to choose which databases to use.
  * <br>
- * Copyright (C) 2015-2018 I.Puigdomenech.
+ * Copyright (C) 2015-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ public class DBnamesDialog extends javax.swing.JDialog {
             Thread hlp = new Thread() {@Override public void run(){
                 String[] a = {"DB_Remove_change_data_htm"};
                 lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-                try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+                try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
                 catch (InterruptedException e) {}
                 DBnamesDialog.this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                 if(parent != null) {parent.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));}
@@ -433,8 +433,8 @@ public class DBnamesDialog extends javax.swing.JDialog {
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
       if(windowSize != null) {
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
+        int w = windowSize.width;
+        int h = windowSize.height;
         if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
         if(this.getWidth()<w){this.setSize(w,this.getHeight());}
       }

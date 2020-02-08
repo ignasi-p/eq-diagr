@@ -15,7 +15,7 @@ import static spana.MainFrame.LINE;
  * make changes to the input file without a text editor. A lot of
  * "intelligence" is used to make life easy for the user.
  * <br>
- * Copyright (C) 2014-2019 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -424,9 +424,9 @@ public class Select_Diagram extends javax.swing.JFrame {
             }   
         };
         jLabelDiagrType = new javax.swing.JLabel();
-        jComboBoxDiagType = new javax.swing.JComboBox<String>();
+        jComboBoxDiagType = new javax.swing.JComboBox<>();
         jPanelMainComp = new javax.swing.JPanel();
-        jComboBoxMainComp = new javax.swing.JComboBox<String>();
+        jComboBoxMainComp = new javax.swing.JComboBox<>();
         jPanelXaxis = new javax.swing.JPanel();
         jTextFieldXmin = new javax.swing.JTextField();
         jTextFieldXmax = new javax.swing.JTextField();
@@ -436,7 +436,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jTextFieldYmax = new javax.swing.JTextField();
         jPanelYaxInner = new javax.swing.JPanel();
         jPanelYcombo = new javax.swing.JPanel();
-        jComboBoxYaxType = new javax.swing.JComboBox<String>();
+        jComboBoxYaxType = new javax.swing.JComboBox<>();
         jPanelYlogC = new javax.swing.JPanel();
         jLabelYlogC = new javax.swing.JLabel();
         jPanelYlogA = new javax.swing.JPanel();
@@ -452,14 +452,14 @@ public class Select_Diagram extends javax.swing.JFrame {
         jPanelYHaff = new javax.swing.JPanel();
         jLabelHaff = new javax.swing.JLabel();
         jPanelYaxComp = new javax.swing.JPanel();
-        jComboBoxYaxComp = new javax.swing.JComboBox<String>();
+        jComboBoxYaxComp = new javax.swing.JComboBox<>();
         jPanelEmptyYax = new javax.swing.JPanel();
         jPanelYmin = new javax.swing.JPanel();
         jTextFieldYmin = new javax.swing.JTextField();
         jPanelXComponent = new javax.swing.JPanel();
         jLabelXaxis = new javax.swing.JLabel();
-        jComboBoxXaxType = new javax.swing.JComboBox<String>();
-        jComboBoxXaxComp = new javax.swing.JComboBox<String>();
+        jComboBoxXaxType = new javax.swing.JComboBox<>();
+        jComboBoxXaxComp = new javax.swing.JComboBox<>();
         jPanelEmptyDiagram = new javax.swing.JPanel();
         jPanelParams = new javax.swing.JPanel();
         jPanelActCoef = new javax.swing.JPanel();
@@ -474,7 +474,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jLabelTC = new javax.swing.JLabel();
         jPanelModel = new javax.swing.JPanel();
         jLabelModel = new javax.swing.JLabel();
-        jComboBoxActCoeff = new javax.swing.JComboBox<String>();
+        jComboBoxActCoeff = new javax.swing.JComboBox<>();
         jPanelSedPredom = new javax.swing.JPanel();
         jPanelPredom = new javax.swing.JPanel();
         jLabelPredNbr = new javax.swing.JLabel();
@@ -504,7 +504,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jLabelEnterConc = new javax.swing.JLabel();
         jPanelConcInner = new javax.swing.JPanel();
         jLabel_GetConcCompName = new javax.swing.JLabel();
-        jComboBoxConcType = new javax.swing.JComboBox<String>();
+        jComboBoxConcType = new javax.swing.JComboBox<>();
         jLabelEqual = new javax.swing.JLabel();
         jLabelFrom = new javax.swing.JLabel();
         jTextFieldCLow = new javax.swing.JTextField();
@@ -700,7 +700,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jLabelDiagrType.setLabelFor(jComboBoxDiagType);
         jLabelDiagrType.setText("<html><u>D</u>iagram type:</html>"); // NOI18N
 
-        jComboBoxDiagType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Predominance Area", "Logarithmic", "log Activities", "Fraction", "log Solubilities", "Relative activities", "Calculated Eh", "Calculated pH", "H+ affinity spectrum" }));
+        jComboBoxDiagType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Predominance Area", "Logarithmic", "log Activities", "Fraction", "log Solubilities", "Relative activities", "Calculated Eh", "Calculated pH", "H+ affinity spectrum" }));
         jComboBoxDiagType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxDiagTypeActionPerformed(evt);
@@ -720,7 +720,7 @@ public class Select_Diagram extends javax.swing.JFrame {
             .addGap(0, 21, Short.MAX_VALUE)
         );
 
-        jComboBoxMainComp.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxMainComp.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxMainComp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxMainCompActionPerformed(evt);
@@ -855,7 +855,7 @@ public class Select_Diagram extends javax.swing.JFrame {
 
         jPanelYaxInner.setLayout(new java.awt.CardLayout());
 
-        jComboBoxYaxType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "jComboBoxYaxType", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxYaxType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "jComboBoxYaxType", "Item 2", "Item 3", "Item 4" }));
         jComboBoxYaxType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxYaxTypeActionPerformed(evt);
@@ -1022,7 +1022,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jPanelYaxComp.setPreferredSize(new java.awt.Dimension(132, 33));
         jPanelYaxComp.setLayout(new java.awt.CardLayout());
 
-        jComboBoxYaxComp.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "jComboBxYaxC", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxYaxComp.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "jComboBxYaxC", "Item 2", "Item 3", "Item 4" }));
         jComboBoxYaxComp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxYaxCompActionPerformed(evt);
@@ -1107,14 +1107,14 @@ public class Select_Diagram extends javax.swing.JFrame {
         jLabelXaxis.setLabelFor(jComboBoxXaxType);
         jLabelXaxis.setText("X-axis:"); // NOI18N
 
-        jComboBoxXaxType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "jComboBoxXaxType", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxXaxType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "jComboBoxXaxType", "Item 2", "Item 3", "Item 4" }));
         jComboBoxXaxType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxXaxTypeActionPerformed(evt);
             }
         });
 
-        jComboBoxXaxComp.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2" }));
+        jComboBoxXaxComp.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2" }));
         jComboBoxXaxComp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxXaxCompActionPerformed(evt);
@@ -1286,7 +1286,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jLabelModel.setLabelFor(jComboBoxActCoeff);
         jLabelModel.setText("<html><u>A</u>ctivity coefficient model:</html>"); // NOI18N
 
-        jComboBoxActCoeff.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Davies eqn.", "SIT (Specific Ion-interaction)", "simpl. Helgeson-Krikham-Flowers" }));
+        jComboBoxActCoeff.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Davies eqn.", "SIT (Specific Ion-interaction)", "simpl. Helgeson-Krikham-Flowers" }));
         jComboBoxActCoeff.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxActCoeffActionPerformed(evt);
@@ -1699,7 +1699,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jLabel_GetConcCompName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel_GetConcCompName.setText("SO4-2"); // NOI18N
 
-        jComboBoxConcType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "jComboBoxConcType", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxConcType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "jComboBoxConcType", "Item 2", "Item 3", "Item 4" }));
         jComboBoxConcType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxConcTypeActionPerformed(evt);
@@ -1923,15 +1923,8 @@ public class Select_Diagram extends javax.swing.JFrame {
         quitFrame();
     }//GEN-LAST:event_formWindowClosing
 
-    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        if(loading || windowSize == null) {return;}
-        int w = Math.round((float)windowSize.getWidth());
-        int h = Math.round((float)windowSize.getHeight());
-        if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
-        if(this.getWidth()<w){this.setSize(w,this.getHeight());}
-    }//GEN-LAST:event_formComponentResized
-
     private void jButton_OKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_OKActionPerformed
+      // --- this will call "runSedPredom()"
       cancel = true;
       double w = readTextField(jTextFieldXmax, "X-max");
       String t = Util.formatNum(w);
@@ -1955,17 +1948,14 @@ public class Select_Diagram extends javax.swing.JFrame {
             // make the calculations and draw the diagram
             boolean ok = runSedPredom();
             Thread wt = new Thread() {@Override public void run(){
-              try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+              try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
               catch (InterruptedException e) {}
-              setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-              MainFrame.getInstance().setCursorDef();
             }};//new Thread
             wt.start();
             if(ok) {cancel = false; quitFrame();}
         } // if there was an error while saving the file(s): return
       }
       setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-      MainFrame.getInstance().setCursorDef();
     }//GEN-LAST:event_jButton_OKActionPerformed
 
     private void jButton_CancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_CancelActionPerformed
@@ -2325,8 +2315,8 @@ public class Select_Diagram extends javax.swing.JFrame {
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         Thread hlp = new Thread() {@Override public void run(){
             String[] a = {"S_Making_Diagrams_htm"};
-            lib.huvud.RunProgr.runProgramInProcess(null,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
-            try{Thread.sleep(1500);}   //show the "wait" cursor for 1.5 sec
+            lib.huvud.RunProgr.runProgramInProcess(Select_Diagram.this,ProgramConf.HELP_JAR,a,false,pc.dbg,pc.pathAPP);
+            try{Thread.sleep(2000);}   //show the "wait" cursor for 2 sec
             catch (InterruptedException e) {}
             setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         }};//new Thread
@@ -2627,6 +2617,15 @@ public class Select_Diagram extends javax.swing.JFrame {
     private void jCheckBoxDrawPHlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxDrawPHlineActionPerformed
         runPHline = jCheckBoxDrawPHline.isSelected();
     }//GEN-LAST:event_jCheckBoxDrawPHlineActionPerformed
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+      if(windowSize != null) {
+        int w = windowSize.width;
+        int h = windowSize.height;
+        if(this.getHeight()<h){this.setSize(this.getWidth(), h);}
+        if(this.getWidth()<w){this.setSize(w,this.getHeight());}
+      }
+    }//GEN-LAST:event_formComponentResized
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="Methods">
@@ -4215,9 +4214,13 @@ private void diagramType_Click() {
 
 //<editor-fold defaultstate="collapsed" desc="runSedPredom()">
 private boolean runSedPredom() {
+  // ===========================
+  //  Make a SED/Predom diagram
+  // ===========================
+
   if(pc.dbg) {System.out.println("runSedPredom()");}
   if(MainFrame.pathSedPredom == null) {
-      MsgExceptn.exception("Error: \"pathSedPredom\" null.");
+      MsgExceptn.exception("Programming error in runSedPredom(): \"pathSedPredom\" is null.");
       return false;
   }
   pc.setPathDef(dataFile);
@@ -4238,10 +4241,8 @@ private boolean runSedPredom() {
                 pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
     return false;
   }
-  // ===========================
-  //  Make a SED/Predom diagram
-  // ===========================
-  if(runPredomSED ==2) {
+
+  if(runPredomSED ==2) { // SED diagram
     if(!Div.progSEDexists(new java.io.File(MainFrame.pathSedPredom))) {
         javax.swing.JOptionPane.showMessageDialog(this, "Error: Program SED not found in path:"+nl+
                   "\""+MainFrame.pathSedPredom+"\""+nl+nl+
@@ -4252,7 +4253,7 @@ private boolean runSedPredom() {
     }
     oldProg = isOldSED();
   }
-  else if(runPredomSED ==1) {
+  else if(runPredomSED ==1) { // Predom diagram
     if(!Div.progPredomExists(new java.io.File(MainFrame.pathSedPredom))) {
         javax.swing.JOptionPane.showMessageDialog(this, "Error: Predom not found in path:"+nl+
                   "\""+MainFrame.pathSedPredom+"\""+nl+nl+
@@ -4261,8 +4262,8 @@ private boolean runSedPredom() {
                   pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
         return false;
     }
-    if(diag.compMain < 0) {
-        MsgExceptn.showErrMsg(this, "Programming Error in runSedPredom(): diag.compMain < 0!", 1);
+    if(diag.compMain < 0) { // check main chemical component
+        MsgExceptn.showErrMsg(this, "Programming error in runSedPredom(): diag.compMain < 0!", 1);
         return false;
     }
     if(dgrC.hur[diag.compMain] != 4 
@@ -4290,6 +4291,10 @@ private boolean runSedPredom() {
     prog_name= "SED";
   } else {prog_name= "(error?)";}
 
+  // ===========================
+  //  command-line options
+  // ===========================
+
   java.util.ArrayList<String> options = new java.util.ArrayList<String>();
   options.add("\"-d="+dataFile.getPath()+"\"");
   options.add("\"-p="+pltFile.getPath()+"\"");
@@ -4303,7 +4308,7 @@ private boolean runSedPredom() {
   if(!Double.isNaN(pd.tolHalta) && pd.tolHalta != Chem.TOL_HALTA_DEF) {
     options.add("-tol="+Math.min(1e-2,Math.max(pd.tolHalta, 1e-9)));
   }
-  if(runPredomSED ==2 && runTbl) { //for SED
+  if(runPredomSED ==2 && runTbl) { // SED table output
     options.add("-tbl");
     if(!oldProg) {
         if(pd.tblExtension != null && pd.tblExtension.length() >0) {options.add("-tble:"+pd.tblExtension);}
@@ -4320,19 +4325,22 @@ private boolean runSedPredom() {
         }
     }
   }
-  if(runPredomSED ==2) {
+
+  if(runPredomSED ==2) {  // SED diagram
     runNbrStepsSED = (int)((float)jScrollBarSEDNbrP.getValue()/1f);
     if(runNbrStepsSED != MainFrame.NSTEPS_DEF) {options.add("-n="+(runNbrStepsSED));}
     if(diag.plotType == 1 && !oldProg) { // "fraction"
         options.add("-thr="+(pd.fractionThreshold));
     }
-  } else if(runPredomSED ==1) { //for Predom
+  } else if(runPredomSED ==1) { // Predom diagram
     if(runAqu) {options.add("-aqu");}
     runNbrStepsPred = (int)((float)jScrollBarPredNbrP.getValue()/1f);
     if(runNbrStepsPred != MainFrame.NSTEPS_DEF) {options.add("-n="+(runNbrStepsPred));}
     if(runPHline) {options.add("-pH");}
   }
+
   if(runRevs) {options.add("-rev");}
+
   if(pd.keepFrame) {
     options.add("-keep");
     if(!oldProg) {
@@ -4345,39 +4353,55 @@ private boolean runSedPredom() {
   args = options.toArray(args);
 
   final long pltFileDate0 = pltFile.lastModified();
-  new javax.swing.SwingWorker<Void,Void>() {
-    @Override protected Void doInBackground() throws Exception {
-        if(oldProg) {
-          String pSP = MainFrame.pathSedPredom;
-          if(pSP != null && pSP.endsWith(SLASH)) {pSP = pSP.substring(0,pSP.length()-1);}
-          final String prg;
-          if(pSP != null) {prg = pSP + SLASH + prog_name+".exe";} else {prg = prog_name+".exe";}
-          boolean waitForCompletion = true;
-          lib.huvud.RunProgr.runProgramInProcess(null,prg,args,waitForCompletion,
-                  (pc.dbg || pd.calcDbg),pc.pathAPP);
-        } else {
-          // save the look-and-feel
-          javax.swing.LookAndFeel oldLaF = javax.swing.UIManager.getLookAndFeel();
-          if(pc.dbg) {System.out.println("--- oldLookAndFeel("+oldLaF.getName()+");");}
-          rj = new lib.huvud.RunJar();
-          // The "main" method of SED and Predom waits for the calculations to be finished..
-          // RunJar uses a separate thread (SwingWorker) to run the programs.
-          // Next statement will return when the jar-program ends
-          rj.runJarLoadingFile(MainFrame.getInstance(), prog_name+".jar", args, (pc.dbg || pd.calcDbg),
-                  pc.pathAPP);
-          // reset the look-and-feel if needed
-          if(!oldLaF.getName().equals(javax.swing.UIManager.getLookAndFeel().getName())) {
-              try {
-                  if(pc.dbg) {System.out.println("--- setLookAndFeel("+oldLaF.getName()+");");}
-                  javax.swing.UIManager.setLookAndFeel(oldLaF);
-              }
-              catch (javax.swing.UnsupportedLookAndFeelException ex) {
-                  System.out.println("--- setLookAndFeel: "+ex.getMessage());
-              }
-          }
+  MainFrame.getInstance().setCursorWait();
 
-          // --- restore the Dock icon
-          if(System.getProperty("os.name").startsWith("Mac OS")) {
+  new javax.swing.SwingWorker<Void,Void>() {
+    @Override
+    protected Void doInBackground() throws Exception {
+
+        if(oldProg) {
+            String pSP = MainFrame.pathSedPredom;
+            if(pSP != null && pSP.endsWith(SLASH)) {pSP = pSP.substring(0,pSP.length()-1);}
+            final String prg;
+            if(pSP != null) {prg = pSP + SLASH + prog_name+".exe";} else {prg = prog_name+".exe";}
+            boolean waitForCompletion = true;
+            lib.huvud.RunProgr.runProgramInProcess(null,prg,args,waitForCompletion,
+                  (pc.dbg || pd.calcDbg),pc.pathAPP);
+            return null;
+        }
+
+        if(!pd.jarClassLd) { // run calculations in a separate system process
+            boolean waitForCompletion = true;
+            lib.huvud.RunProgr.runProgramInProcess(MainFrame.getInstance(), prog_name+".jar", args,
+                waitForCompletion, (pc.dbg || pd.calcDbg), pc.pathAPP);
+            return null;
+        }
+
+        // ----- neither "old" programs, or ProgramData.jarClassLd:
+        //       invoke the main class of the jar-file
+
+        // save the look-and-feel
+        javax.swing.LookAndFeel oldLaF = javax.swing.UIManager.getLookAndFeel();
+        if(pc.dbg) {System.out.println("--- oldLookAndFeel("+oldLaF.getName()+");");}
+        rj = new lib.huvud.RunJar();
+        // The "main" method of SED and Predom waits for the calculations to be finished..
+        // RunJar uses a separate thread (SwingWorker) to run the programs.
+        // Next statement will return when the jar-program ends
+        rj.runJarLoadingFile(MainFrame.getInstance(), prog_name+".jar", args, (pc.dbg || pd.calcDbg),
+                pc.pathAPP);
+        // reset the look-and-feel if needed
+        if(!oldLaF.getName().equals(javax.swing.UIManager.getLookAndFeel().getName())) {
+            try {
+                if(pc.dbg) {System.out.println("--- setLookAndFeel("+oldLaF.getName()+");");}
+                javax.swing.UIManager.setLookAndFeel(oldLaF);
+            }
+            catch (javax.swing.UnsupportedLookAndFeelException ex) {
+                System.out.println("--- setLookAndFeel: "+ex.getMessage());
+            }
+        }
+
+        // --- restore the Mac OS Dock icon
+        if(System.getProperty("os.name").startsWith("Mac OS")) {
             String iconName = "images/Spana_icon_48x48.gif";
             java.net.URL imgURL = this.getClass().getResource(iconName);
             if (imgURL != null) {
@@ -4393,11 +4417,12 @@ private boolean runSedPredom() {
             } else {
                 System.out.println("Error: Could not load image = \""+iconName+"\"");
             }
-          } //---- Icon
+        } //---- Mac OS Dock Icon
 
-        }
         return null;
-    }
+
+    } // doInBackground()
+
     @Override protected void done(){
         long pltFileDate = pltFile.lastModified();
         if(pltFileDate <= pltFileDate0) {
@@ -4411,9 +4436,12 @@ private boolean runSedPredom() {
         } else {
             MainFrame.getInstance().displayPlotFile(pltFile.getPath(), null);
         }
+
+        MainFrame.getInstance().setCursorDef();
+
     } // done()
-  }.execute(); // this returns inmediately,
-  //    but the SwingWorker continues running...
+
+  }.execute(); // SwingWorker returns inmediately, but it continues running...
 
   return true;
 

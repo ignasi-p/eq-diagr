@@ -7,16 +7,17 @@ Name "Chemical Equilibrium Diagrams (Java)"
 Caption "Chemical Equilibrium Diagrams (java) - ${__DATE__}"
 Icon "images/Eq-Diagr_Java.ico"
 OutFile "Eq-Diagr_Java_Setup.exe"  ;The file to write
+Unicode true
 
 ; Directories containing the files to be installed
 ; the NSIS scripts directory
 !define S_ "."
 ; the Source directories
-!define S "\Eq-Calc_Java\dist"
-!define SW "\Eq-Calc_Java\Windows-files"
+!define S "C:\!M\Ignasi\Eq-Calc_Java\dist"
+!define SW "C:\!M\Ignasi\Eq-Calc_Java\Windows-files"
 ; the Source directory for PortableApps
 !define SPA ".\PortableApps"
-!define SPAE "\Eq-Calc_Java\Windows-files\PortableApps_exe"
+!define SPAE "C:\!M\Ignasi\Eq-Calc_Java\Windows-files\PortableApps_exe"
 ;--------------------------------
 ; Libraries and macros needed in this script:
 !include "LogicLib.nsh"

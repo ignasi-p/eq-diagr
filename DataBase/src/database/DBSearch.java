@@ -3,7 +3,7 @@ package database;
 import lib.common.MsgExceptn;
 import lib.common.Util;
 import lib.database.Complex;
-import lib.database.IAPWSF95;
+import lib.kemi.H2O.IAPWSF95;
 import lib.database.LibDB;
 import lib.database.ProgramDataDB;
 import lib.huvud.ProgramConf;

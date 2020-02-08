@@ -4,7 +4,7 @@ import lib.common.Util;
 
 /** Show the data in the databases for a single reaction.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -110,7 +110,7 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
                 && (tC<24.9 || tC > 25.1 || pBar > 1.1)) {
             w = species.logKatTandP(tC, pBar);
             if(!Double.isNaN(w) && w != Complex.EMPTY) {
-                if(pBar < lib.database.IAPWSF95.CRITICAL_pBar) {
+                if(pBar < lib.kemi.H2O.IAPWSF95.CRITICAL_pBar) {
                     jLabellogKTP.setText("<html>log <i>K</i>°("+Util.formatNumAsInt(tC).trim()+","+
                         String.format(java.util.Locale.ENGLISH,"%.2f bar",pBar)+") = "+Util.formatDbl3(w)+"</html>");
                 } else {
@@ -396,8 +396,8 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
       if(loading || windowSize == null) {return;}
       int x = this.getX(); int y = this.getY();
       int w = this.getWidth(); int h = this.getHeight();
-      int nw = Math.max(w, Math.round((float)windowSize.getWidth()));
-      int nh = Math.max(h, Math.round((float)windowSize.getHeight()));
+      int nw = Math.max(w, windowSize.width);
+      int nh = Math.max(h, windowSize.height);
       int nx=x, ny=y;
       if(x+nw > screenSize.width) {nx = screenSize.width - nw;}
       if(y+nh > screenSize.height) {ny = screenSize.height -nh;}
