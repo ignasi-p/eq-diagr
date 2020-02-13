@@ -69,6 +69,7 @@ Joachim Zeising (KTH). Many thanks are due to the chemistry teaching staff at KT
 
 
 ## Last Updates
+- 2020-Feb - Corrected an error that made Spana to fail performing the calculations in Linux-Ubuntu.
 - 2019-Feb - Restored text database format to old format, if possible. Introduced special settings and a special [database][26] for the course on chemical analysis [KD1280][27] at the Royal Institute of Technology (KTH).
 - 2018-Oct - New database formats, including both a power series expression and a look-up table, allow the search and data selection at higher temperatures (up to 600 C) and pressures (up to 5k bar). Chemical equilibrium diagrams may be made for supercritical aqueous. solutions. **To do:** update the help file to document these changes.
 - 2018-Aug - Increased the speed of the calculations. For Windows: improved the java-launchers (exe-files). For MacOS created a script that the user may use to create "apps".
