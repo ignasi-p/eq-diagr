@@ -9,7 +9,7 @@ package plotPS;
  * unless the command line argument -nostop is given, a message box
  * displaying the error is also produced.
  * 
- * Copyright (C) 2015-2018 I.Puigdomenech.
+ * Copyright (C) 2015-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ package plotPS;
  * @author Ignasi Puigdomenech */
 public class PlotPS {
 private static final String progName = "PlotPS";
-private static final String VERS = "2018-May-15";
+private static final String VERS = "2020-June-12";
 private static boolean started = false;
 /** print debug information? */
 private boolean dbg = false;
@@ -42,8 +42,8 @@ private java.io.File psFile;
 /** has the file conversion finished ? */
 private boolean finished = false;
 private java.io.BufferedReader bufReader;
-private java.io.OutputStreamWriter outputFile;
-/** has an error occured? if so, delete the output file */
+private java.io.BufferedWriter outputFile;
+/** has an error occurred? if so, delete the output file */
 private boolean delete = false;
 /** New-line character(s) to substitute "\n" */
 private static final String nl = System.getProperty("line.separator");
@@ -115,8 +115,8 @@ private static class BoundingBox {
   public static void main(String[] args) {
     boolean h = false;
     boolean doNotS = false, debg = false;
-    String msg = "GRAPHIC  \"PostScript\"  UTILITY                                   "+VERS+nl+
-            "=============================="+nl;
+    String msg = "GRAPHIC  \"PostScript\"  UTILITY                            "+VERS+nl+
+            "==============================                           (Unicode UTF-8 vers.)"+nl;
     System.out.println(msg);
     if(args.length > 0) {
         for(String arg : args) {
@@ -584,8 +584,9 @@ private static class BoundingBox {
     //--- make sure the output file can be written
     String msg;
     try{
-        outputFile = new java.io.OutputStreamWriter(
-                   new java.io.FileOutputStream(psFile), "ISO-8859-1");
+        outputFile = new java.io.BufferedWriter(
+                new java.io.OutputStreamWriter(
+                   new java.io.FileOutputStream(psFile), "UTF8"));
     } catch (java.io.FileNotFoundException ex) {
         msg = "File not found:"+nl+
               "   \""+psFile.getAbsolutePath()+"\"";
@@ -883,12 +884,12 @@ private static class BoundingBox {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="psInit">
-  private void psInit(java.io.OutputStreamWriter o) {
+  private void psInit(java.io.BufferedWriter o) {
     final String[] FONTN =  {"Times-Roman","Helvetica","Courier"};
     final String[] FONTBN = {"Times-Bold","Helvetica-Bold","Courier-Bold"};
     final String[] FONTIN = {"Times-Italic","Helvetica-Oblique","Courier-Oblique"};
     try{
-      String t = "%%Title: "+fixTextSimple(maybeInQuotes(pltFile.getName()))+"; ";
+      String t = "%%Title: "+fixTextSimple(maybeInQuotes(pltFile.getName()),false)+"; ";
       if(!eps) {
         o.write("%!PS-Adobe-2.0"+nl);
         o.write(t+nl);
@@ -898,7 +899,7 @@ private static class BoundingBox {
       }
       o.write("%%Creator: PlotPS [java],  version: "+VERS+nl);
       o.write("%%CreationDate: "+getDateTime()+nl);
-      o.write("%%For: "+fixTextSimple(System.getProperty("user.name", "anonymous"))+nl);
+      o.write("%%For: "+fixTextSimple(System.getProperty("user.name", "anonymous"),false)+nl);
       String or = "Portrait"; if(!psPortrait) {or = "Landscape";}
       // o.write("%%Orientation: "+or+nl);
       t = "%%DocumentNeededResources: font ";
@@ -1022,6 +1023,21 @@ private static class BoundingBox {
               "            /Encoding ISOLatin1Encoding def currentdict end"+nl+
               "            /UserFont exch definefont pop"+nl+
               "            getSize /UserFont findfont 1.43 siz mul scalefont setfont} def"+nl+
+              "/_normS    {/"+FONTN[n]+" findfont dup length dict begin"+nl+
+              "            {1 index /FID ne {def} {pop pop} ifelse} forall"+nl+
+              "            /Encoding StandardEncoding def currentdict end"+nl+
+              "            /UserFont exch definefont pop"+nl+
+              "            getSize /UserFont findfont 1.43 siz mul scalefont setfont} def"+nl+
+              "/_boldS    {/"+FONTBN[n]+" findfont dup length dict begin"+nl+
+              "            {1 index /FID ne {def} {pop pop} ifelse} forall"+nl+
+              "            /Encoding StandardEncoding def currentdict end"+nl+
+              "            /UserFont exch definefont pop"+nl+
+              "            getSize /UserFont findfont 1.43 siz mul scalefont setfont} def"+nl+
+              "/_emS      {/"+FONTIN[n]+" findfont dup length dict begin"+nl+
+              "            {1 index /FID ne {def} {pop pop} ifelse} forall"+nl+
+              "            /Encoding StandardEncoding def currentdict end"+nl+
+              "            /UserFont exch definefont pop"+nl+
+              "            getSize /UserFont findfont 1.43 siz mul scalefont setfont} def"+nl+
               "/_sym      {getSize /Symbol findfont 1.43 siz mul scalefont setfont} def"+nl+"%"+nl);
       }
       o.write("end   % pop ChemEqDict from dictionary stack"+nl+
@@ -1050,7 +1066,7 @@ private static class BoundingBox {
                   "        /UserFont exch definefont pop"+nl+
                   "        /UserFont findfont 8 scalefont setfont"+nl+"        ");
           o.write("30 770 moveto"+nl);
-          t = "(file: "+fixTextSimple(maybeInQuotes(pltFile.getAbsolutePath()))+"   PostScripted: "+getDateTime()+") show";
+          t = "(file: "+fixTextSimple(maybeInQuotes(pltFile.getAbsolutePath()),false)+"   PostScripted: "+getDateTime()+") show";
           o.write(t+nl);
       }
       // set Landscape / Portrait orientation
@@ -1085,7 +1101,7 @@ private static class BoundingBox {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="psEnd">
-  private void psEnd(java.io.OutputStreamWriter o) {
+  private void psEnd(java.io.BufferedWriter o) {
     try{
       o.write("stroke"+nl);
       o.write("%-------------------------- plot file ends here --------------------------"+nl);
@@ -1258,7 +1274,7 @@ private static class BoundingBox {
   * @param i either 5 (change screen colour) or 8 (chenage plotter pen number)
   * @param pen0 the colour/pen nbr
   * @param o output file */
-  private void setPen(int i, int pen0, java.io.OutputStreamWriter o) {
+  private void setPen(int i, int pen0, java.io.BufferedWriter o) {
     if(i != 5 && i != 8) {return;}
     int pen = Math.max(1, pen0);
     pen--;
@@ -1313,7 +1329,7 @@ private static class BoundingBox {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="moveOrDraw">
-  private void moveOrDraw (int i0, double x0, double y0, java.io.OutputStreamWriter o) {
+  private void moveOrDraw (int i0, double x0, double y0, java.io.BufferedWriter o) {
     // --- newPath: -1 = start of program;
     // 0 = no drawing performed yet
     // 1 = some move performed
@@ -1407,17 +1423,136 @@ private static class BoundingBox {
    * and change hyphen, "-", to endash.
    * @param txt
    * @return    */
-  private String fixTextSimple(String txt) {
+  private String fixTextSimple(String txt, boolean isFormula) {
     if(txt == null || txt.trim().length() <=0) {return txt;}
+    /**
+     * €γερΣΔ‚ƒ„…†‡^‰Š‹ŒŽ‘’“”•–—~™š›œžŸ¤¦¨©ª¬®¯°±²³´μ·¹º¼½¾ÀÁÂÃÄÅÆÇÈÉÊË
+     * ÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ
+     */
     StringBuilder t = new StringBuilder(txt);
     int i = 0;
     while(i < t.length()) {
-        // "\" change to "\\"
-        if(t.charAt(i) == '\\') {t.replace(i, i+1, "\\\\"); i++;}
-        else if(t.charAt(i) == '(')  {t.replace(i, i+1, "\\("); i++;}
-        else if(t.charAt(i) == ')')  {t.replace(i, i+1, "\\)"); i++;}
-        else if(t.charAt(i) == '-')  {t.replace(i, i+1, "\\055"); i = i+3;} // minus in PostScript
-        i++;
+      // "\" change to "\\"
+      if(t.charAt(i) == '\\') {t.replace(i, i+1, "\\\\"); i++;}
+      else if(t.charAt(i) == '(')  {t.replace(i, i+1, "\\("); i++;}
+      else if(t.charAt(i) == ')')  {t.replace(i, i+1, "\\)"); i++;}
+      // for hyphen and minus sign
+      else if(t.charAt(i) == '-' || t.charAt(i) == '−')  {t.replace(i, i+1, "\\055"); i = i+3;} // minus in PostScript
+      // when it is a "formula" then tilde is 'degree sign' and circumflex is 'Delta'
+      else if(t.charAt(i) == '~' && !isFormula)  {t.replace(i, i+1, "\\230"); i = i+3;} //tilde (152 dec)
+      else if(t.charAt(i) == '^' && !isFormula)  {t.replace(i, i+1, "\\210"); i = i+3;} //circumflex (136 dec)
+      else if(t.charAt(i) == '×')  {t.replace(i, i+1, "\\327"); i = i+3;} //multiply
+      // these are not written properly:
+      //else if(t.charAt(i) == '€')  {t.replace(i, i+1, "\\200"); i = i+3;} //euro (Symbol font)
+      else if(t.charAt(i) == '‚')  {t.replace(i, i+1, "\\140"); i = i+3;} //quotesinglbase (=quoteleft)
+      //else if(t.charAt(i) == 'ƒ')  {t.replace(i, i+1, "\\203"); i = i+3;} //florin (Symbol font)
+      else if(t.charAt(i) == '„')  {t.replace(i, i+1, "\\042"); i = i+3;} //quotedblbase (=quotedbl)
+      //else if(t.charAt(i) == '…')  {t.replace(i, i+1, "\\205"); i = i+3;} //ellipsis (Symbol font)
+      //else if(t.charAt(i) == '†')  {t.replace(i, i+1, "\\174"); i = i+3;} //dagger (StandardEncoding)
+      //else if(t.charAt(i) == '‡')  {t.replace(i, i+1, "\\174"); i = i+3;} //daggerdbl (StandardEncoding)
+      //else if(t.charAt(i) == '‰')  {t.replace(i, i+1, "\\077"); i = i+3;} //perthousand (StandardEncoding)
+      else if(t.charAt(i) == 'Š')  {t.replace(i, i+1, "\\123"); i = i+3;} //Scaron (=S)
+      else if(t.charAt(i) == '‹')  {t.replace(i, i+1, "\\074"); i = i+3;} //guilsinglleft (=< less)
+      //else if(t.charAt(i) == 'Œ')  {t.replace(i, i+1, "\\326"); i = i+3;} //OE (=Ö)
+      else if(t.charAt(i) == 'Ž')  {t.replace(i, i+1, "\\132"); i = i+3;} //Zcaron (=Z)
+      else if(t.charAt(i) == '‘')  {t.replace(i, i+1, "\\140"); i = i+3;} //quoteleft
+      else if(t.charAt(i) == '’')  {t.replace(i, i+1, "\\047"); i = i+3;} //quoteright
+      else if(t.charAt(i) == '“')  {t.replace(i, i+1, "\\042"); i = i+3;} //quotedblleft (=quotedbl)
+      else if(t.charAt(i) == '”')  {t.replace(i, i+1, "\\042"); i = i+3;} //quotedblright (=quotedbl)
+      //else if(t.charAt(i) == '•')  {t.replace(i, i+1, "\\225"); i = i+3;} //bullet (Symbol font)
+      else if(t.charAt(i) == '–')  {t.replace(i, i+1, "\\055"); i = i+3;} //endash (=minus)
+      else if(t.charAt(i) == '—')  {t.replace(i, i+1, "\\055"); i = i+3;} //emdash (=minus)
+      //else if(t.charAt(i) == '™')  {t.replace(i, i+1, "\\231"); i = i+3;} //trademark (Symbol font)
+      else if(t.charAt(i) == 'š')  {t.replace(i, i+1, "\\163"); i = i+3;} //scaron (=s)
+      else if(t.charAt(i) == '›')  {t.replace(i, i+1, "\\076"); i = i+3;} //guilsinglright (=> greater)
+      //else if(t.charAt(i) == 'œ')  {t.replace(i, i+1, "\\366"); i = i+3;} //oe (=ö)
+      else if(t.charAt(i) == 'ž')  {t.replace(i, i+1, "\\172"); i = i+3;} //zcaron (=z)
+      else if(t.charAt(i) == 'Ÿ')  {t.replace(i, i+1, "\\131"); i = i+3;} //Ydieresis (=Y)
+
+      else if(t.charAt(i) == '¤')  {t.replace(i, i+1, "\\244"); i = i+3;} //currency
+      else if(t.charAt(i) == '¦')  {t.replace(i, i+1, "\\246"); i = i+3;} //brokenbar
+      else if(t.charAt(i) == '¨')  {t.replace(i, i+1, "\\250"); i = i+3;} //dieresis
+      else if(t.charAt(i) == '©')  {t.replace(i, i+1, "\\251"); i = i+3;} //copyright
+      else if(t.charAt(i) == 'ª')  {t.replace(i, i+1, "\\252"); i = i+3;} //ordfeminine
+      else if(t.charAt(i) == '¬')  {t.replace(i, i+1, "\\254"); i = i+3;} //logicalnot
+      else if(t.charAt(i) == '®')  {t.replace(i, i+1, "\\256"); i = i+3;} //registered
+      else if(t.charAt(i) == '¯')  {t.replace(i, i+1, "\\257"); i = i+3;} //macron
+      else if(t.charAt(i) == '°')  {t.replace(i, i+1, "\\260"); i = i+3;} //degree
+      else if(t.charAt(i) == '±')  {t.replace(i, i+1, "\\261"); i = i+3;} //plusminus
+      else if(t.charAt(i) == '²')  {t.replace(i, i+1, "\\262"); i = i+3;} //twosuperior
+      else if(t.charAt(i) == '³')  {t.replace(i, i+1, "\\263"); i = i+3;} //threesuperior
+      else if(t.charAt(i) == '´')  {t.replace(i, i+1, "\\264"); i = i+3;} //acute
+      else if(t.charAt(i) == 'μ')  {t.replace(i, i+1, "\\265"); i = i+3;} //mu
+      else if(t.charAt(i) == '·')  {t.replace(i, i+1, "\\267"); i = i+3;} //periodcentered
+      else if(t.charAt(i) == '¹')  {t.replace(i, i+1, "\\271"); i = i+3;} //onesuperior
+      else if(t.charAt(i) == 'º')  {t.replace(i, i+1, "\\272"); i = i+3;} //ordmasculine
+      else if(t.charAt(i) == '¼')  {t.replace(i, i+1, "\\274"); i = i+3;} //onequarter
+      else if(t.charAt(i) == '½')  {t.replace(i, i+1, "\\275"); i = i+3;} //onehalf
+      else if(t.charAt(i) == '¾')  {t.replace(i, i+1, "\\276"); i = i+3;} //threequarters
+      else if(t.charAt(i) == 'À')  {t.replace(i, i+1, "\\300"); i = i+3;} //Agrave
+      else if(t.charAt(i) == 'Á')  {t.replace(i, i+1, "\\301"); i = i+3;} //Aacute
+      else if(t.charAt(i) == 'Â')  {t.replace(i, i+1, "\\302"); i = i+3;} //Acircumflex
+      else if(t.charAt(i) == 'Ã')  {t.replace(i, i+1, "\\303"); i = i+3;} //Atilde
+      else if(t.charAt(i) == 'Ä')  {t.replace(i, i+1, "\\304"); i = i+3;} //Adieresis
+      else if(t.charAt(i) == 'Å')  {t.replace(i, i+1, "\\305"); i = i+3;} //Aring
+      else if(t.charAt(i) == 'Æ')  {t.replace(i, i+1, "\\306"); i = i+3;} //AE
+      else if(t.charAt(i) == 'Ç')  {t.replace(i, i+1, "\\307"); i = i+3;} //Ccedilla
+      else if(t.charAt(i) == 'È')  {t.replace(i, i+1, "\\310"); i = i+3;} //Egrave
+      else if(t.charAt(i) == 'É')  {t.replace(i, i+1, "\\311"); i = i+3;} //Eacute
+      else if(t.charAt(i) == 'Ê')  {t.replace(i, i+1, "\\312"); i = i+3;} //Ecircumflex
+      else if(t.charAt(i) == 'Ë')  {t.replace(i, i+1, "\\313"); i = i+3;} //Edieresis
+      else if(t.charAt(i) == 'Ì')  {t.replace(i, i+1, "\\314"); i = i+3;} //Igrave
+      else if(t.charAt(i) == 'Í')  {t.replace(i, i+1, "\\315"); i = i+3;} //Iacute
+      else if(t.charAt(i) == 'Î')  {t.replace(i, i+1, "\\316"); i = i+3;} //Icircumflex
+      else if(t.charAt(i) == 'Ï')  {t.replace(i, i+1, "\\317"); i = i+3;} //Idieresis
+      else if(t.charAt(i) == 'Ð')  {t.replace(i, i+1, "\\320"); i = i+3;} //Eth
+      else if(t.charAt(i) == 'Ñ')  {t.replace(i, i+1, "\\321"); i = i+3;} //Ntilde
+      else if(t.charAt(i) == 'Ò')  {t.replace(i, i+1, "\\322"); i = i+3;} //Ograve
+      else if(t.charAt(i) == 'Ó')  {t.replace(i, i+1, "\\323"); i = i+3;} //Oacute
+      else if(t.charAt(i) == 'Ô')  {t.replace(i, i+1, "\\324"); i = i+3;} //Ocircumflex
+      else if(t.charAt(i) == 'Õ')  {t.replace(i, i+1, "\\325"); i = i+3;} //Otilde
+      else if(t.charAt(i) == 'Ö')  {t.replace(i, i+1, "\\326"); i = i+3;} //Odieresis
+      else if(t.charAt(i) == 'Ø')  {t.replace(i, i+1, "\\330"); i = i+3;} //Oslash
+      else if(t.charAt(i) == 'Ù')  {t.replace(i, i+1, "\\331"); i = i+3;} //Ugrave
+      else if(t.charAt(i) == 'Ú')  {t.replace(i, i+1, "\\332"); i = i+3;} //Uacute
+      else if(t.charAt(i) == 'Û')  {t.replace(i, i+1, "\\333"); i = i+3;} //Ucircumflex
+      else if(t.charAt(i) == 'Ü')  {t.replace(i, i+1, "\\334"); i = i+3;} //Udieresis
+      else if(t.charAt(i) == 'Ý')  {t.replace(i, i+1, "\\335"); i = i+3;} //Yacute
+      else if(t.charAt(i) == 'Þ')  {t.replace(i, i+1, "\\336"); i = i+3;} //Thorn
+      else if(t.charAt(i) == 'ß')  {t.replace(i, i+1, "\\337"); i = i+3;} //germandbls
+      else if(t.charAt(i) == 'à')  {t.replace(i, i+1, "\\340"); i = i+3;} //agrave
+      else if(t.charAt(i) == 'á')  {t.replace(i, i+1, "\\341"); i = i+3;} //aacute
+      else if(t.charAt(i) == 'â')  {t.replace(i, i+1, "\\342"); i = i+3;} //acircumflex
+      else if(t.charAt(i) == 'ã')  {t.replace(i, i+1, "\\343"); i = i+3;} //atilde
+      else if(t.charAt(i) == 'ä')  {t.replace(i, i+1, "\\344"); i = i+3;} //adieresis
+      else if(t.charAt(i) == 'å')  {t.replace(i, i+1, "\\345"); i = i+3;} //aring
+      else if(t.charAt(i) == 'æ')  {t.replace(i, i+1, "\\346"); i = i+3;} //ae
+      else if(t.charAt(i) == 'ç')  {t.replace(i, i+1, "\\347"); i = i+3;} //ccedilla
+      else if(t.charAt(i) == 'è')  {t.replace(i, i+1, "\\350"); i = i+3;} //egrave
+      else if(t.charAt(i) == 'é')  {t.replace(i, i+1, "\\351"); i = i+3;} //eacute
+      else if(t.charAt(i) == 'ê')  {t.replace(i, i+1, "\\352"); i = i+3;} //ecircumflex
+      else if(t.charAt(i) == 'ë')  {t.replace(i, i+1, "\\353"); i = i+3;} //edieresis
+      else if(t.charAt(i) == 'ì')  {t.replace(i, i+1, "\\354"); i = i+3;} //igrave
+      else if(t.charAt(i) == 'í')  {t.replace(i, i+1, "\\355"); i = i+3;} //iacute
+      else if(t.charAt(i) == 'î')  {t.replace(i, i+1, "\\356"); i = i+3;} //icircumflex
+      else if(t.charAt(i) == 'ï')  {t.replace(i, i+1, "\\357"); i = i+3;} //idieresis
+      else if(t.charAt(i) == 'ð')  {t.replace(i, i+1, "\\360"); i = i+3;} //eth
+      else if(t.charAt(i) == 'ñ')  {t.replace(i, i+1, "\\361"); i = i+3;} //ntilde
+      else if(t.charAt(i) == 'ò')  {t.replace(i, i+1, "\\362"); i = i+3;} //ograve
+      else if(t.charAt(i) == 'ó')  {t.replace(i, i+1, "\\363"); i = i+3;} //oacute
+      else if(t.charAt(i) == 'ô')  {t.replace(i, i+1, "\\364"); i = i+3;} //ocircumflex
+      else if(t.charAt(i) == 'õ')  {t.replace(i, i+1, "\\365"); i = i+3;} //otilde
+      else if(t.charAt(i) == 'ö')  {t.replace(i, i+1, "\\366"); i = i+3;} //odieresis
+      else if(t.charAt(i) == '÷')  {t.replace(i, i+1, "\\367"); i = i+3;} //divide
+      else if(t.charAt(i) == 'ø')  {t.replace(i, i+1, "\\370"); i = i+3;} //oslash
+      else if(t.charAt(i) == 'ù')  {t.replace(i, i+1, "\\371"); i = i+3;} //ugrave
+      else if(t.charAt(i) == 'ú')  {t.replace(i, i+1, "\\372"); i = i+3;} //uacute
+      else if(t.charAt(i) == 'û')  {t.replace(i, i+1, "\\373"); i = i+3;} //ucircumflex
+      else if(t.charAt(i) == 'ü')  {t.replace(i, i+1, "\\374"); i = i+3;} //udieresis
+      else if(t.charAt(i) == 'ý')  {t.replace(i, i+1, "\\375"); i = i+3;} //yacute
+      else if(t.charAt(i) == 'þ')  {t.replace(i, i+1, "\\376"); i = i+3;} //thorn
+      else if(t.charAt(i) == 'ÿ')  {t.replace(i, i+1, "\\377"); i = i+3;} //ydieresis
+      i++;
     } //while
     return t.toString();
   }
@@ -1477,7 +1612,7 @@ private static class BoundingBox {
   * @param o where the text will be printed  */
   private void printText(int i1, int i2, String txt,
           boolean isFormula, int align, double txtSize, double txtAngle,
-          java.io.OutputStreamWriter o) {
+          java.io.BufferedWriter o) {
     //final double[] FontScaleHeight={1.45, 1.35, 1.6};
     final double[] FontScaleWidth ={0.7, 0.71, 0.88};
     final String[] ALIGNMENTS = {"left","centre","right"};
@@ -1660,11 +1795,11 @@ private static class BoundingBox {
     else {
       try{
         if(align == 1) {
-                o.write("("+fixTextSimple(txt)+")rShow"+nl);
+                o.write("("+fixTextSimple(txt,isFormula)+")rShow"+nl);
         } else if(align == 0) {
-                o.write("("+fixTextSimple(txt)+")cShow"+nl);
+                o.write("("+fixTextSimple(txt,isFormula)+")cShow"+nl);
         } else if(align == -1) {
-            o.write("("+fixTextSimple(txt)+")lShow"+nl);
+            o.write("("+fixTextSimple(txt,isFormula)+")lShow"+nl);
         }
       } catch (java.io.IOException ex) {exception(ex, null, doNotStop); delete =true;}
     }
@@ -1690,7 +1825,7 @@ private static class BoundingBox {
     if(txt == null || txt.trim().length() <=0) {return txt;}
     if(move == null) {move = "";}
     // change "\", "(" and ")" to "\\", "\(" and "\)"
-    StringBuilder t = new StringBuilder(fixTextSimple(txt));
+    StringBuilder t = new StringBuilder(fixTextSimple(txt,isFormula));
     String fontSizeTxt = String.valueOf(fontSize);
     int i = 0;
     while(i < t.length()) {
@@ -1699,13 +1834,14 @@ private static class BoundingBox {
         else if(t.charAt(i) == '$')  {t.replace(i, i+1, "\\265"); i = i+4; continue;} //mu
       }
       // Delta:
-      if(t.charAt(i) == 127 || (isFormula && t.charAt(i) == '^')) {
-          String str = ") "+move+" "+ fontSizeTxt + " _setSize _sym (D) "+move;
+      if(t.charAt(i) == 'Δ' || t.charAt(i) == '∆' || (isFormula && t.charAt(i) == '^')) {
+          /** String str = ") "+move+" "+ fontSizeTxt + " _setSize _sym (\\104) "+move;
           if(penNow == 1) {str = str + " _bold ";} else {str = str + " _norm ";}
           fontSizeOld = fontSize;
           str = str + fontSizeTxt + " _setSize (";
           t.replace(i, i+1, str);
-          i = i+str.length();
+          i = i+str.length(); */
+          i = symChar("104",t,i,move);
           continue;
       }
       // versus:
@@ -1735,9 +1871,77 @@ private static class BoundingBox {
           i = i+str.length();
           continue;
       }
+      if(t.charAt(i) == '‰') { // perthousand:
+          i = standardEncodingChar("275",t,i,move); continue;
+      }
+      if(t.charAt(i) == '†') { // dagger:
+          i = standardEncodingChar("262",t,i,move); continue;
+      }
+      if(t.charAt(i) == '‡') { // daggerdbl:
+          i = standardEncodingChar("263",t,i,move); continue;
+      }
+      if(t.charAt(i) == 'Œ') { // OE:
+          i = standardEncodingChar("352",t,i,move); continue;
+      }
+      if(t.charAt(i) == 'œ') { // oe:
+          i = standardEncodingChar("372",t,i,move); continue;
+      }
+      if(t.charAt(i) == '€') { // Euro:
+          i = symChar("240",t,i,move); continue;
+      }
+      if(t.charAt(i) == '…') { // elipsis:
+          i = symChar("274",t,i,move); continue;
+      }
+      if(t.charAt(i) == '•') { //  bullet:
+          i = symChar("267",t,i,move); continue;
+      }
+      if(t.charAt(i) == '™') { //  trademark:
+          i = symChar("324",t,i,move); continue;
+      }
+      if(t.charAt(i) == 'ƒ') { //  florin:
+          i = symChar("246",t,i,move); continue;
+      }      
+      // Sum:
+      if(t.charAt(i) == 'Σ' || t.charAt(i) == '∑') {
+          i = symChar("123",t,i,move); continue;
+      }
+      // rho:
+      if(t.charAt(i) == 'ρ') {
+          i = symChar("162",t,i,move); continue;
+      }
+      // epsilon:γ
+      if(t.charAt(i) == 'ε') {
+          i = symChar("145",t,i,move); continue;
+      }
+      // gamma:
+      if(t.charAt(i) == 'γ') {
+          i = symChar("147",t,i,move); continue;
+      }
       i++;
     } //while
     return t.toString();
+  }
+  private int standardEncodingChar(String code, StringBuilder t, int i, String move) {
+    String fontSizeTxt = String.valueOf(fontSize);
+    String f;
+    if(penNow == 1) {f = "_boldS";} else {f = "_normS";} // StandardEncoding fonts
+    String str = ") "+move+" "+ fontSizeTxt + " _setSize "+f+" (\\"+code+") "+move;
+    if(penNow == 1) {str = str + " _bold ";} else {str = str + " _norm ";}
+    fontSizeOld = fontSize;
+    str = str + fontSizeTxt + " _setSize (";
+    t.replace(i, i+1, str);
+    i = i+str.length();
+    return i;
+  }
+  private int symChar(String code, StringBuilder t, int i, String move) {
+    String fontSizeTxt = String.valueOf(fontSize);
+    String str = ") "+move+" "+ fontSizeTxt + " _setSize _sym (\\"+code+") "+move;
+    if(penNow == 1) {str = str + " _bold ";} else {str = str + " _norm ";}
+    fontSizeOld = fontSize;
+    str = str + fontSizeTxt + " _setSize (";
+    t.replace(i, i+1, str);
+    i = i+str.length();
+    return i;
   }
   //</editor-fold>
   //<editor-fold defaultstate="collapsed" desc="rTrim">
