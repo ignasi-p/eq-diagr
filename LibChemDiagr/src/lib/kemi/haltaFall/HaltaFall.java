@@ -37,12 +37,12 @@ import lib.kemi.chem.Chem;
  *  public class Factor {
  *      public Factor() {}
  *      public void factor(double[] C, double[] lnf) {
- *          for(int i=0; i&lt;lnf.length; i++) {lnf[i]=0;}
+ *          for(int i=0; i&lt;lnf.length; i++) {lnf[i]=0.;}
  *      }
  *  }
  * </pre>
  *
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,7 +79,8 @@ public class HaltaFall {
   private final boolean ONLY_ONE_SOLID_AT_A_TIME = true;
  /** Used in procedure <code>kille()</code>: When the stepwise changes of x
   * are smaller than <code>STEGBYT</code> the procedure switches to
-  * the chord method. Should be small enough to avout rounding errors
+  * the chord method. Should be small enough to avoid rounding errors.
+  * It must not be smaller than STEGBYT.
   * @see lib.kemi.haltaFall.HaltaFall#x x
   * @see lib.kemi.haltaFall.HaltaFall#y y
   * @see lib.kemi.haltaFall.HaltaFall#y0 y0
@@ -87,7 +88,7 @@ public class HaltaFall {
   * @see lib.kemi.haltaFall.HaltaFall#steg steg
   * @see lib.kemi.haltaFall.HaltaFall#catchRoundingErrors catchRoundingErrors
   * @see lib.kemi.haltaFall.HaltaFall#kille() kille() */
-  private final double STEGBYT = 0.05;
+  private final double STEGBYT = 0.005;
  /** starting value of steg[] in the iterations of procedure kille
   * when dealing with a new chemical system, that is, when
   * <code>c.cont = false</code>.
@@ -102,7 +103,7 @@ public class HaltaFall {
   private final double STEG0 = 0.1;
  /** starting value of steg[] in the iterations of procedure kille
   * when dealing with the same chemical system as last calculation, that is,
-  * when <code>c.cont = true</code>.
+  * when <code>c.cont = true</code>. It must not be smaller than STEGBYT.
   * @see lib.kemi.chem.Chem.ChemSystem.ChemConcs#cont cont
   * @see lib.kemi.haltaFall.HaltaFall#kille() kille()
   * @see lib.kemi.haltaFall.HaltaFall#x x
@@ -111,11 +112,11 @@ public class HaltaFall {
   * @see lib.kemi.haltaFall.HaltaFall#STEG0 STEG0
   * @see lib.kemi.haltaFall.HaltaFall#STEGBYT STEGBYT
   * @see lib.kemi.haltaFall.HaltaFall#steg steg */
-  private final double STEG0_CONT = 0.001;
+  private final double STEG0_CONT = 0.01;
  /** maximum number of iterations in procedure kille */
   private static final int ITER_MAX =60; // it is perhaps ok with 40
  /** maximum number of iterations when calculating activity coefficients */
-  private static final int ITERAC_MAX = 75;
+  private static final int ITERAC_MAX = 100;
  /** maximum number of "InFall" iterations in procedure fasta() */
   private static final int ITER_FASTA_MAX = 100;
  /** The default value for the tolerance (in natural log scale) when iterating
@@ -206,6 +207,16 @@ public class HaltaFall {
   * @see lib.kemi.haltaFall.HaltaFall#y y */
   private double y0;
 
+ /** The minimum value of the tolY[] array.
+  * In some calculations where the tolerance is high, a solid
+  * might be found both supersaturated and with zero or slightly negative
+  * concentration, and this leads to a loop. To avoid this situation, if
+  * the negative concentration of the solid is (in absolute value) less
+  * than this tolerance, the concentration is assumed to be zero.
+  * @see lib.kemi.haltaFall.HaltaFall#tolY tolY
+  * @see lib.kemi.chem.Chem.ChemSystem.ChemConcs#tol ChemConcs.tol  */
+  private double tolFasta;
+
 //-- boolean arrays in alphabetical order:
  /** true if lnA[] is calculated from a solubility product (eqn.(14))
   * @see lib.kemi.haltaFall.HaltaFall#ibe ibe */
@@ -228,7 +239,7 @@ public class HaltaFall {
   * @see lib.kemi.chem.Chem.ChemSystem.ChemConcs#kh Chem.ChemSystem.ChemConcs.kh */
   private boolean[] noCalc;
   /** the value of logA when noCalc is true */
-  private final double NOCALC_LOGA = -9999;
+  private final double NOCALC_LOGA = -9999.;
  /** true if the two components are independent as seen from the stoichimotric coefficients
   * (no complex or solid contains both components)
   * @see lib.kemi.haltaFall.HaltaFall#nober nober */
@@ -263,17 +274,7 @@ public class HaltaFall {
  /** numbers of the solids present at equilibrium (0 to nfall-1)
   * @see lib.kemi.haltaFall.HaltaFall#nfall nfall  */
   private int[] ifall;
- /** In some calculations where the tolerance is high, a solid
-  * might be found bot supersaturated and with zero or slightly negative
-  * concentration, and this leads to a loop. To avoid this situation, the
-  * sets of solids found in the last two iterations at routine fasta() are
-  * stored, so that the algorithm can decide that the solid is at the limit
-  * of saturation, given the tolerance chosen.
-  * numbers of the solids present at equilibrium (0 to nfall-1)
-  * @see lib.kemi.haltaFall.HaltaFall#ifall ifall
-  * @see lib.kemi.haltaFall.HaltaFall#nfall nfall  */
-  private int[][] ifallSpar;  
- /** nbr of the solids indicated as possible after INFALL in proceure <code>fasta()</code>,
+ /** nbr of the solids indicated as possible after INFALL in procedure <code>fasta()</code>,
   * (needed when <code>singFall</code>)
   * @see lib.kemi.haltaFall.HaltaFall#nUt nUt
   * @see lib.kemi.haltaFall.HaltaFall#fut fut
@@ -351,6 +352,13 @@ public class HaltaFall {
   private double[] steg;
  /** tolerance when solving the mass balance equations for tot[] */
   private double[] tolY;
+ /** For some reason the calculations go faster if they are performed in two steps,
+  * first with a small tolerance (1.E-3) and then with the user-requested tolerance.
+  * This is accomplished with the loop "loopTol".
+  * This variable is either 1 or 2 (first and second loops).
+  * @see lib.kemi.haltaFall.HaltaFall#tolY tolY
+  * @see lib.kemi.chem.Chem.ChemSystem.ChemConcs#tol ChemConcs.tol  */
+  private int tolLoop;
  /** <code>totBe[i]</code> = term for component <code>ibe[i]</code> (eqn. 15) used for calculating
   * <i>cf</i> after FallProv in procedure fasta() */
   private double[] totBe;
@@ -476,7 +484,6 @@ public HaltaFall (Chem.ChemSystem cs, Factor factor,
     steg = new double[MXA];
     ibe = new int[MXA];
     ifall = new int[MXS];
-    ifallSpar = new int[MXS][2];
     iva = new int[MXA+1];
     ivaf = new int[MXA];
     ivaBra = new int[MXA+1];  ivaNov = new int[MXA+1];
@@ -507,7 +514,7 @@ public HaltaFall (Chem.ChemSystem cs, Factor factor,
     pva = new double[MXA][MXC];
 
     oldLnG = new double[MXAQ];
-    for(int lix =0; lix <MXAQ; lix++) {oldLnG[lix] = 0;}
+    for(int lix =0; lix <MXAQ; lix++) {oldLnG[lix] = 0.;}
     fut = new int[MXS];
     iber = new int[MXA+1];
     ifSpar = new int[MXS];
@@ -523,7 +530,7 @@ public HaltaFall (Chem.ChemSystem cs, Factor factor,
         for(int lif=0; lif <cs.mSol; lif++) {
             liaf = cs.nx +lif;
             lnKf[lif] = -cs.lBeta[liaf]*ln10;
-            fscal[lif] = 1;
+            fscal[lif] = 1.;
             liax = cs.Na +cs.nx +lif;
             if(!cs.noll[liax]) {
                 for(int lia =0; lia < cs.Na; lia++) {
@@ -607,44 +614,62 @@ public void haltaCalc()
                                               "                  debug level = "+c.dbg);}
     panic = false;
 
-    //For some reason the calculations go faster if they are performed in two steps,
-    //  first with a small tolerance (1E-3) and then with the user-requested tolerance.
-    //  This is accomplished with "loopTol". To remove this loop, set tol0 = 1E-10.
-    //
-    //Smaller tolerances are set to components solved in "inner" iteration loops.
-    //  The maximum decrease in the tolerance is "MAXtolSteg" (equals 2 or 3 in log-units).
-    //  For example, if tol=1e-5, the tolerance for the component in the inner
-    //  loop might be 1e-8, depending on the number of equations to solve (nva).
-    final int MAXtolSPAN;
-    if(nva <= 3) {MAXtolSPAN = 2;} else {MAXtolSPAN = 3;}  //log10-units
-    double tol, tol0 = 5.01187E-3; // log10(tol0) = -2.3
+    /** A note on activity coefficient calculations. It would seem logic to add
+     * an activity coefficient calculation loop after step (after each cBer() call).
+     * However, "kille" takes large steps in lnA and soon a value of lnA for a
+     * component implies very large activities for the individual species, which
+     * in turn results in unrealistic ionic strengths. The result is that the activity
+     * coefficient calculation do not converge.
+     * 
+     * The approach adopted here is to first get the equilibrium composition at a
+     * fixed value of the activity coefficients, then calculate new activity
+     * coefficients based on the new equilibrium composition, and iterate until
+     * the activity coefficients do not vary.
+     */
+    
+    /** For some reason the calculations go faster if they are performed in two steps,
+     * first with a large tolerance (e.g. 1.E-3) and then with the user-requested
+     * tolerance. This is accomplished with "loopTol".
+     * To remove this loop, set TOL0 <= 1.E-10 in next line  */
+    final double TOL0 = 5.01187233E-3; // log10(TOL0) = -2.3
+    double tol;
+    final String[] msg = new String[] {" (preliminary calculation with higher tolerance)"," (with user-requested tolerance)"};
 
-    int tolLoop = 0;
+    tolLoop = 0;
     loopTol:
     do {
-        tol = Math.min(Math.max(Math.abs(c.tol),1e-9),1e-2); // something between 1E-9 and 1E-2
+        tol = Math.min(Math.max(Math.abs(c.tol),1.e-9),1.e-2); // something between 1.E-9 and 1.E-2
         if(tolLoop == 0) {
-            if(tol < tol0) {tol = tol0;} else {tolLoop++;}
+            if(tol < TOL0) {tol = TOL0;} else {tolLoop++;}
         }
         tolLoop++;
 
-    c.errFlags = 0;
+    if(c.dbg >=ERR_RESL_INPUT_3 && TOL0 > 1.e-10) {        
+        out.println("- - - - -  Tolerance loop: "+tolLoop+" (of 2)"+msg[tolLoop-1]);
+    }
+    c.errFlags = 0; // clear all error flags
     haltaInit();
-    boolean firstLoop=true;
+    boolean firstLoop = true;
     singFall = false;
     iterFasta = 1;
-    iterAc = 0;
 
 // NYA:  get lnA[] and/or tolY[]
+    //Smaller tolerances are set to components solved in "inner" iteration loops.
+    //  The maximum decrease in the tolerance is "MAXtolSPAN" (in log-units).
+    //  For example, if tol=1.e-5, the tolerance for the component in the inner
+    //  loop might be 1.e-7, depending on the number of equations to solve (nva).
+    final int MAXtolSPAN;
+    if(nva <= 3) {MAXtolSPAN = 1;} else {MAXtolSPAN = 2;}  //log10-units
     double logTol = Math.log10(tol);
     if(c.dbg >=ERR_RESL_INPUT_3) {out.println("Max tolerance to solve mass-balance eqns. (log) = "+(float)logTol+", max tolerance span (log) = "+MAXtolSPAN);}
-    // Get minTot and tolStep:
-    //    minTot will contain the lowest non-zero total concentration
+    // Get tolStep (tolerance step) from tolSpan, minTot and maxTot:
+    //    minTot will contain the smallest absolute value of non-zero total concentration
+    //    maxTot will contain the largest absolute value of non-zero total concentration
     double minTot = Double.MAX_VALUE;
     //    tolStep is the step size in log-units for the change in tol between components
-    double tolStep = 0;
+    double tolStep = 0.;
     if(nva > 1) {
-        // get a value between 1 and MAXtolSPAN
+        // get a value between 1 and 3
         // if nva = 2  then tolSpan = 1
         // if nva = 3  then tolSpan = 2
         // if nva >= 4  then tolSpan = 3
@@ -655,17 +680,19 @@ public void haltaCalc()
         // if nva = 5  then tolSteg = 0.75
         // if nva = 6  then tolSteg = 0.6  etc
         tolStep = (double)tolSpan/(double)(nva-1);
-       // get minTot: the lowest non-zero total concentration
+       // get minTot and maxTot: the smallest and largest absolute value non-zero total concentrations
        for(ia=0; ia <cs.Na; ia++) {
-         if(c.kh[ia]==1 && c.tot[ia]!=0) {minTot = Math.min(Math.abs(c.tot[ia]),minTot);}
+         if(c.kh[ia]==1 && c.tot[ia]!=0. && !noCalc[ia]) {
+             minTot = Math.min(Math.abs(c.tot[ia]),minTot);
+         }
        }
-       minTot = minTot * 1e-4; // this value is used when a tot.conc.=0
     }
-    // if the lowest non-zero total concentration is too high:
-    // use 1e-8 as "zero" concentration.
-    minTot = Math.min(minTot, 1e-8);
+    // minTot value is used to calculate tolerance when a tot.conc.=0;
+    // use 1e-7 as minimum concentration if the smallest non-zero total concentration is too high
+    minTot = Math.min(minTot, 1.e-7);
     if(c.dbg >=ERR_RESL_INPUT_3){out.println("Mass-balance tolerances (relative):");}
     int ivaIndex;
+    tolFasta = Double.MAX_VALUE;
     for(ia=0; ia <cs.Na; ia++) {
       if(c.kh[ia] == 1 && !noCalc[ia]) {
           w = logTol;
@@ -681,6 +708,8 @@ public void haltaCalc()
           if(c.dbg >=ERR_RESL_INPUT_3){out.print(" "+(float)w);}
           // if the total concentration is zero, use a minimum value
           tolY[ia] = w * Math.max(Math.abs(c.tot[ia]),minTot);
+          // if(tolLoop>1) out.println("w="+(float)w+", minTot="+(float)minTot+", c.tot["+ia+"]="+(float)c.tot[ia]+", tolY["+ia+"]="+(float)tolY[ia]); // ##
+          tolFasta = Math.min(tolFasta, tolY[ia]);
       } //if kh =1
       else {
           if(c.dbg >=ERR_RESL_INPUT_3) {out.print(" NaN");}
@@ -701,6 +730,7 @@ public void haltaCalc()
         ivar = 0;
         iterFasta = 0;
         x = lnaBas(ivar);
+        iterAc = 0; c.errFlagsClear(6);
         while(true) {
             cBer(ivar);
             if(!c.actCoefCalc || actCoeffs()) {break;} // ok!
@@ -722,8 +752,8 @@ public void haltaCalc()
     while(true) {
     if(panic) {break;} //Slingor
 
+    if(c.dbg >=ERR_RESL_INPUT_3){out.println("--- haltaCalc at Slingor; nva="+nva+", nfall="+nfall+"; nvaf="+nvaf);}
     if(c.dbg >=ERR_DEBUG_FASTA_4) {
-        out.println("--- haltaCalc at Slingor; nva="+nva+", nfall="+nfall+"; nvaf="+nvaf);
         printArrays(true,false); //print iva[], ivaBra[], ivaNov[]
         if(nvaf>0) {printArraysFasta(true, false,false,false,false, true, false,false);} //print ifall and ivaf[]
     }
@@ -753,7 +783,7 @@ public void haltaCalc()
     } //if ber[ivar]
     else {
         tjat = true;
-        if(cs.nx == 0 && cs.noll[ivar]) {lnA[ivar]=1; tjat = false;} //added 2011-sept.
+        if(cs.nx == 0 && cs.noll[ivar]) {lnA[ivar]=1.; tjat = false;} //added 2011-sept.
         if(c.dbg >= ERR_DEBUG_FASTA_4) {out.println("    ber["+ivar+"]=false;  tjat="+tjat);}
     }
 
@@ -761,61 +791,61 @@ public void haltaCalc()
 //      Solve the mass balance equations through iterations
     Tjat:
     while(true) {
-    if(panic) {break Slingor;}
-    if(c.dbg >= ERR_DEBUG_FASTA_4) {out.println("--- haltaCalc at Tjat; ivar="+ivar+", tjat="+tjat);}
+        if(panic) {break Slingor;}
+        if(c.dbg >= ERR_DEBUG_FASTA_4) {out.println("--- haltaCalc at Tjat; ivar="+ivar+", tjat="+tjat);}
 
     goToProv: {
-    if(tjat) {
-        lnA[ivar] =x;
-        if(falla[ivar]) {
-            lnaBer1();
-            x = lnaBas(ivar);
-        }
-        if(ivar != ivaNov[ivar]) {
-
-        // Clear "too Many Iterations"
-        // for "inner" loops if they are "dependent" with this ivar
-            for(rva=0; rva < nva; rva++) {
-                if(iva[rva] != ivar) {continue;}
-                if(rva == 0) {break;} // do not clear anything for the 1st iva
-                for(int n=0; n < rva; n++) {
-                    ia = iva[n];
-                    if(ia != ivar && !ober[ivar][ia]) {
-                        if(c.dbg >= ERR_XTRA_DEBUG_6) {out.println("    setting  iter["+ia+"]=0  and  catchRoundingErrors["+ia+"]=0");}
-                        iter[ia] = 0; catchRoundingErrors[ia]=0;
-                    }
-                }
-                break;
+        if(tjat) {
+            lnA[ivar] =x;
+            if(falla[ivar]) {
+                lnaBer1();
+                x = lnaBas(ivar);
             }
+            if(ivar != ivaNov[ivar]) {
 
-            ivar = ivaNov[ivar];
-            if(c.dbg >=ERR_XTRA_DEBUG_6) {out.println("--- haltaCalc at Tjat; new ivar="+ivar);}
-            x = lnaBas(ivar);
-            if(ber[ivar]) {
-                cBer(ivar);
-                if(nvaf >0) lnaBer2();
-                break goToProv;
-            } //if ber[ivar]
+                // Clear "too Many Iterations" for "inner" loops if they are "dependent" with this ivar
+                for(rva=0; rva < nva; rva++) {
+                    if(iva[rva] != ivar) {continue;}
+                    if(rva == 0) {break;} // do not clear anything for the 1st iva
+                    for(int n=0; n < rva; n++) {
+                        ia = iva[n];
+                        if(ia != ivar && !ober[ivar][ia]) {
+                            if(c.dbg >= ERR_XTRA_DEBUG_6) {out.println("    setting  iter["+ia+"]=0  and  catchRoundingErrors["+ia+"]=0");}
+                            iter[ia] = 0; catchRoundingErrors[ia]=0;
+                        }
+                    }
+                    break; //for
+                }
+
+                ivar = ivaNov[ivar];
+                if(c.dbg >=ERR_XTRA_DEBUG_6) {out.println("--- haltaCalc at Tjat; new ivar="+ivar);}
+                x = lnaBas(ivar);
+                if(ber[ivar]) {
+                    cBer(ivar);
+                    if(nvaf >0) lnaBer2();
+                    break goToProv;
+                } //if ber[ivar]
+            }
+            cBer(ivar);
+            if(nvaf >0) {lnaBer2();}
+            totBer(); /* Returns a value for indik
+                       * indik=1 not ok but it is a component only involved in
+                       *    mononuclear reactions and there are no solids present
+                       * indik=2 ok (the Y is equal to Y0 within the tolerance)
+                       * indik=3 not ok and it is either not a mono component or
+                       *    there are solids present
+                       * indik=4 if too many iterations (iter[ivar] is then > ITER_MAX+1) */
+            if(indik ==1) {continue;} //Tjat
+            else if(indik ==2 || indik ==4) {break goToProv;}
+            else if(indik ==3) {
+                kille();
+                continue; //Tjat
+            }
+        } //if tjat
+        else {
+            if(c.actCoefCalc) {actCoeffs();}
+            tjat = true;
         }
-        cBer(ivar);
-        if(nvaf >0) {lnaBer2();}
-        totBer(); /* Returns
-                   * indik=1 not ok but it is a component only involved in
-                   *    mononuclear reactions and there are no solids present
-                   * indik=2 ok (the Y is equal to Y0 within the tolerance)
-                   *    or if too many iterations (iter[ivar] is then = -1)
-                   * indik=3 not ok and it is either not a mono component or
-                   *    there are solids present */
-        if(indik ==1) {continue;} //Tjat
-        else if(indik ==2) {
-            break goToProv;
-        }
-        else if(indik ==3) {
-            kille();
-            continue; //Tjat
-        }
-    } //if tjat
-    else {tjat = true;}
     } //goToProv:
 
 //PROV    ( = "test" in Swedish)
@@ -829,55 +859,55 @@ public void haltaCalc()
         ivar = ivaBra[ivar];
         //java: changed ivar==0 to ivar==-1
         if(ivar == -1) {
-            // This was the last ivar
-            //     check first activity coefficients
-            //     and then the solid phases
-            //
+            // This was the last ivar: check activity coefficients and the solid phases
             // Calculate activity coefficients
-            if(firstLoop && c.actCoefCalc && !actCoeffs()) {
-                // act.coeffs. changed
-                singFall = false;  // solid phases might change as well...
-                continue Slingor;
+            if(firstLoop) {
+                if(c.actCoefCalc && !actCoeffs()) {
+                    // act.coeffs. changed
+                    singFall = false;  // solid phases might change as well...
+                    continue Slingor;
+                }
             }
             // ok, act.coeffs. not changed
             firstLoop = false;
             //if(!c.isErrFlagsSet(6)) {iterc = 0;}
 
-            // check for "too many iterations"
-            for(rva=0; rva < nva; rva++) {
-                if(catchRoundingErrors[iva[rva]]==3) {c.errFlagsSet(1);} // uncertain solution
-                if(iter[iva[rva]]<0) {iter[iva[rva]] = ITER_MAX+1; c.errFlagsSet(2); break Slingor;}
-            }
+            // check for "too many iterations" of the outer loop
+            if(iter[iva[nva-1]] > ITER_MAX+1) {break Slingor;}
 
             // Solid phases
             fasta(); /* Returns
                       * indik=2 if a new set of solids is chosen
                       * indik=3 if ok: either no solids precipitate in the system,
                       *     or no solubility products are exceeded and no solid
-                      *     assumed present has zero or negative concentration,
-                      *     or if too may solid phase combinations have been tested
+                      *     assumed present has zero or negative concentration
+                      * indik=4 if too may solid phase combinations have been tested
                       * indik=1 if "tji" (all combinations of solids give unsoluble equations,
                       *     i.e. negative determinants). */
 
             if(panic) {break Slingor;}
 
-            if(indik ==1 || indik ==3) { // ok in fasta()
+            if(indik !=2) { // "ok" (or can not go on) in fasta()
                 if(c.dbg >= ERR_DEBUG_FASTA_4) {
                     out.println("haltaCalc at Prov after fasta()");
                     printArrays(false,true); //print lnA
                 }
+                if(indik ==4) {break Slingor;} // too may solid phase iterations
                 // Calculate activity coefficients
                 if(!c.actCoefCalc || actCoeffs()) { // ok: act.coeffs. not changed
-                    break Slingor;
+                    iterAc = 0; c.errFlagsClear(6);
+                    break Slingor; 
                 } else { // not ok: act.coeffs. changed
                     singFall = false;  // solid phases might also change
                     continue Slingor;
                 }
-            } else if(indik ==2) { // not ok in fasta()
+            } else if(indik ==2) { // not "ok" in fasta()
                 // new set of solids: clear the "too many iterations" flag
-                c.errFlagsClear(1);
-                c.errFlagsClear(2);
-                c.errFlagsClear(5);
+                c.errFlagsClear(1); // the numerical solution is uncertain
+                c.errFlagsClear(2); // too many iterations when solving the mass balance equations
+                c.errFlagsClear(5); // some aqueous concentration(s) are too large (>20): uncertain activity coefficients
+                c.errFlagsClear(6); // activity factors did not converge.
+                iterAc = 0;
                 continue Slingor;
             }
         } //if ivar=-1
@@ -886,19 +916,17 @@ public void haltaCalc()
             continue; //Prov
         }
         x = lnaBas(ivar);
-        totBer(); /* Returns
+        totBer(); /* Returns a value for indik
                    * indik=1 not ok but it is a component only involved in
                    *    mononuclear reactions and there are no solids present
                    * indik=2 ok (the Y is equal to Y0 within the tolerance)
-                   *    or if too many iterations (iter[ivar] is then = -1)
                    * indik=3 not ok and it is either not a mono component or
-                   *    there are solids present */
+                   *    there are solids present
+                   * indik=4 if too many iterations (iter[ivar] is then > ITER_MAX+1) */
         if(indik ==1) {continue Tjat;}
         else if(indik ==2) {continue;} //Prov
-        else if(indik ==3) {
-            kille();
-            continue Tjat;
-        }
+        else if(indik ==3) {kille(); continue Tjat;}
+        else if(indik ==4) {iter[ivar] = 0; catchRoundingErrors[ivar]=0; continue;} //Prov
 
         break Slingor; // this statement should not be executed
 
@@ -909,21 +937,49 @@ public void haltaCalc()
     } //while Slingor:
 
 //NOG   ( = "enough" in Swedish)
-    if(!panic) {nog();} else {
-        c.errFlagsSet(7);
+    if(c.dbg >=ERR_RESL_INPUT_3) {out.println("--- haltaCalc at NOG,  errFlags = "+c.errFlagsToString());}
+    if(panic) {
+        c.errFlagsSet(7); // calculation interrupted by the user
         if(c.dbg >=ERR_ONLY_1) {out.println(" *****  Interrupted by the user!  *****");}
         break loopTol;
     }
 
+    nog();
+
     } while (tolLoop <= 1); // loopTol:
 
-    c.cont = !c.isErrFlagsSet(2) && !c.isErrFlagsSet(3) && !c.isErrFlagsSet(4) &&
-             !c.isErrFlagsSet(6) && !c.isErrFlagsSet(7);
+    for(rva=0; rva < nva; rva++) {
+            if(catchRoundingErrors[iva[rva]]==3) {c.errFlagsSet(1);}
+            if(iter[iva[rva]] > ITER_MAX+1) {c.errFlagsSet(2);}
+    }
     if(c.dbg >=ERR_RESL_INPUT_3) {
         out.println("---- haltaCalc(concs) returns;  cont = "+c.cont+nl+
-                "   iterations: "+iter[iva[nva-1]]+", solid combinations = "+iterFasta+nl+
-                "   activity coefficient iterations:"+iterAc+", "+c.errFlagsToString()+nl);
+                "   outer-loop iterations: "+iter[iva[nva-1]]+", solid combinations = "+iterFasta+nl+
+                "   activity coefficient iterations: "+iterAc);
+        String t = "";
+        for(rva=0; rva < nva; rva++) {
+            if(catchRoundingErrors[iva[rva]]==3) {if(!t.isEmpty()) {t=t+", ";} t=t+String.valueOf(iva[rva]);}
+        }
+        if(!t.isEmpty()) {out.println("   round-off errors for component(s) "+t);}
+        t = "";
+        for(rva=0; rva < nva; rva++) {
+            if(iter[iva[rva]] > (ITER_MAX+1)) {if(!t.isEmpty()) {t=t+", ";} t=t+String.valueOf(iva[rva]);}
+        }
+        if(!t.isEmpty()) {out.println("   too many iterations for component(s) "+t);}
+        out.println();
     }
+
+    if(c.dbg >=ERR_RESULTS_2) {printConcs();} // ---- debug ----
+
+    /** 1: the numerical solution is uncertain (round-off errors)
+     *  2: too many iterations when solving the mass balance equations
+     *  3: failed to find a satisfactory combination of solids
+     *  4: too many iterations trying to find the solids at equilibrium
+     *  5: some aqueous concentration(s) are too large (20) uncertain activity coefficients
+     *  6: activity factors did not converge.
+     *  7: calculation interrupted by the user.   */
+    c.cont = !c.isErrFlagsSet(2) && !c.isErrFlagsSet(3) && !c.isErrFlagsSet(4) &&
+             !c.isErrFlagsSet(6) && !c.isErrFlagsSet(7);
 
 } // haltaCalc
 // </editor-fold>
@@ -952,8 +1008,11 @@ public void printConcs() {
   out.flush();
   boolean failed = c.errFlags >0 && (c.isErrFlagsSet(2) || c.isErrFlagsSet(3) ||
           c.isErrFlagsSet(4) || c.isErrFlagsSet(6));
-  if(failed) {out.println("--- HaltaFall - Output composition (failed calculation):");}
-  else {out.println("--- HaltaFall - Calculated equilibrium composition:");}
+  if(failed) {out.println("--- HaltaFall - Output composition"+nl+"... Failed calculation: "+nl+c.errFlagsGetMessages());}
+  else {
+      out.println("--- HaltaFall - Calculated equilibrium composition:");
+      if(c.isErrFlagsSet(1)) {out.println("    (round-off errors - not within given tolerances)");}
+  }
   out.println("Components:");
     n0 = 0;     //start index to print
     nM = cs.Na-1;  //end index to print
@@ -1040,7 +1099,7 @@ private void nog() {
     int lia, lix, liax, liaf;
     for(lia =0; lia < cs.Na; lia++) {
         c.logf[lia] = lnG[lia]/ln10; //activity coeff.
-        c.solub[lia] = 0;
+        c.solub[lia] = 0.;
         if(!cs.noll[lia]) {c.solub[lia] = c.C[lia];}
         for(lix =0; lix <cs.nx; lix++) {
             liax = cs.Na +lix;
@@ -1081,8 +1140,6 @@ private void nog() {
         } //for lix
     } //if mSol >0
 
-    if(c.dbg >=ERR_RESULTS_2) {printConcs();} // ---- debug ----
-
     if(c.dbg >=ERR_XTRA_DEBUG_6) {out.println("nog() returns;");}
 } // nog
 // </editor-fold>
@@ -1105,8 +1162,8 @@ private void haltaInit() {
             if(!noCalc[ia]) {continue;} //calculation was possible
             ok = false;
             noCalc[ia] = false; //calculation is possible
-            c.logA[ia] = -10;
-            if(c.tot[ia] >0) {c.logA[ia] = Math.log10(c.tot[ia]) -2;}
+            c.logA[ia] = -10.;
+            if(c.tot[ia] >0) {c.logA[ia] = Math.log10(c.tot[ia]) -2.;}
             } //if pos | neg
         else {
             if(!noCalc[ia]) {ok = false;} //calculation was possible
@@ -1273,7 +1330,8 @@ private void kille() {
     double w, w1;
     if(c.dbg >=ERR_XTRA_DEBUG_6) {
         out.println("kille() in; ivar="+ivar+", karl["+ivar+"]="+karl[ivar]+", x="+x+", steg="+steg[ivar]+" (STEGBYT="+STEGBYT+")"+nl+
-                    "    x1["+ivar+"]="+x1[ivar]+", x2["+ivar+"]="+x2[ivar]);}
+                    "    x1["+ivar+"]="+x1[ivar]+", x2["+ivar+"]="+x2[ivar]+",    y="+y+", y0="+y0+nl+
+                    "    y1["+ivar+"]="+y1[ivar]+", y2["+ivar+"]="+y2[ivar]);}
 // Locating the solution by giving steg(Ivar)=0.5,1,2,4,8,16,32,64,...
 //   until a pair of x1 and x2 is found (in karl(ivar)=2 or 3). Then
 //   decreasing steg(ivar) (=steg(ivar)*0.5, in karl(ivar)=4) until
@@ -1321,15 +1379,15 @@ private void kille() {
             if(c.dbg >= ERR_XTRA_DEBUG_6) {out.println("   x1,x2="+x1[ivar]+", "+x2[ivar]+", new x="+x);}
             
             // --- Avoid rounding errors
-            if(Math.abs(1-(xOld[ivar]/x)) < 1e-14) {
+            if(Math.abs(1.-(xOld[ivar]/x)) < 1.e-12) {
                 if(c.dbg >= ERR_XTRA_DEBUG_6) {out.println("   ---- catchRoundingErrors["+ivar+"]="+(catchRoundingErrors[ivar]+1)+
                                                                     ", x="+x+"  old x="+xOld[ivar]);}
                 if(catchRoundingErrors[ivar]==0) {
-                    x = x + 1e-10*Math.abs(x);
+                    x = x + 1.e-8*Math.abs(x);
                 } else if(catchRoundingErrors[ivar]==1) {
-                    x = x - 2e-10*Math.abs(x);
+                    x = x - 2.e-8*Math.abs(x);
                 }
-                if(catchRoundingErrors[ivar] < 3) { // catchRoundingErrors[] may be 0,1,2, or 3.
+                if(catchRoundingErrors[ivar] < 3) { // catchRoundingErrors[] may be 0,1,2, or 3
                     catchRoundingErrors[ivar]++;
                     if(c.dbg >= ERR_XTRA_DEBUG_6) {out.println("        new x="+x);}
                 }
@@ -1356,7 +1414,8 @@ private void kille() {
  * = 2 if a new set of solids is chosen<br>
  * = 3 if ok (either no solids precipitate in the system, or no solubility
  *   products are exceeded and no solid assumed present has zero or negative
- *   concentration), or if too may solid phase combinations tested<br>
+ *   concentration)<br>
+ * = 4 if too may solid phase combinations tested<br>
  * = 1 if "tji" (all combinations of solids give unsoluble equations,
  *   i.e. negative determinants).
  */
@@ -1407,10 +1466,10 @@ private void fasta() {
     do {
         if(panic) {break;}
         switch (nextFall) {
-            case 1: {fallProv_InFall(); break;}
-            case 2: {beFall(); break;}
-            case 3: {anFall(); break;}
-            case 4: {utFall(); break;}
+            case 1: {fallProv_InFall(); break;} // Tests for changes in the number of solids calculated with the given lnA[] values
+            case 2: {beFall(); break;}  // Initialises iber[]
+            case 3: {anFall(); break;}  // Calculates ibe[], ivaf[], rut1[][] and pva[][] arrays
+            case 4: {utFall(); break;}  // Calculates ruta[][] and inverts the array
             case 5: {sing_Hopsi(); break;}
             case 6: {fUtt(); break;}
             case 7: {hoppFut(); break;}
@@ -1448,15 +1507,15 @@ private void fallProv_InFall() {
   // zMax and kMax are used with ONLY_ONE_SOLID_AT_A_TIME
   // to find which of the supersaturated solids is to be included
   // in the equilibrium system
-  zMax = -1.e-30; kMax = -1;
+  zMax = -1.e+50; kMax = -1;
   for(lif =0; lif < cs.mSol; lif++) {
       liax = nIon + lif;
       if(!fall[lif]) {
           liaf = cs.nx + lif;
-          c.C[liax] =0;
-          w =0;
+          c.C[liax] =0.;
+          w =0.;
           for(lia =0; lia < cs.Na; lia++) {w = w + cs.a[liaf][lia]*lnA[lia];}
-          lnA[liax] = w -lnKf[lif];
+          lnA[liax] = w -lnKf[lif]; // lnA is now the (over)saturation index
           if(w <= lnKf[lif] || cs.noll[liax] || nva == 0) {continue;}
           // ---- Block added 2013-Jan.
           //      Solids may be oversaturated that can not be allowed to
@@ -1473,19 +1532,27 @@ private void fallProv_InFall() {
               if(Math.abs(cs.a[liaf][iva[lia]]) >0.00001) {foundOne = true; break;}
           }
           if(!foundOne) {continue;} // all coefficients zero?
+          // calculate the scaled oversaturation
+          w = lnA[liax]/fscal[lif];
+          if(w < tolFasta) {
+                if(c.dbg >= ERR_DEBUG_FASTA_4) {
+                    out.println("FallProv solid nbr: "+lif+", lnA["+liax+"]="+(float)lnA[liax]+", scaling factor = "+fscal[lif]+", lnA/fscal = "+(float)w+nl+
+                                "         tolerance = "+(float)tolFasta+". Accepting the oversaturation of solid "+lif+" as zero within the tolerance...");
+                }
+                continue;
+          }
           // ---- Block end
-          if(!ONLY_ONE_SOLID_AT_A_TIME) {
+          if(ONLY_ONE_SOLID_AT_A_TIME) {
+              if(w > zMax) {zMax = w; kMax = lif;}
+          } else {
               bra = false;
               fall[lif]= true;
               nyfall++;
               //java: changed ifall[nfall+nyfall] to ifall[nfall+nyfall-1]
-              ifall[nfall + nyfall -1] = lif;
-          } else {
-              w = lnA[liax]/fscal[lif];
-              if(w > zMax) {zMax = w; kMax = lif;}
+              ifall[nfall + nyfall -1] = lif;              
           }
       } //if !fall[lif]
-      else {lnA[liax] = 0;}
+      else {lnA[liax] = 0.;}
   } //for lif
   if(ONLY_ONE_SOLID_AT_A_TIME && kMax > -1) {
         bra = false;
@@ -1495,7 +1562,7 @@ private void fallProv_InFall() {
   }
   if(!bra && c.dbg >= ERR_DEBUG_FASTA_4) {
       out.print("FallProv nyfall="+nyfall+", ");
-      if(ONLY_ONE_SOLID_AT_A_TIME) {out.println("new solid nbr. is: "+ifall[nfall]);}
+      if(ONLY_ONE_SOLID_AT_A_TIME) {out.println("new solid nbr. is: "+ifall[nfall]+", lnA["+(nIon+ifall[nfall])+"]="+lnA[((nIon+ifall[nfall]))]);}
       else {printArraysFasta(true, false, false, false, false, false, false, false);} //print ifall[]
   }
   // ---- Block added 2018-March.
@@ -1539,17 +1606,23 @@ private void fallProv_InFall() {
         totBe[li] = w;
     }
     for(li =0; li < nfall; li++) {
-        w = 0;
+        w = 0.;
         for(lj =0; lj < nfall; lj++) {w = w + ruta[li][lj] * totBe[lj];}
         lq = ifall[li];
         lqa = nIon + lq;
         c.C[lqa] = w;
         if(c.C[lqa] < 0) {
-            fall[lq] = false;
-            c.C[lqa] = 0;
-            bra = false; // not "ok"
             if(c.dbg >= ERR_DEBUG_FASTA_4) {
-                out.println("Fasta(): for solid "+lq+" the concentration is <0");
+                out.println("Fasta(): for solid "+lq+" the concentration is <0, c.C["+lqa+"]="+(float)w+", tolerance="+(float)tolFasta);
+            }
+            if(-c.C[lqa] > tolFasta) {
+                fall[lq] = false;
+                c.C[lqa] = 0.;
+                bra = false; // not "ok"    
+            } else {
+                if(c.dbg >= ERR_DEBUG_FASTA_4) {
+                    out.println("         accepting the concentration of solid "+lq+" as zero within the tolerance...");
+                }
             }
         }
     }
@@ -1566,13 +1639,13 @@ private void fallProv_InFall() {
     return;
   }
   if(iterFasta > ITER_FASTA_MAX) {
-    indik =3;
-    c.errFlagsSet(4);
+    indik =4;
+    c.errFlagsSet(4); // too many iterations trying to find the solids at equilibrium
     if(c.dbg >=ERR_DEBUG_FASTA_4) {
         out.println("Error in HaltaFall.fasta(): "+ITER_FASTA_MAX+
                     " different solid phase combinations"+nl+
-                    "were tested and found NOT satisfactory.");
-        out.println("Fasta() returns (to nog()); indik =3; "+c.errFlagsToString());
+                    "were tested and found NOT satisfactory (too many iterations).");
+        out.println("Fasta() returns (to nog()); indik =4; "+c.errFlagsToString());
     }
     nextFall = 0;
     return;
@@ -1724,7 +1797,7 @@ private void anFall() {
           if(nvaf > 0) {
               for(li =0; li < nvaf; li++) {
                   for(lj =0; lj < nfall; lj++) {
-                      w = 0;
+                      w = 0.;
                       for(lm =0; lm < nfall; lm++) {
                           lq = ivaf[li];
                           lz = cs.nx + ifall[lm];
@@ -1755,7 +1828,7 @@ private void anFall() {
   //SLINGOR(IN)
   indik = 2;
   if(c.dbg >= ERR_DEBUG_FASTA_4) {
-    out.println("HaltaFall.fasta() returns to Slingor(In); nfall="+nfall+"; iterFasta="+iterFasta);
+    out.println("HaltaFall.fasta() returns to Slingor(In); indik =2, nfall="+nfall+"; iterFasta="+iterFasta);
     //print most arrays
     printArraysFasta(true,true,true,true,true, false,false,false);
   }
@@ -1982,10 +2055,11 @@ private void uppNut() {
           printArraysFasta(false,false,false,false,false,false, true, false);
       } // ---- error ----
       indik = 1;
-      c.errFlagsSet(3);
+      c.errFlagsSet(3); // failed to find a satisfactory combination of solids.
       if(c.dbg >= ERR_DEBUG_FASTA_4) {
-            out.println("HaltaFall.fasta() returns at \"Tji\", "+
-                    c.errFlagsToString()+", nvaf = "+nvaf+", iterFasta="+iterFasta);}
+            out.println("HaltaFall.fasta() returns at \"Tji\", indik =1, "+
+                    c.errFlagsToString()+", nvaf = "+nvaf+", iterFasta="+iterFasta+nl+
+                    "Failed to find a satisfactory combination of solids.");}
       nextFall = 0;
       return;  // NYP (IN)
   }
@@ -2055,10 +2129,10 @@ private void invert(double a[][], int n) {
           }
         }
       }
-      if(Math.abs(pivot) < 1.0E-10) {
+      if(Math.abs(pivot) < 1.0e-10) {
         indik = 1;
         if(c.dbg >= ERR_DEBUG_FASTA_4) {
-            out.println("invert() returns; indik=1 (matrix singular)");
+            out.println("invert() returns; indik =1 (matrix singular)");
         }
         return;
       }
@@ -2100,7 +2174,7 @@ private void invert(double a[][], int n) {
     }
     indik = 0;
     if(c.dbg >= ERR_DEBUG_FASTA_4) {
-        out.println("invert() returns; indik="+indik+" (ok)");
+        out.println("invert() returns; indik ="+indik+" (ok)");
     }
   } // end invert
 // </editor-fold>
@@ -2122,14 +2196,14 @@ private void invert0(double a[][], int n) {
     column =-1;
     row =-1;
     for(i = 0; i < n; i++) {
-        zmax = 0;
+        zmax = 0.;
         for(j = 0; j < n; j++) {
             if(iPivot[j] == 1) {continue;}
             for(k = 0; k < n; k++) {
                 if(iPivot[k] == 1) {continue;}
                 if(iPivot[k] > 1) {
                     indik = 1;
-                    if(c.dbg >= ERR_DEBUG_FASTA_4) {out.println("invert0() returns; indik=1 (matrix singular)!");}
+                    if(c.dbg >= ERR_DEBUG_FASTA_4) {out.println("invert0() returns; indik =1 (matrix singular)!");}
                     return;}
                 if(Math.abs(a[j][k]) > Math.abs(zmax)) {
                     row =j;
@@ -2152,7 +2226,7 @@ private void invert0(double a[][], int n) {
         // Divide pivot row by pivot element
         if(Math.abs(zmax) < 1.0E-10) {
             indik =1;
-            if(c.dbg >= ERR_DEBUG_FASTA_4) {out.println("invert0() returns; indik=1 (matrix singular)");}
+            if(c.dbg >= ERR_DEBUG_FASTA_4) {out.println("invert0() returns; indik =1 (matrix singular)");}
             return;} //abs(zmax) =0
         a[column][column] = 1;
         for(l = 0; l < n; l++) {a[column][l] = a[column][l] / pivot[i];}
@@ -2160,7 +2234,7 @@ private void invert0(double a[][], int n) {
         for(l1 = 0; l1 < n; l1++) {
             if(l1 == column) {continue;}
             t = a[l1][column];
-            a[l1][column] = 0;
+            a[l1][column] = 0.;
             for(l = 0; l < n; l++) {a[l1][l] = a[l1][l] - a[column][l] * t;}
         } //for l1
     } //for i
@@ -2180,7 +2254,7 @@ private void invert0(double a[][], int n) {
         } //for k
     } //for i
     indik = 0;
-    if(c.dbg >= ERR_DEBUG_FASTA_4) {out.println("invert0() returns; indik="+indik+" (ok)");}
+    if(c.dbg >= ERR_DEBUG_FASTA_4) {out.println("invert0() returns; indik ="+indik+" (ok)");}
 } // invert0
 */
 // </editor-fold>
@@ -2210,11 +2284,11 @@ private void cBer(int ivar) {
     //   components and soluble complexes
     double lnC;
     for(lia =0; lia <nIon; lia++) {
-        c.C[lia] = 0;
+        c.C[lia] = 0.;
         if(!cs.noll[lia]) {
             lnC = lnA[lia] - lnG[lia];
-            if(lnC >  81) {lnC = 81;} //max concentration 1.5E+35
-            if(lnC > -103) { // min concentration 1.8E-45
+            if(lnC >  81.) {lnC = 81.;} //max concentration 1.5E+35
+            if(lnC > -103.) { // min concentration 1.8E-45
                 c.C[lia] = Math.exp(lnC);
             }
         } //if !noll
@@ -2244,7 +2318,7 @@ private void lnaBer1() {
     } //for li
     // Calculate lnA[ibe[]]
     for(li = 0; li < nfall; li++) {
-        w = 0;
+        w = 0.;
             for(lj = 0; lj < nfall; lj++) {
                 w = w + lnKmi[lj] * ruta[lj][li];
             } //for lj
@@ -2291,10 +2365,11 @@ private double lnaBas(int ivar) {
  * =1 not ok but it is a component only involved in
  * mononuclear reactions and there are no solids present<br>
  * =2 if ok (the Y is equal to Y0 within the tolerance)<br>
- * =3 not ok and it is either not a mono component or there are solids present */
+ * =3 not ok and it is either not a mono component or there are solids present
+ * =4 if too many iterations (iter[ivar] larger than ITER_MAX+1)  */
 private void totBer() {
     int lix, liax;
-    double w = 0;
+    double w = 0.;
     if(c.dbg >=ERR_XTRA_DEBUG_6) {out.println("totBer() in, ivar="+ivar+", indik="+indik);}
     try { //catch too many iterations
         y = c.C[ivar];
@@ -2304,11 +2379,11 @@ private void totBer() {
                 y = y + pva[ivar][lix] * c.C[liax];
             } //for lix
             y = y - totVA[ivar];
-            y0 = 0;
+            y0 = 0.;
             w = Math.abs(y-y0);
             if(tolY[ivar] >0 &&
-                    Math.abs(totVA[ivar]) > 1 &&
-                    w < Math.abs(tolY[ivar]*totVA[ivar])) {w = 0;}
+                    Math.abs(totVA[ivar]) > 1. &&
+                    w < Math.abs(tolY[ivar]*totVA[ivar])) {w = 0.;}
         } //if nfall !=0
         else { // No solid phase assumed to be present
             for (lix =0; lix < cs.nx; lix++) {
@@ -2330,7 +2405,7 @@ private void totBer() {
                 return;
             }
             if(mono[ivar] && nfall == 0) { // mononuclear component
-                if(y0 <= 0 || y <= 0) {
+                if(y0 <= 0. || y <= 0.) {
                     indik = 3;
                     iter[ivar]++;
                     if(iter[ivar] >= ITER_MAX) {throw new TooManyIterationsException();}
@@ -2339,7 +2414,7 @@ private void totBer() {
                 }
                 lnA[ivar] = lnA[ivar] + Math.log(y0) - Math.log(y);
                 x = lnA[ivar];
-                indik = 1;
+                indik = 1; // goto TJAT
                 iter[ivar]++;
                 if(iter[ivar] >= ITER_MAX) {throw new TooManyIterationsException();}
                 if(c.dbg >=ERR_XTRA_DEBUG_6) {prnt(); out.println("totBer() returns; indik =1 (not ok & mono & no solids), mono["+ivar+"]=true, iter["+ivar+"]="+iter[ivar]);}
@@ -2352,25 +2427,23 @@ private void totBer() {
                 //return;
             } //if !mono | nfall !=0
         } else { // OK
-            indik = 2;
+            indik = 2; // goto PROV
             karl[ivar] = 1;
             steg[ivar] = STEG0_CONT;
             iter[ivar]++;
             if(c.dbg >=ERR_XTRA_DEBUG_6) {prnt(); out.println("totBer() returns; indik =2 (ok); iter["+ivar+"]="+iter[ivar]);}
             //return;
         } //if OK
-    } //try //try
-
+    }
     catch (TooManyIterationsException ex) {
         if(c.dbg >=ERR_XTRA_DEBUG_6) {out.println("--- Too many iterations for ivar="+ivar);}
         if(ivaBra[ivar] == -1) { // only print error message for the "outer" loop component
             if(c.dbg >= ERR_DEBUG_FASTA_4) {printTooManyIterations(w);} //debug print-out
         }
-        if(iter[ivar] > ITER_MAX+1) {
-            indik = 2;
+        if(iter[ivar] > (ITER_MAX+1)) {
+            indik = 4; // break the iterations
             karl[ivar] = 1;
             if(!c.cont) {steg[ivar] = STEG0;} else {steg[ivar] = STEG0_CONT;}
-            iter[ivar] = -1; // flag for too many iterations
         }
         if(c.dbg >=ERR_XTRA_DEBUG_6) {prnt(); out.println("totBer() returns; indik ="+indik+"; iter["+ivar+"]="+iter[ivar]+", too many iterations.");}
     } //catch //catch
@@ -2408,7 +2481,7 @@ private void lnaBer2() {
 
 //<editor-fold defaultstate="collapsed" desc="actCoeffs">
 /** Calculates activity coefficients (array lnG[]).
- * If the activity coeficients (which depend on the composition of the
+ * If the activity coefficients (which depend on the composition of the
  * fluid) have changed since they were last calculated, then
  * the equilibrium composition must be recalculated.
  * @return false if the activity coefficients have changed since last
@@ -2429,35 +2502,30 @@ private boolean actCoeffs() {
     */
     double diff, newDiff, absDiff, maxAbsDiff, f;
     int i, iMaxDiff;
-    if(c.dbg >= ERR_DEBUG_ACT_COEF_5) {out.println("actCoeffs() in");}
-    boolean ok, factorOK = true;
+    if(c.dbg >= ERR_DEBUG_ACT_COEF_5) {out.println("actCoeffs() in, iterAc = "+iterAc);}
+    boolean ok;
 
     // --- get lnG[]= natural log of activity coefficient ---
     try {factor.factor(c.C, lnG);}
     catch (Exception ex) {
-        if(c.dbg >=ERR_ONLY_1) {out.println(ex.getMessage());}
-        factorOK = false;
-    }
-    if(!factorOK) {
-        for(i =0; i <nIon; i++) {lnG[i]=0;}
-        if(cs.jWater >= 0) {lnA[cs.jWater] = 0;}
-        c.errFlagsSet(6);
+        for(i =0; i <nIon; i++) {lnG[i]=0.;}
+        if(cs.jWater >= 0) {lnA[cs.jWater] = 0.;}
         if(c.dbg >= ERR_DEBUG_ACT_COEF_5) {
-            out.println("actCoeffs() returns.  Error in Factor.");
+            out.println("actCoeffs() returns.  Activity factor calculation failed.");
         }
+        lib.common.MsgExceptn.showErrMsg(null, ex.getMessage(), 1);
         return true;
     }
     if(cs.jWater >= 0) { //for H2O
       lnA[cs.jWater] = lnG[cs.jWater];
-      //lnG[cs.jWater] = 0;
+      //lnG[cs.jWater] = 0.;
     }
     
     // --- decide what tolerances in the lnG[] to use
-    double tolLnG = TOL_LNG;
+    double tolLnG = TOL_LNG, w;
     for(i =0; i <nIon; i++) {
-        if(c.C[i] < 1) {continue;}
         if(cs.namn.z[i] !=0 && !cs.noll[i]) {
-            tolLnG = Math.max(tolLnG, TOL_LNG*c.C[i]);
+            tolLnG = Math.max(tolLnG, TOL_LNG*c.C[i]*cs.namn.z[i]);
         }
     }
     tolLnG = Math.min(tolLnG,0.1);
@@ -2469,30 +2537,30 @@ private boolean actCoeffs() {
     iMaxDiff = -1;
     maxAbsDiff = -1;
     for(i =0; i <nIon; i++) {
-        if(c.C[i] < 1e-20) {oldLnG[i] = lnG[i]; continue;}
+        if(c.C[i] < tolFasta) {oldLnG[i] = lnG[i]; continue;}
         diff = lnG[i] - oldLnG[i];
         absDiff = Math.abs(diff);
         if(absDiff > tolLnG) {
             ok = false;
             if(maxAbsDiff < absDiff) {iMaxDiff = i; maxAbsDiff = absDiff;}
-        }
-        // ---- instead of going ahead and use the new activity coefficients in
-        //      a new iteration step, for species with "large" conc. we do not
-        //      apply the full change: it is scaled down to avoid oscillations
-        final double cLim=0.25, fL=0.50;
-        // After a few iterations, and for larger concs:
-        //     f = fraction giving how much change in lnG should be applied
-        if(iterAc >1 && cs.chemConcs.C[i] > cLim) {
-            f = fL/Math.sqrt(cs.chemConcs.C[i]);
-            // --- f has a value between 1 and 0.1
-            newDiff = diff * f;
-            if(c.dbg >= ERR_DEBUG_ACT_COEF_5) {
-                out.println("note, for \""+cs.namn.ident[i]+"\" C["+i+"] = "
+            // ---- instead of going ahead and use the new activity coefficients in
+            //      a new iteration step, for species with "large" contribution to
+            //      the ionic strength we do not apply the full change:
+            //      it is scaled down to avoid oscillations
+            final double cLim=0.25, fL=0.50;
+            // f = fraction giving how much change in lnG should be applied
+            w = cs.chemConcs.C[i]*cs.namn.z[i]*cs.namn.z[i]; 
+            if(w > cLim) {
+                f = fL/(Math.sqrt(w));
+                // --- f is less than one
+                newDiff = diff * f;
+                if(c.dbg >= ERR_DEBUG_ACT_COEF_5) {
+                    out.println("note, for \""+cs.namn.ident[i]+"\" C["+i+"] = "
                         +(float)cs.chemConcs.C[i]+" diff="+(float)diff
-                        +" f="+(float)f+" applying lnG-change = "
-                        +(float)newDiff);
+                        +" f="+(float)f+" applying lnG-change = "+(float)newDiff);
+                }
+                lnG[i] = oldLnG[i] + newDiff;
             }
-            lnG[i] = oldLnG[i] + newDiff;
         }
         oldLnG[i] = lnG[i];
     } //for i
@@ -2500,35 +2568,34 @@ private boolean actCoeffs() {
         if(iterAc >0 && !ok) {out.println("New values:"); printLnG(1);}
         if(maxAbsDiff > 0) {
             out.println("Max abs(diff) for \""+cs.namn.ident[iMaxDiff]
-                    +"\", lnG["+iMaxDiff+"]="+(float)maxAbsDiff);
+                    +"\", abs(diff["+iMaxDiff+"])="+(float)maxAbsDiff);
         }
     }
 
+    iterAc++;
     if(ok) { // some aqueous concentration(s) too large?
         for(i =0; i <nIon; i++) {
             if(c.C[i] >20) {
                 if(c.dbg >= ERR_DEBUG_ACT_COEF_5) {
                     out.println("note: C["+i+"]="+(float)c.C[i]+" >"+(int)Factor.MAX_CONC+" (too large)");}
-                c.errFlagsSet(5);
+                c.errFlagsSet(5); // some aqueous concentration(s) are too large (>20): uncertain activity coefficients
                 break;
             }
         }
     } else {
-        iterAc++;
-        if(iterAc > ITERAC_MAX) {ok = true; c.errFlagsSet(6);}
+        if(iterAc > ITERAC_MAX) {ok = true; c.errFlagsSet(6);} // activity factors did not converge
     }
     if(c.dbg >= ERR_DEBUG_FASTA_4) {
       if(ok) {
-        if(c.isErrFlagsSet(6)) {
+        if(c.isErrFlagsSet(6)) { // activity factors did not converge
             out.print("--- actCoeffs() returns Ok after too many iterations");
         } else {
             out.print("--- actCoeffs() returns OK after "+iterAc+" iterations");
         }
       } else {
-          out.print("--- actCoeffs() returns NOT OK. Iter nbr."+iterAc);}
-          out.println(", tol="+(float)c.tolLogF
-                  +", I="+(float)factor.ionicStr
-                  +", el.bal.="+(float)factor.electricBalance);
+          out.print("--- actCoeffs() returns NOT OK. Iter nbr."+iterAc);
+      }
+      out.println(", tol="+(float)c.tolLogF +", I="+(float)factor.ionicStr +", el.bal.="+(float)factor.electricBalance);
     }
     return ok;
 } // actCoeffs()
@@ -2546,7 +2613,7 @@ private void printTooManyIterations(double w) {
   int n0, nM, iPl, nP;
   out.flush();
 
-  if(iter[ivar] == ITER_MAX) {
+  if(iter[ivar] >= ITER_MAX) {
     out.println("Error: too many iterations with ivar = "+ivar);
     out.println("Component nbrs. in the order they are iterated (starting with zero):");
     printArrays(true, false); // print iva[]
@@ -2569,7 +2636,7 @@ private void printTooManyIterations(double w) {
       out.println(); out.print("     ");} //for ijj
       }
       out.flush();
-  } //if iter[ivar] =ITER_MAX
+  } //if iter[ivar] >= ITER_MAX
 
   out.println("Component: "+ivar+", iteration: "+iter[ivar]);
     printArrays(false, true); // print lnA[]
@@ -2582,20 +2649,6 @@ private void printTooManyIterations(double w) {
     if(kjj >(nM-1)) {out.println(); break print_1;}} //for j
     out.println(); out.print("         ");} //for ijj
     }
-
-/**
-  if(iter[ivar] > ITER_MAX) {
-    n0 = 0;     //start index to print
-    nM = nIon + cs.mSol -1;  //end index to print
-    iPl = 5; nP= nM-n0; if(nP >=0) { //items_Per_Line and itemsto print
-  out.print("  C[]= ");
-    print_1: for(int ijj=0; ijj<=nP/iPl; ijj++) { for(int jjj=0; jjj<iPl; jjj++) { int kjj = n0+(ijj*iPl+jjj);
-    out.format(e," %15.7g",c.C[kjj]);
-    if(kjj >(nM-1)) {out.println(); break print_1;}} //for j
-    out.println(); out.print("       ");} //for ijj
-    }
-  } //if iter >ITER_MAX
-*/
 
   if(nfall == 0) {
       out.format("  Tot(calc) = %17.9g, Tot(input) = %17.9g, tolerance = %10.2g%n",y,y0,tolY[ivar]);
@@ -2634,6 +2687,11 @@ private void printLnG(final int printDiffs) {
         out.format(e," %10.2g",c.C[kjj]);
         if(kjj >(nM-1)) {out.println(); break print_1;}} //for j
         out.println(); out.print("        ");} //for ijj
+        out.print("old lnG[]=");
+        print_1: for(int ijj=0; ijj<=nP/iPl; ijj++) { for(int jjj=0; jjj<iPl; jjj++) { int kjj = n0+(ijj*iPl+jjj);
+            out.format(e," %10.6f",oldLnG[kjj]);
+            if(kjj >(nM-1)) {out.println(); break print_1;}} //for j
+            out.println(); out.print("        ");} //for ijj
     }
     out.print("  lnG[]=");
     print_1: for(int ijj=0; ijj<=nP/iPl; ijj++) { for(int jjj=0; jjj<iPl; jjj++) { int kjj = n0+(ijj*iPl+jjj);
@@ -2646,7 +2704,7 @@ private void printLnG(final int printDiffs) {
         out.format(e," %10.6f",Math.abs(oldLnG[kjj]-lnG[kjj]));
         if(kjj >(nM-1)) {out.println(); break print_1;}} //for j
         out.println(); out.print("        ");} //for ijj
-    out.println("tolerance (log10)= "+(float)(c.tolLogF*ln10)+", I = "+(float)factor.ionicStr+
+    out.println("tolerance (log10)= "+(float)(c.tolLogF)+", I = "+(float)factor.ionicStr+
             ", electric balance = "+(float)factor.electricBalance);
   }
 } //printLnG()
@@ -2841,7 +2899,7 @@ private void printArraysFasta(
   out.flush();
 } //printArraysFasta()
 // </editor-fold>
-//<editor-fold defaultstate="collapsed" desc="printMatrix(matrix,length)">
+//<editor-fold defaultstate="collapsed" desc="printMatrix(matrix,length) -- not used --">
 /**
 private void printMatrix(double matrix[][], int length) {
   int n0, nM, iPl, nP;

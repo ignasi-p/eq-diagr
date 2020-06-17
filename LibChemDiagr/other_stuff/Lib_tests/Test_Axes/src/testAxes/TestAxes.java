@@ -684,7 +684,7 @@ protected void drawTest() {
     //---- create a GraphLib instance
     GraphLib g = new GraphLib();
     try{g.start(dd, new java.io.File("test_lines.plt"), true);}
-    catch (GraphLib.openPlotFileException ex) {System.err.println("Error "+ex.toString());}
+    catch (GraphLib.OpenPlotFileException ex) {System.err.println("Error "+ex.toString());}
     dd.axisInfo = false;
     
     yMin = -1.1f; yMax = 0.6f;
@@ -745,7 +745,7 @@ protected void drawPlot() {
     //---- create a GraphLib instance
     GraphLib g = new GraphLib();
     try{g.start(dd, new java.io.File("test_axes.plt"), true);}
-    catch (GraphLib.openPlotFileException ex) {System.err.println("Error "+ex.toString());}
+    catch (GraphLib.OpenPlotFileException ex) {System.err.println("Error "+ex.toString());}
     dd.axisInfo = false;
     g.setIsFormula(true);
     float xAxl = 15; float yAxl = 10;

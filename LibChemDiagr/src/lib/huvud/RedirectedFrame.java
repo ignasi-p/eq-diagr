@@ -23,7 +23,7 @@ import lib.common.Util;
  * them to a file and more.
  * For more details, read the constructor method description
  *  
- * Modified by Ignasi Puigdomenech (2014-2016) to use a rotating Logger
+ * Modified by Ignasi Puigdomenech (2014-2020) to use a rotating Logger, etc
  *
  * @author Real Gagnon */
 public class RedirectedFrame extends javax.swing.JFrame {
@@ -174,8 +174,10 @@ public class RedirectedFrame extends javax.swing.JFrame {
         jLabel1.setText("(press [ESC] to focus the main window)");
 
         jButtonClose.setMnemonic('S');
-        jButtonClose.setText("do not Show");
+        jButtonClose.setText(" do not Show ");
         jButtonClose.setToolTipText("hide frame (alt-S)");
+        jButtonClose.setAlignmentX(0.5F);
+        jButtonClose.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonClose.setIconTextGap(2);
         jButtonClose.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButtonClose.addActionListener(new java.awt.event.ActionListener() {
@@ -219,7 +221,7 @@ public class RedirectedFrame extends javax.swing.JFrame {
                     .addComponent(jButtonClose)
                     .addComponent(jLabel1))
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 

@@ -45,7 +45,7 @@
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="281" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="283" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -60,8 +60,14 @@
     <Component class="javax.swing.JButton" name="jButtonClose">
       <Properties>
         <Property name="mnemonic" type="int" value="83"/>
-        <Property name="text" type="java.lang.String" value="do not Show"/>
+        <Property name="text" type="java.lang.String" value=" do not Show "/>
         <Property name="toolTipText" type="java.lang.String" value="hide frame (alt-S)"/>
+        <Property name="alignmentX" type="float" value="0.5"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+            <BevelBorder/>
+          </Border>
+        </Property>
         <Property name="iconTextGap" type="int" value="2"/>
         <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
           <Insets value="[2, 2, 2, 2]"/>

@@ -284,7 +284,7 @@
 12090 536
 02082 528
 12099 528
-0 700 500 TextEnd
+0   0   0 TextEnd
 0 685 575 TextBeginC size=   0.35 cm, angle=   22.00, alignment: L
 0 703 578 (PO4-3)  [Fe(CO3)2-2]`TOT'  {SO4-2}  (UO2)2(OH)2+2
 1 698 580
@@ -571,7 +571,7 @@
 119611129
 019561119
 119721125
-0 685 575 TextEnd
+0   0   0 TextEnd
 0 641 641 TextBeginC size=   0.35 cm, angle=   45.00, alignment: L
 0 656 651 (PO4-3)  [Fe(CO3)2-2]`TOT'  {SO4-2}  (UO2)2(OH)2+2
 1 651 651
@@ -858,7 +858,7 @@
 115991650
 015991638
 116111650
-0 641 641 TextEnd
+0   0   0 TextEnd
 0 578 684 TextBeginC size=   0.35 cm, angle=   67.00, alignment: L
 0 588 699 (PO4-3)  [Fe(CO3)2-2]`TOT'  {SO4-2}  (UO2)2(OH)2+2
 1 584 697
@@ -1145,7 +1145,7 @@
 110881978
 010921967
 110991982
-0 578 684 TextEnd
+0   0   0 TextEnd
 0 500 700 TextBeginC size=   0.35 cm, angle=   90.00, alignment: L
 0 504 718 (PO4-3)  [Fe(CO3)2-2]`TOT'  {SO4-2}  (UO2)2(OH)2+2
 1 500 714
@@ -1432,7 +1432,7 @@
 1 4642090
 0 4722082
 1 4722099
-0 500 700 TextEnd
+0   0   0 TextEnd
 0 300 500 TextBeginC size=   0.35 cm, angle=  180.00, alignment: L
 0 283 504 (PO4-3)  [Fe(CO3)2-2]`TOT'  {SO4-2}  (UO2)2(OH)2+2
 1 286 500
@@ -1714,7 +1714,7 @@
 0-999 480
 1-999 464
 0-999 472
-0 300 500 TextEnd
+0   0   0 TextEnd
 0 327 400 TextBeginC size=   0.35 cm, angle= -150.00, alignment: L
 0 310 394 (PO4-3)  [Fe(CO3)2-2]`TOT'  {SO4-2}  (UO2)2(OH)2+2
 1 315 393
@@ -2001,7 +2001,7 @@
 1-859-327
 0-856-315
 1-870-324
-0 327 400 TextEnd
+0   0   0 TextEnd
 0 400 327 TextBeginC size=   0.35 cm, angle= -120.00, alignment: L
 0 388 313 (PO4-3)  [Fe(CO3)2-2]`TOT'  {SO4-2}  (UO2)2(OH)2+2
 1 393 315
@@ -2288,7 +2288,7 @@
 1-264-895
 0-267-884
 1-275-898
-0 400 327 TextEnd
+0   0   0 TextEnd
 0 673 400 TextBeginC size=   0.35 cm, angle=  -30.00, alignment: L
 0 687 388 (PO4-3)  [Fe(CO3)2-2]`TOT'  {SO4-2}  (UO2)2(OH)2+2
 1 685 393
@@ -2575,7 +2575,7 @@
 11895-264
 01884-267
 11898-275
-0 673 400 TextEnd
+0   0   0 TextEnd
 0 600 327 TextBeginC size=   0.35 cm, angle=  -60.00, alignment: L
 0 606 310 (PO4-3)  [Fe(CO3)2-2]`TOT'  {SO4-2}  (UO2)2(OH)2+2
 1 607 315
@@ -2862,7 +2862,7 @@
 11327-859
 01315-856
 11324-870
-0 600 327 TextEnd
+0   0   0 TextEnd
 0 500 300 TextBeginC size=   0.35 cm, angle=  -90.00, alignment: L
 0 497 283 (PO4-3)  [Fe(CO3)2-2]`TOT'  {SO4-2}  (UO2)2(OH)2+2
 1 500 286
@@ -3144,7 +3144,7 @@
 0 520-999
 1 536-999
 0 528-999
-0 500 300 TextEnd
+0   0   0 TextEnd
 0 359 641 TextBeginC size=   0.35 cm, angle=  135.00, alignment: L
 0 349 656 (PO4-3)  [Fe(CO3)2-2]`TOT'  {SO4-2}  (UO2)2(OH)2+2
 1 349 651
@@ -3431,4 +3431,4 @@
 1-6501599
 0-6381599
 1-6501611
-0 359 641 TextEnd
+0   0   0 TextEnd

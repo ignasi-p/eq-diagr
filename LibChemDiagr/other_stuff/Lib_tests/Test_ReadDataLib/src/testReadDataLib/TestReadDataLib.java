@@ -12,11 +12,11 @@ public class TestReadDataLib {
         if(!inputFile.exists()) {
             // --- write a text file to read later
             System.out.println("Writing file: \""+inputFile.getAbsolutePath()+"\"");
-            java.io.PrintWriter out = null;
+            java.io.FileOutputStream fos = null;
+            java.io.Writer out = null;
             try{
-                out = new java.io.PrintWriter(
-                    new java.io.BufferedWriter(
-                    new java.io.FileWriter(testFileName)));
+                fos = new java.io.FileOutputStream(testFileName);
+                out = new java.io.BufferedWriter(new java.io.OutputStreamWriter(fos,"UTF8"));
             } //try
             catch (Exception e) {
                 System.err.print("Error: \""+e.toString()+"\""+nl+
@@ -25,7 +25,8 @@ public class TestReadDataLib {
                 catch (Exception e1) {}
                 return;
             } //catch
-            out.println(
+            try{
+            out.write(
                 "/ a test file:"+nl+
                 "/"+nl+
                 "\"text 1\",, text 3 ,"+nl+
@@ -45,8 +46,16 @@ public class TestReadDataLib {
                 "-7 /almost the end"+nl+nl+
                 "one comment line"+nl+
                 "  two comment /lines"+nl+
-                "three comment lines");
-            out.flush(); out.close();
+                "three comment lines"+nl);
+            out.flush(); out.close(); fos.close();
+            }
+            catch (Exception ex) {
+                System.err.print("Error: \""+ex.toString()+"\""+nl+
+                              "trying to write file: \""+testFileName+"\"");
+                try {if(out != null) {out.close();} if(fos != null) {fos.close();}}
+                catch (Exception e1) {}
+                return;
+            }
         }
 
         // --- read the test file created above

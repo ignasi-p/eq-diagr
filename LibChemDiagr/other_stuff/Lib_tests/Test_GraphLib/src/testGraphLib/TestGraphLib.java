@@ -32,8 +32,8 @@ public class TestGraphLib extends javax.swing.JFrame {
         g.setIsFormula(false); g.sym(x1, y, size, "(PO4 3-)  [Fe(CO3)2 2-]`TOT'  {SO4 2-}", 0, -1, false);
         g.setIsFormula(true);  g.sym(x2, y, size, "(PO4 3-)  [Fe(CO3)2 2-]`TOT'  {SO4 2-}", 0, -1, false);
         y = y + 0.8f;
-        g.setIsFormula(false); g.sym(x1, y, size, "Fe0.943O(c)  NaCl.2H2O  UO2.6667(c)", 0, -1, false);
-        g.setIsFormula(true);  g.sym(x2, y, size, "Fe0.943O(c)  NaCl.2H2O  UO2.6667(c)", 0, -1, false);
+        g.setIsFormula(false); g.sym(x1, y, size, "Fe0.943O(c)  NaCl·2H2O  UO2.6667(c)", 0, -1, false);
+        g.setIsFormula(true);  g.sym(x2, y, size, "Fe0.943O(c)  NaCl·2H2O  UO2.6667(c)", 0, -1, false);
         y = y + 0.8f;
         g.setIsFormula(false); g.sym(x1, y, size, "CaCO3:2.5H2O  log P`CO2'  E`SHE' 10'-3`", 0, -1, false);
         g.setIsFormula(true);  g.sym(x2, y, size, "CaCO3:2.5H2O  log P`CO2'  E`SHE' 10'-3`", 0, -1, false);
@@ -75,6 +75,7 @@ public class TestGraphLib extends javax.swing.JFrame {
         g.setIsFormula(true);  g.sym(x2, y, size, "Symbol style:", 0, -1, false);
         // finished
         g.end();
+        System.out.println("Written: \"test_symbol.plt\"");
 
         //---- write another test plot file "test_rotated_text.plt"
         // - create a PltData instance
@@ -126,6 +127,7 @@ public class TestGraphLib extends javax.swing.JFrame {
         g.sym(x1, y, size, t, angle, -1, false);
         // finished
         g.end();
+        System.out.println("Written: \"test_rotated_text.plt\"");
 
         //---- write another test plot file "test_all.plt"
         // - create a PltData instance
@@ -283,6 +285,7 @@ public class TestGraphLib extends javax.swing.JFrame {
         } // while pen <=2
         // finished
         g.end();
+        System.out.println("Written: \"test_all.plt\"");
 
         //---- display a frame
         java.awt.EventQueue.invokeLater(new Runnable() {

@@ -2,7 +2,7 @@ package lib.common;
 
 /**  A collection of static methods to display messages and exceptions.
  *
- * Copyright (C) 2014-2016 I.Puigdomenech.
+ * Copyright (C) 2014-2018 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

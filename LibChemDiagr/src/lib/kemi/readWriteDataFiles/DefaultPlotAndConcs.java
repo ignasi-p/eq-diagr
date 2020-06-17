@@ -7,7 +7,7 @@ import lib.kemi.chem.Chem;
  * for each chemical component, the static methods in this class will assign
  * default values for a plot type and for the concentrations.
  *
- * Copyright (C) 2014-2019 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

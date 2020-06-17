@@ -2,7 +2,7 @@ package lib.kemi.readDataLib;
 
 import lib.common.Util;
 
-/** Read data from an input file where data is sepparated by commas,
+/** Read data from an input file where data is separated by commas,
  * white space, or end-of-line. The procedures used are <code>readA</code>,
  * <code>readI</code>, <code>readR</code> and <code>readLine</code>.
  * 
@@ -24,7 +24,7 @@ import lib.common.Util;
  * This means that a comment written in a line by itself can only be retrieved
  * using the procedure <code>readLine</code>.
  *
- * Copyright (C) 2014-2017 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -112,8 +112,9 @@ public ReadDataLib(java.io.File inpF) throws DataFileException {
         throw new DataFileException("Error in \"ReadDataLib\": can not read input file"+nl+"  \""+dataFileName+"\"");
         }
     inputBuffReader = null;
-    try {inputBuffReader = new java.io.BufferedReader(new java.io.FileReader(inpF));}
-    catch(java.io.FileNotFoundException ex) {
+    try {inputBuffReader = new java.io.BufferedReader(
+            new java.io.InputStreamReader(new java.io.FileInputStream(inpF),"UTF8"));
+    } catch(Exception ex) {
         throw new DataFileException("Error in \"ReadDataLib\": "+ex.getMessage()+nl+
                             "  with input file:\""+dataFileName+"\"");}
     temperatureDataLineNextOriginal = null;

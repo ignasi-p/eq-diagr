@@ -6,7 +6,7 @@ import lib.kemi.chem.Chem;
 /** Write a data file.
  * The data to write must be stored in an instance of class Chem.
  *
- * Copyright (C) 2015-2018 I.Puigdomenech.
+ * Copyright (C) 2015-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,13 +30,13 @@ private static String nl = System.getProperty("line.separator");
 /** Write a data file.
  * @param ch an instance of of the class Chem,
  *    containing the data to be written
- * @param dataFile the file that will be written.
+ * @param dataFile the file that will be written
+ * @throws java.io.IOException
  * @throws lib.kemi.readWriteDataFiles.WriteChemSyst.DataLimitsException
  * @throws lib.kemi.readWriteDataFiles.WriteChemSyst.WriteChemSystArgsException */
 public static void writeChemSyst (Chem ch,
                                      java.io.File dataFile)
-                                throws DataLimitsException,
-                                    WriteChemSystArgsException {
+        throws DataLimitsException, WriteChemSystArgsException, java.io.IOException {
   if(ch == null) {
       throw new WriteChemSystArgsException(
               nl+"Error in \"writeChemSyst\":"+nl+
@@ -65,18 +65,10 @@ public static void writeChemSyst (Chem ch,
   String tmpFileName;
   tmpFileName = dataFileName.substring(0,dataFileName.length()-4).concat(".tmp");
   java.io.File tmpFile = new java.io.File(tmpFileName);
-  java.io.PrintWriter outputFile = null;
-  try{outputFile = new java.io.PrintWriter(
-                new java.io.BufferedWriter(
-                new java.io.FileWriter(tmpFile)));
-  }
-  catch (java.io.IOException ex) {
-            throw new WriteChemSystArgsException(nl+
-                    "Error: \""+ex.toString()+"\","+nl+
-                    "   in \"writeChemSyst\","+nl+
-                    "   while writing the data file"+nl+
-                    "   \""+tmpFileName+"\"");
-  }
+  java.io.FileOutputStream fos = null;
+  java.io.Writer w = null;
+  fos = new java.io.FileOutputStream(tmpFile);
+  w = new java.io.BufferedWriter(new java.io.OutputStreamWriter(fos,"UTF8"));
   Chem.ChemSystem cs = ch.chemSystem;
   Chem.ChemSystem.NamesEtc namn = cs.namn;
   Chem.Diagr diag = ch.diag;
@@ -105,20 +97,20 @@ public static void writeChemSyst (Chem ch,
   String m = ",   /SPANA (MEDUSA)";
   if(!Double.isNaN(diag.temperature)) {m = m + ", t="+Util.formatDbl3(diag.temperature);}
   if(!Double.isNaN(diag.pressure)) {m = m + ", p="+Util.formatDbl3(diag.pressure);}
-  outputFile.println(" "+String.valueOf(cs.Na)+", "+
+  w.write(" "+String.valueOf(cs.Na)+", "+
           String.valueOf(cs.nx)+", "+String.valueOf(nrSol)+", "+
-          String.valueOf(cs.solidC) + m.trim());
+          String.valueOf(cs.solidC) + m.trim() +nl);
   for(int i=0; i < cs.Na; i++) {
-    outputFile.format("%s",namn.identC[i]);
-    if(namn.comment[i] != null && namn.comment[i].length() >0) {outputFile.format(" /%s",namn.comment[i]);}
-    outputFile.println();
+    w.write(String.format("%s",namn.identC[i]));
+    if(namn.comment[i] != null && namn.comment[i].length() >0) {w.write(String.format(" /%s",namn.comment[i]));}
+    w.write(nl);
   } //for i
-  outputFile.flush();
+  w.flush();
   int ix; StringBuilder logB = new StringBuilder(); int j;
   for(int i=cs.Na; i < cs.Na+cs.nx+nrSol; i++) {
     if(namn.ident[i].length()<=20) {
-      outputFile.format(engl, "%-20s, ",namn.ident[i]);
-    } else {outputFile.format(engl, "%s, ",namn.ident[i]);}
+      w.write(String.format(engl, "%-20s, ",namn.ident[i]));
+    } else {w.write(String.format(engl, "%s, ",namn.ident[i]));}
     ix = i - cs.Na;
     if(logB.length()>0) {logB.delete(0, logB.length());}
     if(Double.isNaN(cs.lBeta[ix])) {
@@ -133,15 +125,16 @@ public static void writeChemSyst (Chem ch,
     j = 10 - logB.length();
     if(j>0) {for(int k=0;k<j;k++) {logB.append(' ');}}
     else {logB.append(' ');} //add at least one space
-    outputFile.print(logB.toString());
+    w.write(logB.toString());
     for(j=0; j < cs.Na-1; j++) {
-      outputFile.print(Util.formatDbl4(cs.a[ix][j])+" ");
+      w.write(Util.formatDbl4(cs.a[ix][j])+" ");
     }//for j
-    outputFile.print(Util.formatDbl4(cs.a[ix][cs.Na-1]));
-    if(namn.comment[i] != null && namn.comment[i].length() >0) {outputFile.format(" /%s",namn.comment[i]);}
-    outputFile.println();
+    w.write(Util.formatDbl4(cs.a[ix][cs.Na-1]));
+    if(namn.comment[i] != null && namn.comment[i].length() >0) {w.write(String.format(" /%s",namn.comment[i]));}
+    w.write(nl);
 
   }//for i
+  w.flush();
 
   // ------------------------
   //  Write Plot information
@@ -156,53 +149,54 @@ public static void writeChemSyst (Chem ch,
       }
   }
   if(diag.plotType == 0) { // a Predom diagram:
-    if(ePresent && diag.Eh) {outputFile.print("EH, ");}
-    outputFile.println(namn.identC[diag.compY]+", "+
+    if(ePresent && diag.Eh) {w.write("EH, ");}
+    w.write(namn.identC[diag.compY]+", "+
                      namn.identC[diag.compX]+", "+
-                     namn.identC[diag.compMain]+",");
+                     namn.identC[diag.compMain]+","+nl);
   } else { // a SED diagram
     if(diag.plotType == 1) { // "Fraction"
-      outputFile.print(namn.identC[diag.compY]+", ");
-      if(ePresent && diag.Eh) {outputFile.print("EH, ");}
-      outputFile.println(namn.identC[diag.compX]+",");
+      w.write(namn.identC[diag.compY]+", ");
+      if(ePresent && diag.Eh) {w.write("EH, ");}
+      w.write(namn.identC[diag.compX]+","+nl);
     } else
     if(diag.plotType == 2) { // "log Solubilities"
-      outputFile.print("LS,"+Util.formatDbl4(diag.yLow)+","+Util.formatDbl4(diag.yHigh)+", ");
-      if(ePresent && diag.Eh) {outputFile.print("EH, ");}
-      outputFile.println(namn.identC[diag.compX]+",");
+      w.write("LS,"+Util.formatDbl4(diag.yLow)+","+Util.formatDbl4(diag.yHigh)+", ");
+      if(ePresent && diag.Eh) {w.write("EH, ");}
+      w.write(namn.identC[diag.compX]+","+nl);
     } else
     if(diag.plotType == 3) { // "Logarithmic"
-      outputFile.print("LC,"+Util.formatDbl4(diag.yLow)+","+Util.formatDbl4(diag.yHigh)+", ");
-      if(ePresent && diag.Eh) {outputFile.print("EH, ");}
-      outputFile.println(namn.identC[diag.compX]+",");
+      w.write("LC,"+Util.formatDbl4(diag.yLow)+","+Util.formatDbl4(diag.yHigh)+", ");
+      if(ePresent && diag.Eh) {w.write("EH, ");}
+      w.write(namn.identC[diag.compX]+","+nl);
     } else
     if(diag.plotType == 4) { // "Relative activities"
-      outputFile.print("R, "+namn.identC[diag.compY]+", "
+      w.write("R, "+namn.identC[diag.compY]+", "
               +Util.formatDbl4(diag.yLow)+","+Util.formatDbl4(diag.yHigh)+", ");
-      if(ePresent && diag.Eh) {outputFile.print("EH, ");}
-      outputFile.println(namn.identC[diag.compX]+",");
+      if(ePresent && diag.Eh) {w.write("EH, ");}
+      w.write(namn.identC[diag.compX]+","+nl);
     } else
     if(diag.plotType == 5) { // "calculated pe" "calculated Eh"
-      outputFile.print("pe,"+Util.formatDbl4(diag.yLow)+","+Util.formatDbl4(diag.yHigh)+", ");
-      if(ePresent && diag.Eh) {outputFile.print("EH, ");}
-      outputFile.println(namn.identC[diag.compX]+",");
+      w.write("pe,"+Util.formatDbl4(diag.yLow)+","+Util.formatDbl4(diag.yHigh)+", ");
+      if(ePresent && diag.Eh) {w.write("EH, ");}
+      w.write(namn.identC[diag.compX]+","+nl);
     } else
     if(diag.plotType == 6) { // "calculated pH"
-      outputFile.print("pH,"+Util.formatDbl4(diag.yLow)+","+Util.formatDbl4(diag.yHigh)+", ");
-      if(ePresent && diag.Eh) {outputFile.print("EH, ");}
-      outputFile.println(namn.identC[diag.compX]+",");
+      w.write("pH,"+Util.formatDbl4(diag.yLow)+","+Util.formatDbl4(diag.yHigh)+", ");
+      if(ePresent && diag.Eh) {w.write("EH, ");}
+      w.write(namn.identC[diag.compX]+","+nl);
     } else
     if(diag.plotType == 7) { // "log Activities"
-      outputFile.print("LAC,"+Util.formatDbl4(diag.yLow)+","+Util.formatDbl4(diag.yHigh)+", ");
-      if(ePresent && diag.Eh) {outputFile.print("EH, ");}
-      outputFile.println(namn.identC[diag.compX]+",");
+      w.write("LAC,"+Util.formatDbl4(diag.yLow)+","+Util.formatDbl4(diag.yHigh)+", ");
+      if(ePresent && diag.Eh) {w.write("EH, ");}
+      w.write(namn.identC[diag.compX]+","+nl);
     } else
     if(diag.plotType == 8) { // "H+ affinity spectrum"
-      outputFile.print("PS, ");
-      if(ePresent && diag.Eh) {outputFile.print("EH, ");}
-      outputFile.println(namn.identC[diag.compX]+",");
+      w.write("PS, ");
+      if(ePresent && diag.Eh) {w.write("EH, ");}
+      w.write(namn.identC[diag.compX]+","+nl);
     }
   } // SED or Predom?
+  w.flush();
 
   // ------------------------
   //  Write concentrations
@@ -212,22 +206,22 @@ public static void writeChemSyst (Chem ch,
   for(int i=0; i<cs.Na; i++) {
     h = dgrC.hur[i];
     if(h ==2 || h ==3 || h ==5) { //conc varied
-      outputFile.println(ct[h]+", "+Util.formatDbl6(dgrC.cLow[i])+" "+
-                                    Util.formatDbl6(dgrC.cHigh[i]));
+      w.write(ct[h]+", "+Util.formatDbl6(dgrC.cLow[i])+" "+
+                                    Util.formatDbl6(dgrC.cHigh[i])+nl);
     } else
     if(h ==1 || h ==4) { //conc constant
-      outputFile.println(ct[h]+", "+Util.formatDbl6(dgrC.cLow[i]));
+      w.write(ct[h]+", "+Util.formatDbl6(dgrC.cLow[i])+nl);
     }
   } //for i
   // title and any comment lines
   if(diag.title != null && diag.title.length() >0) {
-    outputFile.println(diag.title);
+    w.write(diag.title+nl);
   }
   if(diag.endLines != null && diag.endLines.length() >0) {
-    if(diag.title == null || diag.title.length() <=0) {outputFile.println();}
-    outputFile.print(diag.endLines);
+    if(diag.title == null || diag.title.length() <=0) {w.write(nl);}
+    w.write(diag.endLines+nl);
   }
-  outputFile.flush(); outputFile.close();
+  w.flush(); w.close(); fos.close();
 
   //the temporary file has been created without a problem
   //  delete the data file and rename the temporary file

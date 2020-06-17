@@ -23,7 +23,7 @@ import lib.common.Util;
  * but during the painting events they are scaled to the size of the
  * painted component.
  *
- * Copyright (C) 2014-2016 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +62,8 @@ private int plotPen;
 private boolean isFormula;
 private String label;
 private boolean save;
-private java.io.PrintWriter outputFile;
+/** The output file */
+private java.io.Writer w;
 private double xL =1; private double yL =1;
 private double xI =0; private double yI =0;
 private double sizeSym =0;
@@ -179,19 +180,19 @@ public void GraphLib() {
  * of the PltData instance.
  * @throws lib.kemi.graph_lib.GraphLib.OpenPlotFileException  */
 public void start(PltData pD, java.io.File plotFile, boolean txtWithFonts)
-        throws OpenPlotFileException {
+        throws WritePlotFileException {
     if(pD == null) {return;}
     this.pd = pD;
     this.textWithFonts = txtWithFonts; 
     String msg = null;
     if(plotFile != null && plotFile.getName().length()>0) {
-        outputFile = null;
-        try{outputFile = new java.io.PrintWriter(
-                new java.io.BufferedWriter(
-                new java.io.FileWriter(plotFile)));
-                pd.pltFile_Name = plotFile.getPath();
-                save = true;}
-        catch (java.io.IOException ex) {
+        w = null;
+        try{
+            w = new java.io.BufferedWriter(
+                    new java.io.OutputStreamWriter(new java.io.FileOutputStream(plotFile),"UTF8"));
+            pd.pltFile_Name = plotFile.getPath();
+            save = true;
+        } catch (java.io.IOException ex) {
             msg = "Error: \""+ex.toString()+"\","+nl+
                            "   in Graphics Library,"+nl+
                            "   while opening output file" +nl+
@@ -199,12 +200,12 @@ public void start(PltData pD, java.io.File plotFile, boolean txtWithFonts)
             pd.pltFile_Name = null;
             save = false;}
     } else {pd.pltFile_Name = null; save = false;}
-    if (msg != null) {throw new OpenPlotFileException(msg);}
+    if (msg != null) {throw new WritePlotFileException(msg);}
     //return;
 } //start(pD, plotFile)
-public static class OpenPlotFileException extends Exception {
-    public OpenPlotFileException() {}
-    public OpenPlotFileException(String txt) {super(txt);}
+public static class WritePlotFileException extends Exception {
+    public WritePlotFileException() {}
+    public WritePlotFileException(String txt) {super(txt);}
     } //openPlotFileException
 
 //</editor-fold>
@@ -212,7 +213,7 @@ public static class OpenPlotFileException extends Exception {
 //<editor-fold defaultstate="collapsed" desc="end()">
 /** Close the output plot file;
  * Checks that the "user graphic space" is not zero. */
-public void end() {
+public void end() throws WritePlotFileException {
     // check the "UserSpace" dimensions
     if(pd.userSpaceMax.x == Integer.MIN_VALUE) {pd.userSpaceMax.x = 2100;}
     if(pd.userSpaceMin.x == Integer.MAX_VALUE) {pd.userSpaceMin.x = 0;}
@@ -227,10 +228,27 @@ public void end() {
     int yShift = Math.round(Math.max( (100f-userSpace_w)/2f, userSpace_w*xtra ) );
     pd.userSpaceMax.y = pd.userSpaceMax.y + yShift;
     pd.userSpaceMin.y = pd.userSpaceMin.y - yShift;
-    if(label != null && save) {outputFile.println("0   0   0 "+label);}
+    try{if(label != null && save) {w.write("0   0   0 "+label+nl);}}
+    catch(Exception ex) {
+        save = false;
+        pd.pltFile_Name = null;
+        throw new WritePlotFileException("Error: \""+ex.getMessage()+"\","+nl+
+                           "   in Graphics Library,"+nl+
+                           "   while closing output file" +nl+
+                           "   \""+pd.pltFile_Name+"\"");
+    }
     // close output file
-    if(outputFile != null) {
-        save = false; outputFile.flush(); outputFile.close();}
+    if(w != null) {
+        save = false;
+        try{w.flush(); w.close();}
+        catch(Exception ex) {
+            pd.pltFile_Name = null;
+            throw new WritePlotFileException("Error: \""+ex.getMessage()+"\","+nl+
+                           "   in Graphics Library,"+nl+
+                           "   while closing output file" +nl+
+                           "   \""+pd.pltFile_Name+"\"");
+        }
+    }
     //return;
 } // end()
 //</editor-fold>
@@ -238,8 +256,18 @@ public void end() {
 //<editor-fold defaultstate="collapsed" desc="setLabel">
 /**  A comment to be written to the output file
  * @param txt String */
-public void setLabel(String txt) {
-    if(label != null && save) {outputFile.println("0   0   0 "+label);}
+public void setLabel(String txt) throws WritePlotFileException {
+    if(label != null && save) {
+        try{w.write("0   0   0 "+label+nl);}
+        catch(Exception ex) {
+            save = false;
+            pd.pltFile_Name = null;
+            throw new WritePlotFileException("Error: \""+ex.getMessage()+"\","+nl+
+                           "   in Graphics Library \"setLabel\","+nl+
+                           "   while writing output file" +nl+
+                           "   \""+pd.pltFile_Name+"\"");
+        }
+    }
     label = txt;
     //return;
 } //setLabel(txt)
@@ -250,17 +278,26 @@ public void setLabel(String txt) {
  * further painting.
  * @param pen int larger than zero to set the plotter pen number;
  * zero or negative to set the screen colour */
-public void setPen(int pen) {
+public void setPen(int pen) throws WritePlotFileException {
     int n; int i;
     if(pen >=0) {n=8;  plotPen = Math.min(pen,9999); i=plotPen;}
     else {n=5;  screenColour = Math.min(-pen,9999); i=screenColour;}
     pd.pltFileAList.add(new PltData.PlotStep(n,i,0));
     if(save) {
+        try{
         if(label != null) {
-                outputFile.format("%1d%4d     %s%n", n,i,label);
+                w.write(String.format("%1d%4d     %s%n", n,i,label));
                 label = null;
-        } else {outputFile.format("%1d%4d%n", n,i);}
-        outputFile.flush();
+        } else {w.write(String.format("%1d%4d%n", n,i));}
+        w.flush();
+        } catch (Exception ex) {
+            save = false;
+            pd.pltFile_Name = null;
+            throw new WritePlotFileException("Error: \""+ex.getMessage()+"\","+nl+
+                           "   in Graphics Library \"setPen\","+nl+
+                           "   while writing output file" +nl+
+                           "   \""+pd.pltFile_Name+"\"");
+        }
         } //if save
 } // setPen(pen)
 //</editor-fold>
@@ -281,7 +318,7 @@ public void setIsFormula(boolean b) {isFormula = b;}
  * @param axesCoord boolean: if true the (x,y)-values are taken
  * to be in the same scale as previously drawm axes */
 public void sym(float xP, float yP, float tHeight, String t, float angle,
-        int alignment, boolean axesCoord) {
+        int alignment, boolean axesCoord) throws WritePlotFileException {
     sym((double)xP, (double)yP, (double)tHeight, t, (double)angle,
             alignment, axesCoord);
 } //sym(float)
@@ -296,7 +333,7 @@ public void sym(float xP, float yP, float tHeight, String t, float angle,
  * @param axesCoord boolean: if true the (x,y)-values are taken
  * to be in the same scale as previously drawm axes */
 public void sym(double xP, double yP, double tHeight, String t, double angle,
-        int alignment, boolean axesCoord) {
+        int alignment, boolean axesCoord) throws WritePlotFileException {
     if(t == null) {return;}
     if(t.trim().length() < 1) {return;}
     if(Math.abs(tHeight) < 0.05) {return;} // less than 0.5 mm size?
@@ -387,9 +424,116 @@ public void sym(double xP, double yP, double tHeight, String t, double angle,
                             (float)sizeSym, (float)angleDegr, t, plotPen, screenColour));
     //return;
 } // sym(x,y,h,txt,a)
+//</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="sketch">
 //<editor-fold defaultstate="collapsed" desc="sketch data">
+// the integers in SK (QnnNN) incorporate three values: the last two digits (NN),
+// the previous 2 digits (nn) and an optional flag (Q)
+// The last two (NN) are the x-coordinate of the character stroke;
+// the previous two digits (nn) are the y-coordinate, and the flag (Q) is
+// either "0"= draw to (x,y), "1"= move to (x,y), and
+// "2" = draw to (x,y) and end of character
+private static final int[] SK =
+{10010,9040,70,13060,23020, //A [0-4
+ 10010,9010,9060,8070,6070,5060,5010,15060,4070,1070,60,20010,  //B [5-16
+ 18070,9060,9020,8010,1010,20,60,21070, //C [17-24
+ 10010,9010,9050,7070,2070,50,20010, //D [25-31
+ 10070,10,9010,9070,15010,25050,  //E [32-37
+ 10010,9010,9070,15010,25050, //F [38-42
+ 18070,9060,9020,8010,1010,20,60,1070,4070,24050, //G [43-52
+ 19010,10,19070,70,15010,25070,  //H [53-58
+ 19030,9050,19040,40,10030,20050,  //I [59-64
+ 19060,1060,50,20,1010,22010,   19010,10,19060,5010,20070, //J [65-70  K [71-75
+ 19010,10,20070,   10010,9010,5040,9070,20070,  //L [76-78  M [79-83
+ 10010,9010,70,29070, //N [84-87
+ 10020,1010,8010,9020,9060,8070,1070,60,20020, //O [88-96
+ 10010,9010,9060,8070,6070,5060,25010, //P [97-103
+ 10020,1010,8010,9020,9060,8070,1070,60,20,12050,20070, //Q [104-114
+ 10010,9010,9060,8070,6070,5060,5010,15050,20070, //R [115-123
+ 11010,20,60,1070,4070,5060,5020,6010,8010,9020,9060,28070, //S [124-135
+ 19010,9070,19040,20040,  19010,1010,20,60,1070,29070, //T [136-139  U [140-145
+ 19010,40,29070,   19010,10,4040,70,29070, //W [146-148  V [149-153
+ 19010,70,10010,29070,   19010,5040,9070,15040,20040, //X [154-157  Y [158-162
+ 19010,9070,10,20070, // Z [163-166
+ 12070,40,20,1010,5010,6035,6070,20070, //a [167-174
+ 16010,6060,5070,1070,60,10,29910,  //b [175-181
+ 15070,6060,6020,5010,1010,20,20070,  //c [182-188
+ 16070,6020,5010,1010,20,70,29970,  //d [189-195
+ 13010,3070,5070,6060,6020,5010,1010,20,20070,  //e [196-204
+ 10020,7520,9035,9055,7570,14010,24055,   //f [205-211
+-12010,-3060,-2070,5070,6060,6020,5010,2010,1020,1060,22070,  //g [212-222
+ 10010,9910,16010,6060,5070,20070,  //h [223-228
+ 16020,6035,35,10020,50, 18033,8037,8437,8433,28033,  //i [229-238
+-12010,-3020,-3040,-2050,6050,18550,9050,9055,8555,28550,  //j [239-248
+ 10010,9010,13010,6050,14530,20060,  //k [249-254
+ 19020,9035,35,10020,20050,  //l [255-259
+ 10010,6010,15010,6040,40,15040,6070,20070,  //m [260-267
+ 10010,6010,15010,6055,5070,20070,  //n [268-273
+ 15070,1070,60,20,1010,5010,6020,6060,25070,  //o [274-282
+-13010,6010,6060,5070,2070,1060,21010,  //p [283-289
+-13070,6070,6020,5010,2010,1020,21070,   //q [290-296
+ 10010,6010,14510,6040,6060,25070,  //r [297-302
+ 11010,20,60,1070,2070,3060,3020,4010,5010,6020,6060,25070,  //s [303-314
+ 19030,1030,45,55,1070,16020,26060,  //t [315-321
+ 16020,1020,30,60,1070,26070,  16010,40,26070,  //u [322-327  v [328-330
+ 16010,20,3040,60,26070,  //w [331-335
+ 10010,6070,16010,20070,  -13000,-3010,6060,16010,21030,  //x [336-339  y [340-344
+ 16010,6070,10,20070,  //z [345-348
+ 10020,1010,8010,9020,9060,8070,1070,60,20020,  //0 [349-357
+ 17030,9040,40,10030,20050,  //1 [358-362
+ 18010,9020,9060,8070,5570,1510,10,20070,  //2 [363-370
+ 18010,9020,9060,8070,5570,4560,4520,14560,3570,1070,60,20,21010, //3 [371-383
+ 10060,9060,3010,23070,  //4 [384-387
+ 11010,20,60,1070,4070,5060,5010,9010,29070,  //5 [388-396
+ 14010,5020,5060,4070,1070,60,20,1010,8010,9020,29060,  //6 [397-407
+ 10020,9070,9010,28010,  //7 [408-411
+ 15020,4010,1010,20,60,1070,4070,5060,5020,6010,8010,9020,9060,8070,6070,25060, //8 [412-427
+ 10020,10020,60,1070,8070,9060,9020,8010,5010,4020,4060,25070,  //9 [428-439
+ 15010,25070,  12040,8040,15010,25070,  //- [440-441  + [442-445
+ 15020,5060,13050,7030,17050,23030,  10010,29070,  //* [446-451  / [452-453
+-11050,40,2530,7030,9540,30550, //( [454-459
+-11030,40,2550,7050,9540,30530, //) [460-465
+ 19950,9930,-1030,-21050,  -11030,-1050,9950,29930,  //[ [466-469  ] [470-473
+ 11520,1565,15520,25565,  //= [474-477
+-11050,40,4040,5030,6040,9940,31050,  //{ [478-484
+-11030,40,4040,5050,6040,9940,31030,  //} [485-491
+ 10030,40,1040,1030,20030,  //. [492-496
+-11525,1040,1030,30,-21525, //, [497-501
+-11010,2020,6020,12020,1030,1060,2070,6070,12070,21080,  //µ(micro) [502-511
+ 19960,7240,9950,29960,  19920,7240,9930,29920,          //' [512-515  ` [516-519
+ 19970,7260,9960,9970,19940,7030,9930,29940,             //" [520-527
+ 19033,3033,10030,35,535,530,20030,                      //! [528-534
+ 18010,9020,9060,8070,6070,4040,3040,10040,45,545,540,20040,//? [535-546
+-12000,-22099,  //_ [547-548
+ 10030,40,1040,1030,30,14030,4040,5040,5030,24030,     //: [549-558
+-11525,1040,1030,30,-1525,14030,4040,5040,5030,24030,  //; [559-568
+ 17070,4010,21070,  11010,4070,27010,                  //< [569-571  > [572-574
+ 13020,3060,15060,5020,17030,1030,11050,27050,         //# [575-582
+ 16010,8010,8030,6030,6010,10010,9070,13070,1070,1050,3050,23070, //% [583-594
+ 14074,550,033,1818,4030,6057,7060,8054,8040,7032,6232,20080,  //& [595-606
+ 17020,8530,7060,28570,                                //~ [607-610
+ 10080,10,9060,20080,                                  //Δ [611-614
+ 19010,20070,  19033,20033,                            //\ [615-616  | [617-618
+ 17030,9045,27060,                                     //^ [619-621
+ 16030,6040,7050,8050,9040,9030,8020,7020,26030,       //° [622-630
+ 10020,1010,7010,8020,8060,7070,1070,60,20, 19230,9220,
+        9920,9930,9230, 19260,9250,9950,9960,29260,    //Ö [631-649
+ 11010,5010,6020,6060,5070,1070,60,20,1010, 17525,
+        7520,8020,8025,7525, 17560,7555,8055,8060,27560,  //ö [650-668
+ 10010,9040,70, 13060,3020, 19247,9233,9933,9947,29247, //Å [669-678
+ 12070,40,20,1010,5010,6035,6070,70, 17552,9052,9038,7538,27552,  //å [679-691
+ 10010,9040,70, 13060,3020, 19230,9220,9920,9930,9230,
+        19260,9250,9950,9960,29260, //Ä [692-706
+ 12070,40,20,1010,5010,6035,6070,70,
+     17525,7520,8020,8025,7525,  17560,7555,8055,8060,27560,   //ä [707-724
+ 13040,7040,15020,5060,11020,21060,  //± [725-730
+ 14040,4050,5050,5040,24040,  //· [731-735
+ 11010,20,60,1070,4070,5060,5020,6010,8010,9020,9060,8070,
+    -11040,29940,  //$ [736-749
+ 12070,40,30,1020,5020,6035,6070, 10080,1070,6570,7560,7520,
+       6005,1005,-1020,-21040,    //@ [750-765
+ 11010,7070,17010,21070};   //× [766-769]
 private int[] ADDRES =
  //' ' A B  C  D  E  F  G  H  I  J  K  L  M  N  O  P   Q   R
    {-1,0,5,17,25,32,38,43,53,59,65,71,76,79,84,88,97,104,115,     //0-18
@@ -405,109 +549,11 @@ private int[] ADDRES =
     535,547,549,559,569,572,575,583,595,516,607,619,502,736,     //79-92
 //bcksp @   \   |    Ö   ö    Å   å    Ä   ä   º   °   ±   ·
    -1,750,615,617, 631,650, 669,679, 692,707,622,622,725,731,    //93-106
- //   •   –   −   µ   Δ   ∆   ´
-    731,440,440,502,611,611,512};                               //107-113
-private static final int[] SK =
-{10010,9040,70,13060,23020, //A [0
- 10010,9010,9060,8070,6070,5060,5010,15060,4070,1070,60,20010,  //B [5
- 18070,9060,9020,8010,1010,20,60,21070, //C [17
- 10010,9010,9050,7070,2070,50,20010, //D [25
- 10070,10,9010,9070,15010,25050,  //E [32
- 10010,9010,9070,15010,25050, //F [38
- 18070,9060,9020,8010,1010,20,60,1070,4070,24050, //G [43
- 19010,10,19070,70,15010,25070,  //H [53
- 19030,9050,19040,40,10030,20050,  //I [59
- 19060,1060,50,20,1010,22010,   19010,10,19060,5010,20070, //J [65  K [71
- 19010,10,20070,   10010,9010,5040,9070,20070,  //L [76  M [79
- 10010,9010,70,29070, //N [84
- 10020,1010,8010,9020,9060,8070,1070,60,20020, //O [88
- 10010,9010,9060,8070,6070,5060,25010, //P [97
- 10020,1010,8010,9020,9060,8070, //Q [104
- 1070,60,20,12050,20070,10010,9010,9060,8070,6070,5060,5010,15050,20070, //R [115
- 11010,20,60,1070,4070,5060,5020,6010,8010,9020,9060,28070, //S [124
- 19010,9070,19040,20040,  19010,1010,20,60,1070,29070, //T [136  U [140
- 19010,40,29070,   19010,10,4040,70,29070, //W [146  V [149
- 19010,70,10010,29070,   19010,5040,9070,15040,20040, //X [154  Y [158
- 19010,9070,10,20070, // Z [163
- 12070,40,20,1010,5010,6035,6070,20070, //a [167
- 16010,6060,5070,1070,60,10,29910,  //b [175
- 15070,6060,6020,5010,1010,20,20070,  //c [182
- 16070,6020,5010,1010,20,70,29970,  //d [189
- 13010,3070,5070,6060,6020,5010,1010,20,20070,  //e [196
- 10020,7520,9035,9055,7570,14010,24055,   //f [205
--12010,-3060,-2070,5070,6060,6020,5010,2010,1020,1060,22070,  //g [212
- 10010,9910,16010,6060,5070,20070,  //h [223
- 16020,6035,35,10020,50, 18033,8037,8437,8433,28033,  //i [229
--12010,-3020,-3040,-2050,6050,18550,9050,9055,8555,28550,  //j [239
- 10010,9010,13010,6050,14530,20060,  //k [249
- 19020,9035,35,10020,20050,  //l [255
- 10010,6010,15010,6040,40,15040,6070,20070,  //m [260
- 10010,6010,15010,6055,5070,20070,  //n [268
- 15070,1070,60,20,1010,5010,6020,6060,25070,  //o [274
--13010,6010,6060,5070,2070,1060,21010,  //p [283
--13070,6070,6020,5010,2010,1020,21070,   //q [290
- 10010,6010,14510,6040,6060,25070,  //r [297
- 11010,20,60,1070,2070,3060,3020,4010,5010,6020,6060,25070,  //s [303
- 19030,1030,45,55,1070,16020,26060,  //t [315
- 16020,1020,30,60,1070,26070,  16010,40,26070,  //u [322  v [328
- 16010,20,3040,60,26070,  //w [331
- 10010,6070,16010,20070,  -13000,-3010,6060,16010,21030,  //x [336  y [340
- 16010,6070,10,20070,  //z [345
- 10020,1010,8010,9020,9060,8070,1070,60,20020,  //0 [349
- 17030,9040,40,10030,20050,  //1 [358
- 18010,9020,9060,8070,5570,1510,10,20070,  //2 [363
- 18010,9020,9060,8070,5570,4560,4520,14560,3570,1070,60,20,21010, //3 [371
- 10060,9060,3010,23070,  //4 [384
- 11010,20,60,1070,4070,5060,5010,9010,29070,  //5 [388
- 14010,5020,5060,4070,1070,60,20,1010,8010,9020,29060,  //6 [397
- 10020,9070,9010,28010,  //7 [408
- 15020,4010,1010,20,60,1070,4070,5060,5020,6010,8010,9020,9060,8070,6070,25060, //8 [412
- 10020,10020,60,1070,8070,9060,9020,8010,5010,4020,4060,25070,  //9 [428
- 15010,25070,  12040,8040,15010,25070,  //- [440  + [442
- 15020,5060,13050,7030,17050,23030,  10010,29070,  //* [446  / [452
--11050,40,2530,7030,9540,30550, //( [454
--11030,40,2550,7050,9540,30530, //) [460
- 19950,9930,-1030,-21050,  -11030,-1050,9950,29930,  //[ [466  ] [470
- 11520,1565,15520,25565,  //= [474
--11050,40,4040,5030,6040,9940,31050,  //{ [478
--11030,40,4040,5050,6040,9940,31030,  //} [485
- 10030,40,1040,1030,20030,  //. [492
--11525,1040,1030,30,-21525, //, [497
--11010,2020,6020,12020,1030,1060,2070,6070,12070,21080,  //µ(micro) [502
- 19960,7240,9950,29960,  19920,7240,9930,29920,          //' [512  ` [516
- 19970,7260,9960,9970,19940,7030,9930,29940,             //" [520
- 19033,3033,10030,35,535,530,20030,                      //! [528
- 18010,9020,9060,8070,6070,4040,3040,10040,45,545,540,20040,//? [535
--12000,-22099,  //_ [547
- 10030,40,1040,1030,30,14030,4040,5040,5030,24030,     //: [549
--11525,1040,1030,30,-1525,14030,4040,5040,5030,24030,  //; [559
- 17070,4010,21070,  11010,4070,27010,                  //< [569  > [572
- 13020,3060,15060,5020,17030,1030,11050,27050,         //# [575
- 16010,8010,8030,6030,6010,10010,9070,13070,1070,1050,3050,23070, //% [583
- 14074,550,033,1818,4030,6057,7060,8054,8040,7032,6232,20080,  //& [595
- 17020,8530,7060,28570,                                //~ [607
- 10080,10,9060,20080,                                  //Δ [611
- 19010,20070,  19033,20033,                            //\ [615  | [617
- 17030,9045,27060,                                     //^ [619
- 16030,6040,7050,8050,9040,9030,8020,7020,26030,       //° [622
- 10020,1010,7010,8020,8060,7070,1070,60,20, 19230,9220,
-        9920,9930,9230, 19260,9250,9950,9960,29260,    //Ö [631
- 11010,5010,6020,6060,5070,1070,60,20,1010, 17525,
-        7520,8020,8025,7525, 17560,7555,8055,8060,27560,  //ö [650
- 10010,9040,70, 13060,3020, 19247,9233,9933,9947,29247, //Å [669
- 12070,40,20,1010,5010,6035,6070,70, 17552,9052,9038,7538,27552,  //å [679
- 10010,9040,70, 13060,3020, 19230,9220,9920,9930,9230,
-        19260,9250,9950,9960,29260, //Ä [692
- 12070,40,20,1010,5010,6035,6070,70,
-     17525,7520,8020,8025,7525,  17560,7555,8055,8060,27560,   //ä [706
- 13040,7040,15020,5060,11020,21060,  //± [724
- 14040,4050,5050,5040,24040,  //· [730
- 11010,20,60,1070,4070,5060,5020,6010,8010,9020,9060,8070,
-    -11040,29940,  //$ [735
- 12070,40,30,1020,5020,6035,6070, 10080,1070,6570,7560,7520,
-       6005,1005,-1020,-21040};   //@ [749-764]
+ //   •   –   −   µ   Δ   ∆   ´   ×
+    731,440,440,502,611,611,512,766};                            //107-114
 //</editor-fold>
-private void sketch(double x0, double y0, String txt, double angleDegr) {
+private void sketch(double x0, double y0, String txt, double angleDegr)
+                    throws WritePlotFileException {
   //Characters recognized:
   char[] CHR =
    {' ','A', 'B','C','D','E','F','G','H','I','J','K','L','M','N', // 0-14
@@ -517,7 +563,7 @@ private void sketch(double x0, double y0, String txt, double angleDegr) {
     '7','8', '9','-','+','*','/','(',')','[',']','=','{','}','.', //60-74
     ',','\'','"','!','?','_',':',';','<','>','#','%','&','`','~', //75-89
     '^','μ','$',' ','@','\\','|','Ö','ö','Å','å','Ä','ä',         //90-102
-    'º','°','±','·','•','–','−','µ','Δ','∆','´'};               //103-113
+    'º','°','±','·','•','–','−','µ','Δ','∆','´','×'};            //103-114
   int nRecn = CHR.length;
   /* to convert a character to ASCII code and back:
    *   char x = '−';
@@ -651,7 +697,6 @@ private void sketch(double x0, double y0, String txt, double angleDegr) {
   //return;
 } //sketch
 //</editor-fold>
-//</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="moveToDrawTo">
 /**  "Move to" or "Draw to"
@@ -659,7 +704,7 @@ private void sketch(double x0, double y0, String txt, double angleDegr) {
  * @param y float, Y-position, should be between -9.99 and 99.99
  * @param flag int, must be zero (0) for "move to" or one (1) for "draw to".
  * If not =1 then zero is assumed. */
-public void moveToDrawTo(float x, float y, int flag) {
+public void moveToDrawTo(float x, float y, int flag) throws WritePlotFileException {
     moveToDrawTo((double)x, (double)y, flag);
     //return;
 } //moveToDrawTo(float)
@@ -669,7 +714,7 @@ public void moveToDrawTo(float x, float y, int flag) {
  * @param y double, Y-position, should be between -9.99 and 99.99
  * @param flag int, must be zero (0) for "move to" or one (1) for "draw to".
  * If not =1 then zero is assumed. */
-public void moveToDrawTo(double x, double y, int flag) {
+public void moveToDrawTo(double x, double y, int flag) throws WritePlotFileException {
     int i0;
     if(flag != 1) {i0 = 0;} else {i0 = 1;}
     x = Math.min(99.999, Math.max(-9.999, x));
@@ -681,11 +726,20 @@ public void moveToDrawTo(double x, double y, int flag) {
     if(i1 == i2Last && i2 == i3Last && label == null) {return;}
     i2Last = i1;  i3Last = i2;
     if(save) {
-        if(label != null) {
-            outputFile.format("%1d%4d%4d %s%n", i0,i1,i2,label);
-            label = null; }
-        else {outputFile.format("%1d%4d%4d%n", i0,i1,i2);}
-        outputFile.flush();
+        try{
+            if(label != null) {
+                w.write(String.format("%1d%4d%4d %s%n", i0,i1,i2,label));
+                label = null; }
+            else {w.write(String.format("%1d%4d%4d%n", i0,i1,i2));}
+            w.flush();
+        } catch (Exception ex) {
+            save = false;
+            pd.pltFile_Name = null;
+            throw new WritePlotFileException("Error: \""+ex.getMessage()+"\","+nl+
+                           "   in Graphics Library \"moveToDrawTo\","+nl+
+                           "   while writing output file" +nl+
+                           "   \""+pd.pltFile_Name+"\"");
+        }
     } //if(save)
     if(!sketching) {pd.pltFileAList.add(new PltData.PlotStep(i0, i1, i2));}
     if(i1<pd.userSpaceMin.x) {pd.userSpaceMin.x = i1;}
@@ -714,10 +768,13 @@ public void moveToDrawTo(double x, double y, int flag) {
  * @throws lib.kemi.graph_lib.GraphLib.AxesDataException */
 public void axes(float xMinI, float xMaxI, float yMinI, float yMaxI,
         float xOr, float yOr, float xAxL, float yAxL, float size,
-        boolean logX, boolean logY, boolean frame) throws AxesDataException {
+        boolean logX, boolean logY, boolean frame)
+        throws AxesDataException, WritePlotFileException {
+
     axes((double)xMinI, (double)xMaxI, (double)yMinI, (double)yMaxI,
             (double)xOr, (double)yOr, (double)xAxL, (double)yAxL,
             (double)size, logX, logY, frame);
+
 } //axes(float)
 /**  Display (X,Y)-axes (and save to the output plot file).
  * @param xMinI double, minimum X-value. For a log-axis xMinI = log10(min. X-value)
@@ -736,7 +793,8 @@ public void axes(float xMinI, float xMaxI, float yMinI, float yMaxI,
  * @throws lib.kemi.graph_lib.GraphLib.AxesDataException */
 public void axes(double xMinI, double xMaxI, double yMinI, double yMaxI,
         double xOr, double yOr, double xAxL, double yAxL, double size,
-        boolean logX, boolean logY, boolean frame) throws AxesDataException {
+        boolean logX, boolean logY, boolean frame)
+        throws AxesDataException, WritePlotFileException {
 // Draw axes.
 // The spacing between numbering in the axes can be controlled by the
 // variables stpXI,stpYI. Valid input values are 0, 0.5, 1.0 and 2.0
@@ -940,7 +998,7 @@ if(!(expX >= 1 && expX <= 4 && b) &&
   //if(expX > 99 || expX < -99) {xPl = xPl + size;}
   //if(expX < 0) {xPl = xPl + size;}
   txt = String.format("%4d", expX);
-  txt = "*10'"+txt.trim()+"`";
+  txt = "×10'"+txt.trim()+"`";
   sym(xPl, yPl, size, txt, anglX, -1, false);
 }
 
@@ -1116,7 +1174,7 @@ if(!(expY >= 1 && expY <= 4 && b) &&
   //if(expY > 99 || expY < -99) {xPl = xPl + size;}
   //if(expY < 0) {xPl = xPl + size;}
   txt = String.format("%4d", expY);
-  txt = "*10'"+txt.trim()+"`";
+  txt = "×10'"+txt.trim()+"`";
   sym(xPl, yPl, size, txt, anglY, -1, false);
 }
 
@@ -1370,7 +1428,7 @@ public static int isFormulaLength(String cDum) {
 //<editor-fold defaultstate="collapsed" desc="line">
 /**  Set the style for the lines drawn using the method "line"
  * @param lineStyle int 0=continous, 1-5=dashed. */
-public void lineType(int lineStyle) {
+public void lineType(int lineStyle) throws WritePlotFileException {
   this.lineStyle = Math.max(0,Math.min(5,lineStyle));
   if(nDash !=0) {dashIt();}
   nDash = 0;
@@ -1384,11 +1442,11 @@ public void lineType(int lineStyle) {
 } //lineType(int)
 
 
-/** Draw a line using the type (continuous or dahsed) specified by
+/** Draw a line using the type (continuous or dashed) specified by
  * previous call to lineType(i).
  * @param x double[] x-coordinates
  * @param y double[] y-coordinates  */
-public void line(double[] x, double[] y) {
+public void line(double[] x, double[] y) throws WritePlotFileException {
   int n = Math.min(x.length, y.length);
   if(n <=1) {return;}
   double oldX = Double.NEGATIVE_INFINITY;
@@ -1426,7 +1484,7 @@ public void line(double[] x, double[] y) {
    private double[] yDash = new double[100];
    private double[] dash = {0,0,0,0};
 //<editor-fold defaultstate="collapsed" desc="dash-line methods">
-private void lineMoveToDrawTo(double x, double y, int n) {
+private void lineMoveToDrawTo(double x, double y, int n) throws WritePlotFileException {
   if(lineStyle == 0) {moveToDrawTo(x, y, n); return;}
   if(n == 0 && nDash >0) {dashIt();}
   nDash++;
@@ -1434,7 +1492,7 @@ private void lineMoveToDrawTo(double x, double y, int n) {
   if(nDash >= xDash.length-1) {dashIt();}
   //return;
 } //lineMoveToDrawTo(x,y,n)
-private void dashIt(){
+private void dashIt() throws WritePlotFileException {
   if(nDash <=1) {nDash=0; return;}
   boolean down;
   double xP = xDash[0]; double yP = yDash[0];

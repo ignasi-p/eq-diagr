@@ -17,7 +17,7 @@ import lib.common.Util;
  * </ul>
  * Each instance of this class contains one instance of the inner classes. 
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -351,7 +351,7 @@ public class ChemConcs{
  * If the calculation fails, up to 6 error flags are set bitwise
  * in this variable.<br>
  * The meaning of the different flags:<br>
- * 1: the numerical solution is uncertain.<br>
+ * 1: the numerical solution is uncertain (round-off errors).<br>
  * 2: too many iterations when solving the mass balance equations.<br>
  * 3: failed to find a satisfactory combination of solids.<br>
  * 4: too many iterations trying to find the solids at equilibrium.<br>
@@ -365,21 +365,21 @@ public class ChemConcs{
  * @see lib.kemi.chem.Chem.ChemSystem.ChemConcs#errFlagsGetMessages() errFlagsGetMessages
  * @see lib.kemi.haltaFall.Factor#MAX_CONC MAX_CONC */
     public int errFlags;
-/** If it is <b><code>true</code></b> activity coefficents (ionic strength effects) will
+/** If it is <b><code>true</code></b> activity coefficients (ionic strength effects) will
  * be calculated by <code>HaltaFall</code> using using the provided instance of
  * <code>Factor</code>. If it is <b><code>false</code></b> then the calculations in 
  * <code>HaltaFall</code> are made for ideal solutions (all activity coefficients = 1)
- * and <code>Factor</code> is never called during the iterations.
+ * and <code>Factor</code> is never called by <code>HaltaFall</code> during the iterations.
  * @see lib.kemi.chem.Chem.Diagr#activityCoeffsModel Chem.Diagr.activityCoeffsModel
  * @see lib.kemi.chem.Chem.Diagr#ionicStrength Chem.Diagr.ionicStrength
  * @see lib.kemi.haltaFall.Factor#ionicStrengthCalc haltaFall.Factor.ionicStrengthCalc */
     public boolean actCoefCalc = false;
- /** The tolerance being used to iterate activity coefficient calculations.
+ /** The tolerance (log-10 scale) being used to iterate activity coefficient calculations.
   * For systems where the highest concentration for a ionic species is less
-  * than 1 (mol/L), the tolerance is 0.001 in log-10 scale. If one or more concentration
-  * for a ionic species <nobr>(C[i])</nobr> is larger than 1, then
+  * than 1 (mol/L), the tolerance is 0.001 in log-10 scale. If one or more
+  * concentrations for a ionic species <nobr>(C[i])</nobr> is larger than one, then
   * <nobr><code>tolLogF = 0.001*C[i]</code>.</nobr>  For example, if the highest
-  * ionic concentration is 12 mol/L, then <code>tolLogF = 0.012</code>.
+  * concentration is 12 mol/L, then <code>tolLogF = 0.012</code>.
   * @see #actCoefCalc actCoefCalc
   * @see #logf logf
   * @see lib.kemi.haltaFall.HaltaFall#TOL_LNG TOL_LNG */
@@ -490,7 +490,7 @@ public class ChemConcs{
         if(errFlags <= 0) {return null;}
         String t = "";
         if((errFlags & 1) == 1) {
-            t = t+ "The numerical solution is uncertain.";
+            t = t+ "The numerical solution is uncertain (round-off errors).";
         }
         if((errFlags & 2) == 2) {
             if(t.length()>0) {t=t+nl;}
@@ -702,11 +702,28 @@ public boolean aquSystem;
 public double temperature;
 /** pressure in bar */
 public double pressure;
-/** The ionic strength given by the user to make the calculations.
+/** The ionic strength given by the user.
  * If the ionic strength is negative (e.g. =-1) then it is calculated.
+ * This variable is checked in SED and Predom when plotting a heading in the
+ * diagram. If it is zero or NaN (Not a Number) then it is not displayed
+ * in the plot.
  * @see lib.kemi.chem.Chem.Diagr#activityCoeffsModel Chem.Diagr.activityCoeffsModel
  * @see lib.kemi.haltaFall.Factor#ionicStrengthCalc haltaFall.Factor.ionicStrengthCalc */
 public double ionicStrength;
+/** The ionic strength calculated in <code>Factor</code>.
+ * @see lib.kemi.chem.Chem.Diagr#activityCoeffsModel Chem.Diagr.activityCoeffsModel
+ * @see lib.kemi.chem.Chem.Diagr#ionicStrength ionicStrength */
+public double ionicStrCalc;
+/** The osmotic coefficient of water, calculated in <code>Factor</code>.
+ * @see lib.kemi.chem.Chem.ChemSystem#jWater Chem.ChemSystem.jWater
+ * @see lib.kemi.haltaFall.Factor#log10aH2O haltaFall.Factor.log10aH2O
+ * @see lib.kemi.chem.Chem.Diagr#activityCoeffsModel Chem.Diagr.activityCoeffsModel
+ * @see lib.kemi.haltaFall.Factor#ionicStrengthCalc haltaFall.Factor.ionicStrengthCalc */
+public double phi;
+  /** sum of molalities of all species in the aqueous solution
+ * @see lib.kemi.chem.Chem.Diagr#activityCoeffsModel Chem.Diagr.activityCoeffsModel
+ * @see lib.kemi.haltaFall.Factor#ionicStrengthCalc haltaFall.Factor.ionicStrengthCalc */
+public double sumM;
 /** Model to calculate activity coefficents (ionic strength effects):<ul>
  * <li> &lt;0 for ideal solutions (all activity coefficients = 1)
  * <li> =0 Davies eqn.
@@ -739,7 +756,7 @@ public Diagr(){
     aquSystem = false;
     ionicStrength = 0;
     temperature = 25;
-    pressure = Double.NaN;
+    pressure = 1;
     activityCoeffsModel = -1;
     fractionThreshold = 0.03f;
 } // constructor

@@ -27,7 +27,7 @@ public class TestHaltaFall {
     // create an instance of the enclosing class "Chem"
     // this also creates ChemSystem and ChemConc objects
     Chem chem = null;
-    try{chem = new Chem(na, ms, msol);}
+    try{chem = new Chem(na, ms, msol, solidC);}
     catch (Chem.ChemicalParameterException ex) {ex.printStackTrace(); System.exit(1);}
     if(chem == null) {System.out.println("Chem instance failed."); System.exit(1);}
     // get the instance of the inner class "ChemSystem"

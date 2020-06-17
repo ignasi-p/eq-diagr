@@ -2,7 +2,7 @@ package lib.kemi.interpolate;
 
 /** Interpolation methods.
  *
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,92 +21,7 @@ package lib.kemi.interpolate;
 public class Interpolate {
   private static final String nl = System.getProperty("line.separator");
 
-  //<editor-fold defaultstate="collapsed" desc="interpolate">
-/** Given arrays x[] and y[], each of the same length, with the
- * x[] values sorted, and given a value xx,
- * this procedure returns an interpolated value yy.
- * @param x array of x-values
- * @param y the corresponding y-values
- * @param xx the target
- * @return the interpolated y-value corresponding to the target x-value.
- * Returns NaN (not-a-number) if xx is outside the range of x[] */
-public static float interpolate(final float[] x, final float[] y, final float xx)
-        throws IllegalArgumentException {
-    if(y.length != x.length) {
-        throw new IllegalArgumentException("\"interpolation\": the length of y-array must be "+x.length+".");
-    }
-    // Locate the place in the table of x-values
-    // of xx (at which the evaluation of y is desired).
-    int min = 0, max = x.length-1;
-    for (int i = 0; i < x.length; i++) {
-        if(!Float.isNaN(y[i])) {min = i; break;}
-    }
-    for (int i = x.length-1; i > -1; i--) {
-        if(!Float.isNaN(y[i])) {max = i; break;}
-    }
-    for (int i = min; i <= max; i++) {
-        if(Float.isNaN(y[i])) {
-            throw new IllegalArgumentException("\"interpolation\": found NaN value in y["+i+"], between two numeric values.");
-        }
-    }
-    // -----------------
-    //   Special cases
-    // -----------------
-    // --- out of range?
-    if(xx < x[min] || xx > x[max]) {return Float.NaN;}
-    // --- only y value at one x value is given, and xx "close to" this x value
-    if(min == max) {
-        if(xx >= (x[min]*0.95) && xx <= (x[min]+1.05)) {
-            //System.out.println("\"interpolation\": xx="+xx+" and only \"y\" data at x="+x[min]+" provided.");
-            return y[min];
-        }
-        else {return Float.NaN;}
-    }
-    // --- only two y values are given
-    //     if xx is between them use linear interpolation
-    if((max-min) == 1) {
-        if(xx >= (x[min]-0.95) && xx <= (x[max]+1.05)) {
-                //System.out.println("\"interpolation\": xx="+xx+", only \"y\" data x = "+x[min]+" and "+x[max]+" provided.");
-                return y[min]
-                    +(xx-x[min])*(y[max]-y[min])
-                                         /(x[max]-x[min]);
-        } else {return Float.NaN;}
-    }
-    // -----------------------------------
-    //   General case:
-    //   three or more y values given
-    // -----------------------------------
-    int ix = min;
-    for(int i = min; i < max; i++) {
-        if(xx > x[i] && xx <=x[i+1]) {ix = i; break;}
-    }
-    if(xx > x[max]) {ix = max-1;}
-    //System.out.println("\"interpolation\": xx="+xx+", ix="+ix+",  y["+ix+"]="+y[ix]+", min="+min+" max="+max);
-    float sum, yy = 0;
-    int forMin, forMax;
-    // --- if xx <= the second y value, use the 3 smallest y values
-    if(ix <= min) {forMin = min; forMax = min+2;}
-    // --- if xx >= next to last y value, use the 3 largest y values
-    else if(ix >= max-1) {forMin = max-2; forMax = max;}
-    // --- else use two y values below and one above xx
-    else {forMin = ix-1; forMax = ix+1;}
-    // ---
-    for(int i = forMin; i <= forMax; i++) {
-        sum = y[i];
-        for(int j=forMin; j <= forMax; j++) {
-            if(j != i) {
-                sum = sum*(xx-x[j])/(x[i]-x[j]);
-            }
-        }
-        yy = yy + sum;
-    }
-    //System.out.println("\"interpolation\": returns "+yy);
-    return yy;
-}
-// */
-// </editor-fold>
-
-  //<editor-fold defaultstate="collapsed" desc="interpolate3D">
+  //<editor-fold defaultstate="collapsed" desc="logKinterpolateTP">
 /** Returns the value of logK at the requested tC and pBar, interpolated
  * from a provided array grid, at temperatures (0 to 600 C)
  * and pressures (1 to 5000 bar).
@@ -121,7 +36,7 @@ public static float interpolate(final float[] x, final float[] y, final float xx
  * for example at a pressure = 500 bar and temperatures above 450C, etc.
  * @return the value of logK interpolated at the provided values of tC and pBar
  */
-public static float interpolate3D(final float tC, final float pBar,
+public static float logKinterpolateTP(final float tC, final float pBar,
         final float[][] logKarray) throws IllegalArgumentException {
     //-------------------
     boolean dbg = false;
@@ -150,7 +65,7 @@ public static float interpolate3D(final float tC, final float pBar,
 
     // --- Locate the place in the tables of temperatures and pressures,
     //     given tC and pBar (at which the logK evaluation is desired).
-    java.awt.Point indx = indexer3D(tC,pBar,temperatures,pressures, dbg, logKarray);
+    java.awt.Point indx = indexer3D(tC,pBar,temperatures,pressures, dbg);
     int iT = indx.x, iP = indx.y;
     // --- The values of "iT,iP" define a 3x3 matrix of temperature and pressure
     //     (iT-2, iT-1, iT)x(iP,iP+1,iP+2). The values of tC and pBar are inside
@@ -260,11 +175,10 @@ public static float interpolate3D(final float tC, final float pBar,
  * @param pBar pressure in bar
  * @param temperatures array of temperature values
  * @param pressures array of pressure values
- * @return the inedex for the temperature as "x" and the index for the pressure
+ * @return the index for the temperature as "x" and the index for the pressure
  * as the "y" fields  */
 private static java.awt.Point indexer3D(final float tC, final float pBar,
-        final float[] temperatures, final float[] pressures, final boolean dbg,
-        final float[][] logKarray)
+        final float[] temperatures, final float[] pressures, final boolean dbg)
         throws IllegalArgumentException {
     
     int iT,iP;
@@ -316,15 +230,15 @@ private static java.awt.Point indexer3D(final float tC, final float pBar,
   //</editor-fold>
   //</editor-fold>
 
-  //<editor-fold defaultstate="collapsed" desc="interpolate2D">
+  //<editor-fold defaultstate="collapsed" desc="logKinterpolatePsat">
 /** Returns the value of logK at the requested tC, interpolated
- * from the provided array grid, at temperatures 0 to 350 C 
+ * from the provided array, at temperatures 0 to 350 C 
  * @param tC the input temperature in degrees Celsius
  * @param logKarray an array of logK values (logKarray[9]) at
- * the temperatures {0,25,50,100,150,200,250,300,350}. Absent
- * logK values are set to not-a-number (NaN).
+ * the temperatures {0,25,50,100,150,200,250,300,350} corresponding
+ * to saturated vapor pressure. Set absent logK values to not-a-number (NaN).
  * @return the value of logK interpolated at the provided tC value */
-public static float interpolate2D(final float tC, final float[] logKarray) {
+public static float logKinterpolatePsat(final float tC, final float[] logKarray) {
     //                     index:            0   1   2   3    4    5    6    7    8
     final float[] temperatures = new float[]{0f,25f,50f,100f,150f,200f,250f,300f,350f};
     if(logKarray.length != temperatures.length) {
@@ -406,4 +320,197 @@ public static float interpolate2D(final float tC, final float[] logKarray) {
 }
   //</editor-fold>
 
+ //<editor-fold defaultstate="collapsed" desc="not used">
+
+
+  //<editor-fold defaultstate="collapsed" desc="interpolate">
+
+/** Given arrays x[] and y[], each of the same length, with the
+ * x[] values sorted, and given a value xx,
+ * this procedure returns an interpolated value yy.
+ * @param x array of x-values
+ * @param y the corresponding y-values
+ * @param xx the target
+ * @return the interpolated y-value corresponding to the target x-value.
+ * Returns NaN (not-a-number) if xx is outside the range of x[]
+ //
+public static float interpolate(final float[] x, final float[] y, final float xx)
+        throws IllegalArgumentException {
+    if(y.length != x.length) {
+        throw new IllegalArgumentException("\"interpolation\": the length of y-array must be "+x.length+".");
+    }
+    // Locate the place in the table of x-values
+    // of xx (at which the evaluation of y is desired).
+    int min = 0, max = x.length-1;
+    for (int i = 0; i < x.length; i++) {
+        if(!Float.isNaN(y[i])) {min = i; break;}
+    }
+    for (int i = x.length-1; i > -1; i--) {
+        if(!Float.isNaN(y[i])) {max = i; break;}
+    }
+    for (int i = min; i <= max; i++) {
+        if(Float.isNaN(y[i])) {
+            throw new IllegalArgumentException("\"interpolation\": found NaN value in y["+i+"], between two numeric values.");
+        }
+    }
+    // -----------------
+    //   Special cases
+    // -----------------
+    // --- out of range?
+    if(xx < x[min] || xx > x[max]) {return Float.NaN;}
+    // --- only y value at one x value is given, and xx "close to" this x value
+    if(min == max) {
+        if(xx >= (x[min]*0.95) && xx <= (x[min]+1.05)) {
+            //System.out.println("\"interpolation\": xx="+xx+" and only \"y\" data at x="+x[min]+" provided.");
+            return y[min];
+        }
+        else {return Float.NaN;}
+    }
+    // --- only two y values are given
+    //     if xx is between them use linear interpolation
+    if((max-min) == 1) {
+        if(xx >= (x[min]-0.95) && xx <= (x[max]+1.05)) {
+                //System.out.println("\"interpolation\": xx="+xx+", only \"y\" data x = "+x[min]+" and "+x[max]+" provided.");
+                return y[min]
+                    +(xx-x[min])*(y[max]-y[min])
+                                         /(x[max]-x[min]);
+        } else {return Float.NaN;}
+    }
+    // -----------------------------------
+    //   General case:
+    //   three or more y values given
+    // -----------------------------------
+    int ix = min;
+    for(int i = min; i < max; i++) {
+        if(xx > x[i] && xx <=x[i+1]) {ix = i; break;}
+    }
+    if(xx > x[max]) {ix = max-1;}
+    //System.out.println("\"interpolation\": xx="+xx+", ix="+ix+",  y["+ix+"]="+y[ix]+", min="+min+" max="+max);
+    float sum, yy = 0;
+    int forMin, forMax;
+    // --- if xx <= the second y value, use the 3 smallest y values
+    if(ix <= min) {forMin = min; forMax = min+2;}
+    // --- if xx >= next to last y value, use the 3 largest y values
+    else if(ix >= max-1) {forMin = max-2; forMax = max;}
+    // --- else use two y values below and one above xx
+    else {forMin = ix-1; forMax = ix+1;}
+    // ---
+    for(int i = forMin; i <= forMax; i++) {
+        sum = y[i];
+        for(int j=forMin; j <= forMax; j++) {
+            if(j != i) {
+                sum = sum*(xx-x[j])/(x[i]-x[j]);
+            }
+        }
+        yy = yy + sum;
+    }
+    //System.out.println("\"interpolation\": returns "+yy);
+    return yy;
+}
+// </editor-fold>
+
+//<editor-fold defaultstate="collapsed" desc="rationalInterpolation">
+/** Rational interpolation (1-dimensional interpolation):
+ * Given arrays xTable and yTable, each of the same length, with the
+ * xTable values sorted, and given a value x,
+ * this procedure returns an interpolated value y.
+ * @param xTable array of x-values
+ * @param yTable the corresponding y-values
+ * @param x the target
+ * @return the interpolated y-value corresponding to the target x-value
+
+  public static double rationalInterpolation(double[] xTable, double[] yTable, double x)
+        throws IllegalArgumentException, ArithmeticException {
+    //adapted from: NUMERICAL RECIPES. THE ART OF SCIENTIFIC COMPUTING.
+    //   by   W.H.Press, B.P.Flannery, S.A.Teukolsky and W.T.Vetterling
+    //        Cambridge University Press, Cambridge (1987), p. 85
+    if(xTable == null) {
+        throw new IllegalArgumentException(
+                "Error in \"rationalInterpolation\"; xTable = \"null\"");
+    }
+    int nTable = xTable.length;
+    if(nTable < 2) { // at least two points needed for an interpolation
+        throw new IllegalArgumentException(
+                "Error in \"rationalInterpolation\"; length of array < 2.");
+    }
+    for(int i=0; i < nTable; i++) {
+      if(Double.isNaN(xTable[i])) {
+        throw new IllegalArgumentException(
+            "Error in \"rationalInterpolation\"; xTable["+i+"] = NaN.");
+      }
+    }
+    for(int i=1; i < nTable; i++) {
+      if(xTable[i] < xTable[i-1]) {
+        throw new IllegalArgumentException(
+            "Error in \"rationalInterpolation\"; x-values not in ascending order.");
+      }
+    }
+    if(x > xTable[nTable-1] || x < xTable[0]) {
+        throw new IllegalArgumentException(
+            "Error in \"rationalInterpolation\"; x = "+x+nl+
+            "   is outside interpolation range.");
+    }
+    if(yTable == null) {
+        throw new IllegalArgumentException(
+                "Error in \"rationalInterpolation\"; yTable = \"null\"");
+    }
+    if(yTable.length != nTable) {
+        throw new IllegalArgumentException(
+            "Error in \"rationalInterpolation\"; length of arrays are not equal.");
+    }
+    for(int i=0; i < nTable; i++) {
+      if(Double.isNaN(yTable[i])) {
+        throw new IllegalArgumentException(
+            "Error in \"rationalInterpolation\"; yTable["+i+"] = NaN.");
+      }
+    }
+
+    double y;
+    double tiny = 1e-25; // a small number
+    double dist, t;
+    //-- yErr = error estimate
+    double yErr;
+    double[] c = new double[nTable];
+    double[] d = new double[nTable];
+    //-- get closest table entry
+    double delta =Math.abs(x-xTable[0]);
+    int nClose = 0;
+    for(int i=0; i < nTable; i++) {
+        dist = Math.abs(x-xTable[i]);
+        if(dist <= 0) {
+            y = yTable[i];
+            return y;
+        }
+        if(dist < delta) {nClose = i; delta = dist;}
+        c[i] = yTable[i];
+        d[i] = yTable[i] + tiny; // "tiny" is needed to prevent a rare zero-over-zero condition
+    } //for i
+    y = yTable[nClose];
+    nClose--;
+    for(int m =1; m < nTable; m++) {
+        for(int i =0; i < nTable-m; i++) {
+            dist = xTable[i+m] -x; // can't be zero, we checked above
+            t = (xTable[i]-x)*d[i]/dist;
+            delta = t - c[i+1];
+            if(delta == 0) {
+                throw new ArithmeticException(
+                    "Error in \"rationalInterpolation\": Pole at the requested value of x="+x);
+            }
+            delta = (c[i+1]-d[i]) / delta;
+            d[i] = c[i+1] * delta;
+            c[i] = t * delta;
+        } //for i
+        if(2*nClose < nTable - m) {
+            yErr = c[nClose+1];
+        } else {
+            yErr = d[nClose]; nClose--;
+        }
+        y = y + yErr;
+    } //for m
+    return y;
+  } //rationalInterpolation()
+  //</editor-fold>
+  
+  */
+  //</editor-fold>
 }
