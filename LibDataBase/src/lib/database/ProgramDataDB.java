@@ -5,7 +5,7 @@ import lib.huvud.RedirectedFrame;
 /** Class to store information on the "DataBase" program.
  * The class is used to retrieve data in diverse methods.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@ public class ProgramDataDB {
    * equilibrium constants */
   public double pressure_bar = 25;
   /** if <code>true</code> then it will be possible to choose temperatures
-   * up to 350 C in the program Database. */
-  public boolean temperatureAllowHigher = false;
+   * above 100 C in Database. Default is <code>true</code>. */
+  public boolean temperatureAllowHigher = true;
   public boolean redoxAsk = false;
   public boolean redoxN = true;
   public boolean redoxS = true;

@@ -204,7 +204,7 @@ public class FrameSingleComponent extends javax.swing.JFrame {
         jSeparator = new javax.swing.JPopupMenu.Separator();
         jMenuItemCancel = new javax.swing.JMenuItem();
         jLabelTop = new javax.swing.JLabel();
-        jComboBox = new javax.swing.JComboBox<String>();
+        jComboBox = new javax.swing.JComboBox<>();
         jLabelFound = new javax.swing.JLabel();
         jLabelN = new javax.swing.JLabel();
         jLabelSpecies = new javax.swing.JLabel();
@@ -234,21 +234,21 @@ public class FrameSingleComponent extends javax.swing.JFrame {
         jPopupMenu.add(jMenuItemCancel);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
         jLabelTop.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabelTop.setText("<html>Select one of the following<br>321 components:</html>");
 
-        jComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabelFound.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabelFound.setText("Contents of databases:");
@@ -288,6 +288,7 @@ public class FrameSingleComponent extends javax.swing.JFrame {
         jButtonExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lib/database/images/Java_32x32.gif"))); // NOI18N
         jButtonExit.setMnemonic('x');
         jButtonExit.setText("Exit");
+        jButtonExit.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonExit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonExit.setMargin(new java.awt.Insets(5, 2, 5, 2));
         jButtonExit.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -300,6 +301,7 @@ public class FrameSingleComponent extends javax.swing.JFrame {
         jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lib/database/images/Save_32x32.gif"))); // NOI18N
         jButtonSave.setMnemonic('a');
         jButtonSave.setText("Save");
+        jButtonSave.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonSave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonSave.setMargin(new java.awt.Insets(5, 2, 5, 2));
         jButtonSave.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -312,6 +314,7 @@ public class FrameSingleComponent extends javax.swing.JFrame {
         jButtonSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lib/database/images/Search_32x32.gif"))); // NOI18N
         jButtonSearch.setMnemonic('e');
         jButtonSearch.setText("Search");
+        jButtonSearch.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonSearch.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonSearch.setMargin(new java.awt.Insets(5, 2, 5, 2));
         jButtonSearch.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -406,20 +409,31 @@ public class FrameSingleComponent extends javax.swing.JFrame {
       f = new java.io.File(fn);
       if(f.exists()) {f.delete();}
       if(pc.dbg) {System.out.println("--- Saving file: \""+fn+"\"");}
-      java.io.PrintWriter pw;
-      try {pw = new java.io.PrintWriter(new java.io.FileWriter(f));}
+      java.io.Writer w;
+      try {w = new java.io.BufferedWriter(
+              new java.io.OutputStreamWriter(
+                      new java.io.FileOutputStream(f),"UTF8"));}
       catch (java.io.IOException ex) {
           String msg = "Error: "+ex.toString()+nl+
-                  "while constructing a \"PrintWrite\" for file:"+nl+"\""+fn+"\"";
+                  "while opening file:"+nl+"\""+fn+"\"";
           MsgExceptn.exception(msg);
           javax.swing.JOptionPane.showMessageDialog(this, msg, pc.progName,javax.swing.JOptionPane.ERROR_MESSAGE);
           return;
       }
-      pw.println(Complex.FILE_FIRST_LINE);
+      try{
+      w.write(Complex.FILE_FIRST_LINE+nl);
       for(int i=0; i<sortedModelComplexes.getSize(); i++) {
-          pw.println(sortedModelComplexes.getElementAt(i).toString());
+          w.write(sortedModelComplexes.getElementAt(i).toString()+nl);
       } //for i
-      pw.close();
+      w.close();
+      }
+      catch (Exception ex) {
+          String msg = "Error: "+ex.toString()+nl+
+                  "while writing file:"+nl+"\""+fn+"\"";
+          MsgExceptn.exception(msg);
+          javax.swing.JOptionPane.showMessageDialog(this, msg, pc.progName,javax.swing.JOptionPane.ERROR_MESSAGE);
+          return;
+      }
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
     private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed

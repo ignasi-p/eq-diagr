@@ -5,7 +5,7 @@ import lib.common.Util;
 
 /** Check for errors in the reactions in a database file.
  * <br>
- * Copyright (C) 2017-2019 I.Puigdomenech.
+ * Copyright (C) 2017-2020 I.Puigdomenech.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ public class CheckDatabases {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="checkDataBases">
-/** checks databses, writing statistics and errors in a CheckDataBasesLists object
+/** Checks databases, writing statistics and errors in a CheckDataBasesLists object
  * 
  * @param dbg write debug information?
  * @param parent as the owner of error messages
@@ -390,7 +390,7 @@ public class CheckDatabases {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="displayDatabaseErrors">
- /** display errors in dialogs conatining two buttons (ok and cancel).
+ /** Displays errors in dialogs containing two buttons (ok and cancel).
   * The errors are provided in an object of CheckDataBasesLists.
   * The text on the first button is provided by the user, for example
   * "Exit anyway", the second button is always "Cancel".
@@ -409,7 +409,7 @@ public class CheckDatabases {
           final String title,
           final String database,
           final CheckDataBasesLists lists) {
-    if(dbg) {System.out.println("---- displayDatabaseErrors, debug = true");}
+    if(dbg) {System.out.println("---- CheckDatabases.displayDatabaseErrors, debug = true");}
     if(lists == null) {
         MsgExceptn.exception("Error in \"displayDatabaseErrors\":"+nl+
                 "   parameter \"lists\" (where output arrays would be stored) is null.");

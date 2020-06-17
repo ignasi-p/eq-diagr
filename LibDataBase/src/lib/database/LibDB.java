@@ -5,9 +5,9 @@ import lib.common.MsgExceptn;
 import lib.common.Util;
 import lib.huvud.Div;
 
-/** Some procedures used witin this package.
+/** Some procedures used within this package.
  * <br>
- * Copyright (C) 2015-2019 I.Puigdomenech.
+ * Copyright (C) 2015-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -269,8 +269,10 @@ static { // static initializer
     if(!elemFile.exists()) {throw new ReadElemException("Input file does not exist"+nl+"\""+elN+"\"");}
     if(!elemFile.canRead()) {throw new ReadElemException("Can not read input file"+nl+"\""+elN+"\"");}
     java.io.BufferedReader br;
-    try {br = new java.io.BufferedReader(new java.io.FileReader(elemFile));}
-    catch (java.io.FileNotFoundException ex) {throw new ReadElemException(ex.getMessage());}
+    try {br = new java.io.BufferedReader(
+            new java.io.InputStreamReader(
+                    new java.io.FileInputStream(elemFile),"UTF8"));
+    } catch (Exception ex) {throw new ReadElemException(ex.getMessage());}
     String line = null;
     int lineNbr = 0;
     int i,j,k,n;
@@ -604,9 +606,9 @@ static { // static initializer
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="writeTxtComplex">
-  public static void writeTxtComplex(java.io.PrintWriter pw, Complex cmplx)
+  public static void writeTxtComplex(java.io.Writer w, Complex cmplx)
             throws WriteTxtCmplxException {
-    if(pw == null) {throw new WriteTxtCmplxException(nl+"Error: PrintWriter = null in \"writeTxtComplex\"");}
+    if(w == null) {throw new WriteTxtCmplxException(nl+"Error: Writer = null in \"writeTxtComplex\"");}
     if(cmplx == null) {
         throw new WriteTxtCmplxException(nl+"Error: cmplx = null in \"writeTxtComplex\"");
     }
@@ -614,8 +616,8 @@ static { // static initializer
         throw new WriteTxtCmplxException(nl+"Error: empty cmplx name in \"writeTxtComplex\"");
     }
     try {
-        pw.print(cmplx.toString());
-        pw.println();
+        w.write(cmplx.toString());
+        w.write(nl);
     } catch (Exception ex) {
         throw new WriteTxtCmplxException(nl+"Error: "+ex.getMessage()+nl+" in \"writeTxtComplex\"");
     }
@@ -651,6 +653,9 @@ static { // static initializer
             cmplx.lookUp = false;
             nowReading.replace(0, nowReading.length(), "max temperature for `"+cmplx.name+"´");
             cmplx.tMax = dis.readDouble();
+            cmplx.tMax = Math.max(25., cmplx.tMax);
+            if(cmplx.tMax > 373.) {throw new ReadBinCmplxException(nl+"Error: while reading \""+nowReading.toString()+"\": should be below 373 C (critical point).");}
+            cmplx.pMax = Math.max(1.,lib.kemi.H2O.IAPWSF95.pSat(cmplx.tMax));
             for(int i = 0; i < cmplx.a.length; i++) {
                 nowReading.replace(0, nowReading.length(), "parameter a[+"+i+"] for `"+cmplx.name+"´");
                 cmplx.a[i] = dis.readDouble();
@@ -661,6 +666,8 @@ static { // static initializer
             cmplx.analytic = false;
             nowReading.replace(0, nowReading.length(), "max temperature for `"+cmplx.name+"´");
             cmplx.tMax = dis.readDouble();
+            if(cmplx.tMax != 600) {throw new ReadBinCmplxException(nl+"Error: while reading \""+nowReading.toString()+"\": should be 600 C.");}
+            cmplx.pMax = 5000.;
         } else { // delta-H and delta-Cp
             cmplx.analytic = false;
             cmplx.lookUp = false;
@@ -668,9 +675,10 @@ static { // static initializer
             deltaCp = dis.readDouble();
             cmplx.a = Complex.deltaToA(cmplx.constant, deltaH, deltaCp);
             cmplx.tMax = 25.;
+            cmplx.pMax = 1.;
             if(deltaH != Complex.EMPTY) {
                 cmplx.tMax = 100.;
-                if(deltaCp != Complex.EMPTY) {cmplx.tMax = 200.;}
+                if(deltaCp != Complex.EMPTY) {cmplx.tMax = 300.; cmplx.pMax = 85.9;} // pSat(300) = 85.9
             }
         }
         nowReading.replace(0, nowReading.length(), "reactant nbr.1 or nbr of reactants for `"+cmplx.name+"´");

@@ -43,10 +43,13 @@ public class DBnamesDialog extends javax.swing.JDialog {
 
     private final javax.swing.border.Border defBorder;
     private final javax.swing.border.Border highlightedBorder = javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED, java.awt.Color.gray, java.awt.Color.black);
+    
+    private String dbn;
 
     /** New-line character(s) to substitute "\n". */
     private static final String nl = System.getProperty("line.separator");
 
+    public boolean working = false;
     public boolean cancel = false;
 
   //<editor-fold defaultstate="collapsed" desc="Constructor">
@@ -212,14 +215,14 @@ public class DBnamesDialog extends javax.swing.JDialog {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -257,6 +260,7 @@ public class DBnamesDialog extends javax.swing.JDialog {
         jButtonOK.setMnemonic('o');
         jButtonOK.setText("OK");
         jButtonOK.setToolTipText("exit");
+        jButtonOK.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonOK.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonOK.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButtonOK.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -271,6 +275,7 @@ public class DBnamesDialog extends javax.swing.JDialog {
         jButtonCancel.setMnemonic('C');
         jButtonCancel.setText("Cancel");
         jButtonCancel.setToolTipText("quit");
+        jButtonCancel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonCancel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonCancel.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButtonCancel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -303,6 +308,8 @@ public class DBnamesDialog extends javax.swing.JDialog {
         jButtonAdd.setMnemonic('a');
         jButtonAdd.setText("<html><u>A</u>dd another file</html>");
         jButtonAdd.setToolTipText("Add a new file to the list");
+        jButtonAdd.setAlignmentX(0.5F);
+        jButtonAdd.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAddActionPerformed(evt);
@@ -311,8 +318,10 @@ public class DBnamesDialog extends javax.swing.JDialog {
 
         jButtonRemove.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButtonRemove.setMnemonic('r');
-        jButtonRemove.setText("Remove");
+        jButtonRemove.setText(" Remove ");
         jButtonRemove.setToolTipText("Remove the selected file from the list");
+        jButtonRemove.setAlignmentX(0.5F);
+        jButtonRemove.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonRemove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRemoveActionPerformed(evt);
@@ -322,6 +331,7 @@ public class DBnamesDialog extends javax.swing.JDialog {
         jButtonUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lib/database/images/ArrowUp.gif"))); // NOI18N
         jButtonUp.setMnemonic('u');
         jButtonUp.setToolTipText("move Up (Alt-U)");
+        jButtonUp.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonUp.setIconTextGap(0);
         jButtonUp.setMargin(new java.awt.Insets(0, 2, 0, 2));
         jButtonUp.addActionListener(new java.awt.event.ActionListener() {
@@ -333,6 +343,7 @@ public class DBnamesDialog extends javax.swing.JDialog {
         jButtonDn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lib/database/images/ArrowDn.gif"))); // NOI18N
         jButtonDn.setMnemonic('d');
         jButtonDn.setToolTipText("move Down (Alt-D)");
+        jButtonDn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonDn.setIconTextGap(0);
         jButtonDn.setMargin(new java.awt.Insets(0, 2, 0, 2));
         jButtonDn.addActionListener(new java.awt.event.ActionListener() {
@@ -346,8 +357,8 @@ public class DBnamesDialog extends javax.swing.JDialog {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonRemove)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -449,7 +460,6 @@ public class DBnamesDialog extends javax.swing.JDialog {
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
         cancel = true;
-        if(pc.dbg) {System.out.println("---- Quit: database list unchanged.");}
         closeWindow();
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
@@ -513,11 +523,11 @@ public class DBnamesDialog extends javax.swing.JDialog {
       if(i < 1 || i >= dBnamesModel.size()) {return;}
       // move the name one position up
       synchronized (this) {
-          String dbn = dBnamesModel.get(i).toString();
-          if(pc.dbg) {System.out.println("---- Moving up: \""+dbn+"\"");}
+          String dbname = dBnamesModel.get(i).toString();
+          if(pc.dbg) {System.out.println("---- Moving up: \""+dbname+"\"");}
           String dbnUp = dBnamesModel.get(i-1).toString();
           dbListLocal.set(i, dbnUp);
-          dbListLocal.set(i-1, dbn);
+          dbListLocal.set(i-1, dbname);
       }
       updateDBnames();
       jListDBnames.setSelectedIndex(i-1);
@@ -531,11 +541,11 @@ public class DBnamesDialog extends javax.swing.JDialog {
       if(i < 0 || i >= (dBnamesModel.size()-1)) {return;}
       // move the name one position down
       synchronized (this) {
-        String dbn = dBnamesModel.get(i).toString();
-        if(pc.dbg) {System.out.println("---- Moving down: \""+dbn+"\"");}
+        String dbname = dBnamesModel.get(i).toString();
+        if(pc.dbg) {System.out.println("---- Moving down: \""+dbname+"\"");}
         String dbnDn = dBnamesModel.get(i+1).toString();
         dbListLocal.set(i, dbnDn);
-        dbListLocal.set(i+1, dbn);
+        dbListLocal.set(i+1, dbname);
       }
       updateDBnames();
       jListDBnames.setSelectedIndex(i+1);
@@ -556,12 +566,14 @@ public class DBnamesDialog extends javax.swing.JDialog {
   //<editor-fold defaultstate="collapsed" desc="Methods">
 
   private void closeWindow() {
+    if(working) {return;}
     if(!cancel && dbListLocal.size() <=0) {
         javax.swing.JOptionPane.showMessageDialog(this,
                 "There are no databases selected?"+nl+
                 "Please note that the program is useless without databases."+nl+nl,
                 pc.progName, javax.swing.JOptionPane.WARNING_MESSAGE);
     }
+    if(cancel && pc.dbg) {System.out.println("---- Quit: database list unchanged.");}
     this.setVisible(false);
     //this.dispose();
   } // closeWindow()
@@ -585,34 +597,35 @@ public class DBnamesDialog extends javax.swing.JDialog {
   //<editor-fold defaultstate="collapsed" desc="dBnames_Click">
   private void dBnames_Click() {
     setCursorWait();
-    if(pc.dbg) {System.out.println("--- dBnames_Click()");}
+    if(pc.dbg) {System.out.println(nl+"--- dBnames_Click()");}
 
     //--- get a name
-    String dbn = getDBFileName();
+    dbn = getDBFileName();
     //
     if(dbn == null) {
         setCursorDef();
         jListDBnames.requestFocusInWindow();
         return;
     }
+    setCursorWait();
     //--- OK?
     if(!LibDB.isDBnameOK(this, dbn, pc.dbg)) {System.out.println("--- isDBnameOK("+dbn+") = false"); setCursorDef(); return;}
-    java.io.File dbf = new java.io.File(dbn);
+    final java.io.File dbf = new java.io.File(dbn);
     try {dbn = dbf.getCanonicalPath();}
     catch(java.io.IOException ex) {
         try{dbn = dbf.getAbsolutePath();}
         catch(Exception ex2) {dbn = dbf.getPath();}
     }
+    if(pc.dbg) {System.out.println("    database: \""+dbn+"\""); System.out.flush();}
     //--- element-reactants file
-    String dbnEle = AddDataElem.getElemFileName(pc.dbg, this, dbn);
+    final String dbnEle = AddDataElem.getElemFileName(pc.dbg, this, dbn);
     if(dbnEle == null) {
         if(pc.dbg){System.out.println("--- Could not get an element file name for file: "+dbn);}
         setCursorDef();
         return;
     }
-    java.io.File dbfEle = new java.io.File(dbnEle);
-    boolean binaryDB;
-    binaryDB = dbn.toLowerCase().endsWith(".db");
+    final java.io.File dbfEle = new java.io.File(dbnEle);
+    final boolean binaryDB = dbn.toLowerCase().endsWith(".db");
     if(binaryDB) {
         if(!dbfEle.exists()) {
             String msg = "Could not find the \"element\"-file"+nl+
@@ -639,64 +652,96 @@ public class DBnamesDialog extends javax.swing.JDialog {
                 return;
             }
         }
-        // list of reactants and their chemical elements
-        java.util.ArrayList<String[]> elemCompNewFile = new java.util.ArrayList<String[]>();
-        // are the reactants in "dbn" not found in "dbnEle"?
-        //    if so, are they in "elemComp"?
-        //    if new reactants are found the file "dbnEle" is automatically saved
-        try{AddDataElem.elemCompAdd_Update(pc.dbg, this, dbn, dbnEle, elemComp, elemCompNewFile);}
-        catch (AddDataElem.AddDataException ex) {
-            if(!this.isVisible()) {this.setVisible(true);}
-            MsgExceptn.showErrMsg(this, ex.getMessage(), 1);
-            setCursorDef();
-            return;
-        }
     } // binary database?
 
     // --- check the database for errors
-    java.util.ArrayList<String> arrayList = new java.util.ArrayList<String>();
-    arrayList.add(dbn);
-    CheckDatabases.CheckDataBasesLists lists = new CheckDatabases.CheckDataBasesLists();
-    CheckDatabases.checkDatabases(pc.dbg, this, arrayList, null, lists);
-    String title = pc.progName;
-    boolean ok = CheckDatabases.displayDatabaseErrors(pc.dbg, this, title, dbf.getName(), lists);
-    if(!ok) {
-        System.out.println("--- displayDatabaseErrors: NOT OK for file: "+dbn);
-        setCursorDef();
-        return;
-    }
-
-    //--- add new name to list
-    //    check that the name is not already in the list
-    synchronized (this) {
-        int n = dbListLocal.size();
-        boolean found = false;
-        for(int j=0; j<n; j++) {
-            if(dbListLocal.get(j).equalsIgnoreCase(dbn)) {
-                found = true; break;
+    // ---- Start a thread to wait for the database checks
+    //      (for a large database it takes several seconds)
+    buttonsEnable(false);
+    new javax.swing.SwingWorker<Void,Void>() {
+        @Override protected Void doInBackground() throws Exception {
+            if(!binaryDB) {
+                // list of reactants and their chemical elements
+                java.util.ArrayList<String[]> elemCompNewFile = new java.util.ArrayList<String[]>();
+                if(pc.dbg) {System.out.println("--- Checking that the reactants in \""+dbn+"\" are found in \""+dbnEle+"\"..."); System.out.flush();}
+                // are the reactants in "dbn" not found in "dbnEle"?
+                //    if so, are they in "elemComp"?
+                //    if new reactants are found the file "dbnEle" is automatically saved
+                try{AddDataElem.elemCompAdd_Update(pc.dbg, DBnamesDialog.this, dbn, dbnEle, elemComp, elemCompNewFile);}
+                catch (AddDataElem.AddDataException ex) {
+                    if(!DBnamesDialog.this.isVisible()) {DBnamesDialog.this.setVisible(true);}
+                    MsgExceptn.showErrMsg(DBnamesDialog.this, ex.getMessage(), 1);
+                    dbn = ""; // flag to indicate failure
+                    return null;
+                }
             }
-        }
-        //--- add new name to list
-        if(!found) {
-            if(pc.dbg) {System.out.println("---- Adding database: \""+dbn+"\"");}
-            dbListLocal.add(dbn);
-        }
-    } // synchronized
+            // --- check the database for errors
+            if(pc.dbg) {System.out.println("--- Checking for errors in database \""+dbn+"\""); System.out.flush();}
+            java.util.ArrayList<String> arrayList = new java.util.ArrayList<String>();
+            arrayList.add(dbn);
+            CheckDatabases.CheckDataBasesLists lists = new CheckDatabases.CheckDataBasesLists();
+            CheckDatabases.checkDatabases(pc.dbg, DBnamesDialog.this, arrayList, null, lists);
+            String title = pc.progName;
+            boolean ok = CheckDatabases.displayDatabaseErrors(pc.dbg, DBnamesDialog.this, title, dbf.getName(), lists);
+            if(!ok) {
+                System.out.println("--- displayDatabaseErrors: NOT OK for file: "+dbn);
+                dbn = ""; // flag to indicate failure
+            }
+            return null;
+        } // SwingWorker.doInBackground()
+        @Override protected void done(){
+            //--- failure?
+            if(dbn.isEmpty()) {
+                jButtonCancel.requestFocusInWindow();
+                buttonsEnable(true);
+                setCursorDef();
+                return;
+            }
+            //--- add new name to list
+            //    check that the name is not already in the list
+            synchronized (DBnamesDialog.this) {
+                int n = dbListLocal.size();
+                boolean found = false;
+                for(int j=0; j<n; j++) {
+                    if(dbListLocal.get(j).equalsIgnoreCase(dbn)) {
+                        found = true; break;
+                    }
+                }
+                //--- add new name to list
+                if(!found) {
+                    if(pc.dbg) {System.out.println("---- Adding database: \""+dbn+"\"");}
+                    dbListLocal.add(dbn);
+                }
+            } // synchronized
 
-    //---
-    updateDBnames();
+            //---
+            updateDBnames();
 
-    jListDBnames.requestFocusInWindow();
-    for(int i=0; i < dBnamesModel.size(); i++) {
-        if(dBnamesModel.get(i).equals(dbn)) {
-            jListDBnames.setSelectedIndex(i);
-            jListDBnames.ensureIndexIsVisible(i);
-            break;
-        }
-    }
-    jButtonOK.requestFocusInWindow();
-    setCursorDef();
+            jListDBnames.requestFocusInWindow();
+            for(int i=0; i < dBnamesModel.size(); i++) {
+                if(dBnamesModel.get(i).equals(dbn)) {
+                    jListDBnames.setSelectedIndex(i);
+                    jListDBnames.ensureIndexIsVisible(i);
+                    break;
+                }
+            }
+            buttonsEnable(true);
+            jButtonOK.requestFocusInWindow();
+            setCursorDef();
+        } // SwingWorker.done()
+    }.execute(); // this returns inmediately,
+                 // but the SwingWorker continues running...
   } //dBnames_Click
+
+  private void buttonsEnable(boolean b) {
+    jButtonAdd.setEnabled(b);
+    jButtonRemove.setEnabled(b);
+    jButtonCancel.setEnabled(b);
+    jButtonOK.setEnabled(b);
+    jButtonDn.setEnabled(b);
+    jButtonUp.setEnabled(b);
+    working = !b;
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="getDBFileName()">
@@ -711,6 +756,7 @@ public class DBnamesDialog extends javax.swing.JDialog {
     if(dbFileName == null || dbFileName.trim().length() <= 0) { // cancelled or error
         return null;
     }
+    setCursorWait();
     java.io.File dbFile = new java.io.File(dbFileName);
     if(pathDatabaseFiles.length() >0) {pathDatabaseFiles.delete(0, pathDatabaseFiles.length());}
     pathDatabaseFiles.append(dbFile.getParent());

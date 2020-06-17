@@ -6,7 +6,7 @@ import lib.common.Util;
 /**  Contains data for a "complex": name, stoichiometry, formation equilibrium
  * constant, reference, etc.  May be sorted according to name.
  * <br>
- * Copyright (C) 2014-2019 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,15 +34,17 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * for the reaction have been given, or are empty.
    * @see lib.database.Complex#lookUp lookUp
    * @see lib.database.Complex#a a[]
+   * @see lib.database.Complex#pMax pMax
    * @see lib.database.Complex#tMax tMax */
   public boolean analytic;
   /** if <b>true</b>, a look-up table of logK values (logKarray[][])
    * is used to interpolate values of logK at the desired temperature
    * and pressure; if <b>false</b> then either an analytic power series
-   * expression is used, or the values of detla-H (enthalpy) and delta-Cp
+   * expression is used, or the values of delta-H (enthalpy) and delta-Cp
    * (heat capacity) for the reaction have been given, or are empty.
    * @see lib.database.Complex#analytic analytic
    * @see lib.database.Complex#logKarray logKarray
+   * @see lib.database.Complex#pMax pMax
    * @see lib.database.Complex#tMax tMax */
   public boolean lookUp;
   /** the parameters for the analytic logK(t) equation<br>
@@ -52,6 +54,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * values of a[0], a[2] and a[3] are calculated from the enthalpy
    * and heat capacity.
    * @see lib.database.Complex#analytic analytic
+   * @see lib.database.Complex#pMax pMax
    * @see lib.database.Complex#tMax tMax */
   public double[] a;
   /** A grid of logK values, from which values are interpolated at the
@@ -68,6 +71,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * <b>Note:</b> use Double.NaN (Not-a-Number) where no data is available,
    * for example at temperatures above 400C and pressures below 300bar.
    * @see lib.database.Complex#lookUp lookUp
+   * @see lib.database.Complex#pMax pMax
    * @see lib.database.Complex#tMax tMax */
   public float[][] logKarray;
   /** The highest temperature limit (Celsius) for the temperature extrapolations.
@@ -75,16 +79,34 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * if <b>analytic</b> = false) then: tMax = 25 if values for
    * enthalpy and heat capacity have not been given, tMax = 100
    * if enthalpy has been given but not the heat capacity, and
-   * tMax = 200 if both enthalpy and heat capacity have been given
-   * for this reaction.
+   * tMax = 300 if both enthalpy and heat capacity have been given
+   * for this reaction. Upper limit for tMax is 1000 in "logKatTandP"
+   * and in "logKatTpSat"
+   * @see lib.database.Complex#pMax pMax
    * @see lib.database.Complex#a a[]
    * @see lib.database.Complex#analytic analytic  */
   public double tMax;
+  /** The highest pressure limit (bar) for the pressure extrapolations.
+   * If no <b>analytic</b> equation has been given (that is,
+   * if <b>analytic</b> = false) then: pMax = 1 if values for
+   * enthalpy and heat capacity have not been given or if only the
+   * enthalpy has been given (but not the heat capacity), and
+   * pMax = 85.9 (= pSat(300)) if both enthalpy and heat capacity have
+   * been given for this reaction. If <b>analytic</b> = true then the
+   * value of "pSat" at the tMax temperature is used for pMax.
+   * Upper limit for pMax is 5000 in "logKatTandP" and in "logKatTpSat"
+   * @see lib.database.Complex#tMax tMax
+   * @see lib.database.Complex#a a[]
+   * @see lib.database.Complex#analytic analytic  */
+  public double pMax;
   /** the names of the reactants */
   public java.util.ArrayList<String> reactionComp;
   /** the stoichiometric coefficients for the reactants */
   public java.util.ArrayList<Double> reactionCoef;
-  /** a citation to a reference containing the logK etc */
+  /** a text containing citations to zero or more references (the source of logK etc).
+   * Citations may be separated by comma (,) semicolon (;) or plus (+).
+   * Separators may be enclosed between parentheses, for example: "A+(=Fe+3),D"
+   * contains three citations to "A", "(=Fe+3)" and "D". */
   public String reference;
   /** a comment, such a chemical formula, etc */
   public String comment;
@@ -127,6 +149,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
     analytic = false;
     lookUp = false;
     tMax = 25.;
+    pMax = 1.;
     a = new double[6];
     for(int i=0; i < a.length; i++) {a[i] = EMPTY;}
     logKarray = new float[5][];
@@ -144,6 +167,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
     c.analytic = this.analytic;
     c.lookUp = this.lookUp;
     c.tMax = this.tMax;
+    c.pMax = this.pMax;
     if(this.a != null && this.a.length > 0) {System.arraycopy(this.a, 0, c.a, 0, this.a.length);}
     for (int i = 0; i < this.logKarray.length; i++) {
           if (this.logKarray[i] != null) {
@@ -239,6 +263,10 @@ public class Complex implements Comparable<Complex>, Cloneable {
     }
     if(!Util.areEqualDoubles(this.tMax, other.tMax)) {
         if(dbg) {System.out.println("isEqualTo = false (tMax different)");}
+        return false;
+    }
+    if(!Util.areEqualDoubles(this.pMax, other.pMax)) {
+        if(dbg) {System.out.println("isEqualTo = false (pMax different)");}
         return false;
     }
     for(int i = 0; i < this.a.length; i++) {
@@ -487,13 +515,14 @@ public class Complex implements Comparable<Complex>, Cloneable {
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="toLookUp()">
-  /** Sets "lookUp"=true and sets values to logKarray at pSat (the saturated
-   * vapor-liquid pressure) for temperatures between 0 and 350 C.
+  /** Converts the analytic expression to values of logKarray at pSat
+   * (the saturated vapor-liquid pressure) for temperatures between
+   * 0 and 350 C. Sets "lookUp"=true.
    * The values of logKarray are calculated using the <b>a[]</b>-parameters
    * for the logK(t) equation<br>
    * (log K(t)= a[0] + a[1] T + a[2]/T +  a[3] log10(T)  + a[4] / T^2 + a[5] T^2)<br>
    * where T is the temperature in Kelvin. The value of "tMax" is set to a
-   * maximum value of 350.
+   * maximum value of 350, and "pMax" is set to 165.3 bar (=pSat(350)).
    * 
    * @see lib.database.Complex#analytic analytic
    * @see lib.database.Complex#a a
@@ -512,17 +541,22 @@ public class Complex implements Comparable<Complex>, Cloneable {
           }
       }
       double[] t = new double[]{0, 25, 50,  100, 150, 200, 250, 300, 350};
+      double[] p = new double[]{1,  1,  1,  1.0142, 4.762, 15.55, 39.764, 85.88, 165.3}; // values of pSat
       for(int j=0; j < t.length; j++) {
           logKarray[0][j] = (float)logKatTpSat(t[j]);
-          if(!Float.isNaN(logKarray[0][j])) {tMax = Math.max(t[j], tMax);}
+          if(!Float.isNaN(logKarray[0][j])) {
+              tMax = Math.max(t[j], tMax);
+              pMax = Math.max(p[j], pMax);
+          }
       }
-      tMax = Math.max(25,Math.min(350, tMax));
+      tMax = Math.max(25.,Math.min(350., tMax));
+      pMax = Math.max(1., Math.min(165.3, pMax)); // = pSat(350)
       lookUp = true;
   }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="deltaToA(logK0,deltaH,deltaCp)">
-  /** returns the <b>a[]</b>-parameters for the logK(t) equation<br>
+  /** Returns the <b>a[]</b>-parameters for the logK(t) equation<br>
    * (log K(t)= a[0] + a[1] T + a[2]/T +  a[3] log10(T)  + a[4] / T^2 + a[5] T^2)<br>
    * where T is the temperature in Kelvin, equivalent to the given values of
    * delta-H (entropy) and deltaCp (heat capacity) for the reaction.
@@ -542,8 +576,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * 
    * @see lib.database.Complex#anaytic analytic
    * @see lib.database.Complex#a a[]
-   * @see lib.database.Complex#aToDeltaH(double[]) aToDeltaH
-   * @see lib.database.Complex#tMax tMax */
+   * @see lib.database.Complex#aToDeltaH(double[]) aToDeltaH */
   public static double[] deltaToA(final double logK0, final double deltaH, final double deltaCp) {
       double[] a = new double[6];
       for(int i=0; i < a.length; i++) {a[i] = EMPTY;}
@@ -571,8 +604,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * @see lib.database.Complex#anaytic analytic
    * @see lib.database.Complex#deltaToA(double, double, double) deltaToA
    * @see lib.database.Complex#aToDeltaCp(double[]) aToDeltaCp
-   * @see lib.database.Complex#a a[]
-   * @see lib.database.Complex#tMax tMax */
+   * @see lib.database.Complex#a a[] */
   public double getDeltaH() {
       double deltaH;
       if(a[0] == EMPTY || a[2] == EMPTY) {return EMPTY;}
@@ -598,8 +630,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * @see lib.database.Complex#anaytic analytic
    * @see lib.database.Complex#deltaToA(double, double, double) deltaToA
    * @see lib.database.Complex#aToDeltaH(double[]) aToDeltaH
-   * @see lib.database.Complex#a a[]
-   * @see lib.database.Complex#tMax tMax */
+   * @see lib.database.Complex#a a[] */
   public double getDeltaCp() {
       double deltaCp;
       if(a[0] == EMPTY || a[2] == EMPTY || a[3] == EMPTY) {return EMPTY;}
@@ -731,13 +762,16 @@ public class Complex implements Comparable<Complex>, Cloneable {
                     }
                     n++;
                     c.tMax = 25.;
-                    if(deltaH != EMPTY) {c.tMax = 100.; if(deltaCp != EMPTY) {c.tMax = 200.;}}
+                    c.pMax = 1.;
+                    if(deltaH != EMPTY) {c.tMax = 100.; if(deltaCp != EMPTY) {c.tMax = 300.; c.pMax = 85.9;}} // = pSat(300)
                     c.a = deltaToA(c.constant, deltaH, deltaCp);
                 } else { // look-up Table
                     nowReading.replace(0, nowReading.length(), "Max-temperature");
-                    c.tMax = 25.;
+                    c.pMax = 5000.;
                     if(n < aList.size()) {
                         if(aList.get(n).length() >0) {c.tMax = Double.parseDouble(aList.get(n));}
+                        if(c.tMax > 600) {throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                                "while reading \""+nowReading.toString()+"\" (should <= 600 C)"+nl+"for \""+c.name+"\"");}
                     } else {
                         throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
                             "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
@@ -746,13 +780,15 @@ public class Complex implements Comparable<Complex>, Cloneable {
                 } // lookUp?
             } else { // analytic
                 nowReading.replace(0, nowReading.length(), "Max-temperature");
-                c.tMax = 25.;
                 if(n < aList.size()) {
                     if(aList.get(n).length() >0) {c.tMax = Double.parseDouble(aList.get(n));}
                 } else {
                     throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
                         "missing data while reading "+nowReading.toString()+nl+"for \""+c.name+"\"");
                 }
+                if(c.tMax > 373.) {throw new ReadComplexException("Error in \"Complex.fromString()\":"+nl+
+                                "while reading \""+nowReading.toString()+"\" (should be below 373 C: the critical point)"+nl+"for \""+c.name+"\"");}
+                c.pMax = Math.max(1.,lib.kemi.H2O.IAPWSF95.pSat(c.tMax));
                 n++;
                 for(i = 0; i < c.a.length; i++) {
                     nowReading.replace(0, nowReading.length(), "parameter a["+i+"]");
@@ -931,7 +967,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
       if(Util.isProton(this.reactionComp.get(ic))) {n_H = this.reactionCoef.get(ic); proton = true;}
     }
     if(nTot > 7 || (nTot == 7 && !proton)  || this.analytic || this.lookUp && thereIsLookUpTable) {
-        System.out.println("toStringShort()...");
+        //System.out.println("toStringShort()...");
         return this.toStringShort();
     }
     // delta-H and delta-Cp
@@ -1001,7 +1037,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
         }
     } else if(this.lookUp && thereIsLookUpTable) {
         text.append("lookUpTable;");
-        if(this.tMax == EMPTY || this.tMax < 25) {this.tMax = 25.;}
+        if(this.tMax == EMPTY) {this.tMax = 600.;}
         text.append(Util.formatNumAsInt(this.tMax).trim());
         text.append(";");
     } else { // delta-H and delta-Cp
@@ -1187,7 +1223,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
   * @see lib.database.Complex#logKarray logKarray  */
   public double logKatTpSat(final double tC0) {
     if(Double.isNaN(tC0)) {return Double.NaN;}
-    this.tMax = Math.min(600,Math.max(25, this.tMax));
+    this.tMax = Math.min(1000,Math.max(25, this.tMax));
     if(tC0 > this.tMax+0.001) {return Double.NaN;}
     double tC = Math.max(tC0,0.01); // triple point of water
     if(tC >= 373.946) {return Double.NaN;} // crtitical point of water
@@ -1196,7 +1232,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
         //   t=  0, 25, 50, 100, 150, 200, 250, 300, 350 C
         float[] logK = new float[9];
         System.arraycopy(logKarray[0], 0, logK, 0, logK.length);
-        return lib.kemi.interpolate.Interpolate.interpolate2D((float)tC, logK);
+        return lib.kemi.interpolate.Interpolate.logKinterpolatePsat((float)tC, logK);
     } else {
         return analyticExpression(this, tC);
     }
@@ -1216,14 +1252,16 @@ public class Complex implements Comparable<Complex>, Cloneable {
   * the temperature or the pressure are NaNs, or (c) if tC0 is higher than tMax,
   * or (d) if lookUp is false and pBar is larger than 221 bar.
   * @see lib.database.Complex#tMax tMax
+  * @see lib.database.Complex#pMax pMax
   * @see lib.database.Complex#analytic analytic
   * @see lib.database.Complex#a a
   * @see lib.database.Complex#lookUp lookUp
   * @see lib.database.Complex#logKarray logKarray  */
   public double logKatTandP(final double tC0, final double pBar) {
     if(Double.isNaN(tC0) || Double.isNaN(pBar)) {return Double.NaN;}
-    this.tMax = Math.min(600,Math.max(25, this.tMax));
-    if(tC0 > this.tMax+0.001) {return Double.NaN;}
+    this.tMax = Math.min(1000,Math.max(25, this.tMax));
+    this.pMax = Math.min(5000,Math.max(1, this.pMax));
+    if(tC0 > this.tMax+0.001 || pBar > this.pMax*1.01) {return Double.NaN;}
     double tC = Math.max(tC0,0.01); // triple point of water
     boolean thereIsLookUpTable = false;
     if(this.logKarray[1] != null) {
@@ -1231,17 +1269,18 @@ public class Complex implements Comparable<Complex>, Cloneable {
             if(!Float.isNaN(this.logKarray[1][j])) {thereIsLookUpTable = true; break;}
         }
     }
-    if(tC < 373.946) { // crtitical point of water
+    if(tC < 373.) { // crtitical point of water = 373.946
+        // is the pressure = vapour-liquid equilibrium?
         double pSat = Math.max(1,IAPWSF95.pSat(tC));
-        // if tC <100 and pBar = 1
+        // if tC <=100 and pBar = 1
         if(tC <= 100.001 && Math.abs(pBar-1)<0.001) {return logKatTpSat(tC);}
-        if(pBar < (pSat*0.998)) {  // below saturated liquid-vapor pressure
+        if(pBar < (pSat*0.99)) {  // below saturated liquid-vapor pressure
             return Double.NaN;     // pBar is in the gas range
         } else {
-            return logKatTpSat(tC);
+            if(pBar < (pSat*1.01)) {return logKatTpSat(tC);}
         }
-    } else if(tC == 373.946) {return Double.NaN;}
-    // if tC > 373.946
+    } else if(tC <= 376.) {return Double.NaN;} // between 373 and 376 C
+    // if tC > 376
     double[] tLimit = new double[]{373.946,400,410,430,440,460,470,490,510,520,540,550,570,580,600};
     double[] pLimit = new double[]{        300,350,400,450,500,550,600,650,700,750,800,850,900,950};
     for(int i = 0; i < (tLimit.length-1); i++) {
@@ -1250,7 +1289,7 @@ public class Complex implements Comparable<Complex>, Cloneable {
     // If there is no second row of logKarray, it means that the look-up-table
     // (if it is not null) has been constructed from array a[].
     if(thereIsLookUpTable)  {
-        return lib.kemi.interpolate.Interpolate.interpolate3D((float)tC, (float)pBar, this.logKarray);
+        return lib.kemi.interpolate.Interpolate.logKinterpolateTP((float)tC, (float)pBar, this.logKarray);
     } else {
         if(pBar > 221) {return Double.NaN;}
         return analyticExpression(this, tC);
@@ -1310,8 +1349,8 @@ public class Complex implements Comparable<Complex>, Cloneable {
    * an analytic expression of logK(t)
    * @param cmplx
    * @param tC the temperature (degrees Celsius, between 0 and cmplx.tMax degrees)
-   * @return the logK(t,p)
-   * It returns NaN if either of the input parameters is NaN or if the array
+   * @return the logK(t)
+   * It returns NaN if either: any of the input parameters is NaN, or if the array
    * "a" is not defined. Returns EMPTY if logK0 = EMPTY.
    * @see lib.database.Complex#deltaToA(double, double, double) deltaToA
    * @see lib.database.Complex#analytic analytic
@@ -1322,11 +1361,11 @@ public class Complex implements Comparable<Complex>, Cloneable {
   private static double analyticExpression(Complex cmplx, final double tC) {
     if(Double.isNaN(cmplx.constant) || cmplx.constant == EMPTY
             || Double.isNaN(tC)) {return Double.NaN;}
-    if(tC>24.999 && tC<25.001) {return cmplx.constant;}
+    if(tC>24.99 && tC<25.01) {return cmplx.constant;}
     if(cmplx.a[0] == EMPTY) {return Double.NaN;}
     if(cmplx.tMax == EMPTY || cmplx.tMax < 25) {cmplx.tMax = 25;}
-    cmplx.tMax = Math.min(600,cmplx.tMax);
-    if(tC > cmplx.tMax+0.0001) {return Double.NaN;}
+    cmplx.tMax = Math.min(1000,cmplx.tMax);
+    if(tC > cmplx.tMax+0.001) {return Double.NaN;}
     final double tK = Math.max(0.01,tC)+273.15; // triple point of water
     double logK = cmplx.a[0];
     // log K = A0 + A1 T + A2/T +  A3 log(T)  + A4 / T^2 + A5 T^2

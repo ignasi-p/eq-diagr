@@ -6,7 +6,7 @@ import lib.huvud.Div;
 /** Procedures dealing with reactants and chemical elements.
  * Used for example by "FrameAddData"
  * <br>
- * Copyright (C) 2015-2018 I.Puigdomenech.
+ * Copyright (C) 2015-2020 I.Puigdomenech.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -234,9 +234,12 @@ public class AddDataElem {
             if(!ok) {throw new AddDataException("Could not delete file:"+nl+"\""+addFileEleTmp+"\"");}
         }
     } else {tmpF = wf;}
-    java.io.PrintWriter pw;
-    try {pw =  new java.io.PrintWriter(new java.io.BufferedWriter(new java.io.FileWriter(tmpF)));}
-    catch (java.io.IOException ex) {throw new AddDataException(ex.getMessage());}
+    java.io.Writer w;
+    try {w =  new java.io.BufferedWriter(
+                    new java.io.OutputStreamWriter(
+                            new java.io.FileOutputStream(tmpF),"UTF8"));}
+    catch (java.io.IOException ex) {throw new AddDataException(ex.getMessage()+nl+
+            "opening file: \""+addFileEleTmp+"\"");}
     int n;
     for(int i =0; i < LibDB.elementName.length; i++) {
         n=0;
@@ -244,14 +247,18 @@ public class AddDataElem {
             if(elemCompAdd.get(j)[0].equals(LibDB.elementSymb[i])) {n++;}
         } //for j
         if(n == 0) {continue;}
-        pw.format("%-2s,%2d ,", LibDB.elementSymb[i],n);
+        try{
+        w.write(String.format("%-2s,%2d ,", LibDB.elementSymb[i],n));
         for(int j=0; j < elemCompAdd.size(); j++) {
             if(elemCompAdd.get(j)[0].equals(LibDB.elementSymb[i])) {
-                pw.print(Complex.encloseInQuotes(elemCompAdd.get(j)[1])+",");
-                pw.print(Complex.encloseInQuotes(elemCompAdd.get(j)[2])+",");
+                w.write(Complex.encloseInQuotes(elemCompAdd.get(j)[1])+",");
+                w.write(Complex.encloseInQuotes(elemCompAdd.get(j)[2])+",");
             }
         } //for j
-        pw.println();
+        w.write(nl);
+        w.flush();
+        } catch (Exception ex) {throw new AddDataException(ex.getMessage()+nl+
+            "writing file: \""+addFileEleTmp+"\"");}
     } //for i
     // For components in the database not belonging to any element
     // set all of them into "XX"
@@ -264,21 +271,26 @@ public class AddDataElem {
         if(!ok) {n++;}
     } //for j
     if(n > 0) {
-        pw.format("%-2s,%2d ,", "XX",n);
+        try{
+        w.write(String.format("%-2s,%2d ,", "XX",n));
         for(int j=0; j < elemCompAdd.size(); j++) {
             ok = false;
             for(int i =0; i < LibDB.elementName.length; i++) {
                 if(elemCompAdd.get(j)[0].equals(LibDB.elementSymb[i])) {ok = true; break;}
             } //for i
             if(!ok) {
-                pw.print(Complex.encloseInQuotes(elemCompAdd.get(j)[1])+",");
-                pw.print(Complex.encloseInQuotes(elemCompAdd.get(j)[2])+",");
+                w.write(Complex.encloseInQuotes(elemCompAdd.get(j)[1])+",");
+                w.write(Complex.encloseInQuotes(elemCompAdd.get(j)[2])+",");
             }
         } //for j
-        pw.println();
+        w.write(nl);
+        } catch (Exception ex) {throw new AddDataException(ex.getMessage()+nl+
+            "writing file: \""+addFileEleTmp+"\"");}
     } // n>0
     // finished
-    pw.close();
+    try{w.close();} catch (Exception ex) {throw new AddDataException(ex.getMessage()+nl+
+            "closing file: \""+addFileEleTmp+"\"");}
+
     if(replace) {
         // copy temporary file to final destination
         String line = null;
@@ -380,7 +392,8 @@ public class AddDataElem {
     int cmplxNbr = 0;
     java.io.BufferedReader br = null;
     try{
-        br = new java.io.BufferedReader(new java.io.FileReader(afF));
+        br = new java.io.BufferedReader(
+                new java.io.InputStreamReader(new java.io.FileInputStream(afF),"UTF8"));
         Complex c;
         boolean fnd, there;
         // read the reaction-file "addFile"
@@ -418,7 +431,7 @@ public class AddDataElem {
             } //for i
         } //while
     } //try
-    catch (java.io.IOException ex) {
+    catch (Exception ex) {
         String msg = ex.getMessage()+nl+"reading line "+cmplxNbr+nl+"in file: \""+addFile+"\"";
         if(dbg) {System.out.println("Error "+msg);}
         items.clear();

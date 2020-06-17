@@ -476,20 +476,20 @@ public class FrameAddData extends javax.swing.JFrame {
         jLabelReaction = new javax.swing.JLabel();
         jPanelReaction1 = new javax.swing.JPanel();
         jTextField0 = new javax.swing.JTextField();
-        jComboBox0 = new javax.swing.JComboBox<String>();
+        jComboBox0 = new javax.swing.JComboBox<>();
         jLabelPlus1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<String>();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jTextField2 = new javax.swing.JTextField();
-        jComboBox2 = new javax.swing.JComboBox<String>();
+        jComboBox2 = new javax.swing.JComboBox<>();
         jLabelPlus3 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
-        jComboBox3 = new javax.swing.JComboBox<String>();
+        jComboBox3 = new javax.swing.JComboBox<>();
         jTextField4 = new javax.swing.JTextField();
-        jComboBox4 = new javax.swing.JComboBox<String>();
+        jComboBox4 = new javax.swing.JComboBox<>();
         jLabelPlus5 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
-        jComboBox5 = new javax.swing.JComboBox<String>();
+        jComboBox5 = new javax.swing.JComboBox<>();
         jLabelPlus6 = new javax.swing.JLabel();
         jLabelPlus7 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -520,7 +520,7 @@ public class FrameAddData extends javax.swing.JFrame {
         jLabelCompDescr = new javax.swing.JLabel();
         jTextFieldCompDescr = new javax.swing.JTextField();
         jLabelElems = new javax.swing.JLabel();
-        jComboBoxElems = new javax.swing.JComboBox<String>();
+        jComboBoxElems = new javax.swing.JComboBox<>();
         jButtonLink = new javax.swing.JButton();
         jButtonSaveComp = new javax.swing.JButton();
         jPanelFiles = new javax.swing.JPanel();
@@ -589,6 +589,14 @@ public class FrameAddData extends javax.swing.JFrame {
         jPopupMenu.add(jMenuItemCancel);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentMoved(java.awt.event.ComponentEvent evt) {
+                formComponentMoved(evt);
+            }
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
                 formWindowGainedFocus(evt);
@@ -599,14 +607,6 @@ public class FrameAddData extends javax.swing.JFrame {
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
-            }
-        });
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentMoved(java.awt.event.ComponentEvent evt) {
-                formComponentMoved(evt);
-            }
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                formComponentResized(evt);
             }
         });
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -993,7 +993,9 @@ public class FrameAddData extends javax.swing.JFrame {
         );
 
         jButtonSaveReac.setMnemonic('v');
-        jButtonSaveReac.setText("Save");
+        jButtonSaveReac.setText(" Save ");
+        jButtonSaveReac.setAlignmentX(0.5F);
+        jButtonSaveReac.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonSaveReac.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveReacActionPerformed(evt);
@@ -1030,7 +1032,7 @@ public class FrameAddData extends javax.swing.JFrame {
                     .addGroup(jPanelReactionLayout.createSequentialGroup()
                         .addComponent(jLabelReaction)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanelReaction1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanelReaction1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(jPanelReaction2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(16, Short.MAX_VALUE))
@@ -1073,7 +1075,7 @@ public class FrameAddData extends javax.swing.JFrame {
         jLabelElems.setLabelFor(jComboBoxElems);
         jLabelElems.setText("elements:");
 
-        jComboBoxElems.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxElems.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxElems.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxElemsActionPerformed(evt);
@@ -1086,7 +1088,9 @@ public class FrameAddData extends javax.swing.JFrame {
         });
 
         jButtonLink.setMnemonic('l');
-        jButtonLink.setText("Link component to element");
+        jButtonLink.setText(" Link component to element ");
+        jButtonLink.setAlignmentX(0.5F);
+        jButtonLink.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonLink.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonLinkActionPerformed(evt);
@@ -1099,7 +1103,9 @@ public class FrameAddData extends javax.swing.JFrame {
         });
 
         jButtonSaveComp.setMnemonic('v');
-        jButtonSaveComp.setText("Save");
+        jButtonSaveComp.setText(" Save ");
+        jButtonSaveComp.setAlignmentX(0.5F);
+        jButtonSaveComp.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonSaveComp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveCompActionPerformed(evt);
@@ -1131,7 +1137,7 @@ public class FrameAddData extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabelLinked))
                             .addComponent(jTextFieldCompDescr))))
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
         jPanelComponentLayout.setVerticalGroup(
             jPanelComponentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1154,7 +1160,7 @@ public class FrameAddData extends javax.swing.JFrame {
                     .addComponent(jLabelElems))
                 .addGap(34, 34, 34)
                 .addComponent(jButtonSaveComp)
-                .addContainerGap(152, Short.MAX_VALUE))
+                .addContainerGap(156, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanelComponent, "cardComponent");
@@ -2452,17 +2458,23 @@ public class FrameAddData extends javax.swing.JFrame {
         if(dbg) {System.out.println("  file already exists");}
         return false;
     }
-    java.io.PrintWriter pw = null;
+    java.io.Writer w = null;
     try {
-        pw =  new java.io.PrintWriter(new java.io.BufferedWriter(new java.io.FileWriter(rf)));
-        pw.println(Complex.FILE_FIRST_LINE);
+        w =  new java.io.BufferedWriter(
+                new java.io.OutputStreamWriter(
+                        new java.io.FileOutputStream(rf),"UTF8"));
+        w.write(Complex.FILE_FIRST_LINE+nl);
     }
     catch (java.io.IOException ex) {
-        if(pw != null) {pw.close();}
+        try{if(w != null) {w.close();}}
+        catch (Exception e) {}
         throw new AddDataFrameInternalException("Error: "+ex.getMessage()+nl+
                 "   for file \""+reactionFile+"\"");
     }
-    finally {if(pw != null) {pw.close();}}
+    finally {
+        try{if(w != null) {w.close();}}
+        catch (Exception e) {}
+    }
     return true;
   } //addFile_Initialise(file)
   //</editor-fold>
@@ -2488,19 +2500,23 @@ public class FrameAddData extends javax.swing.JFrame {
     if(rf.exists() && (!rf.canWrite() || !rf.setWritable(true))) {
         throw new AddDataFrameInternalException ("Error: can not write to file"+nl+"    \""+reactionFile+"\".");
     }
-    java.io.PrintWriter pw = null;
+    java.io.Writer w = null;
     try {
         boolean append = true;
-        pw =  new java.io.PrintWriter(new java.io.BufferedWriter(new java.io.FileWriter(rf, append)));
-        pw.println(c.toString());
+        w =  new java.io.BufferedWriter(
+                new java.io.OutputStreamWriter(
+                        new java.io.FileOutputStream(rf,append),"UTF8"));
+        w.write(c.toString()+nl);
     }
     catch (java.io.IOException ex) {
-        if(pw != null) {pw.close();}
+        try{if(w != null) {w.close();}}
+        catch (Exception e) {}
         throw new AddDataFrameInternalException("Error: "+ex.toString()+nl+
                 "   appending complex "+c.name+nl+
                 "   to file \""+reactionFile+"\"");
     }
-    pw.close();
+    try{if(w != null) {w.close();}}
+    catch (Exception e) {}
   } //addFile_ComplexAppend(file, complex)
   //</editor-fold>
 
@@ -2555,8 +2571,9 @@ public class FrameAddData extends javax.swing.JFrame {
 
     // --- open input and output files
     java.io.BufferedReader br;
-    try{br = new java.io.BufferedReader(new java.io.FileReader(rf));}
-    catch (java.io.FileNotFoundException ex) {throw new AddDataFrameInternalException(ex.toString());}
+    try{br = new java.io.BufferedReader(new java.io.InputStreamReader(
+                    new java.io.FileInputStream(rf),"UTF8"));}
+    catch (Exception ex) {throw new AddDataFrameInternalException(ex.toString());}
 
     java.io.File tmpF = new java.io.File(addFileTmp);
     if(dbg) {System.out.println("   copying lines from \""+rf.getName()+"\"  to  \""+tmpF.getName()+"\"");}
@@ -2568,10 +2585,13 @@ public class FrameAddData extends javax.swing.JFrame {
         if(!ok) {throw new AddDataFrameInternalException("Could not delete file:"+nl+"\""+addFileTmp+"\"");}
     }
     addFile_Initialise(dbg, addFileTmp);
-    java.io.PrintWriter pw;
+    java.io.Writer w;
     boolean append = true;
-    try {pw =  new java.io.PrintWriter(new java.io.BufferedWriter(new java.io.FileWriter(tmpF, append)));}
-    catch (java.io.IOException ex) {throw new AddDataFrameInternalException(ex.toString());}
+    try {
+        w =  new java.io.BufferedWriter(
+                new java.io.OutputStreamWriter(
+                        new java.io.FileOutputStream(tmpF,append),"UTF8"));
+    } catch (java.io.IOException ex) {throw new AddDataFrameInternalException(ex.toString());}
 
     String line = null, errMsg = null;
     Complex cRead;
@@ -2582,7 +2602,7 @@ public class FrameAddData extends javax.swing.JFrame {
             cRead = Complex.fromString(line);
             if(cRead.name.startsWith("@")) {cRead.name = cRead.name.substring(1);}
             if(Util.nameCompare(cName, cRead.name)) {continue;}
-            pw.println(line); pw.flush();
+            w.write(line+nl); w.flush();
         } //while
     } //try
     catch (java.io.IOException ex) {
@@ -2597,7 +2617,8 @@ public class FrameAddData extends javax.swing.JFrame {
       if(dbg) {System.out.println("  closing files");}
       try {br.close();}
       catch (java.io.IOException ex) {showErr(ex.toString()+nl+"with file:\""+addFile+"\"",0);}
-      pw.close();
+      try{w.close();}
+      catch (Exception e) {MsgExceptn.exception(Util.stack2string(e));}
     }
     line = null;
     if(dbg) {System.out.println("   deleting \""+rf.getName()+"\"");}
@@ -2683,7 +2704,8 @@ public class FrameAddData extends javax.swing.JFrame {
     Complex cRead;
     String line = null;
     try{
-        br = new java.io.BufferedReader(new java.io.FileReader(afF));
+        br = new java.io.BufferedReader(new java.io.InputStreamReader(
+                new java.io.FileInputStream(afF),"UTF8"));
         while ((line = br.readLine()) != null){
             lineNbr++;
             if(line.length()<=0 || line.toUpperCase().startsWith("COMPLEX")) {continue;}
@@ -2754,7 +2776,9 @@ public class FrameAddData extends javax.swing.JFrame {
     java.io.BufferedReader br = null;
     String line = null;
     try{
-        br = new java.io.BufferedReader(new java.io.FileReader(afF));
+        br = new java.io.BufferedReader(
+                new java.io.InputStreamReader(
+                        new java.io.FileInputStream(afF),"UTF8"));
         String t;
         while ((line = br.readLine()) != null){
             lineNbr++;
@@ -2805,7 +2829,9 @@ public class FrameAddData extends javax.swing.JFrame {
     int cmplxNbr = 0;
     java.io.BufferedReader br = null;
     try{
-        br = new java.io.BufferedReader(new java.io.FileReader(afF));
+        br = new java.io.BufferedReader(
+                new java.io.InputStreamReader(
+                        new java.io.FileInputStream(afF),"UTF8"));
         Complex c;
         java.util.ArrayList<String> items = new java.util.ArrayList<String>();
         while(true){
@@ -2848,7 +2874,7 @@ public class FrameAddData extends javax.swing.JFrame {
                 modelComplexes.addElement(o);
             }}); //invokeLater(Runnable)
         }
-    } catch (java.io.IOException ex) {showErr(ex.toString()+nl+"reading line "+cmplxNbr,0);}
+    } catch (Exception ex) {showErr(ex.toString()+nl+"reading line "+cmplxNbr,0);}
     finally {
         try{if(br != null) {br.close();}}
         catch(java.io.IOException ex) {showErr(ex.toString(),0);}
@@ -3548,8 +3574,9 @@ public class FrameAddData extends javax.swing.JFrame {
                 || elemCompAdd.get(i)[1].equals("H2O"));
     }
     try{
-        br = new java.io.BufferedReader(new java.io.FileReader(afF));
-        String line;
+        br = new java.io.BufferedReader(
+                new java.io.InputStreamReader(
+                        new java.io.FileInputStream(afF),"UTF8"));
         Complex c;
         while (true){
             lineNbr++;
@@ -3585,7 +3612,7 @@ public class FrameAddData extends javax.swing.JFrame {
             } // while
         } //while
     } //try
-    catch (java.io.IOException ex) {
+    catch (Exception ex) {
         MsgExceptn.msg(ex.getMessage()+nl+"reading line "+lineNbr);
     }
     finally {
@@ -3792,9 +3819,10 @@ public class FrameAddData extends javax.swing.JFrame {
         } else {deltaCp = Complex.EMPTY;}
         newC.a = Complex.deltaToA(newC.constant, deltaH, deltaCp);
         newC.tMax = 25.;
+        newC.pMax = 1.;
         if(deltaH != Complex.EMPTY) {
             newC.tMax = 100.;
-            if(deltaCp != Complex.EMPTY) {newC.tMax = 200.;}
+            if(deltaCp != Complex.EMPTY) {newC.tMax = 300.; newC.pMax = 85.9;} // pSat(300) = 85.9
         }
     } // if not analytic or lookUp
     String txt;

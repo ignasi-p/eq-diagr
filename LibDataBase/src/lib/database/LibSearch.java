@@ -4,7 +4,7 @@ import lib.common.MsgExceptn;
 
 /** Search reactions in the databases.
  * <br>
- * Copyright (C) 2014-2017 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -109,10 +109,12 @@ public class LibSearch {
                 dis = new java.io.DataInputStream(new java.io.FileInputStream(dbf));
             } else { //--- text file
                 binaryOrText = 1;
-                br = new java.io.BufferedReader(new java.io.FileReader(dbf));
+                br = new java.io.BufferedReader(
+                        new java.io.InputStreamReader(
+                                new java.io.FileInputStream(dbf),"UTF8"));
             } //--- text or binary?
         }
-        catch (java.io.FileNotFoundException ex) {
+        catch (Exception ex) {
             try{
                 if(dis != null) {dis.close();} else if(br != null) {br.close();}
             } catch (java.io.IOException ioe) {MsgExceptn.msg(ioe.getMessage());}

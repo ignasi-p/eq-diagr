@@ -101,7 +101,7 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
         jLabelDeltaH.setText(" (empty)");
         jLabelDeltaCp.setText(" (empty)");
     } else {
-        double w;
+        double w,z;
         jLabelReaction.setText(species.reactionText());
         if(Double.isNaN(species.constant) || species.constant == Complex.EMPTY) {
             jLabellogK.setText(" (empty)");
@@ -145,8 +145,10 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
         }
         w = species.tMax;
         if(Double.isNaN(w) || w == Complex.EMPTY || w <25) {w = 25.;}
-        jLabelTmax.setText("<html>Max temperature for extrapolation of logK = "+
-                    String.format("%.0f",w)+"&deg;C</html>");
+        z = species.pMax;
+        if(Double.isNaN(z) || z == Complex.EMPTY || z <1) {z = 1.;}
+        jLabelTmax.setText("<html>Max logK extrapolation temperature: "+
+                    String.format("%.0f",w)+"&deg;C, pressure: "+String.format("%.0f",z)+" bar</html>");
     }
 
     if(species != null && species.reference != null && species.reference.trim().length() > 0) {
@@ -154,7 +156,7 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
         jLabelRefCit.setText(refs);
         if(references != null) {
             if(refs.trim().length() >0) {
-                java.util.ArrayList<String> refKeys = references.splitRefs(refs);
+                java.util.ArrayList<String> refKeys = lib.database.References.splitRefs(refs);
                 jTextAreaRefs.append(references.refsAsString(refKeys));
             }
         }
@@ -203,19 +205,21 @@ public class ShowDetailsDialog extends javax.swing.JDialog {
         jTextAreaRefs = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
             }
         });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jButtonOK.setMnemonic('c');
-        jButtonOK.setText("Close");
+        jButtonOK.setText(" Close ");
+        jButtonOK.setAlignmentX(0.5F);
+        jButtonOK.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOKActionPerformed(evt);

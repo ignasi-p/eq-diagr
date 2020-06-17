@@ -8,7 +8,7 @@ import lib.huvud.SortedProperties;
  * Methods for reading and saving the file are provided. 
  * References may be displayed through a dialog window.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,11 +78,13 @@ public class References {
         }
     }
     if(rf == null) {return false;}
-    java.io.FileInputStream fis = null;
     if(dbg) {System.out.println("Reading file \""+rf.getAbsolutePath()+"\"");}
+    java.io.FileInputStream fis = null;
+    java.io.BufferedReader r = null;
     try {
         fis = new java.io.FileInputStream(rf);
-        propertiesRefs.load(fis);
+        r = new java.io.BufferedReader(new java.io.InputStreamReader(fis,"UTF8"));
+        propertiesRefs.load(r);
     } //try
     catch (java.io.FileNotFoundException e) {
         System.out.println("Warning: file Not found: \""+rf.getAbsolutePath()+"\"");
@@ -97,7 +99,7 @@ public class References {
         referenceFileName = null;
     } // catch loading-exception
     finally {
-        try {if(fis != null) {fis.close();}}
+        try {if(r != null) {r.close();} if(fis != null) {fis.close();}}
         catch (java.io.IOException e) {
             String msg = line+nl+"Error: \""+e.toString()+"\""+nl+
                           "   while closing REF-file:"+nl+
@@ -147,24 +149,24 @@ public class References {
             return;
         }
     }
-    java.io.FileOutputStream properties_refFileSave = null;
+    java.io.FileOutputStream fos = null;
+    java.io.Writer w = null;
     System.out.println("Saving file \""+rf.getAbsolutePath()+"\"");
-    try{properties_refFileSave = new java.io.FileOutputStream(rf);
-        propertiesRefs.store(properties_refFileSave,null);
+    try{
+        fos = new java.io.FileOutputStream(rf);
+        w = new java.io.BufferedWriter(new java.io.OutputStreamWriter(fos,"UTF8"));
+        propertiesRefs.store(w,null);
         System.out.println("Written: \""+rf.getAbsolutePath()+"\"");
-    } // try
-    catch (java.io.IOException e) {
+    } catch (java.io.IOException e) {
         String msg = "Error: \""+e.toString()+"\""+nl+
                        "   while writing the References file:"+nl+
                        "   \""+rf.getAbsolutePath()+"\"";
-          System.err.println(msg);
-          javax.swing.JOptionPane.showMessageDialog(parent, msg,
+        System.err.println(msg);
+        javax.swing.JOptionPane.showMessageDialog(parent, msg,
                   "Save references",javax.swing.JOptionPane.ERROR_MESSAGE);
-      } // catch store-exception
-      finally {
-        try {
-            if(properties_refFileSave != null) {properties_refFileSave.close();}
-        }
+    }
+    finally {
+        try {if(w != null) {w.close();} if(fos != null) {fos.close();}}
         catch (java.io.IOException e) {
             String msg = "Error: \""+e.toString()+"\""+nl+
                           "   while closing the References file:"+nl+
@@ -173,7 +175,7 @@ public class References {
             javax.swing.JOptionPane.showMessageDialog(parent,msg,
                     "Save references",javax.swing.JOptionPane.ERROR_MESSAGE);
         }
-      } //finally
+    } //finally
   }
   // </editor-fold>
 
@@ -185,40 +187,115 @@ public class References {
   }
 
   //<editor-fold defaultstate="collapsed" desc="splitRefs(text)">
-  /** Split a <code>text</code>, containing reference citations, into a list of citations.
-   * Citations are expected to be separated by either a comma, or a "+".
-   * For example, any of: "Yu 95,Li" or "Yu 95, Li" or "Yu 95+Li" , etc,
-   * will return the array {"Yu 95", "Li"}.
-   * @param text containing reference citations separated by "+" or commas.
+  /** Split a <code>text</code>, containing reference citations, into a
+   * list of citations.  Citations are expected to be separated either by
+   * a comma (,) or by a semicolon (;) or by a "plus" (+).  For example, either of: "Yu 95,Li" or
+   * "Yu 95, Li" or "Yu 95+Li" will return the array {"Yu 95", "Li"}.
+   * To include a "+" or "," into a reference citation, include the citation
+   * in parentheses (either "()", "[]" or "{}"), for example the text
+   * "1996H (estimate based in La+3)" will return an array with two citations:
+   * {"1996H", "(estimate based in La+3)"}.
+   * @param txt containing reference citations separated by "+", semicolons or commas.
    * @return array list of reference citations. Returns null if <code>text</code> is null,
    * Returns the array {""} if <code>text</code> is empty  */
-  public java.util.ArrayList<String> splitRefs(String text) {
-      if(text == null) {return null;}
-      java.util.ArrayList<String> rfs = new java.util.ArrayList<String>();
-      if(text.trim().length() <=0) {rfs.add(""); return rfs;}
-      //---get a list of references
-      java.util.Scanner s = new java.util.Scanner(text.trim());
-      // Delimiter is either:
-      // "zero or more whitespace followed by "+" followed by zero or more whitespace"  or "one or more whitespace"
-      //s.useDelimiter("\\s*\\+\\s*|\\s+");
-      // Delimiter is:
-      // "zero or more whitespace followed by "+" followed by zero or more whitespace"
-      //s.useDelimiter("\\s*\\+\\s*")
-      // Delimiter is either:
-      // "zero or more whitespace followed by "+" followed by zero or more whitespace"  or
-      // "zero or more whitespace followed by "," followed by zero or more whitespace"  or
-      // "zero or more whitespace followed by ";" followed by zero or more whitespace"  or
-      s.useDelimiter("\\s*\\+\\s*|\\s*,\\s*|\\s*;\\s*");
-      s.useLocale(java.util.Locale.ENGLISH);
-      while (s.hasNext()) {
-        String token = s.next();
-        if(dbg) {System.out.println("token = \""+token+"\"");}
+  public static java.util.ArrayList<String> splitRefs(String txt) {
+    if(txt == null) {return null;}
+    final boolean debug = false;
+    // Regex delimiter:
+    // Delimiter is either:
+    // "zero or more whitespace followed by "+" followed by zero or more whitespace"  or
+    // "zero or more whitespace followed by "," followed by zero or more whitespace"  or
+    // "zero or more whitespace followed by ";" followed by zero or more whitespace"  or
+    String delimiter = "\\s*\\+\\s*|\\s*,\\s*|\\s*;\\s*";
+    java.util.Scanner scanner;
+    String text = txt.trim();
+    java.util.ArrayList<String> rfs = new java.util.ArrayList<String>();
+    if(text.length() <=0) {rfs.add(""); return rfs;}
+    String token, left;
+    //  open parenthesis, square brackets, curly braces
+    int open, openP,openS,openC,close;
+    char openChar, closeChar;
+    // ---- get a list of references ----
+    if(debug) {System.out.println("text = \""+text+"\"");}
+    //
+    // ---- 1st find and remove texts within "([{}])"
+    openP = text.indexOf("(");
+    openS = text.indexOf("[");
+    openC = text.indexOf("{");
+    open = openP;
+    if(openP >=0) {
+        if(openS >=0) {open = Math.min(openP, openS);}
+        if(openC >=0) {open = Math.min(open,  openC);}
+    } else if(openS >=0) {
+        open = openS;
+        if(openC >=0) {open = Math.min(openS, openC);}
+    } else {open = openC;}
+    if(debug) {System.out.println("open = "+open+", (="+openP+", [="+openS+", {="+openC);}
+    while (open >=0) {
+        openChar = '('; closeChar = ')';
+        if(open == openS) {openChar = '['; closeChar = ']';}
+        if(open == openC) {openChar = '{'; closeChar = '}';}
+        close = findClosingParen(text.toCharArray(), openChar, closeChar, open);
+        if(close <= open) {break;}
+        left = text.substring(0, open).trim();
+        if(debug) {System.out.println("left of () = \""+left+"\"");}
+        if(left.length() >0) { // add any tokens before "("
+            scanner = new java.util.Scanner(left);
+            scanner.useDelimiter(delimiter);
+            scanner.useLocale(java.util.Locale.ENGLISH);
+            while (scanner.hasNext()) {
+                token = scanner.next();
+                if(token.trim().length() >0) {
+                    if(debug) {System.out.println("token = \""+token+"\"");}
+                    rfs.add(token);
+                }
+            } //while
+            scanner.close();
+        } // tokens before "("
+        token = text.substring(open,close+1);
         rfs.add(token);
-      } //while
-      s.close();
-      if(dbg) {System.out.println(java.util.Arrays.toString(rfs.toArray()));}
-      return rfs;
+        text = text.substring(close+1);
+        if(debug) {System.out.println("(token) = \""+token+"\", new text = \""+text+"\"");}
+        openP = text.indexOf("(");
+        openS = text.indexOf("[");
+        openC = text.indexOf("{");
+        open = openP;
+        if(openP >=0) {
+            if(openS >=0) {open = Math.min(openP, openS);}
+            if(openC >=0) {open = Math.min(open,  openC);}
+        } else if(openS >=0) {
+            open = openS;
+            if(openC >=0) {open = Math.min(openS, openC);}
+        } else {open = openC;}
+        if(debug) {System.out.println("open = "+open+", (="+openP+", [="+openS+", {="+openC);}
+    } // while (open >=0)
+
+    scanner = new java.util.Scanner(text.trim());
+    scanner.useDelimiter(delimiter);
+    scanner.useLocale(java.util.Locale.ENGLISH);
+    while (scanner.hasNext()) {
+        token = scanner.next();
+        if(token.trim().length() >0) {
+            if(debug) {System.out.println("token = \""+token+"\"");}
+            rfs.add(token);
+        }
+    } //while
+    scanner.close();
+    if(debug) {System.out.println(java.util.Arrays.toString(rfs.toArray()));}
+    return rfs;
   }
+    private static int findClosingParen(char[] text, char openParenthesis, char closeParenthesis, int openPos) {
+        if(openPos < 0 || text == null || openPos >= text.length) {return -1;}
+        int closePos = openPos;
+        int counter = 1, pos;
+        while (counter > 0) {
+            pos = ++closePos;
+            if(pos >= text.length) {return -1;}
+            char c = text[pos];
+            if (c == openParenthesis) {counter++;} else if(c == closeParenthesis) {counter--;}
+        }
+        return closePos;
+    }
   // </editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="referenceKeys()">
