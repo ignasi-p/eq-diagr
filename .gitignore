@@ -22,3 +22,7 @@
 /DataMaintenance/dist/
 /Chem_Diagr_Help/dist/
 /Predom/build
+/LibChemDiagr/other_stuff/Lib_tests/Test_GraphLib/build/
+/LibChemDiagr/other_stuff/Lib_tests/Test_HaltaFall/build/
+/LibChemDiagr/other_stuff/Lib_tests/Test_ReadDataLib/build/
+/LibChemDiagr/other_stuff/Lib_tests/Test_GraphLib/dist/

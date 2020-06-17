@@ -4,7 +4,7 @@
 
 For the course [KD1280][27] (chemical analysis) at [KTH][28] (the Royal Institute of Technology at Stockholm) there is [another version][30] with special settings and a different database. Here you will find the original software (without KTH settings).
 
-A previous un-maintained version for Windows (Visual Basic) named (**Medusa/Hydra**) and developped at [KTH][1] is available at https://sites.google.com/site/chemdiagr
+A previous version for Windows (now un-maintained, written in Visual Basic) named (**Medusa/Hydra**) and developped at [KTH][1] is available at https://sites.google.com/site/chemdiagr
 
 
 ## Download
@@ -69,6 +69,8 @@ Joachim Zeising (KTH). Many thanks are due to the chemistry teaching staff at KT
 
 
 ## Last Updates
+- 2020-June - Improvements to avoid "too many iterations" problems. Revision of the help files. Modifications to write and read all text files in Unicode UTF-8 format. Modifications to allow calculation of activity coefficients up to 1000°C.
+- 2020-Feb - Corrected an error that made Spana to fail performing the calculations in Linux-Ubuntu.
 - 2019-Feb - Restored text database format to old format, if possible. Introduced special settings and a special [database][26] for the course on chemical analysis [KD1280][27] at the Royal Institute of Technology (KTH).
 - 2018-Oct - New database formats, including both a power series expression and a look-up table, allow the search and data selection at higher temperatures (up to 600 C) and pressures (up to 5k bar). Chemical equilibrium diagrams may be made for supercritical aqueous. solutions. **To do:** update the help file to document these changes.
 - 2018-Aug - Increased the speed of the calculations. For Windows: improved the java-launchers (exe-files). For MacOS created a script that the user may use to create "apps".
