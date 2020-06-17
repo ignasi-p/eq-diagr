@@ -7,7 +7,7 @@ import lib.kemi.graph_lib.GraphLib;
 
 /** Methods to create a chemical equilibrium diagram.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,9 @@ public class Plot {
     static double c0[][];
     /** values of solubility or tot. conc. for each point tot0[Na][nP] */
     static double tot0[][];
-    private static boolean xMolar = true;
+    /** If true, the concentration is displayed as is. If false, the
+     * concentration is displayed as milli molal, micro molal, or nano molal. */
+    private static boolean xMolal = true;
     private static final java.util.Locale engl = java.util.Locale.ENGLISH;
 /** Where errors will be printed. It may be <code>System.err</code>.
  * If null, <code>System.err</code> is used. */
@@ -75,6 +77,73 @@ void preparePlot(Chem ch) {
     c0 = new double[cs.Ms][sed.nSteps+1];
     tot0 = new double[cs.Na][sed.nSteps+1];
 
+// Values for the Y-axis
+//  plotType=1 fraction diagram      compY= main component
+//  plotType=2 log solubility diagram
+//  plotType=3 log (conc) diagram
+//  plotType=4 log (ai/ar) diagram   compY= reference species
+//  plotType=5 pe in Y-axis
+//  plotType=6 pH in Y-axis
+//  plotType=7 log (activity) diagram
+//  plotType=8 H-affinity diagram
+//---- what species to diagramData ----
+    nbrSpeciesInPlot = cs.Ms;
+    speciesInPlot = new int[cs.Ms+L2];
+    if(diag.plotType == 2) { // solubility diagram
+        nbrSpeciesInPlot = 0;
+        for(int n =0; n < cs.Na; n++) {
+            String t = namn.identC[n];
+            if(Util.isElectron(t) ||
+               Util.isProton(t) ||
+               Util.isWater(t)) {continue;}
+            nbrSpeciesInPlot++;
+            speciesInPlot[nbrSpeciesInPlot-1] = n;
+        } //for n
+    } else if(diag.plotType ==5 || diag.plotType ==6) { //pe or pH in the Y-AXIS
+        for(int n =0; n < cs.Ms; n++) {
+            String t = namn.ident[n];
+            if(diag.plotType ==5) {//pe
+                if(Util.isElectron(t)) {speciesInPlot[0] = n; break;}
+            } else { //pH
+                if(Util.isProton(t)) {speciesInPlot[0] = n; break;}
+            }
+        } //for n
+        nbrSpeciesInPlot = 1;
+    } else if(diag.plotType ==8) { //H-affinity diagram
+        nbrSpeciesInPlot = 1;
+        speciesInPlot[0] = diag.Hplus;
+    } else { //Log(c), Log(a), Fraction and log(ai/ar)
+        nbrSpeciesInPlot = 0;
+        for(int n =0; n < cs.Ms; n++) {
+            String t = namn.ident[n].toUpperCase();
+            //if not log(a): exclude electrons
+            if(diag.plotType !=7 && Util.isElectron(t)) {continue;}
+            if(diag.plotType ==4) { //log (ai/ar)
+                if(n == diag.compY) {
+                    nbrSpeciesInPlot++;
+                    speciesInPlot[nbrSpeciesInPlot-1] = n;
+                    continue;
+                }
+                if(diag.compY >= cs.Na) {
+                    //relative diagram where the reference species is not a component
+                    if(n < cs.Na && Math.abs(cs.a[diag.compY][n]) <= 1e-10) {continue;}
+                    nbrSpeciesInPlot++;
+                    speciesInPlot[nbrSpeciesInPlot-1] = n;
+                    continue;
+                }
+                if(n < cs.Na) {continue;}
+                //include only species related to the reference species
+                if(Math.abs(cs.a[n-cs.Na][diag.compY]) > 1e-10) {
+                    nbrSpeciesInPlot++;
+                    speciesInPlot[nbrSpeciesInPlot-1] = n;
+                }
+            } else {
+                nbrSpeciesInPlot++;
+                speciesInPlot[nbrSpeciesInPlot-1] = n;
+            }
+        } //for n
+    } //Log(c), Log(a), Fraction and log(ai/ar)
+
 } //preparePlot
 //</editor-fold>
 
@@ -87,7 +156,6 @@ void storePlotData(int nP, Chem ch) {
     if(sed.dbg) {out.println("--- storePlotData("+nP+", ch)");}
     Chem.ChemSystem cs = ch.chemSystem;
     Chem.ChemSystem.ChemConcs csC = cs.chemConcs;
-    Chem.ChemSystem.NamesEtc namn = cs.namn;
     Chem.Diagr diag = ch.diag;
     //chem.Chem.DiagrConcs dgrC = ch.diagrConcs;
 // Values for the Y-axis
@@ -166,7 +234,7 @@ void storePlotData(int nP, Chem ch) {
  * @param plotFile where the diagram will be saved
  * @param ch where the data for the chemical system are stored
  */
-void drawPlot(java.io.File plotFile, Chem ch) {
+void drawPlot(java.io.File plotFile, Chem ch) throws GraphLib.WritePlotFileException {
 Chem.ChemSystem cs = ch.chemSystem;
 Chem.ChemSystem.ChemConcs csC = cs.chemConcs;
 Chem.ChemSystem.NamesEtc namn = cs.namn;
@@ -178,72 +246,27 @@ if(sed.dbg) {
             "Drawing the plot...");
 }
 
-// Values for the Y-axis
-//  plotType=1 fraction diagram      compY= main component
-//  plotType=2 log solubility diagram
-//  plotType=3 log (conc) diagram
-//  plotType=4 log (ai/ar) diagram   compY= reference species
-//  plotType=5 pe in Y-axis
-//  plotType=6 pH in Y-axis
-//  plotType=7 log (activity) diagram
-//  plotType=8 H-affinity diagram
-//---- what species to diagramData ----
-    nbrSpeciesInPlot = cs.Ms;
-    speciesInPlot = new int[cs.Ms+L2];
-    if(diag.plotType == 2) { // solubility diagram
-        nbrSpeciesInPlot = 0;
-        for(int n =0; n < cs.Na; n++) {
-            String t = namn.identC[n];
-            if(Util.isElectron(t) ||
-               Util.isProton(t) ||
-               Util.isWater(t)) {continue;}
-            nbrSpeciesInPlot++;
-            speciesInPlot[nbrSpeciesInPlot-1] = n;
-        } //for n
-    } else if(diag.plotType ==5 || diag.plotType ==6) { //pe or pH in the Y-AXIS
-        for(int n =0; n < cs.Ms; n++) {
-            String t = namn.ident[n];
-            if(diag.plotType ==5) {//pe
-                if(Util.isElectron(t)) {speciesInPlot[0] = n; break;}
-            } else { //pH
-                if(Util.isProton(t)) {speciesInPlot[0] = n; break;}
-            }
-        } //for n
-        nbrSpeciesInPlot = 1;
-    } else if(diag.plotType ==8) { //H-affinity diagram
-        nbrSpeciesInPlot = 1;
-        speciesInPlot[0] = diag.Hplus;
-    } else { //Log(c), Log(a), Fraction and log(ai/ar)
-        nbrSpeciesInPlot = 0;
-        for(int n =0; n < cs.Ms; n++) {
-            String t = namn.ident[n].toUpperCase();
-            //if not log(a): exclude electrons
-            if(diag.plotType !=7 && Util.isElectron(t)) {continue;}
-            if(diag.plotType ==4) { //log (ai/ar)
-                if(n == diag.compY) {
-                    nbrSpeciesInPlot++;
-                    speciesInPlot[nbrSpeciesInPlot-1] = n;
-                    continue;
-                }
-                if(diag.compY >= cs.Na) {
-                    //relative diagram where the reference species is not a component
-                    if(n < cs.Na && Math.abs(cs.a[diag.compY][n]) <= 1e-10) {continue;}
-                    nbrSpeciesInPlot++;
-                    speciesInPlot[nbrSpeciesInPlot-1] = n;
-                    continue;
-                }
-                if(n < cs.Na) {continue;}
-                //include only species related to the reference species
-                if(Math.abs(cs.a[n-cs.Na][diag.compY]) > 1e-10) {
-                    nbrSpeciesInPlot++;
-                    speciesInPlot[nbrSpeciesInPlot-1] = n;
-                }
-            } else {
-                nbrSpeciesInPlot++;
-                speciesInPlot[nbrSpeciesInPlot-1] = n;
-            }
-        } //for n
-    } //Log(c), Log(a), Fraction and log(ai/ar)
+//-- display of concentrations: units and notation
+//   default is that:
+//   1- if the temperature is between 0 and 45 Celsius and the pressure
+//      is below 50 bars, then units = "M" (molar) and the notation is
+//      engineering (millimolar, micromolar, etc)
+//   2- otherwise units = "molal" and the notation is engineering
+//      (10'-3` molal, 10'-6` molal, etc)
+sed.conc_units = Math.min(2, Math.max(sed.conc_units, -1));
+sed.conc_nottn = Math.min(2, Math.max(sed.conc_nottn, 0));
+if(sed.conc_nottn == 0) {sed.conc_nottn = 2;} // engineering    
+if( (Double.isNaN(diag.temperature) || (diag.temperature >= 0 && diag.temperature <= 45))
+        && (Double.isNaN(diag.pressure) || diag.pressure <=50)) {
+    // temperatures around 25 and low pressures
+    if(sed.conc_units == 0) {sed.conc_units = 2;} // units = "M"
+}
+String cUnit = sed.cUnits[(sed.conc_units+1)];
+String mUnit = ("×10'-3` "+cUnit).trim();
+String uUnit = ("×10'-6` "+cUnit).trim();
+String nUnit = ("×10'-9` "+cUnit).trim();
+if(sed.conc_units == 2) {mUnit = " mM"; uUnit = " $M"; nUnit = " nM";}
+
 //---- Max and Min values in the axes: xLow,xHigh, yLow,yHigh
     double xLow = sed.bt[diag.compX][0];
     double xHigh = sed.bt[diag.compX][(sed.bt[0].length-1)];
@@ -268,13 +291,14 @@ if(sed.dbg) {
             }
         } // if LAV
     } // is H+ or engl-
-    // Molar scale in X-axis
-    xMolar = true;
+    // standard scale in X-axis
+    xMolal = true;
     if(dgrC.hur[diag.compX] <=2) { // T or TV
-        if(Math.abs(xLow) <0.9d && Math.abs(xHigh) <0.9d) {
-            //milimolar units in X-axis
-            xMolar = false;
-            xLow = xLow * 1000.d; xHigh = xHigh * 1000.d;
+        if((sed.conc_nottn == 2 || (sed.conc_nottn == 0 && sed.conc_units == 2)) &&
+               Math.abs(xLow) <0.9 && Math.abs(xHigh) <0.9) {
+            //milli units in X-axis
+            xMolal = false;
+            xLow = xLow * 1000.; xHigh = xHigh * 1000.;
         }
     } //T or TV
     //Values for the Y-axis
@@ -327,7 +351,7 @@ if(sed.dbg) {
     //  the axis-variables (pH, pe, Eh, log{}, log[]tot, etc)
     float xL = xAxl / (float)(xHigh - xLow);  float xI = xL * (float)xLow - xOr;
     float yL = yAxl / (float)(yHigh - yLow);  float yI = yL * (float)yHigh - yMx;
-    if(!xMolar) {xL = xL * 1000;}  // T or TV and "mM"
+    if(!xMolal) {xL = xL * 1000;}  // T or TV and "milli units"
     //  pInX=0 "normal" X-axis
     //  pInX=1 pH in X-axis
     //  pInX=2 pe in X-axis
@@ -342,7 +366,7 @@ if(sed.dbg) {
     GraphLib g = new GraphLib();
     boolean textWithFonts = true;
     try {g.start(sed.dd, plotFile, textWithFonts);}
-    catch (GraphLib.OpenPlotFileException ex) {sed.showErrMsgBx(ex.getMessage(),1); g.end(); return;}
+    catch (GraphLib.WritePlotFileException ex) {sed.showErrMsgBx(ex.getMessage(),1); g.end(); return;}
     sed.dd.axisInfo = false;
     g.setLabel("-- SED DIAGRAM --");
     // -------------------------------------------------------------------
@@ -405,8 +429,8 @@ if(sed.dbg) {
     } //"LAV"
     else if(dgrC.hur[diag.compX] ==2) { //"TV"
         t = "["+namn.identC[diag.compX]+"]`TOT'";
-        if(xMolar) {t = t + "    M";}
-        else  {t = t + "    mM";}
+        if(xMolal) {t = t + "   "+cUnit;}
+        else  {t = t + "   "+mUnit;}
     }  else { // if(dgrC.hur[diag.compX] ==3)  "LTV"
         t = "Log ["+namn.identC[diag.compX]+"]`TOT'";
     }
@@ -640,6 +664,7 @@ if(sed.dbg) {
             // diagramData the label:
             if(diag.plotType ==2) {t = namn.identC[speciesInPlot[k]];} //log (solubl.)
             else {t = namn.ident[speciesInPlot[k]];}
+            g.setLabel(t); // make it possible to change the color automatically by writing the name
             g.setPen(-(speciesInPlot[k]+1));
             g.sym(xPl[k], yPl[k], (float)heightAx, t, 0f, -1, false);
         } //for k
@@ -648,6 +673,12 @@ if(sed.dbg) {
     // -------------------------------------------------------------------
     //                  Text with concentrations as a Heading
     g.setLabel("-- HEADING --"); g.setPen(1); g.setPen(-1);
+    if(sed.dbg) {
+        out.print("Heading; concentration units: \""+sed.cUnits[sed.conc_units+1]+"\"");
+        if(sed.conc_nottn == 2 || (sed.conc_nottn == 0 && sed.conc_units == 2)) {out.print(",  notation: engineering");}
+        if(sed.conc_nottn == 1 || (sed.conc_nottn == 0 && sed.conc_units != 2)) {out.print(",  notation: scientific");}
+        out.println();
+    }
     float headColumnX = 0.5f*heightAx;
     int headRow = 0;
     int headRowMax = Math.max(2,(2+cs.Na)/2);
@@ -674,15 +705,30 @@ if(sed.dbg) {
         String value;
         if(dgrC.hur[j] == 1) { //"T"
             w = csC.tot[j]; wa = Math.abs(w);
-            String units = "M";
-            if(wa < 1 && wa >= 0.9999E-4) {w = w*1.E+3; units = "mM";}
-            else if(wa < 0.9999E-4 && wa >= 0.9999E-7) {w = w*1.E+6; units = "$M";}
-            else if(wa < 0.9999E-7 && wa >= 0.9999E-10) {w = w*1.E+9; units = "nM";}
-            else if(wa < 0.9999E-10) {units = " ";}
-            if((wa <= 9999.9 && wa >= 0.9999E-10) || wa < 1E-99 ) {
-                value = String.format(engl,"=%8.2f ",(float)w) + units;
+            // use engineering notation?
+            if(sed.conc_nottn == 2 || (sed.conc_nottn == 0 && sed.conc_units == 2)) {
+                if(wa < 1.E-99) {value = String.format(engl,"=%8.2f",(float)w);}
+                else if(wa < 1. && wa >= 0.9999E-4) {
+                    w = w*1.E+3;
+                    value = String.format(engl,"=%8.2f"+mUnit,(float)w);
+                } else if(wa < 0.9999E-4 && wa >= 0.9999E-7) {
+                    w = w*1.E+6;
+                    value = String.format(engl,"=%8.2f"+uUnit,(float)w);
+                } else if(wa < 0.9999E-7 && wa >= 0.9999E-10) {
+                    w = w*1.E+9;
+                    value = String.format(engl,"=%8.2f"+nUnit,(float)w);
+                } else if(wa <= 9999.99 && wa >= 0.99) {
+                    value = String.format(engl,"=%8.2f "+cUnit,(float)w);
+                } else {
+                    value = "= "+double2String(w)+" "+cUnit;
+                }
             } else {
-                value = String.format(engl,"=%10.2e M",(float)w);
+                if(wa < 1.E-99) {value = String.format(engl,"=%8.2f",(float)w);}
+                else if(wa <= 9999.99 && wa >= 0.99) {
+                    value = String.format(engl,"=%8.2f "+cUnit,(float)w);
+                } else {
+                    value = "= "+double2String(w)+" "+cUnit;
+                }
             }
             t = "["+namn.ident[i]+"]`TOT' "+value;
         } // hur=1: "T"
@@ -720,13 +766,13 @@ if(sed.dbg) {
         }
         if(yP > (yPMx + 0.1f*heightAx)) {headColumnX = (0.5f*heightAx); yPMx = yP;}
         if(diag.ionicStrength > 0) {
-            t = String.format(engl,"I=%6.3f M",diag.ionicStrength);
+            t = String.format(engl,"I=%6.3f "+cUnit,diag.ionicStrength);
         } else {t = "I= varied";}
         g.sym(headColumnX, yP, heightAx, t, 0, -1, false);
     } // if ionicStrength != NaN & !=0
 
     // ---- Temperature + Pressure (in the heading)
-    if(!Double.isNaN(diag.temperature) && diag.temperature > -1.e-6) {
+    if(!Double.isNaN(diag.temperature)) {
         if(Double.isNaN(diag.pressure) || diag.pressure < 1.02) {
             g.setLabel("-- Temperature --");
         } else {g.setLabel("-- Temperature and Pressure --");}
@@ -761,6 +807,50 @@ if(sed.dbg) {
     //                  Finished
     g.end();
 } //drawPlot()
+//</editor-fold>
+
+//<editor-fold defaultstate="collapsed" desc="double2String">
+/** Returns a text representing a double in the format
+ * 1.23×10'-1`.
+ * @param d
+ * @return a string such as 1.23×10'-1`
+ */
+private static String double2String(double d) {
+    if(Double.isNaN(d) || Double.isInfinite(d)) {return String.valueOf(d);}
+    if(d == 0) {return "0.00";}
+    boolean ok = true;
+    // txt = number_in_scientific_notation
+    final String txt = String.format(engl,"%10.2e",d).trim();
+    int e = txt.indexOf('e');
+    String exp = "", sign="";
+    if(e >= 0) {
+        exp = txt.substring(e+1);
+        final int length =exp.length();
+        if(length > 1) {
+            int i, j;
+            sign = exp.substring(0,1);
+            if(sign.equals("+") || sign.equals("-")) {j=1;} else {j=0; sign="";}
+            if(length > j+1) {
+                for (i = j; i < length-1; i++) {
+                    if (exp.charAt(i) != '0') {break;}
+                }
+                exp = exp.substring(i);
+            } else {ok = false;}
+        } else {ok = false;}
+    } else {
+        ok = false;
+    }
+    int k;
+    try{k = Integer.parseInt(exp);} catch (Exception ex) {
+        System.err.println(ex.getMessage());
+        k=0;
+        ok = false;
+    }
+    if(ok && k == 0) {return txt.substring(0, e);}
+    if(ok && exp.length() >0) {
+        return txt.substring(0, e)+"×10'"+sign+exp+"`";
+    } else {return txt;}
+}
 //</editor-fold>
 
 }// class Plot
