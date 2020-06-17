@@ -5,7 +5,7 @@ import lib.huvud.RedirectedFrame;
 
 /** Disclaimer for the Database program.
  * <br>
- * Copyright (C) 2015-2016 I.Puigdomenech.
+ * Copyright (C) 2015-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -132,7 +132,9 @@ public class Disclaimer extends javax.swing.JFrame {
         jScrollPanelDiscl.setViewportView(jLabelDiscl);
 
         jButtonOK.setMnemonic('A');
-        jButtonOK.setText("Accept");
+        jButtonOK.setText(" Accept ");
+        jButtonOK.setAlignmentX(0.5F);
+        jButtonOK.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOKActionPerformed(evt);
@@ -153,7 +155,7 @@ public class Disclaimer extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonOK)
+                .addComponent(jButtonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48))
         );
         layout.setVerticalGroup(

@@ -26,7 +26,7 @@ import lib.huvud.Splash;
  * along with this program.  If not, see http://www.gnu.org/licenses/
  * @author Ignasi Puigdomenech */
 public class FrameDBmain extends javax.swing.JFrame {
-  static final String VERS = "2020-Feb-03";
+  static final String VERS = "2020-June-10";
   /** all instances will use the same redirected frame */
   static RedirectedFrame msgFrame = null;
 
@@ -63,10 +63,11 @@ public class FrameDBmain extends javax.swing.JFrame {
    * invisible if <code>false</code>; in other operating systems the menu
    * might become visible anyway.  */
   private boolean advancedMenu = false;
-  /** If <code>laf</code> = 2 then the CrossPlatform look-and-feel is used,
-   * else if <code>laf</code> = 1 the System look-and-feel is used.
-   * Else (<code>laf</code> = 0) the System look-and-feel is
-   * used on Windows and the CrossPlatform is used on Linux and Mac OS.
+  /** <tt>laf</tt> = LookAndFeel: the look-and-feel to be used (read from the ini-file).
+   * If <tt>laf</tt> = 2 then the <i>C<rossPlatform</i> look-and-feel will be used;
+   * else if <tt>laf</tt> = 1 the <i>System</i> look-and-feel will be used.
+   * Else (<tt>laf</tt> = 0, default) then the look-and-feel will be <i>System</i>
+   * for Windows and <i>CrossPlatform</i> on Linux and Mac OS.
    * Default at program start = 0 **/
   private int laf = 0;
 
@@ -84,7 +85,10 @@ public class FrameDBmain extends javax.swing.JFrame {
   private int lastButtonInFocus = -1;
   private int lastReactionInFocus = -1;
 
-  private javax.swing.border.Border buttonBorder;
+  /** default border for elements with data in the database(s) */
+  private final javax.swing.border.Border buttonBorder = javax.swing.BorderFactory.createRaisedBevelBorder();
+  /** border for elements without data in the database(s) */
+  private final javax.swing.border.Border buttonBorderN = javax.swing.BorderFactory.createEmptyBorder();
   private final javax.swing.border.Border bevelBorder = javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED);
   private final javax.swing.border.Border lineBorder = javax.swing.BorderFactory.createLineBorder(java.awt.Color.black,1);
   private final javax.swing.border.Border buttonBorderSelected = javax.swing.BorderFactory.createCompoundBorder(lineBorder, bevelBorder);
@@ -205,7 +209,7 @@ public class FrameDBmain extends javax.swing.JFrame {
   private void prepareButtons() {
     if(pc.dbg) {System.out.println(pc.progName+" - prepareButtons()");}
     setCursorWait();
-    buttonBorder = jButton1.getBorder(); // get the default button border
+    //buttonBorder = jButton0.getBorder(); // get the default button border
 
     //---- an array of JButton is made with the chemical element buttons in the frame;
     //     to each element button it is assigned an action name ("0", "1", "2", ...),
@@ -223,6 +227,7 @@ public class FrameDBmain extends javax.swing.JFrame {
         buttons[i].setMargin(new java.awt.Insets(2, 0, 2, 0));
         buttons[i].setPreferredSize(new java.awt.Dimension(27, 27));
         buttons[i].setBackground(buttonBackgroundB);
+        buttons[i].setBorder(buttonBorder);
     }
     setCursorDef();
   } // prepareButtons()
@@ -388,6 +393,7 @@ public class FrameDBmain extends javax.swing.JFrame {
     jLabelRight.setText(" ");
     jMenuSearch.setEnabled(false);
     jMenuExit.setEnabled(false);
+    //<editor-fold defaultstate="collapsed" desc="---- Icon">
     //---- Icon
     String iconName = "images/DataBase.gif";
     java.net.URL imgURL = this.getClass().getResource(iconName);
@@ -410,10 +416,12 @@ public class FrameDBmain extends javax.swing.JFrame {
     } else {
         System.out.println("Error: Could not load image = \""+iconName+"\"");
     }
+  // </editor-fold>
 
     //getContentPane().setBackground(java.awt.Color.white);
     jMenuBar.add(javax.swing.Box.createHorizontalGlue(),2); //move "Help" menu to the right
 
+    //<editor-fold defaultstate="collapsed" desc="---- key actions ----">
     //----- key actions -----
     //--- ESC key: with a menu bar, the behaviour of ESC is too complex
     //--- Alt-Q quit
@@ -501,7 +509,9 @@ public class FrameDBmain extends javax.swing.JFrame {
         }};
     getRootPane().getActionMap().put("ALT_D", altDAction);
     //----- key actions end -----
+    // </editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="---- print debug info">
     if (pc.dbg) {
         System.out.println(LINE);
         StringBuffer msg = new StringBuffer();
@@ -524,17 +534,18 @@ public class FrameDBmain extends javax.swing.JFrame {
         msg.append("CLASSPATH = ");msg.append(System.getProperty("java.class.path"));msg.append(nl);
         msg.append("Program to make diagrams = ");msg.append(pd.diagramProgr);msg.append(nl);
         int ndb = pd.dataBasesList.size();
-        msg.append(ndb+" database"); if(ndb != 1) {msg.append("s");}
+        msg.append(ndb); msg.append(" database"); if(ndb != 1) {msg.append("s");}
         if(ndb > 0) {
-            msg.append(":"+nl);
+            msg.append(":"); msg.append(nl);
             for(int i = 0; i < ndb; i++) {
-                msg.append("    "+pd.dataBasesList.get(i));
+                msg.append("    "); msg.append(pd.dataBasesList.get(i));
                 msg.append(nl);
             }
         }
         System.out.println(msg);
         System.out.println(LINE);
     } // if dbg
+    // </editor-fold>
 
     // ----
     if(pd.msgFrame != null) {
@@ -550,28 +561,25 @@ public class FrameDBmain extends javax.swing.JFrame {
     if(!f.exists()) {jMenuHelp.setEnabled(false);}
 
     //---- set Look-And-Feel
-    try{
-        if(laf == 2) {
-            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getCrossPlatformLookAndFeelClassName());
-            System.out.println("--- setLookAndFeel(CrossPlatform);");
-        } else if(laf == 1) {
-            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-            System.out.println("--- setLookAndFeel(System);");
-        }
-    }
-    catch (ClassNotFoundException ex) {System.out.println("Error: "+ex.getMessage());}
-    catch (IllegalAccessException ex) {System.out.println("Error: "+ex.getMessage());}
-    catch (InstantiationException ex) {System.out.println("Error: "+ex.getMessage());}
-    catch (javax.swing.UnsupportedLookAndFeelException ex) {System.out.println("Error: "+ex.getMessage());}
-
-    javax.swing.SwingUtilities.updateComponentTreeUI(dbf);
-    dbf.invalidate();dbf.validate();dbf.repaint();
-
-    javax.swing.SwingUtilities.updateComponentTreeUI(msgFrame);
-    msgFrame.invalidate();msgFrame.validate();msgFrame.repaint();
-
-    // System.out.println("--- configureOptionPane();");
-    Util.configureOptionPane();
+    boolean changeLookAndFeel = ((laf == 2 && windows) || (laf == 1 && !windows));
+    if(pc.dbg) {System.out.println("--- Change look-and-feel:  windows = "+windows+",  look-and-feel in ini-file = "+laf);}
+    if (changeLookAndFeel) {
+        try{
+            if(laf == 2) {
+                javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getCrossPlatformLookAndFeelClassName());
+                System.out.println("--- setLookAndFeel(CrossPlatform);");
+            } else if(laf == 1) {
+                javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+                System.out.println("--- setLookAndFeel(System);");
+            }
+        } catch (Exception ex) {System.out.println("Error: "+ex.getMessage());}
+        javax.swing.SwingUtilities.updateComponentTreeUI(dbf);
+        dbf.invalidate(); dbf.validate(); dbf.repaint();
+        javax.swing.SwingUtilities.updateComponentTreeUI(msgFrame);
+        msgFrame.invalidate(); msgFrame.validate(); msgFrame.repaint();
+        if(pc.dbg) {System.out.println("--- configureOptionPane();");}
+        Util.configureOptionPane();
+    } // changeLookAndFeel
 
     if(pd.temperatureAllowHigher) {
         jMenuItemTemperature.setText("set Temperature & pressure");
@@ -583,10 +591,12 @@ public class FrameDBmain extends javax.swing.JFrame {
     setTitle();
     pack();
 
+    if(pc.dbg) {System.out.println(pc.progName+" - start() exit.");}
+
     if(disclaimerFrame != null) {
         if(disclaimerSkip) {
+            System.out.println("Skipping disclaimer.");
             //--- remove the "disclaimer" window
-            // this will call "disclaimerAccepted()" and "bringToFront"
             disclaimerFrame.closeWindow(true);            
             disclaimerFrame = null;
             // set this window visible, set the minimum size and the location
@@ -604,9 +614,9 @@ public class FrameDBmain extends javax.swing.JFrame {
             @Override protected void done(){
                 disclaimerFrame = null;
                 // set this window visible, set the minimum size and the location
-                bringToFront();
                 System.out.println("    disclaimer accepted.");
                 disclaimerAccepted();
+                bringToFront();
             } // done()
             }.execute(); // this returns inmediately,
             //    but the SwingWorker continues running...
@@ -618,7 +628,6 @@ public class FrameDBmain extends javax.swing.JFrame {
         disclaimerAccepted();
     }
 
-    if(pc.dbg) {System.out.println(pc.progName+" - start() exit.");}
   } //start
   // </editor-fold>
 
@@ -820,6 +829,11 @@ public class FrameDBmain extends javax.swing.JFrame {
         jPopupMenu.add(jMenuItemCancel);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
                 formWindowGainedFocus(evt);
@@ -835,11 +849,6 @@ public class FrameDBmain extends javax.swing.JFrame {
                 formWindowClosing(evt);
             }
         });
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                formComponentResized(evt);
-            }
-        });
 
         jPanelTable.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -848,6 +857,7 @@ public class FrameDBmain extends javax.swing.JFrame {
         jPanelPeriodicT.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton1.setText("H");
+        jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton1.setMargin(new java.awt.Insets(2, 0, 2, 0));
         jButton1.setPreferredSize(new java.awt.Dimension(27, 27));
         jPanelPeriodicT.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 13, -1, -1));
@@ -858,6 +868,7 @@ public class FrameDBmain extends javax.swing.JFrame {
         jPanelPeriodicT.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(471, 13, -1, -1));
 
         jButton3.setText("Li");
+        jButton3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jButton3.setMargin(new java.awt.Insets(2, 0, 2, 0));
         jButton3.setPreferredSize(new java.awt.Dimension(27, 27));
         jPanelPeriodicT.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 40, -1, -1));
@@ -1223,6 +1234,7 @@ public class FrameDBmain extends javax.swing.JFrame {
         jPanelPeriodicT.add(jButton89, new org.netbeans.lib.awtextra.AbsoluteConstraints(66, 175, -1, -1));
 
         jButton0.setText("e-");
+        jButton0.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton0.setMargin(new java.awt.Insets(2, 0, 2, 0));
         jButton0.setPreferredSize(new java.awt.Dimension(27, 27));
         jPanelPeriodicT.add(jButton0, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 10, -1, -1));
@@ -1511,22 +1523,9 @@ public class FrameDBmain extends javax.swing.JFrame {
 
         jListSelectedComps.setModel(modelSelectedComps);
         jListSelectedComps.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jListSelectedComps.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jListSelectedCompsMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                jListSelectedCompsMouseExited(evt);
-            }
-        });
         jListSelectedComps.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 jListSelectedCompsMouseMoved(evt);
-            }
-        });
-        jListSelectedComps.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jListSelectedCompsValueChanged(evt);
             }
         });
         jListSelectedComps.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1537,9 +1536,22 @@ public class FrameDBmain extends javax.swing.JFrame {
                 jListSelectedCompsFocusLost(evt);
             }
         });
+        jListSelectedComps.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jListSelectedCompsMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jListSelectedCompsMouseExited(evt);
+            }
+        });
         jListSelectedComps.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 jListSelectedCompsKeyTyped(evt);
+            }
+        });
+        jListSelectedComps.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jListSelectedCompsValueChanged(evt);
             }
         });
         jScrollPaneSelectedComps.setViewportView(jListSelectedComps);
@@ -3039,9 +3051,9 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
     if(pc.dbg) {
         String s;
         if(fileINInotRO != null) {s=fileINInotRO.getAbsolutePath();} else {s="\"null\"";}
-        System.out.println("   fileINInotRO = "+s);
+        System.out.println("   ini-file not read-only = "+s);
         if(fileRead != null) {s=fileRead.getAbsolutePath();} else {s="\"null\"";}        
-        System.out.println("   fileRead = "+s);
+        System.out.println("   ini-file read = "+s);
     }
     if(!readOk) {
         String msg = "Failed to read any INI-file."+nl+
@@ -3079,11 +3091,13 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
     msg = msg + "ini-file: \""+f.getPath()+"\"";
     System.out.println(msg);
     java.util.Properties propertiesIni = new java.util.Properties();
-    java.io.FileInputStream properties_iniFile = null;
+    java.io.FileInputStream fis = null;
+    java.io.BufferedReader r = null;
     boolean ok = true;
     try {
-      properties_iniFile = new java.io.FileInputStream(f);
-      propertiesIni.load(properties_iniFile);
+      fis = new java.io.FileInputStream(f);
+      r = new java.io.BufferedReader(new java.io.InputStreamReader(fis,"UTF8"));
+      propertiesIni.load(r);
       //throw new Exception("Test error");
     } //try
     catch (java.io.FileNotFoundException e) {
@@ -3101,7 +3115,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
       ok = false;
     } // catch loading-exception
     finally {
-        try {if(properties_iniFile != null) {properties_iniFile.close();}}
+        try {if(r != null) {r.close();} if(fis != null) {fis.close();}}
         catch (java.io.IOException e) {
             msg = "Error: \""+e.toString()+"\""+nl+
                           "   while closing INI-file:"+nl+
@@ -3112,7 +3126,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
     }
     if(!ok) {return ok;}
     try{
-        disclaimerSkip = Boolean.parseBoolean(propertiesIni.getProperty("skipDisclaimer"));
+        disclaimerSkip = Boolean.parseBoolean(propertiesIni.getProperty("skipDisclaimer","false"));
     } catch (NullPointerException e) {disclaimerSkip = false;}
     //--- hide the "disclaimer" window
     if(disclaimerSkip && disclaimerFrame != null) {disclaimerFrame.setVisible(false);}
@@ -3125,12 +3139,9 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
         locationMsgFrame.y = Integer.parseInt(propertiesIni.getProperty("msgFrame_top"));
         pd.addDataLocation.x = Integer.parseInt(propertiesIni.getProperty("addData_left"));
         pd.addDataLocation.y = Integer.parseInt(propertiesIni.getProperty("addData_top"));
-        try{pd.allSolidsAsk = Boolean.parseBoolean(propertiesIni.getProperty("All_Solids_Ask"));}
-        catch (NullPointerException e) {pd.allSolidsAsk = false;}
-        try{pd.redoxAsk = Boolean.parseBoolean(propertiesIni.getProperty("Redox_Ask"));}
-        catch (NullPointerException e) {pd.redoxAsk = false;}
-        try{pd.temperatureAllowHigher = Boolean.parseBoolean(propertiesIni.getProperty("Temperature_Allow_Higher"));}
-        catch (NullPointerException e) {pd.temperatureAllowHigher = false;}
+        pd.allSolidsAsk = Boolean.parseBoolean(propertiesIni.getProperty("All_Solids_Ask","false"));
+        pd.redoxAsk = Boolean.parseBoolean(propertiesIni.getProperty("Redox_Ask","false"));
+        pd.temperatureAllowHigher = Boolean.parseBoolean(propertiesIni.getProperty("Temperature_Allow_Higher","true"));
         //if(!userFile) {
         //    // These settings are NOT read from the "user" ini-file.
         //    // If running from a CD or on a network server, the user may save these
@@ -3141,18 +3152,15 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
             pd.redoxP = Boolean.parseBoolean(propertiesIni.getProperty("Redox_P"));
             pd.includeH2O = Boolean.parseBoolean(propertiesIni.getProperty("H2O"));
             pd.diagramProgr = propertiesIni.getProperty("diagramProgram");
-            try{pd.temperature_C = Double.parseDouble(propertiesIni.getProperty("Temperature"));}
-            catch (NullPointerException e) {pd.temperature_C = 25;}
+            try{pd.temperature_C = Double.parseDouble(propertiesIni.getProperty("Temperature","25"));}
             catch (NumberFormatException e) {pd.temperature_C = 25;
                 System.out.println("Error reading temperature in \"ini\"-file; setting temperature = 25 C.");
             }
-            try{pd.pressure_bar = Double.parseDouble(propertiesIni.getProperty("Pressure"));}
-            catch (NullPointerException e) {pd.pressure_bar = 1;}
+            try{pd.pressure_bar = Double.parseDouble(propertiesIni.getProperty("Pressure","1"));}
             catch (NumberFormatException e) {pd.pressure_bar = 1;
                 System.out.println("Error reading pressure in \"ini\"-file; setting pressure = 1 bar.");
             }
-            try{advancedMenu = Boolean.parseBoolean(propertiesIni.getProperty("advancedMenu"));}
-            catch (NullPointerException e) {advancedMenu = false;}
+            advancedMenu = Boolean.parseBoolean(propertiesIni.getProperty("advancedMenu","false"));
         //} // if !userFile
         if(pc.pathDef.length() >0) {pc.pathDef.delete(0, pc.pathDef.length());}
         pc.pathDef.append(propertiesIni.getProperty("pathDefault"));
@@ -3172,7 +3180,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
                 if(dbName != null && dbName.trim().length() >0) {pd.dataBasesList.add(dbName);}
             }
         }
-    } catch (NumberFormatException e) {
+    } catch (Exception e) {
         MsgExceptn.exception(Util.stack2string(e));
         msg = "Error: \""+e.toString()+"\""+nl+
                          "   while reading INI-file:"+nl+
@@ -3182,12 +3190,12 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
         ok = false;
     }
 
-    if(advancedMenu) {
-        String s = propertiesIni.getProperty("lookAndFeel").toLowerCase();
+    try{
+        String s = propertiesIni.getProperty("lookAndFeel").trim().toLowerCase();
         if(s.startsWith("system")) {laf = 1;}
         else if(s.startsWith("cross")) {laf = 2;}
         else {laf = 0;}
-    } else {laf = 0;}
+    } catch (NullPointerException e) {laf = 0;}
     if(ok && pc.dbg) {System.out.println("Finished reading ini-file");}
     System.out.flush();
     checkIniValues();
@@ -3281,7 +3289,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
 
     pd.allSolids = Math.min(3, Math.max(0, pd.allSolids));
     double maxT, maxP;
-    if(pd.temperatureAllowHigher) {maxT = 600; maxP = 5000;} else {maxT = 100; maxP = 1.0142;}
+    if(pd.temperatureAllowHigher) {maxT = 1000; maxP = 5000;} else {maxT = 100; maxP = 1.0142;}
     pd.temperature_C = Math.min(maxT, Math.max(-0.00001, pd.temperature_C));
     pd.pressure_bar = Math.min(maxP, Math.max(1, pd.pressure_bar));
     laf = Math.min(2,Math.max(0,laf));
@@ -3333,7 +3341,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
       locationMsgFrame.x = 80; locationMsgFrame.y = 28;
       // set the default path to the "current directory" (from where the program is started)
       pc.setPathDef(); // set Default Path = User Directory
-      pd.temperatureAllowHigher = false;
+      pd.temperatureAllowHigher = true;
       pd.temperature_C = 25;
       pd.pressure_bar = 1;
       pd.allSolidsAsk = false;
@@ -3435,29 +3443,36 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
     }
 
     System.out.println("Saving ini-file: \""+f.getPath()+"\"");
-    java.io.FileOutputStream propertiesIniFile = null;
+    java.io.FileOutputStream fos = null;
+    java.io.Writer w = null;
     try{
-        propertiesIniFile = new java.io.FileOutputStream(f);
+        fos = new java.io.FileOutputStream(f);
+        w = new java.io.BufferedWriter(new java.io.OutputStreamWriter(fos,"UTF8"));
         // INI-section "[DataBase]" needed by PortableApps java launcher
-        int i = nl.length();
-        byte[] b = new byte[10+i];
+        char[] b = new char[10 + nl.length()];
         b[0]='['; b[1]='D'; b[2]='a'; b[3]='t'; b[4]='a';
         b[5]='B'; b[6]='a'; b[7]='s'; b[8]='e'; b[9]=']';
-        for(int j =0; j < i; j++) {b[10+j] = (byte)nl.codePointAt(j);}
-        propertiesIniFile.write(b);
+        for(int j =0; j < nl.length(); j++) {b[10+j] = nl.charAt(j);}
+        w.write(b);
         //
-        propertiesIni.store(propertiesIniFile,null);
+        propertiesIni.store(w,null);
         if (pc.dbg) {System.out.println("Written: \""+f.getPath()+"\"");}
     } catch (java.io.IOException e) {
           msg = "Error: \""+e.getMessage()+"\""+nl+
                 "while writing INI-file:"+nl+
                 "\""+f.getPath()+"\"";
+          if(!this.isVisible()) {this.setVisible(true);}
           MsgExceptn.showErrMsg(dbf, msg, 1);
           ok = false;
     } // catch store-exception
     finally {
-        try {if(propertiesIniFile != null) {propertiesIniFile.close();}}
-        catch (java.io.IOException e) {}
+        try {if(w != null) {w.close();} if(fos != null) {fos.close();}}
+        catch (java.io.IOException e) {
+            msg = e.getMessage()+nl+
+                        "   trying to write ini-file: \""+f.getPath()+"\"";
+            if(!this.isVisible()) {this.setVisible(true);}
+            MsgExceptn.showErrMsg(dbf, msg, 1);
+        }
     } //finally
     return ok;
   } // saveIni()
@@ -3724,6 +3739,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
             button.setFocusable(false);
             button.setFont(fN);
             button.setBackground(buttonBackgroundN);
+            button.setBorder(buttonBorderN);
         }
     } //for button
     if(pd.foundH2O) {jMenuAdvH2O.setEnabled(true);} else {jMenuAdvH2O.setEnabled(false);}
@@ -3821,10 +3837,7 @@ private static boolean askH2O(java.awt.Frame parent, final String title, final b
             System.out.println("--- setLookAndFeel(CrossPlatform);");
         }
     }
-    catch (ClassNotFoundException ex) {System.out.println("Error: "+ex.getMessage());}
-    catch (IllegalAccessException ex) {System.out.println("Error: "+ex.getMessage());}
-    catch (InstantiationException ex) {System.out.println("Error: "+ex.getMessage());}
-    catch (javax.swing.UnsupportedLookAndFeelException ex) {System.out.println("Error: "+ex.getMessage());}
+    catch (Exception ex) {System.out.println("Error: "+ex.getMessage());}
 
     //---- for JOptionPanes set the default button to the one with the focus
     //     so that pressing "enter" behaves as expected:

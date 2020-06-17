@@ -10,7 +10,7 @@ import lib.huvud.ProgramConf;
 
 /** Search reactions in the databases.
  * <br>
- * Copyright (C) 2016-2018 I.Puigdomenech.
+ * Copyright (C) 2016-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -386,6 +386,7 @@ If redox And RedoxAsk Then  */
                               }
                           }
                           cplx.tMax = Math.min(cplx.tMax,rcomp.tMax);
+                          cplx.pMax = Math.min(cplx.pMax,rcomp.pMax);
                           //add all stoichiometric coefficients of rRedox(rDxC)
                           cplx.reactionComp.set(ic,"");
                           cplx.reactionCoef.set(ic,0.);
@@ -461,46 +462,68 @@ If redox And RedoxAsk Then  */
     }
     java.util.ArrayList<String> items = new java.util.ArrayList<String>();
     // Is there T-P data for all reactions?
+    double maxT = Double.MAX_VALUE, maxP = Double.MAX_VALUE;
+    String txt;
     long cnt = 0;
     for(int ix=0; ix < srch.nx+srch.nf; ix++) {
-        if(srch.temperature_C > srch.dat.get(ix).tMax
+        if(srch.temperature_C > srch.dat.get(ix).tMax || srch.pressure_bar > srch.dat.get(ix).pMax
                 || Double.isNaN(srch.dat.get(ix).logKatTandP(srch.temperature_C, srch.pressure_bar))) {
             if(!fnd) {
-                System.out.println("--------- Temperature extrapolations to "
+                System.out.println("--------- Temperature-pressure extrapolations to "
                     +String.format("%.0f",srch.temperature_C)+" C, pressure = "+
                     String.format(java.util.Locale.ENGLISH,"%.2f",srch.pressure_bar)+" bar");
                 fnd = true;
             }
+            if(srch.dat.get(ix).pMax < 221) { // below critical point
+                txt = String.format("%.3f",srch.dat.get(ix).pMax);
+            } else {
+                txt = String.format("%.0f",srch.dat.get(ix).pMax);
+            }
             System.out.println("species \""+srch.dat.get(ix).name+
                     "\": missing T-P data, max temperature = "+
-                    String.format("%.0f",srch.dat.get(ix).tMax));
+                    String.format("%.0f",srch.dat.get(ix).tMax)+", max pressure = "+txt);
             items.add(srch.dat.get(ix).name);
+            maxT = Math.min(maxT, srch.dat.get(ix).tMax);
+            maxP = Math.min(maxP, srch.dat.get(ix).pMax);
             cnt++;
         }
     }
     if(cnt >0) {
         System.out.println("---------");
         //javax.swing.DefaultListModel aModel = new javax.swing.DefaultListModel(); // java 1.6
-        javax.swing.DefaultListModel<String> aModel = new javax.swing.DefaultListModel<>();
         java.util.Iterator<String> iter = items.iterator();
-        while(iter.hasNext()) {aModel.addElement(iter.next());}
-        String msg = "<html><b>Error:</b><br>"+
-                    "Temperature extrapolations from 25 to "+
-                    String.format("%.0f",srch.temperature_C)+"°C<br>(pressure = ";
+        txt = "";
+        while(iter.hasNext()) {txt = txt+iter.next()+"\n";}
+        String msg = "<html><font size=\"+1\"><b>Error:</b></font><br>"+
+                    "Temperature and pressure extrapolations are<br>"+
+                    "requested to "+
+                    String.format("%.0f",srch.temperature_C)+"°C and pressure = ";
         if(srch.pressure_bar > IAPWSF95.CRITICAL_pBar) {msg = msg + Util.formatNumAsInt(srch.pressure_bar);}
         else {msg = msg + String.format(java.util.Locale.ENGLISH,"%.2f",srch.pressure_bar);}
-        msg = msg + " bar) are requested,<br>but temperature-pressure data"+
-                    " are missing<br>for the following species:</html>";
+        msg = msg + " bar,<br>but the necessary temperature-pressure<br>"+
+                    "data are missing for the following species:</html>";
         javax.swing.JLabel aLabel = new javax.swing.JLabel(msg);
         // javax.swing.JList aList = new javax.swing.JList(aModel); // java 1.6
-        javax.swing.JList<String> aList = new javax.swing.JList<>(aModel);
-        aList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        aList.setVisibleRowCount(5);
-        javax.swing.JScrollPane aScrollPane = new javax.swing.JScrollPane();
-        aScrollPane.setViewportView(aList);
-        aList.setFocusable(false);
-        javax.swing.JLabel endLabel = new javax.swing.JLabel("Please change the temperature in the menu \"Options\".");
-        Object[] o = {aLabel, aScrollPane, endLabel};
+        javax.swing.JTextArea aTextArea = new javax.swing.JTextArea(6,20);
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(aTextArea);
+        scrollPane.setVerticalScrollBarPolicy(javax.swing.JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        aTextArea.append(txt);
+        aTextArea.setEditable(true);
+        aTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {evt.consume();}
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {evt.consume();}
+        });
+        aTextArea.setFocusable(true);
+        String p = "\"pSat\" (vapor-liquid equilibrium)";
+        if(maxP > IAPWSF95.CRITICAL_pBar) {p = Util.formatNumAsInt(maxP)+" bar";}
+        javax.swing.JLabel endLabel = new javax.swing.JLabel(
+                "<html>For these reactions the maximum extrapolation<br>"+
+                      "temperature is "+Util.formatNumAsInt(maxT)+"°C, and maximum<br>"+
+                      "pressure is "+p+".<br>&nbsp;<br>"+
+                "Please change the temperature in the menu \"Options\".</html>");
+        Object[] o = {aLabel, scrollPane, endLabel};
         javax.swing.JOptionPane.showMessageDialog(parent, o, "Temperature extrapolations",
                                         javax.swing.JOptionPane.ERROR_MESSAGE);
         temperatureCorrectionsPossible = false;
@@ -761,6 +784,7 @@ If redox And RedoxAsk Then  */
    * @throws DBSearch.SearchInternalException */
   private Complex getOneComplex(boolean firstComplex) throws DBSearch.SearchInternalException {
     boolean protonPresent;
+    String msg;
     if(firstComplex) {
         //open the first file
         openNextFile = true;
@@ -776,7 +800,7 @@ If redox And RedoxAsk Then  */
         if(complxFileName == null || complxFileName.length() <=0) {continue;}
         java.io.File dbf = new java.io.File(complxFileName);
         if(!dbf.exists() || !dbf.canRead()) {
-            String msg = "Error: can not open file"+nl+
+            msg = "Error: can not open file"+nl+
                          "    \""+complxFileName+"\".";
             if(!dbf.exists()) {msg = msg +nl+ "(the file does not exist)."+nl+
                                               "Search terminated";}
@@ -797,16 +821,18 @@ If redox And RedoxAsk Then  */
                 dis = new java.io.DataInputStream(new java.io.FileInputStream(dbf));
             } else { //--- text file
                 binaryOrText = 1;
-                br = new java.io.BufferedReader(new java.io.FileReader(dbf));
+                br = new java.io.BufferedReader(
+                        new java.io.InputStreamReader(
+                                new java.io.FileInputStream(dbf),"UTF8"));
                 // -- comments at the top of the file
                 // topComments = rd.dataLineComment.toString();
             } //--- text or binary?
         }
-        catch (java.io.FileNotFoundException ex) {
+        catch (Exception ex) {
             try{
                 if(dis != null) {dis.close();} else if(br != null) {br.close();}
-            } catch (java.io.IOException ioe) {MsgExceptn.msg(ioe.getMessage());}
-            String msg = "Error: "+ex.toString()+nl+
+            } catch (Exception ioe) {MsgExceptn.msg(ioe.getMessage());}
+            msg = "Error: "+ex.toString()+nl+
                     "while trying to open file: \""+complxFileName+"\"."+nl+"search terminated";
             throw new SearchInternalException(msg);
         }
@@ -826,7 +852,7 @@ If redox And RedoxAsk Then  */
                         /(double)complxFileNameSize));
             }
             catch (LibDB.ReadBinCmplxException ex) {
-                String msg = "Error: in \"getOneComplex\", cmplxNbr = "+cmplxNbr+nl+
+                msg = "Error: in \"getOneComplex\", cmplxNbr = "+cmplxNbr+nl+
                     "ReadBinCmplxException: "+ex.getMessage()+nl+
                     "in file: \""+complxFileName+"\"";
                 throw new SearchInternalException(msg);
@@ -842,7 +868,7 @@ If redox And RedoxAsk Then  */
                 catch (LibDB.EndOfFileException ex) {complex = null;}                    
             }
             catch (LibDB.ReadTxtCmplxException ex) {
-                String msg = "Error: in \"getOneComplex\", cmplxNbr = "+cmplxNbr+nl+
+                msg = "Error: in \"getOneComplex\", cmplxNbr = "+cmplxNbr+nl+
                     ex.getMessage()+nl+
                     "in file: \""+complxFileName+"\"";
                 throw new SearchInternalException(msg);

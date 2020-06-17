@@ -192,16 +192,17 @@ public class HelpAboutDB extends javax.swing.JFrame {
         jLabelIniFile = new javax.swing.JLabel();
         jLabelIniFU = new javax.swing.JLabel();
         jLabelIniFileUser = new javax.swing.JLabel();
+        jLabelUnicode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -219,7 +220,9 @@ public class HelpAboutDB extends javax.swing.JFrame {
         jPanel2.setOpaque(false);
 
         jButtonLicense.setMnemonic('l');
-        jButtonLicense.setText("License Details");
+        jButtonLicense.setText(" License Details ");
+        jButtonLicense.setAlignmentX(0.5F);
+        jButtonLicense.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonLicense.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonLicenseActionPerformed(evt);
@@ -356,6 +359,8 @@ public class HelpAboutDB extends javax.swing.JFrame {
 
         jLabelIniFileUser.setText("\"null\"");
 
+        jLabelUnicode.setText("(Unicode UTF-8)");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -379,7 +384,10 @@ public class HelpAboutDB extends javax.swing.JFrame {
                             .addComponent(jLabelLastUpdate)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabelVers)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabelVers)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabelUnicode))
                                     .addComponent(jLabelLib)
                                     .addComponent(jLabelLib2)
                                     .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -411,7 +419,9 @@ public class HelpAboutDB extends javax.swing.JFrame {
                         .addGap(2, 2, 2)
                         .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelVers)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelVers)
+                            .addComponent(jLabelUnicode))
                         .addGap(2, 2, 2)
                         .addComponent(jLabelLib)
                         .addGap(2, 2, 2)
@@ -634,6 +644,7 @@ private static class BareBonesBrowserLaunch {
     private javax.swing.JLabel jLabelPathApp;
     private javax.swing.JLabel jLabelPathU;
     private javax.swing.JLabel jLabelPathUser;
+    private javax.swing.JLabel jLabelUnicode;
     private javax.swing.JLabel jLabelVers;
     private javax.swing.JLabel jLabel_www;
     private javax.swing.JLabel jLabel_wwwKTH;

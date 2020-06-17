@@ -66,7 +66,7 @@
                       <Component id="jButtonCancel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButtonOK" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="30" max="32767" attributes="0"/>
+                      <EmptySpace pref="36" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jPanel4" max="32767" attributes="0"/>
               </Group>
@@ -86,8 +86,14 @@
     <Component class="javax.swing.JButton" name="jButtonHelp">
       <Properties>
         <Property name="mnemonic" type="int" value="104"/>
-        <Property name="text" type="java.lang.String" value="Help"/>
+        <Property name="text" type="java.lang.String" value=" Help "/>
         <Property name="toolTipText" type="java.lang.String" value="Alt-H or F1"/>
+        <Property name="alignmentX" type="float" value="0.5"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+            <BevelBorder/>
+          </Border>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonHelpActionPerformed"/>
@@ -96,8 +102,14 @@
     <Component class="javax.swing.JButton" name="jButtonCancel">
       <Properties>
         <Property name="mnemonic" type="int" value="99"/>
-        <Property name="text" type="java.lang.String" value="Cancel"/>
+        <Property name="text" type="java.lang.String" value=" Cancel "/>
         <Property name="toolTipText" type="java.lang.String" value="Alt-C or Esc"/>
+        <Property name="alignmentX" type="float" value="0.5"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+            <BevelBorder/>
+          </Border>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCancelActionPerformed"/>
@@ -106,8 +118,14 @@
     <Component class="javax.swing.JButton" name="jButtonOK">
       <Properties>
         <Property name="mnemonic" type="int" value="111"/>
-        <Property name="text" type="java.lang.String" value="OK"/>
+        <Property name="text" type="java.lang.String" value=" OK "/>
         <Property name="toolTipText" type="java.lang.String" value="Alt-O"/>
+        <Property name="alignmentX" type="float" value="0.5"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+            <BevelBorder/>
+          </Border>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOKActionPerformed"/>

@@ -172,14 +172,14 @@ public class AskSolids extends javax.swing.JDialog {
         jRadioButton2 = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -187,8 +187,10 @@ public class AskSolids extends javax.swing.JDialog {
         jLabelTop.setText("<html>If solids are found when searching the database:<br>include all types of solids?</html>");
 
         jButtonHelp.setMnemonic('h');
-        jButtonHelp.setText("Help");
+        jButtonHelp.setText(" Help ");
         jButtonHelp.setToolTipText("Alt-H or F1");
+        jButtonHelp.setAlignmentX(0.5F);
+        jButtonHelp.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonHelpActionPerformed(evt);
@@ -196,8 +198,10 @@ public class AskSolids extends javax.swing.JDialog {
         });
 
         jButtonCancel.setMnemonic('c');
-        jButtonCancel.setText("Cancel");
+        jButtonCancel.setText(" Cancel ");
         jButtonCancel.setToolTipText("Alt-C or Esc");
+        jButtonCancel.setAlignmentX(0.5F);
+        jButtonCancel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelActionPerformed(evt);
@@ -205,8 +209,10 @@ public class AskSolids extends javax.swing.JDialog {
         });
 
         jButtonOK.setMnemonic('o');
-        jButtonOK.setText("OK");
+        jButtonOK.setText(" OK ");
         jButtonOK.setToolTipText("Alt-O");
+        jButtonOK.setAlignmentX(0.5F);
+        jButtonOK.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOKActionPerformed(evt);
@@ -337,7 +343,7 @@ public class AskSolids extends javax.swing.JDialog {
                         .addComponent(jButtonCancel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonOK)
-                        .addContainerGap(30, Short.MAX_VALUE))
+                        .addContainerGap(36, Short.MAX_VALUE))
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 

@@ -156,19 +156,20 @@ public class ExitDialog extends javax.swing.JDialog {
         jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
             }
         });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jButtonDiagram.setIcon(new javax.swing.ImageIcon(getClass().getResource("/database/images/Diagram_button.gif"))); // NOI18N
         jButtonDiagram.setMnemonic('d');
+        jButtonDiagram.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonDiagram.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButtonDiagram.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -183,6 +184,7 @@ public class ExitDialog extends javax.swing.JDialog {
 
         jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/database/images/Save_32x32.gif"))); // NOI18N
         jButtonSave.setMnemonic('s');
+        jButtonSave.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonSave.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButtonSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,6 +200,7 @@ public class ExitDialog extends javax.swing.JDialog {
         jButtonCancel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButtonCancel.setMnemonic('c');
         jButtonCancel.setText("Cancel");
+        jButtonCancel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonCancel.setMargin(new java.awt.Insets(2, 5, 2, 5));
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -302,17 +305,16 @@ public class ExitDialog extends javax.swing.JDialog {
       String tmpFileName;
       tmpFileName = fn.substring(0,fn.length()-4).concat(".tmp");
       java.io.File tmpFile = new java.io.File(tmpFileName);
-      java.io.PrintWriter outputFile;
+      java.io.FileOutputStream fos;
+      java.io.Writer w;
       try{
-          outputFile = new java.io.PrintWriter(
-                new java.io.BufferedWriter(
-                new java.io.FileWriter(tmpFile)));
+          fos = new java.io.FileOutputStream(tmpFile);
+          w = new java.io.BufferedWriter(new java.io.OutputStreamWriter(fos,"UTF8"));
       }
       catch (java.io.IOException ex) {
           String msg = "Error in \"saveDataFile\","+nl+
                     "   \""+ex.toString()+"\","+nl+
-                    "   while making a PrintWriter for data file:"+nl+
-                    "   \""+tmpFileName+"\"";
+                    "   while preparing file:"+nl+"   \""+tmpFileName+"\"";
           MsgExceptn.exception(msg);
           javax.swing.JOptionPane.showMessageDialog(this, msg, pc.progName,javax.swing.JOptionPane.ERROR_MESSAGE);
           return false;
@@ -342,23 +344,24 @@ public class ExitDialog extends javax.swing.JDialog {
           dbF.modelSelectedComps.add((srch.na - srch.solidC), "H2O");
           srch.na++;
       }
-      outputFile.println(" "+String.valueOf(srch.na)+", "+
+
+      try{
+      w.write(" "+String.valueOf(srch.na)+", "+
           String.valueOf(srch.nx)+", "+String.valueOf(nrSol)+", "+
-          String.valueOf(srch.solidC) + m.trim());
+          String.valueOf(srch.solidC) + m.trim()+nl);
       for(int i=0; i < srch.na; i++) {
-        outputFile.format("%s",dbF.modelSelectedComps.get(i));
-        outputFile.println();
+        w.write(String.format("%s",dbF.modelSelectedComps.get(i))+nl);
       } //for i
 
-      outputFile.flush();
+      w.flush();
       int j, jc, nTot;
       Complex cmplx;
       StringBuilder logB = new StringBuilder();
       for(int ix=0; ix < srch.nx+srch.nf; ix++) {
         cmplx = srch.dat.get(ix);
         if(cmplx.name.length()<=19) {
-            outputFile.format(engl, "%-19s,  ",cmplx.name);
-        } else {outputFile.format(engl, "%s,  ",cmplx.name);}
+            w.write(String.format(engl, "%-19s,  ",cmplx.name));
+        } else {w.write(String.format(engl, "%s,  ",cmplx.name));}
         if(logB.length()>0) {logB.delete(0, logB.length());}
         double lgK = cmplx.logKatTandP(srch.temperature_C, srch.pressure_bar);
         if(Double.isNaN(lgK)) {
@@ -375,29 +378,39 @@ public class ExitDialog extends javax.swing.JDialog {
         j = 9 - logB.length();
         if(j>0) {for(int k=0;k<j;k++) {logB.append(' ');}}
         else {logB.append(' ');} //add at least one space
-        outputFile.print(logB.toString());
+        w.write(logB.toString());
         boolean fnd;
         for(jc = 0; jc < srch.na; jc++) {
             fnd = false;
             nTot = Math.min(cmplx.reactionComp.size(), cmplx.reactionCoef.size());
             for(int jdat=0; jdat < nTot; jdat++) {
                 if(cmplx.reactionComp.get(jdat).equals(dbF.modelSelectedComps.get(jc))) {
-                    outputFile.print(Util.formatDbl4(cmplx.reactionCoef.get(jdat)));
-                    if(jc < srch.na-1) {outputFile.print(" ");}
+                    w.write(Util.formatDbl4(cmplx.reactionCoef.get(jdat)));
+                    if(jc < srch.na-1) {w.write(" ");}
                     fnd = true; break;
                 }
             } //for jdat
             if(!fnd) {
-                outputFile.print(" 0");
-                if(jc < srch.na-1) {outputFile.print(" ");}
+                w.write(" 0");
+                if(jc < srch.na-1) {w.write(" ");}
             }
         }//for jc
         if(cmplx.comment != null && cmplx.comment.length() >0) {
-            outputFile.print(" /"+cmplx.comment);
+            w.write(" /"+cmplx.comment);
         }
-        outputFile.println();
+        w.write(nl);
       }//for ix
-      outputFile.flush(); outputFile.close();
+      w.flush(); w.close(); fos.close();
+      }
+      catch (Exception ex) {
+          String msg = "Error in \"saveDataFile\","+nl+
+                    "   \""+ex.getMessage()+"\","+nl+
+                    "   while writing to file:"+nl+
+                    "   \""+tmpFileName+"\"";
+          MsgExceptn.exception(msg);
+          javax.swing.JOptionPane.showMessageDialog(this, msg, pc.progName,javax.swing.JOptionPane.ERROR_MESSAGE);
+          return false;
+      }
 
       //the temporary file has been created without a problem
       //  delete the data file and rename the temporary file
