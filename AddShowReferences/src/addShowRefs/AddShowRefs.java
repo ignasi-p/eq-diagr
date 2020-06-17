@@ -148,19 +148,20 @@ public class AddShowRefs extends javax.swing.JFrame {
         jButtonQuit = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jComboBoxKeys = new javax.swing.JComboBox<String>();
+        jComboBoxKeys = new javax.swing.JComboBox<>();
         jButtonShow = new javax.swing.JButton();
         jButtonEdit = new javax.swing.JButton();
+        jLabelUnicode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -170,7 +171,9 @@ public class AddShowRefs extends javax.swing.JFrame {
         jLabelFileName.setText("jLabelFileName");
 
         jButtonAdd.setMnemonic('a');
-        jButtonAdd.setText("Add new reference");
+        jButtonAdd.setText(" Add new reference ");
+        jButtonAdd.setAlignmentX(0.5F);
+        jButtonAdd.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAddActionPerformed(evt);
@@ -178,7 +181,9 @@ public class AddShowRefs extends javax.swing.JFrame {
         });
 
         jButtonQuit.setMnemonic('x');
-        jButtonQuit.setText("Exit");
+        jButtonQuit.setText(" Exit ");
+        jButtonQuit.setAlignmentX(0.5F);
+        jButtonQuit.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonQuit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonQuitActionPerformed(evt);
@@ -187,10 +192,12 @@ public class AddShowRefs extends javax.swing.JFrame {
 
         jLabel1.setText("Keys:");
 
-        jComboBoxKeys.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxKeys.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButtonShow.setMnemonic('s');
-        jButtonShow.setText("Show");
+        jButtonShow.setText(" Show ");
+        jButtonShow.setAlignmentX(0.5F);
+        jButtonShow.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonShow.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonShowActionPerformed(evt);
@@ -198,7 +205,9 @@ public class AddShowRefs extends javax.swing.JFrame {
         });
 
         jButtonEdit.setMnemonic('e');
-        jButtonEdit.setText("Edit");
+        jButtonEdit.setText(" Edit ");
+        jButtonEdit.setAlignmentX(0.5F);
+        jButtonEdit.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonEditActionPerformed(evt);
@@ -231,6 +240,8 @@ public class AddShowRefs extends javax.swing.JFrame {
                     .addComponent(jButtonEdit)))
         );
 
+        jLabelUnicode.setText("(Unicode UTF-8)");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -243,7 +254,8 @@ public class AddShowRefs extends javax.swing.JFrame {
                         .addGap(33, 33, 33))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonQuit)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabelUnicode))
                     .addComponent(jLabelFileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,12 +271,17 @@ public class AddShowRefs extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabelFileName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButtonAdd)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonQuit)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonAdd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonQuit)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabelUnicode))))
         );
 
         pack();
@@ -463,6 +480,7 @@ public class AddShowRefs extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel0;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelFileName;
+    private javax.swing.JLabel jLabelUnicode;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

@@ -126,14 +126,14 @@ public class EditAddRefs extends javax.swing.JFrame {
         jButtonQuit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -212,7 +212,9 @@ public class EditAddRefs extends javax.swing.JFrame {
         jPanel4.setLayout(new java.awt.BorderLayout());
 
         jButtonSave.setMnemonic('s');
-        jButtonSave.setText("Save");
+        jButtonSave.setText(" Save ");
+        jButtonSave.setAlignmentX(0.5F);
+        jButtonSave.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveActionPerformed(evt);
@@ -221,7 +223,9 @@ public class EditAddRefs extends javax.swing.JFrame {
         jPanel4.add(jButtonSave, java.awt.BorderLayout.WEST);
 
         jButtonQuit.setMnemonic('q');
-        jButtonQuit.setText("Quit");
+        jButtonQuit.setText(" Quit ");
+        jButtonQuit.setAlignmentX(0.5F);
+        jButtonQuit.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonQuit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonQuitActionPerformed(evt);
