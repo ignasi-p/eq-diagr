@@ -1,4 +1,6 @@
 @echo off
+rem Note: the path of this file can not contain a space because
+rem       the JavaHelp indexer can not handle that
 prompt -$g
 
 echo =========================================================================

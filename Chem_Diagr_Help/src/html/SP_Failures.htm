@@ -19,63 +19,46 @@
 <h3>The programs fail?</h3>
 
 <ul type="square">
-<li><b>Singular equilibrium conditions:</b>
-  <ul type="disc">
-    <li>Check the concentrations for each component.
-			Try to change a zero total concentration into a <nobr>log(free activity)</nobr>
-      &#8776; <nobr>&#8722;999.</nobr>  This means changing a line saying
-			<nobr>&#147;<tt>T,0</tt>&#148;</nobr> to a line saying
-      <nobr>&#147;<tt>LA,&#8722;999</tt>&#148;.</nobr>
-			This will work with components that can not have negative concentrations (that is,
-			it will work for components like <nobr>Ca<sup>2+</sup>,</nobr> but <b>not</b> for
-			<nobr>H<sup>+</sup></nobr> or <nobr>e<sup>&#8722;</sup>).</nobr></li>
-		<li>Another possibility if a zero total concentration is given:
-			try to change it to a small non-zero number, like <nobr><tt>1E-15.</tt></nobr></li>
-	 <li>If several total concentrations are the same (for example
-			<nobr>[Ca<sup>2+</sup>]<sub>tot</sub></nobr> = <nobr>[Mg<sup>2+</sup>]<sub>tot</sub></nobr> =
-			<nobr>[CO<sub>3</sub><sup>2&#8722;</sup>]<sub>tot</sub></nobr> = <nobr>0.001 M),</nobr>
-			try to change them slightly (for example, set one component to <nobr>0.001,</nobr> the next
-			to <nobr>0.00101,</nobr> the third to <nobr>0.00102,</nobr> etc).</li>
-  </ul>
-  </li>
+<li><p>See also <a href="SP_Tolerance.htm">Calculation Tolerance</a></p></li>
 <li><b>Impossible chemical systems:</b>
   <ul type="disc">
-    <li>Some <nobr>&#147;redox&#148;</nobr> cases (for example an excess free electrons without any left
-			material to be reduced) cannot be handled. Try in that case to limit the concentration
-			range to reasonable values, see for example the input file <nobr><tt>EX5.DAT</tt></nobr>      </li>
-    <li>The programs also fail if the activity for a solid component is given,
-			but some other conditions are also given which make the solid component not stable.
-			For example:
-			 <ul type="circle">
-			   <li>In very acid media an oxide or carbonate can not have
-													<nobr><i>activity</i> = 1.</nobr></li>
-				 <li>A copper(II) compound is not stable under very reducing conditions
-												(where Cu metal is stable), do not give its <nobr><i>activity</i> = 1.</nobr></li>
-				 <li>Iron metal is not stable under an oxygen atmosphere: do not set
-												both the <nobr>O<sub>2</sub>(g)</nobr> and <nobr>Fe(cr)</nobr> activities to
-												fixed values.</li>
-			 </ul>
+    <li>Some <nobr>&#147;redox&#148;</nobr> cases (for example an excess free electrons without any
+        material left to be reduced) cannot be handled. Limit in that case the concentration
+        range to reasonable values.</li>
+    <li>The programs also fail if the activity for a solid component is given, but some other
+        conditions are also given which make the solid component not stable. For example:
+        <ul type="circle">
+            <li>In very acid media an oxide or carbonate can not have
+                 <nobr><i>activity</i> = 1.</nobr></li>
+            <li>A copper(II) compound is not stable under very reducing conditions
+                (where Cu metal is stable), do not give its <nobr><i>activity</i> = 1.</nobr></li>
+            <li>Iron metal is not stable under an oxygen atmosphere: do not set
+                both the <nobr>O<sub>2</sub>(g)</nobr> and <nobr>Fe(cr)</nobr> activities to
+                fixed values.</li>
+        </ul>
         </li>
     </ul>
-  </li>
+</li>
 <li><b>Input errors</b> should not occur if the input file has been created
-  					with <nobr><a href="DB_0_Main.htm">DATABASE</a>.</nobr> Common errors
-            if you modify the input file your-self:
-  <ul type="disc">
-    <li>Check that all components that are specified as solid
-							(SOLIDC in the first input line, see <a href="SP_Data_File_Chemical_System.htm">data-file <nobr>format</a>)</nobr>
-							indeed do correspond to solid phases. The programs assume that the last SOLIDC
-							components are the solid ones.</nobr></li>
-		<li><a name="Check_Stoich"></a>
-      Look for erroneous equilibrium constants and/or stoichiometric coefficients.
-							<b>Check stoichiometric coefficients:</b>  calculate a diagram with SED by setting the
-							<a href="SP_Ionic_Strength.htm">ionic strength</a> to a non-zero value
-							(for example: <nobr>0.1 M).</nobr> The program will check for electroneutrality
-							in all equilibrium reactions and give warning messages for non-balanced reactions.
-							This only works if correct electrical charges are given in the
-							<a href="SP_Names_Numbers.htm">names</a> of all chemical species.</li>
+    with <nobr><a href="DB_0_Main.htm">DATABASE</a>.</nobr> Common errors
+    if you modify the input file your-self:
+    <ul type="disc">
+       <li>Check that all components that are specified as solid
+           (SOLIDC in the first input line, see <a href="SP_Data_File_Chemical_System.htm">data-file <nobr>format</a>)</nobr>
+           indeed do correspond to solid phases. The programs assume that the last SOLIDC
+           components are the solid ones.</nobr></li>
+       <li><a name="Check_Stoich"></a>
+           Look for erroneous equilibrium constants and/or stoichiometric coefficients.</li>
+       <li><b>Check stoichiometric coefficients:</b>  calculate a diagram with SED by setting the
+           <a href="SP_Ionic_Strength.htm">ionic strength</a> to a non-zero value
+           (for example: <nobr>0.1 M).</nobr> The program will check for electroneutrality
+           in all equilibrium reactions and give warning messages for non-balanced reactions.
+           This only works if correct electrical charges are given in the
+           <a href="SP_Names_Numbers.htm">names</a> of all chemical species.</li>
+       <li>The program <b>DatabaseMaintenance</b> can be used to check databases.
+           See <a href="DB_Create_your_database.htm">create your own databases</a>.</li>
     </ul>
-  </li>
+</li>
 </ul>
 
 </body>

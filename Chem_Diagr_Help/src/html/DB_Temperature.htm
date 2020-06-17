@@ -25,59 +25,31 @@
 <h3>Temperature in DATABASE and SPANA</h3>
 
 <p><ul>
-<li><a href="#MakingDataFile">Temperature when making an input Data File for SPANA</a></li>
-<li><a href="DB_logK_files.htm">Temperature parameters in data bases</a></li>
-<li><a href="#MakingDiagrams">Temperature when making a diagram</a></li>
+<li><a href="#MakingDataFile">Temperature when making an input data file with DATABASE</a></li>
+<li><a href="#MakingDiagrams">Temperature when making a diagram in SPANA</a></li>
 </ul></p>
 
 
 <a name="MakingDataFile"></a>
-<h4>Temperature when making a data file for <a href="S_0_Main.htm">SPANA</a></h4>
+<h4>Temperature when making an input data file with <a href="DB_0_Main.htm">DATABASE</a></h4>
 
-<p>In <a href="DB_0_Main.htm">DATABASE</a> the <a href="DB_Databases.htm">database files</a>
-contain equilibrium constants at <nobr>25&deg;C,</nobr> and temperature extrapolations are possible
-if values are also available for the reaction enthalpies (and preferably also reaction
-heat capacitites).
-</p>
+<p>In <a href="DB_0_Main.htm">DATABASE</a> the <a href="DB_logK_files.htm">logK-files</a>
+contain equilibrium constants at <nobr>25&deg;C,</nobr> and 1 bar, and temperature
+extrapolations are possible if data are available, for example <nobr>&#916;<i>H</i>&deg;,</nobr> <i>etc</i>.</p>
 
 <p>Using the menu &#147;Options / set Temperature&#148; in <a href="DB_0_Main.htm">DATABASE</a>
-it is possible to select a temperature between 0 and <nobr>100&deg;C.</nobr>
-If a temperature, <nobr>&#147;<i>t</i>&#148;,</nobr> different than <nobr>25&deg;C</nobr> is selected,
-then the equilibrium constant is calculated using the <nobr>van't&nbsp;Hoff</nobr>
-equation:
-</p>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td valign="baseline"><nobr>log <i>K</i>&deg;(<i>T</i>)</nobr></td>
-<td valign="baseline">&nbsp;=&nbsp;</td>
-<td valign="baseline"><nobr>log <i>K</i>&deg;(<i>T</i><sub>0</sub>)</nobr>
-<nobr>+&nbsp;{&#916;<i>H</i>&deg; / (<i>R</i> ln(10))}</nobr>
-<nobr>&times;&nbsp;{(1/<i>T</i><sub>0</sub>) &#8722; (1/<i>T</i>)}</nobr></td>
-</tr>
-</table>
-<p class="cont">
-where <i>T</i> and <nobr><i>T</i><sub>0</sub></nobr> are absolute temperatures
-in Kelvin <nobr>(<i>T</i><sub>0</sub></nobr> = <nobr>298.15 K)</nobr> and
-<a href="1_Some_Constants.htm"><i>R</i></a> is the gas constant.  If a reaction
-heat capacity is also available, then the constant heat-capacity equation is used instead:
-</p>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td valign="baseline"><nobr>log <i>K</i>&deg;(<i>T</i>)</nobr></td>
-<td valign="baseline">&nbsp;=&nbsp;</td>
-<td valign="baseline"><nobr>log <i>K</i>&deg;(<i>T</i><sub>0</sub>)</nobr>
-<nobr>+&nbsp;{&#916;<i>H</i>&deg; / (<i>R</i> ln(10))}</nobr>
-<nobr>&times;&nbsp;{(1/<i>T</i><sub>0</sub>) &#8722; (1/<i>T</i>)}</nobr>
-<nobr>+&nbsp;{&#916;<i>Cp</i>&deg; / (<i>R</i> ln(10))}</nobr>
-<nobr>&times;&nbsp;{(<i>T</i><sub>0</sub>/<i>T</i>) &#8722; 1 + ln(<i>T</i>/<i>T</i><sub>0</sub>)}</nobr>
-</td></tr>
-</table>
-
-
-<p>When searching data in <a href="DB_0_Main.htm">DATABASE</a> an error message is
+it is possible to select a temperature other than 25&deg;C.</nobr> When searching data in <a href="DB_0_Main.htm">DATABASE</a> an error message is
 displayed if enthalpy data is missing for any species, and an input data file for
-<a href="S_0_Main.htm">SPANA</a> will then <b>not</b> be saved.
+<a href="S_0_Main.htm">SPANA</a> will then <b><u>not</u></b> be created.
 You must then change the temperature back to <nobr>25&deg;C</nobr> to be able to save your search results.</p>
+
+<p>If no data is available for temperature extrapolations,
+you may enter your own data, see:<br>
+<a href="DB_Create_your_database.htm">Create&nbsp;databases</a>&nbsp;/
+<a href="DB_logK_files.htm"><nobr>logK-files</nobr></a>&nbsp;/
+<a href="DB_logK_file_T.htm">Temperature effects</a>
+</p>
+
 
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
 <tr><td><hr> <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -89,12 +61,13 @@ You must then change the temperature back to <nobr>25&deg;C</nobr> to be able to
 <a name="MakingDiagrams"></a>
 <h4>Temperature when making a diagram in <a href="S_0_Main.htm">SPANA</a></h4>
 
-<p><a href="DB_0_Main.htm">DATABASE</a> writes the selected temperature
+<p><a href="DB_0_Main.htm">DATABASE</a> writes the chosen temperature (and pressure)
 in the input data-file in a <a href="SP_Names_Numbers.htm">comment</a> at the
-end of the first line, and this value is used when
-<a href="S_Making_Diagrams.htm">making a diagram</a> if
-<a href="SP_Ionic_Strength.htm">ionic strength effects</a> are calculated,
-or if <a href="1_Eh_pe.htm">Eh</a> is displayed in diagrams.</p>
+end of the first line, and this information is used when
+<a href="S_Making_Diagrams.htm#Parameters">making a diagram</a>,
+for example if <a href="SP_Ionic_Strength.htm">ionic strength effects</a>
+are calculated, or if
+<a href="1_Eh_pe.htm">Eh</a> is displayed in diagrams.</p>
 
 <p style="text-align:right; line-height:0; margin-top:0; margin-bottom:0">
 <a href="#Top"><img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>

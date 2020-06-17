@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Concentrations in diagrams</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="top"><a name="Top"></a>
+    &nbsp;<a href="S_0_Main.htm"><img src="images/Spana.gif" width="30" height="30" border="0" alt="Spana"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="S_0_Main.htm">SPANA</a></font></td>
+  </tr>
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a></font></td>
+  </tr>
+</table>
+
+<h3>Concentration units in diagrams</h3>
+<p>
+The equilibrium constants in the <a href="DB_0_Main.htm">DATABASE</a> program
+are for <nobr>25&deg;C</nobr> and <nobr>1 bar</nobr> pressure. Under such
+conditions the density of water is close to <nobr>1 g/cm<sup>3</sup></nobr>
+<nobr>(<a href="SP_Act_Coeff_DH_params.htm">see Table</a>)</nobr>, and for
+diluted aqueous solutions <a href="SP_Molality.htm">molar and molal</a>
+concentration units are practically the same.</p>
+
+<p>In other conditions, that is, at higher <a href="DB_Temperature.htm">temperature</a>
+(or pressure), or at higher <a href="SP_Ionic_Strength.htm">ionic strength</a> the
+calculations use <a href="SP_Molality.htm">molal</a> concentration units.
+See also <a href="DB_logK_file_T.htm">temperature effects on equilibrium
+constants</a> and <a href="SP_Act_Coeff_Models.htm">activity coefficient models.</a></p>
+
+<p>The programs <a href="SP_0_Main.htm">SED &amp; PREDOM</a> make calculations
+based on the equilibrium constants, which are in <a href="SP_Molality.htm">molal</a>
+scale, and using the <a href="SP_Act_Coeff_Models.htm">activity coefficients</a>,
+also for molal concentrations.</p>
+
+<p>Because at <nobr>25&deg;C</nobr> the <a href="SP_Molality.htm">molar and molal</a>
+concentration units are practically the same, the diagrams display
+concentrations in molar units. <a href="Tut_EX13.htm">See this example.</a>
+At temperatures above <nobr>##&deg;C</nobr> molal concentration units are
+displayed in the diagram. <a href="Tut_EX11.htm">See this example.</a>
+</p>
+
+<p>If the user wishes to have diagrams displaying the concentrations
+in other units, it is possible to run the programs
+<a href="SP_0_Main.htm">SED &amp; PREDOM</a> using special <a href="SP_Batch_Mode.htm">command-line arguments.</a>
+When using <a href="S_0_Main.htm">SPANA</a> two keys in the
+<nobr>&#147;<a href="1_Install_Uninstall.htm#INI">ini&#148;-file</a></nobr>
+control how the concentrations are displayed:
+<ul><li><tt>Calc_concentration_notation</tt></li>
+<li><tt>Calc_concentration_units</tt></li></ul>
+Alternatively, one can change the plot file itself.
+See: <a href="SP_Plot-File_Format.htm#Make_Changes">making changes in a diagram</a>.
+</p>
+
+<p>See also:
+<ul>
+<li><a href="SP_Activity.htm">activity</a>, <a href="SP_Molality.htm">molality</a></li>
+<li><a href="SP_Act_Coeff.htm">activity coefficients</a></li>
+<li><a href="SP_Ionic_Strength.htm">ionic strength</a></li>
+<li><a href="S_Making_Diagrams.htm#Parameters">enter a value for the ionic strength when making a diagram</a></li>
+</ul>
+</p>
+
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -19,12 +19,19 @@
 
 <p>Example of a <b>solubility diagram</b> for a specific solid phase.</p>
 
-<p>If the the solubility of of a solid, for example <nobr>AlOOH</nobr> (boehmite), has to be calculated,
+<p>If the the solubility of a solid, for example <nobr>AlOOH</nobr> (boehmite), has to be calculated,
 it is necessary to set the <a href="SP_Activity.htm#Solids">activity</a> <nobr>= 1</nobr>
 (log <i>activity</i> <nobr>= 0)</nobr> for this solid.
 Note that the most stable Al solid at 25&deg;C is instead <nobr>Al(OH)<sub>3</sub></nobr> (gibbsite).
 Unless the activity of <nobr>AlOOH</nobr> is fixed equal to one,
 <nobr>Al(OH)<sub>3</sub></nobr> would precipitate in the calculations.</p>
+
+<p>See also:
+<ul>
+<li><a href="DB_Solid_solub.htm">Solubility of solids: dissolution or precipitation?</a></li>
+<li><a href="Tut_EX07.htm">Solubility diagram for <nobr>Al(OH)<sub>3</sub></nobr> (gibbsite)</a></li>
+</ul>
+</p>
 
 <p>To set the activity <nobr>= 1</nobr> for a solid you must
 first <a href="S_Modify_Chem_System.htm">exchange a component for a reaction</a>;
@@ -34,7 +41,7 @@ in this case, exchange <nobr>Al<sup>3+</sup></nobr> with <nobr>AlOOH(s).</nobr><
 Al (on a logarithmic scale) against <nobr>H<sup>+</sup>:</nobr></p>
 
 <p>
-<center><img src="images/Diagr_SolubAl.gif" border="1" alt="Solubility diagram" title="Solubility diagram" height="229" width="328"></center>
+<center><img src="images/Diagr_SolubAl.gif" border="1" alt="Solubility diagram" title="Solubility diagram" height="268" width="370"></center>
 </p>
 
 <p>This diagram was obtained with the following input file:
@@ -48,5 +55,6 @@ Al(OH)3(am)  , -2.397   0  1  Al(OH)3(cr)  ,  0.703   0  1
 Al2O3(cr)    , -2.844   0  2  LS,-9, 1, H+,
 LAV, -2 -12  LA, 0</pre>
 </p>
+
 </body>
 </html>

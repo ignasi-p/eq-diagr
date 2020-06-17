@@ -2,7 +2,7 @@
 jh=.\src\javahelp
 jar=\PortableApps\NetBeans_JavaSE_8.0_Portable\App\jdk\bin\jar
 
-.\store\Chem_Diagr_Help.jar : $(jh)\*.xml  $(jh)\*.hs  $(jh)\*.jhm  indexer_output.log
+.\store\Chem_Diagr_Help.jar : $(jh)\*.xml  $(jh)\*.hs  $(jh)\*.jhm  .\src\html\*.*  .\src\html\images\*.*  indexer_output.log
 	@cd src
 	@echo current dir: $(MAKEDIR)\src
 	@echo.==== Updating jar-file
@@ -13,6 +13,7 @@ jar=\PortableApps\NetBeans_JavaSE_8.0_Portable\App\jdk\bin\jar
 	@echo jar uvf ..\store\Chem_Diagr_Help.jar html\*.* >>$(MAKEDIR)\jar_output.log
   @echo. ----- >>$(MAKEDIR)\jar_output.log
 	@$(jar) uvf ..\store\Chem_Diagr_Help.jar html\*.* >>$(MAKEDIR)\jar_output.log
+	@$(jar) uvf ..\store\Chem_Diagr_Help.jar html\images\*.* >>$(MAKEDIR)\jar_output.log
 	@rem
   @echo jar uvf  ..\store\Chem_Diagr_Help.jar  javahelp\*.*
 	@rem

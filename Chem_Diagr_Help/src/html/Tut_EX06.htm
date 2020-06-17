@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Example 6</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="0_Index.htm"><img src="images/thco35_s.gif" border="0" width="32" height="32" alt="Chem.Eq.Diagr"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="0_Index.htm">Chemical Equilibrium Diagrams</a>&nbsp;/ <a href="Tut_Example_Files.htm">Examples</a></font></td>
+  </tr>
+</table>
+
+<h2>Example 6. Calculated Eh</h2>
+
+<p>
+Data for the chemical system <nobr>H<sup>+</sup>,</nobr> <nobr>e<sup>&#8722;</sup>,</nobr>
+<nobr>Fe<sup>2+</sup></nobr> and <nobr>HS<sup>&#8722;</sup></nobr>
+was extracted using <a href="DB_0_Main.htm">DATABASE</a>. Then it was <a href="S_Modify_Chem_System.htm">modified</a> in
+<a href="S_0_Main.htm">SPANA</a> to <a href="S_Modify_Chem_System.htm#Mod_Exch">exchange components for reactions</a>,   
+in this case <nobr>e<sup>&#8722;</sup></nobr> was exchanged for <nobr>O<sub>2</sub>(g),</nobr>
+<nobr>Fe<sup>2+</sup></nobr> for <nobr>FeS<sub>2</sub>(cr),</nobr>
+and <nobr>HS<sup>&#8722;</sup></nobr> for <nobr>H<sub>2</sub>S</nobr>
+(without a <a href="SP_Phase_Indicator.htm">phase indicator</a>, it means that <nobr>H<sub>2</sub>S</nobr> is aqueous, dissolved).
+</p>
+
+<p>The calculated <a href="1_Eh_pe.htm">Eh</a> is plotted against
+the amount of added <nobr>O<sub>2</sub></nobr> (from 0
+to <nobr>0.05M)</nobr> in a closed system that
+initially contains some pyrite <nobr>(0.01 mol/L</nobr> of <nobr>FeS<sub>2</sub>)</nobr>
+and some <nobr>H<sub>2</sub>S</nobr> <nobr>(10<sup>&#8722;4</sup> M).</nobr> Both pyrite
+and sulfide will be oxidised by oxygen.
+</p>
+
+<p>
+<font size="+1"><b>Important:</b></font> to calculate the <a href="1_Eh_pe.htm">Eh</a>
+you can not give a value of Eh (or <nobr><a href="1_Eh_pe.htm">pe</a>);</nobr> instead the total concentration
+of <nobr>e<sup>&#8722;</sup></nobr> must be given. In this example the
+total concentration of <nobr>O<sub>2</sub></nobr> is given.
+</p>
+
+<p>
+<center><img src="images/06_Eh_calculated.gif" border="1" alt="06_Eh_calculated.plt" title="06_Eh_calculated.plt" height="237" width="370"></center>
+</p>
+
+<p>The overall reaction</p>
+<p class="indent">
+<nobr>2 FeS<sub>2</sub>(cr)</nobr> <nobr>+ 7.5 O<sub>2</sub>(g)</nobr>
+ =
+<nobr>Fe<sub>2</sub>O<sub>3</sub>(cr)</nobr> <nobr>+ 4 H<sup>+</sup></nobr> <nobr>+ 4 HSO<sub>4</sub><sup>&#8722;</sup></nobr></p>
+<p class="cont">is shown in a logarithmic diagram:
+</p>
+
+<p>
+<center><img src="images/06_Eh_calculated_(log).gif" border="1" alt="06_Eh_calculated_(log).plt" title="06_Eh_calculated_(log).plt" height="237" width="370"></center>
+</p>
+
+<p>Back to: <a href="Tut_Example_Files.htm"><b>example files</b></a> and <a href="Tut_0_Tutorials.htm"><b>tutorials</b></a>.</p>
+
+
+</body>
+</html>

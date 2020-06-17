@@ -17,6 +17,8 @@
     <mapID target="Install_Uninstall_htm_Run_CDROM" url="../html/1_Install_Uninstall.htm#Run_CDROM"/>
     <mapID target="Install_Uninstall_htm_Run_USB" url="../html/1_Install_Uninstall.htm#Run_USB"/>
     <mapID target="Install_Uninstall_htm_Uninstall" url="../html/1_Install_Uninstall.htm#Uninstall"/>
+    <mapID target="Character_encoding_htm" url="../html/1_File_Encoding.htm"/>
+    <mapID target="License_htm" url="../html/1_License.htm"/>
     <mapID target="Disclaimer_htm" url="../html/1_License.htm#Disclaimer"/>
     <mapID target="Problems_htm" url="../html/1_Problems.htm"/>
     <mapID target="Some_Constants_htm" url="../html/1_Some_Constants.htm"/>
@@ -44,22 +46,25 @@
     <mapID target="DB_Element_files_htm" url="../html/DB_Element_files.htm"/>
     <mapID target="DB_Gases_htm" url="../html/DB_Gases.htm"/>
     <mapID target="DB_logK_files_htm" url="../html/DB_logK_files.htm"/>
+    <mapID target="DB_logK_file_R_htm" url="../html/DB_logK_file_R.htm"/>
+    <mapID target="DB_logK_file_S_htm" url="../html/DB_logK_file_S.htm"/>
+    <mapID target="DB_logK_file_T_htm" url="../html/DB_logK_file_T.htm"/>
     <mapID target="DB_Names_Numbers_htm" url="../html/DB_Names_Numbers.htm"/>
     <mapID target="DB_Organics_htm" url="../html/DB_Organics.htm"/>
     <mapID target="DB_Redox_React_htm" url="../html/DB_Redox_React.htm"/>
-    <mapID target="DB_References" url="../html/DB_Supplied.htm#References"/>
     <mapID target="DB_Remove_change_data_htm" url="../html/DB_Remove_change_data.htm"/>
     <mapID target="DB_Remove_change_data_htm_Network" url="../html/DB_Remove_change_data.htm#Network"/>
     <mapID target="DB_Remove_reaction_htm" url="../html/DB_Remove_reaction.htm"/>
-    <mapID target="DB_Solids_htm" url="../html/DB_Solids.htm"/>
     <mapID target="DB_Solid_solub_htm" url="../html/DB_Solid_solub.htm"/>
+    <mapID target="DB_Solids_htm" url="../html/DB_Solids.htm"/>
     <mapID target="DB_Supplied_htm" url="../html/DB_Supplied.htm"/>
+    <mapID target="DB_References" url="../html/DB_Supplied.htm#References"/>
     <mapID target="DB_Temperature_htm" url="../html/DB_Temperature.htm"/>
     <mapID target="DB_Working_with_htm" url="../html/DB_Working_with.htm"/>
     <mapID target="S_0_Main_htm" url="../html/S_0_Main.htm"/>
     <mapID target="S_Diagr_FractAl_htm" url="../html/S_Diagr_FractAl.htm"/>
-    <mapID target="S_Diagr_Loga_CO2_htm" url="../html/S_Diagr_Loga_CO2.htm"/>
     <mapID target="S_Diagr_Log_CO2_htm" url="../html/S_Diagr_Log_CO2.htm"/>
+    <mapID target="S_Diagr_Loga_CO2_htm" url="../html/S_Diagr_Loga_CO2.htm"/>
     <mapID target="S_Diagr_Rev_Conc_htm" url="../html/S_Diagr_Rev_Conc.htm"/>
     <mapID target="S_Diagr_SolublAl_htm" url="../html/S_Diagr_SolublAl.htm"/>
     <mapID target="S_Diagram_Window_htm" url="../html/S_Diagram_Window.htm"/>
@@ -96,12 +101,20 @@
     <mapID target="S_Working_with_htm" url="../html/S_Working_with.htm"/>
     <mapID target="S_Working_with_htm_Open_Files" url="../html/S_Working_with.htm#Open_Files"/>
     <mapID target="SP_0_Main_htm" url="../html/SP_0_Main.htm"/>
+    <mapID target="SP_Act_Coeff_htm" url="../html/SP_Act_Coeff.htm"/>
+    <mapID target="SP_Act_Coeff_Models_htm" url="../html/SP_Act_Coeff_Models.htm"/>
+    <mapID target="SP_Act_Coeff_Davies_htm" url="../html/SP_Act_Coeff_Davies.htm"/>
+    <mapID target="SP_Act_Coeff_DH_htm" url="../html/SP_Act_Coeff_DH.htm"/>
+    <mapID target="SP_Act_Coeff_DH_params_htm" url="../html/SP_Act_Coeff_DH_params.htm"/>
+    <mapID target="SP_Act_Coeff_HKF_htm" url="../html/SP_Act_Coeff_HKF.htm"/>
+    <mapID target="SP_Act_Coeff_SIT_htm" url="../html/SP_Act_Coeff_SIT.htm"/>
     <mapID target="SP_Activity_htm" url="../html/SP_Activity.htm"/>
     <mapID target="SP_Activity_htm_H2O" url="../html/SP_Activity.htm#H2O"/>
     <mapID target="SP_Activity_htm_Solids" url="../html/SP_Activity.htm#Solids"/>
     <mapID target="SP_Activity_htm_Gases" url="../html/SP_Activity.htm#Gases"/>
     <mapID target="SP_Batch_Mode_htm" url="../html/SP_Batch_Mode.htm"/>
     <mapID target="SP_Charges_in_Names_htm" url="../html/SP_Charges_in_Names.htm"/>
+    <mapID target="SP_Concentrations_htm" url="../html/SP_Concentrations.htm"/>
     <mapID target="SP_Data_File_Chemical_System_htm" url="../html/SP_Data_File_Chemical_System.htm"/>
     <mapID target="SP_Data_File_Chemical_System_htm_Solids_Last" url="../html/SP_Data_File_Chemical_System.htm#Solids_Last"/>
     <mapID target="SP_Data_File_Concs_htm" url="../html/SP_Data_File_Concs.htm"/>
@@ -115,11 +128,6 @@
     <mapID target="SP_Failures_htm_Check_Stoich" url="../html/SP_Failures.htm#Check_Stoich"/>
     <mapID target="SP_Haltafall_htm" url="../html/SP_Haltafall.htm"/>
     <mapID target="SP_Ionic_Strength_htm" url="../html/SP_Ionic_Strength.htm"/>
-    <mapID target="SP_Ionic_Strength_htm_Comp" url="../html/SP_Ionic_Strength.htm#Comparison"/>
-    <mapID target="SP_Ionic_Strength_htm_Models" url="../html/SP_Ionic_Strength.htm#Models"/>
-    <mapID target="SP_Ionic_Strength_Davies_htm" url="../html/SP_Ionic_Strength_Davies.htm"/>
-    <mapID target="SP_Ionic_Strength_HKF_htm" url="../html/SP_Ionic_Strength_HKF.htm"/>
-    <mapID target="SP_Ionic_Strength_SIT_htm" url="../html/SP_Ionic_Strength_SIT.htm"/>
     <mapID target="SP_log_gamma_htm" url="../html/SP_log_gamma.htm"/>
     <mapID target="SP_Molality_htm" url="../html/SP_Molality.htm"/>
     <mapID target="SP_Names_Numbers_htm" url="../html/SP_Names_Numbers.htm"/>
@@ -144,8 +152,23 @@
     <mapID target="SP_Special_Cases_htm" url="../html/SP_Special_Cases.htm"/>
     <mapID target="SP_Species_Zero_Conc_htm" url="../html/SP_Species_Zero_Conc.htm"/>
     <mapID target="SP_Strange_Results_htm" url="../html/SP_Strange_Results.htm"/>
+    <mapID target="SP_Tolerance_htm" url="../html/SP_Tolerance.htm"/>
+    <mapID target="SP_Tolerance_htm_RoundOff" url="../html/SP_Tolerance.htm#RoundOff"/>
     <mapID target="Tut_0_Tutorials_htm" url="../html/Tut_0_Tutorials.htm"/>
     <mapID target="Tut_CO2_htm" url="../html/Tut_CO2.htm"/>
+    <mapID target="Tut_EX02_htm" url="../html/Tut_EX02.htm"/>
+    <mapID target="Tut_EX03_htm" url="../html/Tut_EX03.htm"/>
+    <mapID target="Tut_EX04_htm" url="../html/Tut_EX04.htm"/>
+    <mapID target="Tut_EX05_htm" url="../html/Tut_EX05.htm"/>
+    <mapID target="Tut_EX06_htm" url="../html/Tut_EX06.htm"/>
+    <mapID target="Tut_EX07_htm" url="../html/Tut_EX07.htm"/>
+    <mapID target="Tut_EX08_htm" url="../html/Tut_EX08.htm"/>
+    <mapID target="Tut_EX09_htm" url="../html/Tut_EX09.htm"/>
+    <mapID target="Tut_EX10_htm" url="../html/Tut_EX10.htm"/>
+    <mapID target="Tut_EX11_htm" url="../html/Tut_EX11.htm"/>
+    <mapID target="Tut_EX12_htm" url="../html/Tut_EX12.htm"/>
+    <mapID target="Tut_EX13_htm" url="../html/Tut_EX13.htm"/>
+    <mapID target="Tut_EX14_htm" url="../html/Tut_EX14.htm"/>
     <mapID target="Tut_Example_Files_htm" url="../html/Tut_Example_Files.htm"/>
     <mapID target="Tut_H_aff_spectr_htm" url="../html/Tut_H_aff_spectr.htm"/>
     <mapID target="Tut_Make_1st_Diag_htm" url="../html/Tut_Make_1st_Diag.htm"/>

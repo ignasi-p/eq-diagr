@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Tolerance in HaltaFall</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="top"><a name="Top"></a>
+    &nbsp;<a href="S_0_Main.htm"><img src="images/Spana.gif" width="30" height="30" border="0" alt="Spana"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="S_0_Main.htm">SPANA</a></font></td>
+  </tr>
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a></font></td>
+  </tr>
+</table>
+
+<h2>Tolerance in HaltaFall</h2>
+
+<p><ul>
+<li><a href="#RelTol">Relative tolerance</a></li>
+<li><a href="#AbsTol">Absolute tolerance</a></li>
+<li><a href="#ZeroConc">Components with zero total concentration</a></li>
+<li><a href="#RoundOff">Round-off errors</a></li>
+</ul></p>
+
+<p>See also: <a href="SP_Failures.htm">Calculation failures</a>,
+and <nobr><a href="S_Menu_Prefs.htm#Calcs">&#147;Preferences / Calculation options&#148;</a></nobr>
+</p>
+
+<a name="RelTol"></a>
+<p>
+In <a href="SP_Haltafall.htm">HaltaFall</a> the calculations are perfomed
+iteratively until the mass-balance equations (total concentrations)
+are satisfied within a given maximum relative tolerance, by default 
+<nobr><i>tol<sub>rel</sub></i></nobr> = <nobr>10<sup>&#8722;4</sup></nobr>
+(that is, <nobr>&plusmn;0.01%).</nobr> This relative tolerance may be changed in <a href="S_0_Main.htm">SPANA</a>
+using the menu &#147;Preferences / Calculation options&#148;
+(after setting the &#147;advanced&#148; program level in the
+menu &#147;Preferences / <nobr>General options&#148;)</nobr>.</p>
+
+<p><a href="SP_Haltafall.htm">HaltaFall</a>
+adjusts the total concentrations in loops. Depending on the chemical system
+some loops are concentric, that is, first the componet in the inner loop is
+solved, before a step is taken in the outer loop. In such cases it
+helps to have a smaller <nobr><i>tol<sub>rel</sub></i></nobr> for the
+inner loops. For example, if <nobr><i>tol<sub>rel</sub></i></nobr> = <nobr>10<sup>&#8722;4</sup></nobr>
+in the outer loop, one might set <nobr><i>tol<sub>rel</sub></i></nobr> = <nobr>3.16&times;10<sup>&#8722;5</sup></nobr>
+in the inner loop. This is done automatically by the software.
+</p>
+
+<a name="AbsTol"></a>
+<h4>The absolute tolerances are:</h4>
+<center>
+<nobr><i>tol<sub>abs</sub></i></nobr> = <nobr><i>tol<sub>rel</sub></i></nobr> &times; <nobr>Tot<sub>conc</sub></nobr>
+</center>
+<p class="cont">
+For example, if the total concentration is <nobr>Tol<sub>conc</sub></nobr> = <nobr>10<sup>&#8722;7</sup></nobr>
+and <nobr><i>tol<sub>rel</sub></i></nobr> = <nobr>10<sup>&#8722;4</sup>,</nobr> then
+<nobr><i>tol<sub>abs</sub></i></nobr> = <nobr>10<sup>&#8722;11</sup>,</nobr>
+and the calculated total concentration
+will be between <nobr>(0.9999</nobr> and
+<nobr>1.0001)</nobr> <nobr>&times;10<sup>&#8722;7</sup>.</nobr>
+</p>
+
+<a name="ZeroConc"></a>
+<h4>Chemical components with zero total concentration</h4>
+
+<p>If <nobr>Tot<sub>conc</sub></nobr> = 0, then <nobr><i>tol<sub>abs</sub></i></nobr>
+can not be assigned using the method described above.</p>
+
+<p>There are two types of components:
+those for which <nobr>Tot<sub>conc</sub></nobr> can not be less
+than zero (such as <nobr>Ca<sup>2+</sup>),</nobr> and those
+that could have a negative total concentration (for example
+<nobr>H<sup>+</sup></nobr> in an NaOH solution). If the
+total concentration can not
+be less than zero, the program sets the free concentration
+to a very low value and the mass-balance equation does not
+need to be solved.
+</p>
+
+<p>For components such as <nobr>H<sup>+</sup>,</nobr> that could
+have a negative concentration, the program assigns
+<center>
+<nobr><i>tol<sub>abs</sub></i></nobr> = <nobr><i>tol<sub>rel</sub></i></nobr> &times; <nobr>Min(10<sup>&#8722;7</sup>, Tot<sub>min</sub>)</nobr>
+</center>
+where <nobr>Tot<sub>min</sub></nobr> is the minimum of the absolute
+values of non-zero total concentrations in the chemical system.
+For example, if there
+are three components, with <nobr>Tot<sub>conc</sub></nobr> = <nobr>0.1,</nobr>
+<nobr>10<sup>&#8722;6</sup></nobr> and 0 (zero), respectively, then
+<nobr>Tot<sub>min</sub></nobr> = <nobr>10<sup>&#8722;6</sup>.</nobr>
+In such a case a value of <nobr>10<sup>&#8722;7</sup></nobr> is used instead of <nobr>Tot<sub>min</sub></nobr>,
+and if <nobr><i>tol<sub>rel</sub></i></nobr> = <nobr>10<sup>&#8722;4</sup>,</nobr>
+then the calculated total concentration will be between
+<nobr>(+1.0</nobr> and <nobr>&#8722;1.0)</nobr> <nobr>&times;10<sup>&#8722;11</sup>.</nobr>
+</p>
+
+<a name="RoundOff"></a>
+<h4>Round-off errors</h4>
+<p>Round-off errors from one component may propagate to another
+component, and the system might be difficult to solve numerically.
+The programs will display a warning message. Round-off error problems
+may occurr in systems where some components have large concentrations, some components very small
+concentrations, and some components have zero total concentration.
+
+</body>
+</html>

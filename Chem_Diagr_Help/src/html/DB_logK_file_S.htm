@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>DATABASE: logK-file - reaction stoichiometry</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<a name="Top"></a>
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a>&nbsp;/
+        <a href="DB_Databases.htm">Databases</a>&nbsp;/
+        <a href="DB_Create_your_database.htm">Create&nbsp;databases</a>/
+        <a href="DB_logK_files.htm">logK-files</a></font></td>
+  </tr>
+</table>
+
+<h3><a href="DB_logK_files.htm">logK-files:</a> Reaction soichiometry</h3>
+
+<p>In <a href="DB_0_Main.htm">DATABASE</a> the
+<a href="DB_logK_files.htm">logK-files</a> contain
+contain the <i>stoichiometry</i> for each reaction
+after the <nobr>log<i>K</i>&deg;</nobr> value and the
+<a href="DB_logK_file_T.htm">data on temperature effects</a>.
+There are two possible ways of entering the reaction stoichiometry:
+
+<ol>
+<li><a href="#fix">Six reactants and H<sup>+</sup></a></li>
+<li><a href="#flexible">Flexible number of reactants</a></li>
+</ol>
+See also:
+<ul>
+<li><a href="DB_Names_Numbers.htm">How to enter names and numbers in databases.</a></li>
+</ul></p>
+
+<a name="fix"></a>
+<h4>Six reactants and H<sup>+</sup></h4>
+
+<p>This input method is kept for backwards compatibility with previous
+versions of the software.  The stoichiometry of the reaction is given as
+six component names and their coefficients.  This is followed by
+the number of <nobr>H<sup>+</sup></nobr> ions (protons) involved in the
+reaction (can be negative).
+Examples:</p>
+<p class="indent"><tt>
+<nobr>Fe(NTA)OH-;13.33;;;Fe 3+;1;H+;-1;NTA 3-;1;H2O;1;;;;;-1;SmithMart</nobr><br>
+<nobr>CaCO3(cr);8.48;9.62;;Ca 2+;1;;;CO3 2-;1;;;;;;;0;Wateq4F / calcite</nobr><br>
+<nobr>HCO3-;10.329;analytic;250;107.8871;0.03252849;-5151.79;-38.92561;563713.9;;CO3 2-;1;H+;1;;;;;;;;;1;</nobr>
+</tt></p>
+
+<a name="flexible"></a>
+<h4>Flexible number of reactants</h4>
+
+<p>The number of reactants is given, followed by the name and coefficient
+of each reactant. Examples:</p>
+<p class="indent"><tt>
+<nobr>Fe(NTA)OH-;13.33;;;4;Fe 3+;1;H+;-1;NTA 3-;1;H2O;1;SmithMart</nobr><br>
+<nobr>CaCO3(cr);8.48;9.62;;2;Ca 2+;1;CO3 2-;1;;Wateq4F / calcite</nobr><br>
+<nobr>HCO3-;10.329;analytic;250;107.8871;0.03252849;-5151.79;-38.92561;563713.9;;2;CO3 2-;1;H+;1</nobr>
+</tt></p>
+
+<p><hr> <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --></p>
+
+<p style="margin-top: 0 ex">
+<a href="DB_logK_files.htm">
+<img src="images/Back.gif" alt="back" title="back" height="13" width="16" border="0"></a>
+<tt>&nbsp;</tt><a href="DB_logK_files.htm">logK-files</a></p>
+
+<p>&nbsp;</p>
+</body>
+</html>

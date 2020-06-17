@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Debye-Huckel model</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <a href="SP_Ionic_Strength.htm">Ionic Strength</a>&nbsp;/ <a href="SP_Act_Coeff_Models.htm">Activity Coefficient Models</a></font></td>
+  </tr>
+</table>
+
+<h4>The Debye-H&uuml;ckel model</h4>
+
+<p>This model is based on electrostatic theory,
+and it only considers long-range interactions between ions:
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td valign="top"><nobr>log &#947;<sub><i>i</i></sub><font size="+1"> </font>= </nobr></td>
+	<td valign="top"><nobr>&#8722;<i>A<sub>&#947;</sub> Z<sub>i</sub></i><sup>2</sup></nobr>
+	<nobr>&#8730;<b><i>I</i></b> &nbsp;/
+	<font size="+1">&nbsp;(</font>1 + <i>&aring;B<sub>&#947;</sub></i> &#8730;<b><i>I</i></b><font size="-2"> </font><font size="+1">)</font></nobr>
+</td></tr></table></p>
+
+<p class="cont">
+where <b><i>I</i></b> is the <a href="SP_Ionic_Strength.htm">ionic strength</a>,
+<nobr>&#947;<sub><i>i</i></sub></nobr> is the
+<a href="SP_Act_Coeff.htm">activity coefficient</a> of an
+ion &#147;<i>i</i>&#148; with electric charge <nobr><i>Z<sub>i</sub></i>&nbsp;</nobr> and
+<i>A<sub>&#947;</sub></i> and <nobr><i>B<sub>&#947;</sub></i></nobr> are solvent parameters
+which are <a href="DB_Temperature.htm">temperature-</a> and pressure-dependent <nobr>(<a href="SP_Act_Coeff_DH_params.htm">see Table</a>;</nobr>
+<nobr><i>A<sub>&#947;</sub></i></nobr> = 0.509 <nobr>(mol/kg)<sup>&#8722;&#189;</sup></nobr> for water at <nobr>25&deg;C).</nobr>
+The ion-size parameter <i>&aring;</i> may be different for each electrolyte,
+but according to theory the same value of <i>&aring;</i> must be used for all
+ions in mixtures of salts. A value of
+<i>&aring;</i> = 0.4569 &times; <nobr>10<sup>&#8722;9</sup> m,</nobr>
+corresponds to <i>&aring;B<sub>&#947;</sub></i> = 1.5 <nobr>(mol/kg)<sup>&#8722;&#189;</sup></nobr> at <nobr>25&deg;C.</nobr>
+</p>
+
+<p>The <b>Debye-H&uuml;ckel</b> equation is only useful in <i>very</i> dilute solutions.
+For most real applications <a href="SP_Act_Coeff_Models.htm">other activity coefficient models</a>
+that include short-range ion interactions must be used.
+</p>
+
+<p>To be precise, the above equation must also include the term:
+<table cellspacing="0" cellpadding="0" border="0">
+	<tr><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td><nobr>&#8722; log<font size="+1">(</font>1+0.018015 &#8721;<i>m<sub>k</sub></i><font size="+1">)</font></nobr></td>
+	</tr></table>
+where the sum of molalities includes all dissolved species, both charged and neutral.
+This term is needed to convert <nobr>log &#947;<sub><i>i</i></sub></nobr> from the
+rational (mole fraction) scale to the practical (molality) scale. But because
+the <b>Debye-H&uuml;ckel</b> equation is only valid at <i>very</i> dilute solutions, the sum
+of molalities approaches zero, so that this term becomes negligible and it is generally disregarded.
+</p>
+
+<p>The <b><a href="SP_Activity.htm#H2O">activity of water</a></b> <nobr>(H<sub>2</sub>O) is given by:</nobr>
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td valign="top"><nobr>log <i>a</i><sub>H<sub>2</sub>O</sub><font size="+1"> </font>= </nobr></td>
+	<td valign="top"><nobr>&#8722; &Phi; &#8721;<i>m<sub>k</sub></i>&nbsp;/</nobr>
+		<nobr><font size="+1">(</font>ln(10)&nbsp;55.508<font size="+1">)</font></nobr>
+</td></tr></table></p>
+
+<p class="cont">
+where &#147;<i>k</i>&#148; are all solute species in the aqeuous solution, and &#147;&Phi;&#148;
+is the osmotic coefficient, which for the <b>Debye-H&uuml;ckel</b> model it is given by:
+
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td valign="top"><nobr>&Phi; =<font size="+2"> </font></nobr></td>
+	<td valign="top"><nobr>1<font size="+2"> </font>&#8722;</nobr>
+	<nobr><font size="+2">(</font>2 <i>A</i><sub>&Phi;</sub>&nbsp;<b><i>I</i></b><sup>3/2</sup>
+		<font size="+1">(</font>1/&#8721;<i>m<sub>k</sub></i><font size="+1">)</font>
+		<i>&sigma;</i><font size="+1">(</font>1 + <i>&aring;B<sub>&#947;</sub></i> &#8730;<b><i>I</i></b>
+		<font size="-2"> </font><font size="+1">)</font><font size="+2">)</font></nobr>
+</td></tr></table>
+</p>
+
+<p class="cont">
+where <nobr><i>A</i><sub>&Phi;</sub> =</nobr> (1/3) ln(10) <i>A<sub>&#947;</sub></i>, and
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td>&nbsp;</td>
+	<td valign="top"><nobr><i>&sigma;</i>(<i>x</i>)<font size="+2"> </font>= </nobr></td>
+	<td valign="top"><nobr>(3/<i>x</i><sup>3</sup>)</nobr> <nobr><font size="+2">(</font>(1+<i>x</i>)</nobr> <nobr>&#8722; 1/(1+<i>x</i>)</nobr> <nobr>&#8722; 2 ln(1+<i>x</i>)<font size="+2">)</font></nobr>
+</td></tr></table></p>
+
+<p><hr><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --></p>
+<p>
+<a href="SP_Act_Coeff_Models.htm">
+<img src="images/Back.gif" alt="back" title="back to Models" height="13" width="16" border="0"></a>
+<tt>&nbsp;</tt><a href="SP_Act_Coeff_Models.htm">Models</a> for activity coefficients</p>
+
+<p>&nbsp;</p>
+</body>
+</html>

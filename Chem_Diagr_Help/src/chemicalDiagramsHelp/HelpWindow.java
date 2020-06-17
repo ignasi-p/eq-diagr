@@ -28,7 +28,7 @@ package chemicalDiagramsHelp;
  *     then the helpset is searched inside the jar-file at: "javahelp/helpset.hs".</ul>
  * Many ideas taken from the QuickHelp class available at www.halogenware.com
  * <br>
- * Copyright (C) 2015-2018 I.Puigdomenech.
+ * Copyright (C) 2015-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ package chemicalDiagramsHelp;
  * 
  * @author Ignasi Puigdomenech */
 public class HelpWindow {
-    private static final String VERS = "2018-May-15";
+    private static final String VERS = "2020-June-10";
     private final ProgramConf pc;
     private static boolean started = false;
     /** Because the program checks for other instances and exits if there is
@@ -457,7 +457,8 @@ public class HelpWindow {
             String property = event.getPropertyName();
             if ("title".equals(property)) {
                 try{
-                    jLabel_status.setText(hb.getCurrentID().getURL().getPath());
+                    if(hb != null && hb.getCurrentID() != null)
+                            {jLabel_status.setText(hb.getCurrentID().getURL().getPath());}
                 } catch (java.net.MalformedURLException ex) {
                     jLabel_status.setText(hb.getCurrentID().getIDString());
                 }
@@ -698,11 +699,13 @@ public class HelpWindow {
     System.out.flush();
     OutMsg("Reading ini-file: \""+f.getPath()+"\"");
     java.util.Properties ini= new java.util.Properties();
-    java.io.FileInputStream properties_iniFile = null;
+    java.io.FileInputStream fis = null;
+    java.io.BufferedReader r = null;
     boolean ok = true;
     try {
-      properties_iniFile = new java.io.FileInputStream(f);
-      ini.load(properties_iniFile);
+      fis = new java.io.FileInputStream(f);
+      r = new java.io.BufferedReader(new java.io.InputStreamReader(fis, "UTF8"));
+      ini.load(r);
     } catch (java.io.FileNotFoundException e) {
       OutMsg("Warning: file Not found: \""+f.getPath()+"\""+nl+
              "    using default parameter values.");
@@ -716,9 +719,8 @@ public class HelpWindow {
       ErrMsgBx mb = new ErrMsgBx(msg, pc.progName);
       ok = false;
     } // catch loading-exception
-    try {
-        if(properties_iniFile != null) {properties_iniFile.close();}
-    } catch (java.io.IOException e) {
+    try {if(r != null) {r.close();} if(fis != null) {fis.close();}}
+    catch (java.io.IOException e) {
         String msg ="Error: \""+e.toString()+"\""+nl+
                     "   while closing INI-file:"+nl+
                     "   \""+f.getPath()+"\"";
@@ -726,7 +728,7 @@ public class HelpWindow {
         ok = false;
     }
     finally {
-        try {if(properties_iniFile != null) {properties_iniFile.close();}}
+        try {if(r != null) {r.close();} if(fis != null) {fis.close();}}
         catch (java.io.IOException e) {
             String msg = "Error: \""+e.toString()+"\""+nl+
                           "   while closing INI-file:"+nl+
@@ -826,10 +828,12 @@ public class HelpWindow {
     ini.setProperty("font_size", String.valueOf(hbSize));
     ini.setProperty("window_state", String.valueOf(windowState));
 
-    java.io.FileOutputStream iniFile = null;
+    java.io.FileOutputStream fos = null;
+    java.io.Writer w = null;
     try{
-        iniFile = new java.io.FileOutputStream(f);
-        ini.store(iniFile,null);
+        fos = new java.io.FileOutputStream(f);
+        w = new java.io.BufferedWriter(new java.io.OutputStreamWriter(fos, "UTF8"));
+        ini.store(w, null);
     }
     catch (java.io.IOException ex) {
         msg = "Error \""+ex.toString()+"\""+nl+
@@ -839,7 +843,7 @@ public class HelpWindow {
         ok = false;
     } // catch store-exception
     finally {
-        try{if(iniFile != null) {iniFile.close();}}
+        try{if(w != null) {w.close();} if(fos != null) {fos.close();}}
         catch (java.io.IOException e) {ok = false;}
     }
     return ok;

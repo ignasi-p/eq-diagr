@@ -71,8 +71,14 @@
 <indexitem text="activity" target="SP_Activity_htm" expand="false">
   <indexitem text="of H2O" target="SP_Activity_htm_H2O"/>
   </indexitem>
-<indexitem text="activity coefficient" target="SP_Ionic_Strength_htm" expand="false">
-  <indexitem text="models" target="SP_Ionic_Strength_htm_Models"/>
+<indexitem text="activity coefficient" target="SP_Act_Coeff_htm" expand="false">
+  <indexitem text="ionic strength" target="SP_Ionic_Strength_htm"/>
+  <indexitem text="models" target="SP_Act_Coeff_Models_htm" expand="true">
+    <indexitem text="Debye-Huckel" target="SP_Act_Coeff_DH_htm"/>
+    <indexitem text="Simplified HKF" target="SP_Act_Coeff_HKF_htm"/>
+    <indexitem text="Davies" target="SP_Act_Coeff_Davies_htm"/>
+    <indexitem text="SIT" target="SP_Act_Coeff_SIT_htm"/>
+  </indexitem>
   <indexitem text="in calculations" target="S_Making_Diagrams_htm_Parameters"/>
   </indexitem>
 <indexitem text="affinity (of H+) diagrams" target="Tut_H_aff_spectr_htm"/>
@@ -85,11 +91,15 @@
   <indexitem text="failures" target="SP_Failures_htm"/>
   <indexitem text="HaltaFall" target="SP_Haltafall_htm"/>
   <indexitem text="strange results" target="SP_Strange_Results_htm"/>
-  <indexitem text="tolerance" target="S_Menu_Prefs_htm_Calcs"/>
+  <indexitem text="tolerance (when making a diagram)" target="S_Menu_Prefs_htm_Calcs"/>
+  <indexitem text="tolerance in HaltaFall" target="SP_Tolerance_htm"/>
+  <indexitem text="round-off errors" target="SP_Tolerance_htm_RoundOff"/>
   </indexitem>
 <indexitem text="CFG-files" target="Install_Uninstall_htm_CFG"/>
 <indexitem text="change a diagram" target="SP_Plot-File_Format_htm_Make_Changes"/>
-<indexitem text="character codes (PostScript)" target="S_PostScript_Chars_Fig_htm"/>
+<indexitem text="character encoding" target="Character_encoding_htm" expand="false">
+  <indexitem text="character codes (PostScript)" target="S_PostScript_Chars_Fig_htm"/>
+  </indexitem>
 <indexitem text="check stoichiometric coefficients" target="SP_Failures_htm_Check_Stoich"/>
 <indexitem text="chemical component" target="ChEq_Components_htm"/>
 <indexitem text="chemical equilibrium reaction" target="ChEq_0_Contents_htm"/>
@@ -111,6 +121,7 @@
   </indexitem>
 <indexitem text="concentration" target="SP_Molality_htm" expand="false">
   <indexitem text="data file format: concentrations" target="SP_Data_File_Concs_htm"/>
+  <indexitem text="concentration units in diagrams" target="SP_Concentrations_htm"/>
   </indexitem>
 <indexitem text="configuration files" target="Install_Uninstall_htm_CFG"/>
 <indexitem text="constant gas pressure in diagrams" target="Tut_CO2_htm"/>
@@ -140,11 +151,12 @@
   <indexitem text="create your own database" target="DB_Create_your_database_htm"/>
   </indexitem>
 <indexitem text="DataMaintenance (program)" target="DB_Create_your_database_htm"/>
-<indexitem text="Davies Eqn." target="SP_Ionic_Strength_Davies_htm"/>
+<indexitem text="Davies Eqn." target="SP_Act_Coeff_Davies_htm"/>
 <indexitem text="deactivate species" target="SP_Removing_Species_htm" expand="true">
   <indexitem text="in Spana" target="S_Modify_Chem_System_htm_Deactivate"/>
   <indexitem text="solids (dissolution vs. precipitation)" target="DB_Solid_solub_htm"/>
   </indexitem>
+<indexitem text="Debye-Huckel model" target="SP_Act_Coeff_DH_htm"/>
 <indexitem text="diagram" target="S_Diagram_Window_htm" expand="true">
   <indexitem text="(see plot file)" target="SP_Plot-Files_htm"/>
   <indexitem text="convert to other formats" target="S_Printing_htm_Convert"/>
@@ -183,6 +195,7 @@
   <indexitem text="redox reactions" target="ChEq_Redox_React_htm"/>
   <indexitem text="zero concentration" target="SP_Species_Zero_Conc_htm"/>
   </indexitem>
+<indexitem text="element-file" target="DB_Element_files_htm"/>
 <indexitem text="encapsulated PostScript" target="SP_PostScript_htm"/>
 <indexitem text="encoding (in PostScript)" target="S_PostScript_Commands_htm_Encoding"/>
 <indexitem text="environment variables" target="Install_Uninstall_htm_INI" expand="false">
@@ -196,7 +209,9 @@
   <indexitem text="program errors" target="Problems_htm"/>
   <indexitem text="strange results" target="SP_Strange_Results_htm"/>
   </indexitem>
-<indexitem text="examples" target="Tut_0_Tutorials_htm"/>
+<indexitem text="example files" target="Tut_Example_Files_htm" expand="true">
+  <indexitem text="tutorials" target="Tut_0_Tutorials_htm"/>
+  </indexitem>
 <indexitem text="Excel (table output in SED)" target="S_Making_Diagrams_htm_Table_Output" expand="false">
 	<indexitem text="preferences" target="S_Menu_Prefs_htm_Table"/>
   </indexitem>
@@ -205,6 +220,8 @@
 <indexitem text="failures" target="SP_Failures_htm" expand="false">
   <indexitem text="program errors" target="Problems_htm"/>
   <indexitem text="strange results" target="SP_Strange_Results_htm"/>
+  <indexitem text="tolerance in HaltaFall" target="SP_Tolerance_htm"/>
+  <indexitem text="round-off errors" target="SP_Tolerance_htm_RoundOff"/>
   </indexitem>
 <indexitem text="Faraday" target="Some_Constants_htm"/>
 <indexitem text="Fe corrosion (tutorial)" target="Tut_Redox_htm"/>
@@ -246,7 +263,7 @@
 <indexitem text="HALTAFALL" target="SP_Haltafall_htm"  expand="false">
   <indexitem text="options" target="S_Menu_Prefs_htm_Calcs"/>
   </indexitem>
-<indexitem text="HKF (simplified activity coefficients model)" target="SP_Ionic_Strength_HKF_htm"/>
+<indexitem text="HKF (simplified activity coefficients model)" target="SP_Act_Coeff_HKF_htm"/>
 <indexitem text="hydrogen electrode" target="ChEq_Redox_React_htm"/>
 <indexitem text="IAP (ion activity product)" target="ChEq_Solids_htm_IAP"/>
 <indexitem text="include (cr)-solids" target="DB_Solid_solub_htm"/>
@@ -269,7 +286,14 @@
 <indexitem text="interchange a component with a complex" target="S_Modify_Chem_System_htm_Mod_Exch"/>
 <indexitem text="ion activity product" target="ChEq_Solids_htm_IAP"/>
 <indexitem text="ionic strength" target="SP_Ionic_Strength_htm" expand="false">
-  <indexitem text="models to calculate effects" target="SP_Ionic_Strength_htm_Models"/>
+  <indexitem text="activity coefficient" target="SP_Act_Coeff_htm"/>
+  <indexitem text="ionic strength" target="SP_Ionic_Strength_htm"/>
+  <indexitem text="models to calculate effects" target="SP_Act_Coeff_Models_htm" expand="true">
+    <indexitem text="Debye-Huckel" target="SP_Act_Coeff_DH_htm"/>
+    <indexitem text="Simplified HKF" target="SP_Act_Coeff_HKF_htm"/>
+    <indexitem text="Davies" target="SP_Act_Coeff_Davies_htm"/>
+    <indexitem text="SIT" target="SP_Act_Coeff_SIT_htm"/>
+  </indexitem>
   <indexitem text="when making a diagram" target="S_Making_Diagrams_htm_Parameters"/>
   </indexitem>
 <indexitem text="iron corrosion (tutorial)" target="Tut_Redox_htm"/>
@@ -277,13 +301,16 @@
 <indexitem text="license" target="Disclaimer_htm"/>
 <indexitem text="logarithmic diagram" target="SP_Diagr_Log_htm"/>
 <indexitem text="logK" target="ChEq_Definitions_htm"/>
+<indexitem text="logK-file" target="DB_logK_files_htm"/>
 <indexitem text="magnetite" target="Tut_Redox_htm_magnetite"/>
 <indexitem text="make a diagram pretty for a publication" target="SP_Plot-File_Format_htm_Make_Changes"/>
 <indexitem text="SPANA" target="S_0_Main_htm"/>
 <indexitem text="Mg-EDTA titration" target="Tut_Titr_htm_Mg-edta"/>
 <indexitem text="modify chemical system" target="S_Modify_Chem_System_htm"/>
 <indexitem text="modify diagrams" target="S_Printing_htm"/>
-<indexitem text="molality" target="SP_Molality_htm"/>
+<indexitem text="molality" target="SP_Molality_htm" expand="true">
+  <indexitem text="concentration units in diagrams" target="SP_Concentrations_htm"/>
+  </indexitem>
 <indexitem text="names of chemical species" target="SP_Names_Numbers_htm" expand="false">
   <indexitem text="electric charge" target="SP_Charges_in_Names_htm"/>
   <indexitem text="phase indicator" target="SP_Phase_Indicator_htm"/>
@@ -308,6 +335,7 @@
   </indexitem>
 <indexitem text="pH" target="SP_pH_htm"/>
 <indexitem text="phase rule" target="ChEq_Solids_htm"/>
+<indexitem text="phase indicator" target="SP_Phase_Indicator_htm"/>
 <indexitem text="plot files" target="SP_Plot-Files_htm" expand="true">
   <indexitem text="convert to other formats" target="S_Printing_htm_Convert"/>
   <indexitem text="examples" target="Tut_Example_Files_htm"/>
@@ -337,6 +365,9 @@
   <indexitem text="complexes (ions)" target="ChEq_Def_System_htm_Complexes"/>
   <indexitem text="exchange with a component" target="S_Modify_Chem_System_htm_Mod_Exch"/>
   </indexitem>
+<indexitem text="reaction stoichiometry" target="DB_logK_file_S_htm" expand="false">
+  <indexitem text="check stoichiometry" target="SP_Failures_htm_Check_Stoich"/>  <indexitem text="in a database logK-file" target="DB_logK_file_S_htm"/>
+  </indexitem>
 <indexitem text="redox potential" target="Eh_pe_htm" expand="false">
   <indexitem text="show in diagrams" target="S_Making_Diagrams_htm_Diagram"/>
   </indexitem>
@@ -344,7 +375,9 @@
   <indexitem text="Cu(II) to Cu(I) by CN- (tutorial)" target="Tut_Redox_htm_Cu-CN"/>
   <indexitem text="Fe corrosion (tutorial)" target="Tut_Redox_htm"/>
   </indexitem>
-<indexitem text="references (to data)" target="DB_References"/>
+<indexitem text="references (to data)" target="DB_References" expand="true">
+  <indexitem text="in logK-files" target="DB_logK_file_R_htm"/>
+  </indexitem>
 <indexitem text="references (to software)" target="Acknowledgements_htm_Refs"/>
 <indexitem text="removing species" target="SP_Removing_Species_htm" expand="false">
 	<indexitem text="in Spana" target="S_Modify_Chem_System_htm_Deactivate"/>
@@ -352,6 +385,7 @@
   </indexitem>
 <indexitem text="reports: inserting diagrams in" target="S_Printing_htm_Clipboard"/>
 <indexitem text="Roman font (PostScript)" target="S_PostScript_Chars_Fig_htm"/>
+<indexitem text="round-off errors" target="SP_Tolerance_htm_RoundOff"/>
 <indexitem text="running in batch mode" target="SP_Batch_Mode_htm"/>
 <indexitem text="saturation idex" target="ChEq_Solids_htm_IAP"/>
 <indexitem text="SED" target="SP_SED_htm" expand="false">
@@ -359,7 +393,7 @@
   </indexitem>
 <indexitem text="setup" target="Install_Uninstall_htm"/>
 <indexitem text="SI (saturation index)" target="ChEq_Solids_htm_IAP"/>
-<indexitem text="SIT (specific ion interaction theory)" target="SP_Ionic_Strength_SIT_htm"/>
+<indexitem text="SIT (specific ion interaction theory)" target="SP_Act_Coeff_SIT_htm"/>
 <indexitem text="SOLGASWATER" target="SP_Solgaswater_htm"/>
 <indexitem text="solids" target="ChEq_Solids_htm" expand="true">
   <indexitem text="activity of" target="SP_Activity_htm_Solids"/>
@@ -383,6 +417,7 @@
   </indexitem>
 <indexitem text="stoichiometry of a reaction" target="ChEq_Def_System_htm" expand="false">
   <indexitem text="check stoichiometry" target="SP_Failures_htm_Check_Stoich"/>
+  <indexitem text="in a database logK-file" target="DB_logK_file_S_htm"/>
   </indexitem>
 <indexitem text="strange results" target="SP_Strange_Results_htm"/>
 <indexitem text="Symbol font (PostScript)" target="S_PostScript_Chars_Fig_htm"/>
@@ -390,10 +425,11 @@
 	<indexitem text="preferences" target="S_Menu_Prefs_htm_Table"/>
   </indexitem>
 <indexitem text="temperature" target="DB_Temperature_htm"  expand="false">
-	<indexitem text="making a data-file " target="DB_Temperature_htm"/>
-	<indexitem text="in a data-file" target="SP_Names_Numbers_htm"/>
-	<indexitem text="making a diagram" target="S_Making_Diagrams_htm_Parameters"/>
-	<indexitem text="ionic strength corrections" target="SP_Ionic_Strength_htm_Models"/>
+	<indexitem text="in logK-files (DATABASE)" target="DB_logK_file_T_htm"/>
+	<indexitem text="when making a data-file (DATABASE)" target="DB_Temperature_htm"/>
+	<indexitem text="in a data-file (SPANA)" target="SP_Names_Numbers_htm"/>
+	<indexitem text="making a diagram (SPANA)" target="S_Making_Diagrams_htm_Parameters"/>
+	<indexitem text="ionic strength corrections" target="SP_Act_Coeff_DH_params_htm"/>
 	<indexitem text="pe to Eh (redox potential)" target="Eh_pe_htm"/>
   </indexitem>
 <indexitem text="text editor" target="S_Menu_Prefs_htm_Editor"/>
@@ -401,9 +437,18 @@
 	<indexitem text="make a diagram" target="S_Making_Diagrams_htm_Diagram"/>
   </indexitem>
 <indexitem text="titration tutorials" target="Tut_Titr_htm"/>
-<indexitem text="tolerance (calculations)" target="S_Menu_Prefs_htm_Calcs"/>
-<indexitem text="tutorials" target="Tut_0_Tutorials_htm"/>
+<indexitem text="tolerance (when making a diagram)" target="S_Menu_Prefs_htm_Calcs" expand="true">
+	<indexitem text="tolerances in HaltaFall" target="SP_Tolerance_htm"/>
+	<indexitem text="round-off errors" target="SP_Tolerance_htm_RoundOff"/>
+  </indexitem>
+<indexitem text="tutorials" target="Tut_0_Tutorials_htm" expand="true">
+	<indexitem text="example files" target="Tut_Example_Files_htm"/>
+  </indexitem>
+<indexitem text="Unicode (UTF-8)" target="Character_encoding_htm"/>
 <indexitem text="uninstalling" target="Install_Uninstall_htm_Uninstall"/>
+<indexitem text="units (concentration)" target="SP_Molality_htm" expand="true">
+  <indexitem text="concentration units in diagrams" target="SP_Concentrations_htm"/>
+  </indexitem>
 <indexitem text="warranty" target="Disclaimer_htm"/>
 <indexitem text="USB memory (installing on)" target="Install_Uninstall_htm_Run_USB"/>
 <indexitem text="water (H2O)" target="ChEq_H2O_htm" expand="false">

@@ -4,7 +4,7 @@ package chemicalDiagramsHelp;
  * These data are stored in the configuration file.
  * The class is used to retrieve data in diverse methods
  *
- * Copyright (C) 2015-2018 I.Puigdomenech.
+ * Copyright (C) 2015-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,14 +49,16 @@ public class ProgramConf {
   * @param fileNameCfg
   * @param pc  */
   public static void read_cfgFile(java.io.File fileNameCfg, ProgramConf pc) {
-    if(fileNameCfg == null) {HelpWindow.ErrMsg("Error: fileNameCfg =null in routine \"read_cfgFile\""); return;}
-    if(pc == null) {HelpWindow.ErrMsg("Error: pc =null in routine \"read_cfgFile\""); return;}
+    if(fileNameCfg == null) {HelpWindow.ErrMsg("Error: fileNameCfg = null in routine \"read_cfgFile\""); return;}
+    if(pc == null) {HelpWindow.ErrMsg("Error: pc = null in routine \"read_cfgFile\""); return;}
     java.util.Properties cfg = new java.util.Properties();
-    java.io.FileInputStream cfgFile = null;
-    boolean loadedOK;
+    java.io.FileInputStream fis = null;
+    java.io.BufferedReader r = null;
+    boolean loadedOK = false;
     try {
-      cfgFile = new java.io.FileInputStream(fileNameCfg);
-      cfg.load(cfgFile);
+      fis = new java.io.FileInputStream(fileNameCfg);
+      r = new java.io.BufferedReader(new java.io.InputStreamReader(fis,"UTF8"));
+      cfg.load(r);
       loadedOK = true;
     } //try
     catch (java.io.FileNotFoundException e) {
@@ -71,13 +73,13 @@ public class ProgramConf {
             "   \""+fileNameCfg.getPath()+"\"");
       loadedOK = false;
     } // catch Exception
-    try {if(cfgFile != null) {cfgFile.close();}}
+    try {if(r != null) {r.close();} if(fis != null) {fis.close();}}
     catch (java.io.IOException e) {
             HelpWindow.ErrMsg(e.getMessage()+nl+
                   "   while closing config.-file:"+nl+
                   "   \""+fileNameCfg.getPath()+"\"");
     } // catch
-    if(loadedOK == true) {
+    if(loadedOK) {
         try {
             HelpWindow.OutMsg("Reading file: \""+fileNameCfg.getPath()+"\"");
             if(cfg.getProperty("Debug") != null &&
@@ -98,21 +100,24 @@ public class ProgramConf {
  /** Write program options (configuration file).<br>
   * Exceptions are reported to the console. */
   private static void write_cfgFile(java.io.File fileNameCfg, ProgramConf pc) {
-        java.io.PrintWriter cfgFile = null;
+        java.io.FileOutputStream fos = null;
+        java.io.Writer w = null;
         try {
-            cfgFile = new java.io.PrintWriter(new java.io.BufferedWriter(new java.io.FileWriter(fileNameCfg)));
+            fos = new java.io.FileOutputStream(fileNameCfg);
+            w = new java.io.BufferedWriter(new java.io.OutputStreamWriter(fos,"UTF8"));
         }
         catch (java.io.IOException e) {
             HelpWindow.ErrMsg(e.getMessage()+nl+
                   "   trying to write config.-file: \""+fileNameCfg.toString()+"\"");
-            try{if(cfgFile != null) {cfgFile.flush(); cfgFile.close();}}
+            try{if(w != null) {w.close();} if(fos != null) {fos.close();}}
             catch (Exception e1) {
                 HelpWindow.ErrMsg(e1.getMessage()+nl+
                   "   trying to close config.-file: \""+fileNameCfg.toString()+"\"");
             }
             return;
         } //catch
-        cfgFile.println(
+        try{
+        w.write(
                 "# Next parameter should be \"true\" if running from a USB-memory"+nl+
                 "#  (or a portable drive): then the ini-file will ONLY be saved in"+nl+
                 "#  the application directory.  If the application directory"+nl+
@@ -125,19 +130,24 @@ public class ProgramConf {
                 "#     %HOME%"+nl+
                 "#     the user's home directory (system dependent)."+nl+
                 "#  Except for the installation directory, the ini-file will"+nl+
-                "#  be writen in a sub-folder named \".config\\eq-diagr\".");
+                "#  be writen in a sub-folder named \".config\\eq-diagr\"."+nl);
         if(pc.saveIniFileToApplicationPathOnly) {
-            cfgFile.println("SaveIniFileToApplicationPathOnly=true");
+            w.write("SaveIniFileToApplicationPathOnly=true"+nl);
         } else {
-            cfgFile.println("SaveIniFileToApplicationPathOnly=false");
+            w.write("SaveIniFileToApplicationPathOnly=false"+nl);
         }
-        cfgFile.println(
+        w.write(
                 "# Change next to \"true\" to output debugging information"+nl+
-                "#   to the messages window.");
-        if(pc.dbg) {cfgFile.println("Debug=true");}
-        else {cfgFile.println("Debug=false");}
-        cfgFile.flush(); cfgFile.close();
-        if (pc.dbg) {HelpWindow.OutMsg("Written: \""+fileNameCfg.toString()+"\"");}
+                "#   to the messages window."+nl);
+        if(pc.dbg) {w.write("Debug=true"+nl);}
+        else {w.write("Debug=false"+nl);}
+        w.close(); fos.close();
+        if(pc.dbg) {HelpWindow.OutMsg("Written: \""+fileNameCfg.toString()+"\"");}
+        }
+        catch (Exception ex) {
+                HelpWindow.ErrMsg(ex.getMessage()+nl+
+                  "   trying to write config.-file: \""+fileNameCfg.toString()+"\"");
+        }
   } // write_cfgFile()
   //</editor-fold>
 

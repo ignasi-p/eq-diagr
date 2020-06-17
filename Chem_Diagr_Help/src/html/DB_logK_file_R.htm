@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>DATABASE: logK-file - references</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<a name="Top"></a>
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+    <td align="center" width="50">
+    <a href="DB_0_Main.htm"><img src="images/database0.gif" border="0" width="32" height="32" alt="DataBase"></a>&nbsp;</td>
+    <td align="left"><font size="-1"><a href="DB_0_Main.htm">DATABASE</a>&nbsp;/
+        <a href="DB_Databases.htm">Databases</a>&nbsp;/
+        <a href="DB_Create_your_database.htm">Create&nbsp;databases</a>/
+        <a href="DB_logK_files.htm">logK-files</a></font></td>
+  </tr>
+</table>
+
+<h3><a href="DB_logK_files.htm">logK-files:</a> References</h3>
+
+<p>In <a href="DB_0_Main.htm">DATABASE</a> the <a href="DB_logK_files.htm">logK-files</a>
+contain the <nobr>log<i>K</i>&deg;</nobr> at 25&deg;C,
+<a href="DB_logK_file_T.htm">data on temperature effects</a>, and the
+<a href="DB_logK_file_T.htm">reaction stoichiometry</a>. After that it is
+possible to provide <i>reference</i> citations. This is optional
+but useful.
+</p>
+<p>References consist of a citation and its bibliographic information.
+<ul>
+<li><a href="#cite">Reference citations</a></li>
+<li><a href="#biblio">Bibliographic information</a></li>
+<li><a href="#display">Display the references in DATABASE</a></li>
+</ul></p>
+
+<a name="cite"></a>
+<h4>Reference citations</h4>
+
+<p>Citations are expected to be separated by either a comma (,)
+by a semicolon (;) or by a &#147;plus&#148; (+).
+For example, either of:
+<ul><li>&#147;<tt>Yu 95,Li</tt>&#148;</li>
+<li>&#147;<tt>Yu 95, Li</tt>&#148;</li>
+<li>&#147;<tt>Yu 95+Li</tt>&#148;</li></ul>
+will all be understood as two reference citations: &#147;<tt>Yu 95</tt>&#148; and
+&#147;<tt>Li</tt>&#148;.<p>
+<p>
+To include a &#147;+&#148; or &#147;,&#148; in a reference citation,
+include the citation in parentheses &#147;()&#148;, for example the
+text &#147;<tt>1996H+(estimate based on La+3)</tt>&#148;
+will be translated into two citations: &#147;<tt>1996H</tt>&#148; and
+&#147;<tt>(estimate based on La+3)</tt>&#148;.</p>
+
+<p>Examples:</p>
+<p class="indent"><tt>
+<nobr>Fe(NTA)OH-;13.33;;;4,Fe 3+;1;H+;-1;NTA 3-;1;H2O;1;SmithMart</nobr><br>
+<nobr>CaCO3(cr);8.48;9.62;;Ca 2+;1;;;CO3 2-;1;;;;;;;0;Wateq4F / calcite</nobr><br>
+</tt></p>
+
+<a name="biblio"></a>
+<h4>Bibliographic information</h4>
+
+<p>The bibliographic information is provided in a plain text file named
+<nobr><tt>References.txt</tt>.</nobr> This file must be located in the
+application path (the folder where <nobr><tt>DataBase.jar</tt></nobr> is located).</p>
+
+<p>The program <b>AddShowReferences</b> may be used to add and edit
+citation - reference text pairs. It will take care of escaping
+special characters such as &#147;<tt>\</tt>&#148;, <i>etc</i>.</p>
+
+<p>Each line in this text file <nobr>(<tt>References.txt</tt>)</nobr>
+contains a single citation-reference pair separated by an equal sign (=).
+For example:
+</p>
+<p class="indent"><tt>
+<nobr>1992Mil=Millero F J; Geochim. Cosmochim. Acta 56 (1992) 3123-3132</nobr>
+<nobr>76Bae/Mes=Baes C. F., Jr., Mesmer R. E.,\nThe Hydrolysis of Cations. New York\: J. Wiley & Sons, 1976</nobr>
+</tt></p>
+<p><b>Special characters:</b></p>
+<ul>
+<li>New line: &#147;<tt>\n</tt>&#148;</li>
+<li>Tab: &#147;<tt>\t</tt>&#148;</li>
+<li>These four characters: ! # \ =<br>must be escaped with a back-slash (<tt>\</tt>).
+</li>
+<li>A space in the citation must be escaped as well:
+<p class="indent"><tt>
+<nobr>Yu\ 95=Yu, J.Ph. (1995) (\= 1995Yu).</nobr>
+</tt></p>
+</li>
+</ul>
+
+<a name="display"></a>
+<h4>Display the references in <a href="DB_0_Main.htm">DATABASE</a></h4>
+
+<p>After using the menu &#147;File / Search Reactions&#148; to search the
+database with the selected components, on the pannel at the bottom-right
+(&#147;reactions <nobr>found&#148;):</nobr> it is possible to point to a
+reaction product with the mouse, or select it with either the keyboard or the mouse.
+The status line at the bottom will show: reaction, equilibrium constant,
+and reference citation.</p>
+<p>
+Details on the reaction and its reference 
+may be shown by right-clicking with the mouse (or pressing the
+&#147;space bar&#148; key if using the keyboard).
+</p>
+
+<p>See also <a href="DB_Working_with.htm">working with DATABASE</a></p>
+
+<p><hr> <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --></p>
+
+<p style="margin-top: 0 ex">
+<a href="DB_logK_files.htm">
+<img src="images/Back.gif" alt="back" title="back" height="13" width="16" border="0"></a>
+<tt>&nbsp;</tt><a href="DB_logK_files.htm">logK-files</a></p>
+
+<p>&nbsp;</p>
+</body>
+</html>

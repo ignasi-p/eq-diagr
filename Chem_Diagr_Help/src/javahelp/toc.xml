@@ -4,6 +4,14 @@
 <tocitem text="Chemical Equilibrium Diagram Software" target="0_Index_htm" image="HelpDocItem"/>
 <tocitem text="Make Your 1st Diagram" target="Tut_Make_1st_Diag_htm" image="HelpDocItem"/>
 
+<tocitem text="Tutorials" target="Tut_0_Tutorials_htm" expand="false">
+    <tocitem text="logP(CO2) constant" target="Tut_CO2_htm"/>
+    <tocitem text="Redox reactions" target="Tut_Redox_htm"/>
+    <tocitem text="Titrations" target="Tut_Titr_htm"/>
+    <tocitem text="H+ affinity diagrams" target="Tut_H_aff_spectr_htm"/>
+    <tocitem text="Example files" target="Tut_Example_Files_htm"/>
+  </tocitem>
+
 <tocitem text="Chemical Equilibrium Reactions" target="ChEq_0_Contents_htm" expand="false">
     <tocitem text="What are chemical equilibria?" target="ChEq_Definitions_htm"/>
     <tocitem text="How to define the Chemical System" target="ChEq_Def_System_htm">
@@ -53,7 +61,7 @@
     <tocitem text="Modifying a Chemical System" target="S_Modify_Chem_System_htm"/>
     <tocitem text="Making a Diagram" target="S_Making_Diagrams_htm">
       <tocitem text="Eh and pe" target="Eh_pe_htm"/>
-      <tocitem text="Ionic Strength Corrections" target="SP_Ionic_Strength_htm"/>
+      <tocitem text="Ionic Strength Corrections" target="SP_Act_Coeff_htm"/>
       </tocitem>
     <tocitem text="Displaying Diagrams" target="S_Diagram_Window_htm"/>
     <tocitem text="Printing Diagrams" target="S_Printing_htm">
@@ -69,20 +77,11 @@
     <tocitem text="Menu Preferences" target="S_Menu_Prefs_htm"/>
   </tocitem>
 
-<tocitem text="Tutorials" target="Tut_0_Tutorials_htm" expand="false">
-    <tocitem text="Make your 1st diagram" target="Tut_Make_1st_Diag_htm"/>
-    <tocitem text="logP(CO2) constant" target="Tut_CO2_htm"/>
-    <tocitem text="Redox reactions" target="Tut_Redox_htm"/>
-    <tocitem text="Titrations" target="Tut_Titr_htm"/>
-    <tocitem text="H+ affinity diagrams" target="Tut_H_aff_spectr_htm"/>
-    <tocitem text="Example files" target="Tut_Example_Files_htm"/>
-  </tocitem>
-
 <tocitem text="SED and PREDOM" target="SP_0_Main_htm" expand="false">
 
     <tocitem text="HALTAFALL" target="SP_Haltafall_htm"/>
 
-    <tocitem text="Ionic Strength Corrections" target="SP_Ionic_Strength_htm">
+    <tocitem text="Ionic Strength" target="SP_Ionic_Strength_htm">
       <tocitem text="molality" target="SP_Molality_htm"/>
       <tocitem text="activity" target="SP_Activity_htm"/>
     </tocitem>
@@ -140,5 +139,6 @@
 <tocitem text="Installing and Uninstalling" target="Install_Uninstall_htm"/>
 
 <tocitem text="Credits" target="Acknowledgements_htm" image="HelpDocItem"/>
-<tocitem text="License &amp; Disclaimer" target="Disclaimer_htm" image="HelpDocItem"/>
+<tocitem text="License" target="License _htm" image="HelpDocItem"/>
+<tocitem text="Disclaimer" target="Disclaimer_htm" image="HelpDocItem"/>
 </toc>

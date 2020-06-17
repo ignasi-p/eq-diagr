@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>File character encoding</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50">
+    <a href="0_Index.htm"><img src="images/thco35_s.gif" border="0" width="32" height="32" alt="Chem.Eq.Diagr"></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="0_Index.htm">Chemical Equilibrium Diagrams</a></font></td>
+  </tr>
+</table>
+
+<h2>Text file character encoding</h2>
+
+<p>To make sure that text files created by this software in a given operating system
+mabe be used in other operating systems, text files are encoded using
+<nobr>UTF-8</nobr> (Unicode).
+</p>
+
+<p>
+In previous versions of the software (up to 2019) text files were read and
+written using the default character encoding of the Java Virtual Machine.
+This default depends on the operating system. In Ubuntu (Linux) and
+<nobr>Mac OS</nobr> text files are encoded in <nobr>UTF-8</nobr> (Unicode).
+In Windows systems Java uses a &#147;code-page&#148; that is language specific.
+</p>
+
+<p>As long as the 95 printable ASCII characters are used, a text file written
+in a Windows computer may be read in another machine running for example Linux,
+and vice versa.
+</p>
+
+<p>However, if a text file contains non-ASCII characters, the file will be read
+incorrectly on a computer where Java uses a different character encoding.
+This situation is found if the file contains accented letters (like &eacute; or &auml;), or other
+non-ASCII characters such as the middle dot:
+<nobr>&#147;CaSO<sub>4</sub>&middot;2H<sub>2</sub>O&#148;.</nobr>
+</p>
+
+</body>
+</html>

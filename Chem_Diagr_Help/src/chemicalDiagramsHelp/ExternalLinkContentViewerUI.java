@@ -3,7 +3,7 @@ package chemicalDiagramsHelp;
 /** a UI subclass that will open external links (website or ftp links)
  * in an external browser.
  * Adapted from examples in the internet.
- * Copyright (C) 2014 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,6 +64,7 @@ public class ExternalLinkContentViewerUI extends javax.help.plaf.basic.BasicCont
  * Latest Version: <a href=http://centerkey.com/java/browser>centerkey.com/java/browser</a><br>
  * Author: Dem Pilafian<br>
  * WTFPL -- Free to use as you like
+ * @author  Dem Pilafian
  * @version 3.2, October 24, 2010
  */
 private static class BareBonesBrowserLaunch {
@@ -78,9 +79,9 @@ private static class BareBonesBrowserLaunch {
     * @param url A web address (URL) of a web page (ex: "http://www.google.com/")
     */
    public static void openURL(String url, javax.swing.JComponent parent) {  // modified by Ignasi (added "parent")
-      try {  //attempt to use Desktop library from JDK 1.6+
+       try {  //attempt to use Desktop library from JDK 1.6+
          Class<?> d = Class.forName("java.awt.Desktop");
-         d.getDeclaredMethod("browse", new Class[] {java.net.URI.class}).invoke(
+         d.getDeclaredMethod("browse", new Class<?>[] {java.net.URI.class}).invoke(
             d.getDeclaredMethod("getDesktop").invoke(null),
             new Object[] {java.net.URI.create(url)});
          //above code mimicks:  java.awt.Desktop.getDesktop().browse()
@@ -90,10 +91,10 @@ private static class BareBonesBrowserLaunch {
          try {
             if (osName.startsWith("Mac OS")) {
                Class.forName("com.apple.eio.FileManager").getDeclaredMethod(
-                  "openURL", new Class[] {String.class}).invoke(null,new Object[] {url});
+                  "openURL", new Class<?>[] {String.class}).invoke(null,new Object[] {url});
             }
             else if (osName.startsWith("Windows"))
-               Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
+                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
             else { //assume Unix or Linux
                String browser = null;
                for (String b : browsers)

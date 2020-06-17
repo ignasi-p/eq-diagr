@@ -18,16 +18,15 @@
 
 <h3>logK-files</h3>
 
-<p>logK-files contain stoichiometry for the reactions and their
-<nobr>log<i>K</i>&deg;,</nobr> <nobr>&#916;<i>H</i>&deg;,</nobr> and
-<nobr>&#916;<i>Cp</i>&deg;</nobr> values.</p>
+<p>logK-files contain stoichiometry for each reaction and its data:
+<nobr>log<i>K</i>&deg;,</nobr> <i>etc</i>.</p>
 
 <p>These files are plain text files
 and may be written with a text editor. It is convenient to create and edit
 the logK-files with a spread-sheet program (like MS-Excel), wich may also be
 used to sort the database lines alfabetically, etc. You can also use the
 menu &#147;Options / Data / <nobr>Add data!&#148;</nobr>
-of DATABASE to create a new database.</p>
+of <a href="DB_0_Main.htm">DATABASE</a> to create a new database.</p>
 
 <p>The program <b>DataMaintenance</b> may also be used to create or edit databases,
 as well as to check for common input mistakes.</p>
@@ -39,21 +38,20 @@ as well as to check for common input mistakes.</p>
 
 
 <h5><b>Format for the "log<i>K</i>-files":</b></h5>
-<p>Each file may have any number of lines. Each line must contain:</p>
+
+<p><a href="DB_Names_Numbers.htm">How to enter names and numbers in databases.</a></p>
+
+<p>Each file may have any number of species (reactions).
+For each species the following information is needed:</p>
 <ul>
-<li>Name of the reaction product</li>
+<li>Name of the species (reaction product).</li>
 <li>log<i>K</i>&deg;, overall equilibrium constant of formation at <nobr>25&deg;C.</nobr>
-		<a href="ChEq_Sources_logK.htm">How to get equilibrium constants</a></li>
-<li>&#916;<i>H</i>&deg;, enthalpy change for the reaction <nobr>(kJ/mol).</nobr>
-Used for <a href="DB_Temperature.htm">temperature extrapolations.</a> See
-&#147;<a href="ChEq_Sources_Data.htm">how to get thermodynamic data</a>&#148;</li>
-<li>&#916;<i>Cp</i>&deg;, heat capacity change for the reaction <nobr>(J/mol K).</nobr>
-Used for <a href="DB_Temperature.htm">temperature extrapolations.</a></li>
-<li>The stoichiometry of the reaction is given as 6 component names and their corresponding
-	coefficients</li>
-<li>Number of <nobr>H<sup>+</sup></nobr> ions (protons) involved in the
-  reaction (can be negative)</li>
-<li>A (short) text describing the <nobr>reference(s)</nobr> for the data</li>
+		<a href="ChEq_Sources_logK.htm">(how&nbsp;to&nbsp;get&nbsp;equilibrium&nbsp;constants)</a></li>
+<li><a href="DB_logK_file_T.htm">Data for the temperature variation of <nobr>log<i>K</i>&deg;</nobr></a>
+</li>
+<li><a href="DB_logK_file_S.htm">The reaction stoichiometry</a></li>
+<li><a href="DB_logK_file_R.htm">Reference citations</a>
+<li>A (short) text comment (optional). See below.</li>
 </ul>
 <p>The data is separated by either commas <nobr>(,)</nobr> or semicolons <nobr>(;).</nobr></p>
 
@@ -68,8 +66,6 @@ comments and discarded. Comments may also be added after the reference descripti
 a slash <nobr>(/)</nobr> preceeded by either a space, a comma or a semicolon
 indicates the beginning of the comment (see second line in the examples above).</p>
 
-<p><a href="DB_Names_Numbers.htm"><b>How to enter names and numbers in databases</b></a></p>
-
 <p><b>Special Cases and Examples:</b></p>
 <ul>
 <li><a href="DB_Remove_reaction.htm">Remove a reaction</a></li>
@@ -80,5 +76,13 @@ indicates the beginning of the comment (see second line in the examples above).<
 <li><a href="ChEq_H2O.htm">Water</a></li>
 </ul>
 
+<p><hr> <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --></p>
+
+<p style="margin-top: 0 ex">
+<a href="DB_Create_your_database.htm">
+<img src="images/Back.gif" alt="back" title="back" height="13" width="16" border="0"></a>
+<tt>&nbsp;</tt><a href="DB_Create_your_database.htm">Create your own database</a></p>
+
+<p>&nbsp;</p>
 </body>
 </html>

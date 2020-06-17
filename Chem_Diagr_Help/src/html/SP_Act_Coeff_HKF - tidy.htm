@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Simplified HKF model</title>
+<style type="text/css"> <!-- @import url(1_.css);   --> </style>
+<link disabled rel="stylesheet" type="text/css" href="1_.css">
+</head>
+
+<body bgcolor="#ffffff" text="#000000" link="#008000" vlink="#008000" alink="#008000">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" valign="middle" width="50"><a name="Top"></a>
+    <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <a href="SP_Act_Coeff_Models.htm">Activity Coefficient Models</a></font></td>
+  </tr>
+</table>
+
+<h4>The simplified Helgeson-Kirkham-Flowers (HKF) model</h4>
+
+<p>The equation to calculate the <a href="SP_Activity.htm">activity coefficient</a>,
+<nobr><i>&#947;<sub>i</sub></i>,</nobr> of an ion &#147;<i>i</i>&#148; with
+electric charge <nobr><i>Z<sub>i</sub></i></nobr> is:
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td valign="top"><nobr>log <i>&#947;<sub>i</sub></i><font size="+2"> </font>= </nobr></td>
+	<td valign="top"><nobr>&#8722;<i>A<sub>&#947;</sub></i> <i>Z<sub>i</sub></i><sup>2</sup></nobr>
+		<nobr><font size="+2">(</font>&#8730;<b><i>I</i></b> &nbsp;/
+			<font size="+1">&nbsp;(</font>1 + &aring;<i>B<sub>&#947;</sub></i> &#8730;<b><i>I</i></b><font size="-2"> </font>
+				<font size="+1">)</font><font size="+2">)</font></nobr>
+	<nobr>&#8722; log<font size="+1">(</font>1+0.018 &#8721;<i>m<sub>k</sub></i><font size="+1">)</font></nobr>
+	<nobr>+ <i>b</i><sub><i>&#947;</i>,MX</sub> <i><b>I</b></i></nobr>
+</td></tr></table>
+</p>
+
+<p class="cont">
+where <b><i>I</i></b> is the <a href="SP_Ionic_Strength.htm">ionic strength</a>,
+<i>A<sub>&#947;</sub></i> and <i>B<sub>&#947;</sub></i> are
+<a href="SP_Act_Coeff_DH.htm">Debye-H&uuml;ckel</a> parameters
+which are temperature- and pressure dependent (see <a href="SP_Act_Coeff_DH_params.htm">Table</a>),
+<i>&aring;</i> is the effective ionic radius (discussed below), and
+<nobr><i>b</i><sub><i>&#947;</i>,MX</sub></nobr> is a solute-specific parameter.
+The sum <nobr><font size="+1">(</font>&#8721;<i>m<sub>k</sub></i><font size="+1">)</font></nobr> is made over all solute species &#147;<i>k</i>&#148; in the aqeuous solution, both
+charged and neutral. The model is further described in
+<a href="#Refs">Helgeson, Kirkham and Flowers (1981)</a> (eqs. 121, 165-167, 297, 298),
+<a href="#Refs">Oelkers and Helgeson (1990)</a> (eqs. 22 &amp; 23) and in
+<a href="#Refs">Oelkers and Helgeson (1991)</a> (eqs. 3 &amp; 9).
+</p>
+
+<p>
+In <a href="S_0_Main.htm">SPANA</a> (and <nobr><a href="SP_0_Main.htm">SED/PREDOM</a>)</nobr>
+the HKF model is <b>simplified</b> by using the <nobr><b>NaCl</b></nobr> parameters:
+<ul>
+	<li>the parameter <nobr>&#147;<i>&aring;</i>&#148;</nobr>
+	is the effective ionic distance for NaCl <nobr>(<i>&aring;</i></nobr>
+	= <nobr>(1.91+1.81)</nobr> &Aring; = <nobr>3.72 &Aring;;</nobr> see Table&nbsp;9 in
+	<a href="#Refs">Shock <i>et al.</i> 1992</a> and Table&nbsp;3 in
+	<a href="#Refs">Helgeson <i>et al.</i> <nobr>1981</a>).</nobr>
+    This results in <nobr><i>&aring;B<sub>&#947;</sub></i></nobr> = 1.22
+	<nobr>(kg/mol)<sup>0.5</sup></nobr> at <nobr>25&deg;C.</nobr>
+	The effective ionic distance changes at high temperatures or pressures as
+	described in <a href="#Refs">Shock <i>et al.</i> (1992)</a> (eqs. 4-5, 24-26, <nobr>Table 3).</nobr></li>
+<li><nobr><i>b</i><sub><i>&#947;</i>,MX</sub></nobr> for NaCl solutions
+    is used, see <nobr><a href="SP_Act_Coeff_DH_params.htm">Table</a>.</nobr>
+	<nobr><i>b</i><sub><i>&#947;</i>,NaCl</sub></nobr>= 0.064 at <nobr>25&deg;C.</nobr>
+	</li>
+<li>the calculated ionic strength (<b><i>I</i></b>) is used instead of
+	<nobr>&#8721;<i>m<sub>k</sub></i>.</nobr> This avoids problems when making
+	diagrams where the redox potential, <a href="1_Eh_pe.htm">Eh</a>, is outside
+	the stability range of <nobr>H<sub>2</sub>O.</nobr> Convergence problems
+	in the calculations occur if large amounts of either <nobr>O<sub>2</sub>(aq)</nobr>
+	or <nobr>H<sub>2</sub>(aq)</nobr> are calculated when <a href="1_Eh_pe.htm">Eh</a> is
+	too high or too low, respectively, because then
+	<nobr>&#8721;<i>m<sub>k</sub></i></nobr> becomes unrealistically large.
+</li></ul>
+</p>
+
+<p>The <b>activity of water</b> <nobr>(H<sub>2</sub>O)</nobr> is given by
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td valign="top"><nobr>log <i>a</i><sub>H<sub>2</sub>O</sub> =<font size="+1"> </font></nobr></td>
+	<td valign="top"><nobr>&#8722;<font size="+1"> </font>&Phi; &#8721;<i>m<sub>k</sub></i>&nbsp;/</nobr>
+		<nobr><font size="+1">(</font>ln(10)&nbsp;55.508<font size="+1">)</font></nobr>
+</td></tr></table>
+</p>
+
+<p class="cont">
+where &#147;&Phi;&#148; is the osmotic coefficient,
+calculated using the <b>HKF model</b> as follows:
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td valign="top"><nobr>&Phi; =<font size="+2"> </font></nobr></td>
+	<td valign="top">
+	<nobr>ln<font size="+1">(</font>1+0.018 &#8721;<i>m<sub>k</sub></i><font size="+1">)/(</font>0.018 &#8721;<i>m<sub>k</sub></i><font size="+1">)</font><font size="+2"> </font></nobr>
+	<nobr>&#8722; <font size="+2">(</font>2 <i>A</i><sub>&Phi;</sub> <font size="+1">(</font>1/&#8721;<i>m<sub>k</sub></i><font size="+1">)</font> <b><i>I</i></b><sup>3/2</sup>
+		     <i>&sigma;</i>(<i>&aring;B<sub>&#947;</sub></i>&#8730;<b><i>I</i></b>)<font size="+2">)</font></nobr>
+          <nobr>+ <font size="+1">(</font>1/&#8721;<i>m<sub>k</sub></i><font size="+1">)</font>
+					(1/2) ln(10) <i>b</i><sub><i>&#947;</i>,NaCl</sub> <b><i>I</i></b></nobr>
+</td></tr></table>
+</p>
+
+<p class="cont">
+where <nobr><i>A</i><sub>&Phi;</sub> =</nobr> (1/3) ln(10) <i>A<sub>&#947;</sub></i>, and
+<table cellspacing="0" cellpadding="0" border="0">
+<tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+	<td valign="top"><nobr><i>&sigma;</i>(<i>x</i>)<font size="+2"> </font>= </nobr></td>
+	<td valign="top"><nobr>(3/<i>x</i><sup>3</sup>)</nobr> <nobr><font size="+2">(</font>(1+<i>x</i>)</nobr> <nobr>&#8722; 1/(1+<i>x</i>)</nobr> <nobr>&#8722; 2 ln(1+<i>x</i>)<font size="+2">)</font></nobr>
+</td></tr></table></p>
+<p>
+In <a href="S_0_Main.htm">SPANA</a> (and <nobr><a href="SP_0_Main.htm">SED/PREDOM</a>)</nobr>
+these equations are <b>simplified</b> by using the ionic strength value (<b><i>I</i></b>)
+instead of <nobr>&#8721;<i>m<sub>k</sub></i>.</nobr> This avoids the
+convergence problems explained above in diagrams where the redox potential,
+<a href="1_Eh_pe.htm">Eh</a>, is outside the stability range of <nobr>H<sub>2</sub>O.</nobr>
+</p>
+
+<p>Note that in the calculations the values of <nobr>log <i>&#947;<sub>i</sub></i></nobr>
+are cut-off to be in the range <nobr>&plusmn;(20 <i>Z<sub>i</sub></i><sup>2</sup>),</nobr> and
+<nobr>log <i>a</i><sub>H<sub>2</sub>O</sub></nobr> is cut-off to be in the
+range &plusmn;4.</p>
+
+<a name="Refs"></a>
+<h5>References</h5>
+<ul>
+<li>
+H.C. Helgeson, D.H. Kirkham and G.C. Flowers, <i>Amer. Jour. <nobr>Sci.,</nobr></i> <b>281</b> (1981)
+1249-1516. doi: 10.2475/ajs.281.10.1249</li>
+<li>
+E.H. Oelkers and H.C. Helgeson, <i>Geochim. Cosmochim. Acta,</i> <b>54</b> (1990)
+727-738. doi: 10.1016/0016-7037(90)90368-U</li>
+<li>
+E.H. Oelkers and H.C. Helgeson, <i>Geochim. Cosmochim. Acta</i>, <b>55</b> (1991) 1235–1251.
+doi: 10.1016/0016-7037(91)90303-M</li>
+<li>
+E.L. Shock, E.H.Oelkers, J.W. Johnson, D.A. Sverjensky, H.C.Helgeson
+<i>J. Chem. Soc. Faraday Trans.,</i> <b>88</b> (1992) 803-826.
+doi: 10.1039/FT9928800803</li>
+</ul>
+
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<tr><td><hr><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+</td><td width="20" align="right">
+<a href="#Top"><img src="images/Upp.gif" alt="top" title="top" height="15" width="15" border="0"></a>
+</td></tr></table>
+
+<p style="margin-top: 0 ex">
+<a href="SP_Act_Coeff_Models.htm">
+<img src="images/Back.gif" alt="back" title="back" height="13" width="16" border="0"></a>
+<tt>&nbsp;</tt><a href="SP_Act_Coeff_Models.htm">Models</a> for activity coefficients</p>
+
+<p style="margin-top: 0 ex">
+<a href="SP_log_gamma.htm"><img src="images/Back.gif" alt="back" title="back" height="13" width="16" border="0"></a>
+<tt>&nbsp;</tt><a href="SP_log_gamma.htm">Comparison</a> between experimental data and models</p>
+
+<p>&nbsp;</p>
+</body>
+</html>

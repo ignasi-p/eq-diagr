@@ -12,11 +12,13 @@
   <tr>
     <td align="center" valign="middle" width="50">
     <a href="SP_0_Main.htm"><img src="images/abacus.gif" border="0" width="32" height="32" alt="Calc." title="Calc."></a>&nbsp;</td>
-    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <a href="SP_Ionic_Strength.htm">Ionic Strength</a></font></td>
+    <td align="left" valign="middle"><font size="-1"><a href="SP_0_Main.htm">SED &amp; PREDOM</a>&nbsp;/ <a href="SP_Ionic_Strength.htm">Ionic&nbsp;Strength</a>&nbsp;/ <a href="SP_Act_Coeff_Models.htm">Activity Coefficient Models</a></font></td>
   </tr>
 </table>
 
-<p>The <b>Davies equation</b> is an empirical equation appropriate
+<h4>The Davies equation</h4>
+
+<p>This is an empirical model appropriate
 for ionic strengths up to <nobr>&asymp;0.1 M:</nobr>
 <table cellspacing="0" cellpadding="0" border="0">
 <tr valign="top"><td><tt>&nbsp;&nbsp;</tt></td>
@@ -32,33 +34,33 @@ for ionic strengths up to <nobr>&asymp;0.1 M:</nobr>
 <p class="cont">
 where <b><i>I</i></b> is the <a href="SP_Ionic_Strength.htm">ionic strength</a>;
 <nobr>&#947;<sub><i>i</i></sub></nobr> is the
-<a href="SP_Ionic_Strength.htm#Act_Coef">activity coefficient</a> of an
+<a href="SP_Act_Coeff.htm">activity coefficient</a> of an
 ion &#147;<i>i</i>&#148; with electric charge <nobr><i>Z<sub>i</sub></i>.&nbsp;</nobr>
-The last parameter was initially <nobr>&#147;0.2&#148;</nobr> 
-(Davies, C.W. (1938) <i><nobr>J. Chem.</nobr> Soc.</i>, 2093-<nobr>2098),&nbsp;</nobr>
-but later Davies changed it to <nobr>&#147;0.3&#148;</nobr> (Davies, C.W. (1962) <i>Ion Association.</i>
-London: Butterworths. <nobr>p.41).</nobr>
+The last parameter was initially <nobr>&#147;0.2&#148;</nobr>
+<a href="#Refs">(Davies 1938)</a>
+but it was later changed to <nobr>&#147;0.3&#148;</nobr> <nobr><a href="#Refs">(Davies 1962)</a>.</nobr>
 </p>
 
 <p>
-The <b>Davies equation</b> is derived from the
-<a href="SP_Ionic_Strength_DH.htm">Debye-H&uuml;ckel <nobr>model</a>,</nobr>
+The <b>Davies</b> equation is derived from the
+<a href="SP_Act_Coeff_DH.htm">Debye-H&uuml;ckel <nobr>model</a>,</nobr>
 simplified by setting <nobr><i>&aring;B<sub>&#947;</sub></i></nobr> =&nbsp;1
 for all electrolytes, and extended with the empirical term:
 <nobr>+0.15<font size="-2">&nbsp;</font><i>Z<sub>i</sub></i><sup>2</sup><font size="-2">&nbsp;</font><i><b>I</b></i>.</nobr>
 </p>
 
-<p>In <a href="S_0_Main.htm">SPANA</a>
-(and <nobr><a href="SP_0_Main.htm">SED/PREDOM</a>)</nobr> the parameter
-<nobr>&#147;0.5&#148;</nobr> is replaced by the temperature-dependent
-solvent parameter <nobr>&#147;<i>A</i>&#148;</nobr> of the 
-<a href="SP_Ionic_Strength_DH.htm">Debye-H&uuml;ckel<nobr> model</a>
-<nobr>(<i>A</i>=0.509</nobr> at <nobr>25&deg;C);</nobr>
-but the value <nobr>&#147;0.3&#148;</nobr> in the last term of the equation
-is kept temperature-independent.
+<p>In <a href="S_0_Main.htm">SPANA</a> (and <nobr><a href="SP_0_Main.htm">SED/PREDOM</a>)</nobr>
+the parameter <nobr>&#147;0.5&#148;</nobr> is replaced by the
+<nobr>&#147;<i>A<sub>&#947;</sub></i>&#148;</nobr> parameter of the
+<a href="SP_Act_Coeff_DH.htm">Debye-H&uuml;ckel<nobr> model</a>
+which is <a href="DB_Temperature.htm">temperature-</a> and pressure-dependent <nobr>(<a href="SP_Act_Coeff_DH_params.htm">see Table</a>;</nobr>
+<nobr><i>A<sub>&#947;</sub></i></nobr> = 0.509 <nobr>(mol/kg)<sup>&#8722;&#189;</sup></nobr>
+at <nobr>25&deg;C);</nobr>
+but the value <nobr>&#147;0.3&#148;</nobr> in the last term of the Davies equation
+is kept constant at all temperatures and pressures.
 </p>
 
-<p>The activity of water <nobr>(H<sub>2</sub>O) is given by:</nobr>
+<p>The <b><a href="SP_Activity.htm#H2O">activity of water</a></b> <nobr>(H<sub>2</sub>O) is given by:</nobr>
 <table cellspacing="0" cellpadding="0" border="0">
 <tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 	<td valign="top"><nobr>log <i>a</i><sub>H<sub>2</sub>O</sub><font size="+1"> </font>= </nobr></td>
@@ -71,34 +73,52 @@ where &#147;<i>k</i>&#148; are all solute species in the aqeuous solution, and &
 is the osmotic coefficient, which for the <b>Davies equation</b> it is given by:
 <table cellspacing="0" cellpadding="0" border="0">
 <tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-	<td valign="top"><nobr>&Phi;<font size="+1"> </font>= </nobr></td>
-	<td valign="top">1 &#8722; <nobr>(2/3)</nobr> <nobr><font size="+1">(</font>ln(10)/&#8721;<i>m<sub>k</sub></i><font size="+1">)</font></nobr>
-		<nobr><i>A</i>&nbsp;<b><i>I</i></b><sup>3/2</sup></nobr>
-		<nobr><i>&sigma;</i>(&#8730;<b><i>I</i></b>)</nobr>
-          <nobr>+&nbsp;<font size="+1">(</font>ln(10)/&#8721;<i>m<sub>k</sub></i><font size="+1">)</font>
-					<i>A</i>&nbsp;0.3&nbsp;<b><i>I</i></b><sup>2</sup></nobr>
+	<td valign="top"><nobr>&Phi; =<font size="+2"> </font></nobr></td>
+	<td valign="top"><nobr>1<font size="+2"> </font>&#8722;</nobr>
+	<nobr><font size="+2">(</font>2 <i>A</i><sub>&Phi;</sub>&nbsp;<b><i>I</i></b><sup>3/2</sup>
+		<font size="+1">(</font>1/&#8721;<i>m<sub>k</sub></i><font size="+1">)</font>
+		<i>&sigma;</i>(&#8730;<b><i>I</i></b>)<font size="+2">)</font></nobr>
+          <nobr>+&nbsp;<font size="+1">(</font>1/&#8721;<i>m<sub>k</sub></i><font size="+1">)</font>
+					ln(10) (<i>A<sub>&#947;</sub></i>&times;0.3) <b><i>I</i></b><sup>2</sup></nobr>
 </td></tr></table></p>
-<p class="cont">where
+
+<p class="cont">
+where <nobr><i>A</i><sub>&Phi;</sub> =</nobr> <nobr>(1/3) ln(10) <i>A<sub>&#947;</sub></i>,</nobr> and
 <table cellspacing="0" cellpadding="0" border="0">
 <tr valign="top"><td><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 	<td valign="top"><nobr>&sigma;</i>(<i>x</i>)<font size="+2"> </font>= </nobr></td>
 	<td valign="top"><nobr>(3/<i>x</i><sup>3</sup>)</nobr> <nobr><font size="+2">(</font>(1+<i>x</i>)</nobr> <nobr>&#8722; 1/(1+<i>x</i>)</nobr> <nobr>&#8722; 2 ln(1+<i>x</i>)<font size="+2">)</font></nobr>
 </td></tr></table></p>
 
-<p>Note that in the calculations the values of <nobr>log <i>&#947;<sub>i</sub></i></nobr>
+<p><i>Note:</i> in the calculations the values of <nobr>log <i>&#947;<sub>i</sub></i></nobr>
 are cut-off to be in the range <nobr>&plusmn;(20 <i>Z<sub>i</sub></i><sup>2</sup>),</nobr> and
 <nobr>log <i>a</i><sub>H<sub>2</sub>O</sub></nobr> is cut-off to be in the
 range &plusmn;4.</p>
+
+<a name="Refs"></a>
+<h5>References</h5>
+<ul>
+<li>
+Davies, C.W. (1938) The extent of dissociation of salts in water.
+<nobr>Part VIII.</nobr> An equation for the mean ionic activity coefficient
+of an electrolyte in water, and a revision of the dissociation constants
+of some sulphates. <i>J. Chem. Soc.</i>, 2093-2098. doi: 10.1039/JR9380002093</li>
+<li>
+Davies, C.W. (1962) <i>Ion Association.</i> London: Butterworths. <nobr>p.41</li>
+</ul>
+
+
 <p><hr><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --></p>
 
 <p style="margin-top: 0 ex">
-<a href="SP_Ionic_Strength.htm#Models">
+<a href="SP_Act_Coeff_Models.htm">
 <img src="images/Back.gif" alt="back" title="back" height="13" width="16" border="0"></a>
-<tt>&nbsp;</tt><a href="SP_Ionic_Strength.htm#Models">Models</a> for activity coefficients</p>
+<tt>&nbsp;</tt><a href="SP_Act_Coeff_Models.htm">Models</a> for activity coefficients</p>
 
 <p style="margin-top: 0 ex">
 <a href="SP_log_gamma.htm"><img src="images/Back.gif" alt="back" title="back" height="13" width="16" border="0"></a>
 <tt>&nbsp;</tt><a href="SP_log_gamma.htm">Comparison</a> between experimental data and models</p>
 
+<p>&nbsp;</p>
 </body>
 </html>
