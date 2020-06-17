@@ -105,6 +105,7 @@ public class HelpAboutF extends javax.swing.JFrame {
         jLabelPathApp = new javax.swing.JLabel();
         jLabelPathU = new javax.swing.JLabel();
         jLabelPathUser = new javax.swing.JLabel();
+        jLabelUnicode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -167,6 +168,8 @@ public class HelpAboutF extends javax.swing.JFrame {
 
         jLabelPathUser.setText("\"null\"");
 
+        jLabelUnicode.setText("(Unicode UTF-8)");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -187,7 +190,10 @@ public class HelpAboutF extends javax.swing.JFrame {
                                 .addComponent(jLabelPathU)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabelPathUser))
-                            .addComponent(jLabelVers))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelVers)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelUnicode)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel_Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -203,7 +209,9 @@ public class HelpAboutF extends javax.swing.JFrame {
                     .addComponent(jLabel_Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelVers)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelVers)
+                    .addComponent(jLabelUnicode))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelLicense, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -337,6 +345,7 @@ private static class BareBonesBrowserLaunch {
     private javax.swing.JLabel jLabelPathApp;
     private javax.swing.JLabel jLabelPathU;
     private javax.swing.JLabel jLabelPathUser;
+    private javax.swing.JLabel jLabelUnicode;
     private javax.swing.JLabel jLabelVers;
     private javax.swing.JLabel jLabel_Name;
     private javax.swing.JLabel jLabel_www;

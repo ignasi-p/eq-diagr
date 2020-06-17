@@ -37,7 +37,7 @@ import lib.kemi.readWriteDataFiles.ReadChemSyst;
  *
  * @author Ignasi Puigdomenech */
 public class Predom extends javax.swing.JFrame {
-    static final String VERS = "2020-Feb-03";
+    static final String VERS = "2020-June-17";
     static final String progName = "PREDOM";
 /** variable needed in "main" method */
     private static Predom predomFrame;
@@ -100,15 +100,25 @@ public class Predom extends javax.swing.JFrame {
 /** the calculations class */
     private HaltaFall h;
 
-/** if true only aquous species will be shown in the diagram, that is,
+/** if true only aqueous species will be shown in the diagram, that is,
  * predominance areas for solids will not appear. */
     boolean aqu = false;
 /** if true a dashed line will be plotted in the diagram showing the pH of
  * neutral water, which is temperature dependent. At 25 C the neutral pH is 7. */
     boolean neutral_pH = false;
-/** the species predominating in the diagram at the point being calculated.
- * -2 if two solid species have practically the same amount of "main component" */
+/** This value is set in findTopSpecies() to the species predominating in the
+ * diagram at the point being calculated. It is set to -2 if two solid species
+ * have practically the same amount of "main component" */
     private int topSpecies = -1;
+/** used to direct SED and Predom to draw concentration units
+ * as either:<ul><li>0="molal"</li><li>1="mol/kg_w"</li><li>2="M"</li><li>-1=""</li></ul> */
+    int conc_units = 0;
+    String[] cUnits = new String[]{"","molal","mol/kg`w'","M"};
+/** used to direct SED and Predom to draw concentrations
+ * as either scientific notation or engineering notation:<ul><li>0 = no choice
+ * (default, means scientific for "molal" and engineering for "M")</li>
+ * <li>1 = scientific notation</li><li>2 = engineering notation</li></ul> */
+    int conc_nottn = 0;
 
 /** a class to read text files where data is separated by commas */
     private ReadDataLib rd;
@@ -184,7 +194,7 @@ public class Predom extends javax.swing.JFrame {
        new java.io.PrintStream(
          new outFilteredStreamPredom(
            new java.io.ByteArrayOutputStream()),true);
-    /** true if a minumum of information is sent to the console (System.out)
+    /** true if a minimum of information is sent to the console (System.out)
      * when inputDataFileInCommandLine and not doNotExit.
      * False if all output is sent only to the JTextArea panel. */
     boolean consoleOutput = true;
@@ -443,7 +453,7 @@ public class Predom extends javax.swing.JFrame {
 //<editor-fold defaultstate="collapsed" desc="start">
  /** Sets this window frame visible, and deals with the command-line arguments
   * @param reversedConcs0 needed when reading the input data file.
-  * The comman-line argument may be given <i>after</i> the data file name...
+  * The command-line argument may be given <i>after</i> the data file name...
   * @param help0 if help is displayed, request focus for the text pane,
   * where the help is shown
   * @param args the command-line arguments */
@@ -595,6 +605,11 @@ public class Predom extends javax.swing.JFrame {
         jLabel2.setText("jLabel2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
                 formWindowGainedFocus(evt);
@@ -605,11 +620,6 @@ public class Predom extends javax.swing.JFrame {
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
-            }
-        });
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                formComponentResized(evt);
             }
         });
 
@@ -677,6 +687,7 @@ public class Predom extends javax.swing.JFrame {
         );
 
         jButtonDoIt.setText("make the Diagram");
+        jButtonDoIt.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonDoIt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDoItActionPerformed(evt);
@@ -1412,17 +1423,22 @@ private void jLabelHDMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:ev
         setCursorDef();
         if(txtfn == null || txtfn.trim().equals("")) {return;}
         java.io.File outputTxtFile = new java.io.File(txtfn);
-        java.io.PrintWriter pw = null;
+        java.io.Writer w = null;
         try {
-            pw = new java.io.PrintWriter(new java.io.BufferedWriter(new java.io.FileWriter(outputTxtFile.toString())));
-            pw.print(jTextAreaA.getText());
-            pw.flush();
-            pw.close();
+            w = new java.io.BufferedWriter(
+                    new java.io.OutputStreamWriter(
+                            new java.io.FileOutputStream(outputTxtFile),"UTF8"));
+            w.write(jTextAreaA.getText());
+            w.flush();
+            w.close();
             javax.swing.JOptionPane.showMessageDialog(this, "File:"+nl+"    "+outputTxtFile.toString()+nl+"has been written.",
                     progName,javax.swing.JOptionPane.INFORMATION_MESSAGE);
         }
         catch (Exception ex) {showErrMsgBx(ex.toString(),1);}
-        finally {if(pw != null) {pw.flush(); pw.close();}}
+        finally {
+            try{if(w != null) {w.flush(); w.close();}}
+            catch (Exception ex) {showErrMsgBx(ex.toString(),1);}
+        }
         jTabbedPane.setSelectedComponent(jScrollPaneMessg);
         jTabbedPane.requestFocusInWindow();
     }//GEN-LAST:event_jMenuSaveActionPerformed
@@ -2026,6 +2042,24 @@ private boolean dispatchArg(String arg) {
             }// = or :
         } // if starts with "-dbgh"
     } //if length >6
+    if(arg.length() >7) {
+        String arg0 = arg.substring(0, 6).toLowerCase();
+        if(arg0.startsWith("-units") || arg0.startsWith("/units")) {
+            if(arg.charAt(6) == '=' || arg.charAt(6) == ':') {
+                String t = arg.substring(7);
+                try {conc_units = Integer.parseInt(t);
+                    conc_units = Math.min(2, Math.max(conc_units, -1));
+                    if(dbg) {out.println("Concentration units = "+conc_units+"(\""+cUnits[(conc_units+1)]+"\")");}
+                    return true;
+                    } //try
+                catch (NumberFormatException nfe) {
+                msg = "Wrong numeric format for concentration units \""+t+"\" (setting default: 0=\"molal\")";
+                conc_units = 0;
+                break;
+                } //catch
+            }// = or :
+        } // if starts with "-dbgh"
+    } //if length >7
 
     if(arg.equalsIgnoreCase("-ph") || arg.equalsIgnoreCase("/ph")) {
             neutral_pH = true;
@@ -2055,6 +2089,14 @@ private boolean dispatchArg(String arg) {
     } else if(arg.equalsIgnoreCase("-nostop") || arg.equalsIgnoreCase("/nostop")) {
             doNotStop = true;
             if(dbg) {out.println("Do not show message boxes");}
+            return true;
+    } else if(arg.equalsIgnoreCase("-sci") || arg.equalsIgnoreCase("/sci")) {
+            conc_nottn = 1;
+            if(dbg) {out.println("Display concentrations in scientific notation.");}
+            return true;
+    } else if(arg.equalsIgnoreCase("-eng") || arg.equalsIgnoreCase("/eng")) {
+            conc_nottn = 2;
+            if(dbg) {out.println("Display concentrations in engineerng notation.");}
             return true;
     }
     break;
@@ -2583,6 +2625,7 @@ private void findTopSpecies() {
     "  -dbgH=n  (level for debug output from HaltaFall"+nl+
     "            in the first calculation point; default ="+Chem.DBGHALTA_DEF+")"+nl+
     "  -d=data-file-name  (input file name)"+nl+
+    "  -eng     (display concentrations in engineering notation)"+nl+
     "  -h=nbr   (height factor for labels in the plot)"+nl+
     "  -i=nbr   (ionic strength (the equil. constants are"+nl+
     "            assumed for I=0). Requires a temperature."+nl+
@@ -2599,9 +2642,12 @@ private void findTopSpecies() {
     "  -pr=nbr  (pressure in bar; displayed in the diagram)"+nl+
     "  -rev     (do not reverse the input"+nl+
     "            min. and max. limits in x-axis)"+nl+
+    "  -sci     (display concentrations in scientific notation)"+nl+
     "  -t=nbr   (temperature in °C, ignored if not needed)"+nl+
     "  -tol=nbr (tolerance when solving mass-balance equations in Haltafall,"+nl+
     "            0.01 >= nbr >= 1e-9; default ="+Chem.TOL_HALTA_DEF+")"+nl+
+    "  -units=nbr (concentration units displayed in the diagram: 0=\"molal\","+nl+
+    "              1=\"mol/kg_w\", 2=\"M\", -1=\"\")"+nl+
     "Enclose file names with double quotes (\"\") it they contain blank space."+nl+
     "Example:   PREDOM \"/d=Fe 25\" -t:25 -i=-1 \"-p:plt\\Fe 25\" -n=200");
   } //printInstructions(out)
@@ -2701,8 +2747,9 @@ private boolean readDataFile(java.io.File dataFile) {
           t_d = temperature_InCommandLine;
         } // temperatures differ
       }  // temperature also given
-      jLabelTemperature.setText(String.valueOf(t_d));
     } // temperature written in data file
+    else {t_d = 25.;}
+    jLabelTemperature.setText(String.valueOf(t_d));
     //--- get a pressure:
     double p_d;
     try {w = rd.getPressure();} // pressure written as a comment in the data file?
@@ -2721,8 +2768,9 @@ private boolean readDataFile(java.io.File dataFile) {
           p_d = pressure_InCommandLine;
         } // pressures differ
       }  // pressure also given in command line
-      jLabelPressure.setText(String.valueOf(p_d));
     } // pressure written in data file
+    else {p_d = 1.;}
+    jLabelPressure.setText(String.valueOf(p_d));
 
     try {rd.close();}
     catch (ReadDataLib.ReadDataLibException ex) {showMsg(ex);}
@@ -2760,7 +2808,7 @@ private boolean readDataFile(java.io.File dataFile) {
         return false;}
 
     if(cs.jWater >=0 && dbg) {
-        out.println("Water (H2O) is included: all concentrations are in \"mol/(1 kg H2O)\".");
+        out.println("Water (H2O) is included. All concentrations are in \"mol/(kg H2O)\".");
     }
 
     return true;
@@ -2802,11 +2850,11 @@ private boolean readDataFile(java.io.File dataFile) {
   } //readIonStrength()
 
   /** Reads the value in <code>jLabelTemperature</code>.
-   * Checks that it is within -50 to 1000 Celsius. It returns "NaN"
-   * (not_a_number) if there is no temperature to read.
+   * Checks that it is within -50 to 1000 Celsius. It returns 25
+   * if there is no temperature to read.
    * @return the temperature in Celsius */
   private double readTemperature() {
-    if(jLabelTemperature.getText().length() <=0) {return Double.NaN;}
+    if(jLabelTemperature.getText().length() <=0) {return 25.;}
     double w;
     try{w = Double.parseDouble(jLabelTemperature.getText());
         w = Math.min(1000,Math.max(w, -50));
@@ -2815,26 +2863,26 @@ private boolean readDataFile(java.io.File dataFile) {
         if(!jLabelTemperature.getText().equals("NaN")) {
             out.println("Error reading Temperature:"+nl+"   "+nfe.toString());
         }
-        w = Double.NaN;
+        w = 25.;
     } //catch
     return w;
   } //readTemperature()
 
   /** Reads the value in <code>jLabelPressure</code>.
-   * Checks that it is within 1 to 10000 bar. It returns "NaN"
-   * (not_a_number) if there is no pressure to read.
+   * Checks that it is within 1 to 10000 bar. It returns 1 (one bar)
+   * if there is no pressure to read.
    * @return the pressure in bar */
   private double readPressure() {
-    if(jLabelPressure.getText().length() <=0) {return Double.NaN;}
+    if(jLabelPressure.getText().length() <=0) {return 1.;}
     double w;
     try{w = Double.parseDouble(jLabelPressure.getText());
-        w = Math.min(10000,Math.max(w, 1));
+        w = Math.min(10000.,Math.max(w, 1.));
         } //try
     catch (NumberFormatException nfe) {
         if(!jLabelPressure.getText().equals("NaN")) {
             out.println("Error reading Pressure:"+nl+"   "+nfe.toString());
         }
-        w = Double.NaN;
+        w = 1.;
     } //catch
     return w;
   } //readPressure()
@@ -2975,12 +3023,37 @@ void showMsg(Exception ex) {
             return;            
         }
     }
-    if(diag.Eh) {peEh = (ln10*8.3144126d*(diag.temperature+273.15d)/96484.56d);} else {peEh = Double.NaN;}
     // decide if the temperature should be displayed in the diagram
     if(!diag.Eh && !calcActCoeffs
             && !(neutral_pH && (diag.pInX ==1 || diag.pInY ==1))) {
         if(dbg) {out.println(" (Note: temperature not needed in the diagram)");}
+    } else {
+        double pSat;
+        try {pSat= lib.kemi.H2O.IAPWSF95.pSat(diag.temperature);}
+        catch (Exception ex) {
+            out.println("\"IAPWSF95.pSat\": "+ex.getMessage());
+            out.println("Calculations cancelled.");
+            restoreMenus(false);
+            setCursorDef();
+            return;
+        }
+        if(Double.isNaN(diag.pressure)){diag.pressure = 1.;}
+        if(diag.temperature <= 99.61) {
+            if(diag.pressure < 1.) {
+                out.println("tC = "+diag.temperature+", pBar = "+diag.pressure+", setting pBar = 1.");
+            }
+            diag.pressure = Math.max(1.,diag.pressure);
+        }
+        // if pressure = 1 bar and temperature = 0, set temperature to 0.01 C (tripple point of water)
+        if(diag.pressure >0.99999 && diag.pressure < 1.00001 && Math.abs(diag.temperature) < 0.001) {diag.temperature = 0.01;}
+        if(diag.temperature <= 373.95) { // below critical point
+            if(diag.pressure < (pSat*0.999)) {
+                out.println("tC = "+diag.temperature+", pBar = "+diag.pressure+",  setting pBar = "+(float)pSat);
+                diag.pressure = pSat;
+            }
+        }
     }
+    if(diag.Eh) {peEh = (ln10*8.3144126d*(diag.temperature+273.15d)/96484.56d);} else {peEh = Double.NaN;}
     // nbr of calculation steps
     nSteps = jScrollBarNbrPoints.getValue();
     nSteps = Math.max(NSTP_MIN,nSteps);
@@ -3063,15 +3136,16 @@ void showMsg(Exception ex) {
 
     // ---- Make an instance of Factor
     String userHome = System.getProperty("user.home");
-    factor = new Factor(ch, pathApp, userHome, pathDef.toString(), out);
+    try{factor = new Factor(ch, pathApp, userHome, pathDef.toString(), out);}
+    catch (Exception ex) {showErrMsgBx(ex.getMessage(),1); calcActCoeffs = false; diag.ionicStrength = Double.NaN;}
     out.flush();
     // ---- print information on the model used for activity coefficients
-    try {factor.factorPrint(dbg);}
-    catch (Exception ex) {
-        showErrMsgBx(ex.getMessage(),1);
-        factor = null;
+    if(factor != null) {
+        try {factor.factorPrint(dbg);}
+        catch (Exception ex) {showErrMsgBx(ex.getMessage(),1); calcActCoeffs = false; diag.ionicStrength = Double.NaN;}
     }
     if(factor == null) {
+        out.println("Calculations cancelled.");
         restoreMenus(false);
         setCursorDef();
         return;
@@ -3231,19 +3305,18 @@ public class HaltaTask extends javax.swing.SwingWorker<Boolean, Integer> {
 
             if(finishedCalculations) {break do_loopOuter;} //user requests exit?
 
-            // print debug output from halta for the first point
+            // ------ print debug output from HaltaFall only for the first point (first point = zero) ------
             if(nStepOuter == 0 && nStepInner == 0) {
                 if(dbg || csC.dbg > Chem.DBGHALTA_DEF) {
                     out.println("Starting calculation 1 (of "+(nSteps+1)+"x"+(nSteps+1)+")");
                 }
             } else {
                 csC.dbg = Chem.DBGHALTA_DEF;
-                // ########## ---------- ##########  ---------- ########## ##?##
-                if(Math.abs(xVal+9.03)<0.005 && (Math.abs(yVal+2.48)<0.001)) {
+                /**  // ########## ---------- ##########  ---------- ########## ##?##
+                if(Math.abs(xVal+7.8)<0.005 && (Math.abs(yVal+38.7)<0.001)) {
                     csC.dbg = 6;
                     out.println("---- Note: x="+(float)xVal+", y="+(float)yVal+"  (debug) ---- nStepInner="+nStepInner+", nStepOuter="+nStepOuter);
-                }
-                // ########## ---------- ##########  ---------- ########## ##?##
+                }    // ########## ---------- ##########  ---------- ########## ##?##  */                
             }
             // --- HaltaFall: do the calculations
             //     calculate the equilibrium composition of the system
@@ -3282,8 +3355,8 @@ public class HaltaTask extends javax.swing.SwingWorker<Boolean, Integer> {
             // ---
             if(finishedCalculations) {break do_loopOuter;} //user request exit?
 
+            if(csC.isErrFlagsSet(1)) {nbrHaltaUncertain++;}
             if(csC.isErrFlagsSet(5)) {nbrTooLargeConcs++;}
-            else if(csC.isErrFlagsSet(1)) {nbrHaltaUncertain++;}
             if(csC.isErrFlagsSet(2) || csC.isErrFlagsSet(3) || csC.isErrFlagsSet(4)
                             || csC.isErrFlagsSet(6)) {
                 nbrHaltaErrors++;
@@ -3379,32 +3452,33 @@ public class HaltaTask extends javax.swing.SwingWorker<Boolean, Integer> {
             out.println(nl+msg);
             System.out.println(msg);
             System.out.flush();
+            msg = "";
             if(nbrTooLargeConcs > 0) {
                 int percent = nbrTooLargeConcs*100 /((nSteps+1) * (nSteps+1));
                 if(percent >0) {
                     msg = percent+" % of the calculated points had some"+nl+
                           "concentrations > "+(int)Factor.MAX_CONC+" (molal); impossible in reality."+nl+nl;
                     if(calcActCoeffs) {msg = msg + "The activity coefficients are then WRONG"+nl+
-                          "and the results unrealistic.";}
-                    else {msg = msg + "These results are unrealistic.";}
+                          "and the results unrealistic."+nl;}
+                    else {msg = msg + "These results are unrealistic."+nl;}
                     showErrMsgBx(msg, 1);
                 }
             }
-            if(nbrHaltaUncertain >1) {
-                out.println(LINE);
-                out.println(String.format("%d",nbrHaltaUncertain).trim()+" uncertain point(s)");
-                out.println(LINE);
+            if(nbrHaltaUncertain >0 && dbg) {
+                if(msg.length() >0) msg = msg+nl;
+                msg = msg+String.format("%d",nbrHaltaUncertain).trim()+" point(s) with round-off errors (not within tolerance).";
             }
-            if(failuresMsg != null && failuresMsg.length() >0) {
+            if(nbrHaltaErrors >0) {
+                if(msg.length() >0) msg = msg+nl;
+                msg = msg+String.format("Calculations failed for %d",nbrHaltaErrors).trim()+" point(s).";
+            }
+            if(msg.length() >0) {showErrMsgBx(msg, 1);}
+            if(nbrHaltaErrors >0 && failuresMsg != null && failuresMsg.length() >0) {// failuresMsg should not be empty...
                 out.println(LINE);
                 out.println(failuresMsg);
                 out.println(LINE);
             }
-            if(nbrHaltaErrors >0) {
-                msg = String.format("%d",nbrHaltaErrors).trim()+" calculation failure(s)";
-                showErrMsgBx(msg, 1);
-            }
-            if(dbg && lineMap != null) { //-- print the are limits map
+            if(dbg && lineMap != null) { //-- print the area limits map
                 out.println("---- Map of area limits (points to plot):");
                 for(i=0; i<lineMap.length; i++) {
                     for(j=0; j<lineMap.length; j++) {out.print(lineMap[j][i]);} out.println();
@@ -3480,7 +3554,11 @@ public class HaltaTask extends javax.swing.SwingWorker<Boolean, Integer> {
 
             // -------------------------------------------
             out.println("Saving plot file \""+outputPltFile.getAbsolutePath()+"\"...");
-            plot.drawPlot(outputPltFile, ch, predData);
+            try{plot.drawPlot(outputPltFile, ch, predData);}
+            catch (Exception ex) {
+              showErrMsgBx("Error: "+ex.getMessage()+nl+
+                  "while saving plot file \""+outputPltFile.getAbsolutePath()+"\"", 1);
+            }
             if(outputPltFile != null && outputPltFile.getName().length()>0) {
                 String msg3 = "Saved plot file: \""+outputPltFile.getAbsolutePath()+"\"";
                 out.println(msg3);

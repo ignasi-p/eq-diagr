@@ -3,11 +3,10 @@ package predominanceAreaDiagrams;
 import lib.common.Util;
 import lib.kemi.chem.Chem;
 import lib.kemi.graph_lib.GraphLib;
-import lib.kemi.interpolate.Interpolate;
 
 /** Methods to create a chemical equilibrium diagram.
  * <br>
- * Copyright (C) 2014-2018 I.Puigdomenech.
+ * Copyright (C) 2014-2020 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,10 +36,10 @@ public class Plot_Predom {
   private int[] iFL;
 /** true if the line pair[i][1/2] continues with another point */
   private boolean lineContinued;
-/** iOther[j] = how many neighbour points which are borderline between two
+/** iOther[j] = how many neighbor points which are borderline between two
  * areas, in one of which, species j predominates. */
   private int[] iOther;
-/** neighb[j][n] = number of the "n" neighbour point which is borderline
+/** neighb[j][n] = number of the "n" neighbor point which is borderline
  * between two areas, in one of which,
  * species "j" predominates. */
   private int[][] neighb;
@@ -77,6 +76,7 @@ void minMax(Chem ch, PredomData pd){
       out.println("--- minMax"+nl+"Calculating the position of the centre of each predominance area");
   }
   Chem.ChemSystem cs = ch.chemSystem;
+  // ax and ix are the maximum and minimum x-coordinates, similarly for ay and iy
   ax = new double[cs.Ms];
   ay = new double[cs.Ms];
   ix = new double[cs.Ms];
@@ -155,8 +155,9 @@ void minMax(Chem ch, PredomData pd){
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // how many lines go through X=xCentre ?
-    if(nLines == 1) {} //continue;
-    else if(nLines == 2) {
+    //if(nLines == 1) {} //continue;
+    //else
+    if(nLines == 2) {
       //normal area
       pd.yCentre[i]=(yCentr[0]+yCentr[1])/2.;
       //continue;
@@ -217,7 +218,7 @@ void minMax(Chem ch, PredomData pd){
       pd.yCentre[i2nd] = (yCentr[2]+yCentr[3])/2.;
       pd.xCentre[i2nd] = pd.xCentre[i];
       // Check if the distance in Y is too small
-      dist = pd.yCentre[i] - pd.yCentre[i2nd];
+      dist = Math.abs(pd.yCentre[i] - pd.yCentre[i2nd]);
       if(dist <= distS) {
           pd.yCentre[i] = (ay[i]+iy[i])/2.;
           pd.xCentre[i2nd] = -30000;
@@ -241,7 +242,8 @@ void minMax(Chem ch, PredomData pd){
  * @param ch where the data for the chemical system are stored
  * @param diagP contains information on the diagram
  */
-void drawPlot(java.io.File plotFile, Chem ch, PredomData diagP) {
+void drawPlot(java.io.File plotFile, Chem ch, PredomData diagP)
+        throws GraphLib.WritePlotFileException {
 Chem.ChemSystem cs = ch.chemSystem;
 Chem.ChemSystem.ChemConcs csC = cs.chemConcs;
 Chem.ChemSystem.NamesEtc namn = cs.namn;
@@ -250,7 +252,30 @@ Chem.DiagrConcs dgrC = ch.diagrConcs;
 
 out.println("--- Drawing the plot...");
 
-boolean xMolar, yMolar;
+//-- If true, the concentration is displayed as is.
+//   If false, the concentration is displayed as milli molal, micro molal, or nano molal.
+boolean xMolal, yMolal;
+
+//-- display of concentrations: units and notation
+//   default is that:
+//   1- if the temperature is between 0 and 45 Celsius and the pressure
+//      is below 50 bars, then units = "M" (molar) and the notation is
+//      engineering (millimolar, micromolar, etc)
+//   2- otherwise units = "molal" and the notation is engineering
+//      (10'-3` molal, 10'-6` molal, etc)
+pred.conc_units = Math.min(2, Math.max(pred.conc_units, -1));
+pred.conc_nottn = Math.min(2, Math.max(pred.conc_nottn, 0));
+if(pred.conc_nottn == 0) {pred.conc_nottn = 2;} // engineering    
+if( (Double.isNaN(diag.temperature) || (diag.temperature >= 0 && diag.temperature <= 45))
+        && (Double.isNaN(diag.pressure) || diag.pressure <=50)) {
+    // temperatures around 25 and low pressures
+    if(pred.conc_units == 0) {pred.conc_units = 2;} // units = "M"
+}
+String cUnit = pred.cUnits[(pred.conc_units+1)];
+String mUnit = ("×10'-3` "+cUnit).trim();
+String uUnit = ("×10'-6` "+cUnit).trim();
+String nUnit = ("×10'-9` "+cUnit).trim();
+if(pred.conc_units == 2) {mUnit = " mM"; uUnit = " $M"; nUnit = " nM";}
 
 //---- Max and Min values in the axes: xLow,xHigh, yLow,yHigh
     double xLow = dgrC.cLow[diag.compX];
@@ -276,13 +301,14 @@ boolean xMolar, yMolar;
             }
         } // if LAV
     } // is H+ or engl-
-    // Molar scale in X-axis
-    xMolar = true;
+    // standard scale in X-axis
+    xMolal = true;
     if(dgrC.hur[diag.compX] <=2) { // T or TV
-        if(Math.abs(xLow) <0.9d && Math.abs(xHigh) <0.9d) {
-            //milimolar units in X-axis
-            xMolar = false;
-            xLow = xLow * 1000.d; xHigh = xHigh * 1000.d;
+        if((pred.conc_nottn == 2 || (pred.conc_nottn == 0 && pred.conc_units == 2)) &&
+                Math.abs(xLow) <0.9 && Math.abs(xHigh) <0.9) {
+            //milli units in X-axis
+            xMolal = false;
+            xLow = xLow * 1000.; xHigh = xHigh * 1000.;
         }
     } //T or TV
     //Values for the Y-axis
@@ -303,13 +329,15 @@ boolean xMolar, yMolar;
             }
         } // if LAV
     } // is H+ or engl-
-    // Molar scale in Y-axis
-    yMolar = true;
+    // standard scale in Y-axis
+    yMolal = true;
     if(dgrC.hur[diag.compY] <=2) { // T or TV
-        if(Math.abs(yLow) <0.9d && Math.abs(yHigh) <0.9d) {
-            //milimolar units in Y-axis
-            yMolar = false;
-            yLow = yLow * 1000.d; yHigh = yHigh * 1000.d;
+        if(pred.conc_nottn == 2 ||
+           (pred.conc_nottn == 0 && pred.conc_units == 2 && 
+                Math.abs(yLow) <0.9 && Math.abs(yHigh) <0.9)) {
+            //milli molal units in Y-axis
+            yMolal = false;
+            yLow = yLow * 1000.; yHigh = yHigh * 1000.;
         }
     } //T or TV
 
@@ -336,8 +364,8 @@ boolean xMolar, yMolar;
     //  the axis-variables (pH, pe, Eh, log{}, log[]tot, etc)
     float xL = xAxl / (float)(xHigh - xLow);  float xI = xL * (float)xLow - xOr;
     float yL = yAxl / (float)(yHigh - yLow);  float yI = yL * (float)yHigh - yMx;
-    if(!xMolar) {xL = xL * 1000;}  // T or TV and "mM"
-    if(!yMolar) {yL = yL * 1000;}  // T or TV and "mM"
+    if(!xMolal) {xL = xL * 1000;}  // T or TV and "milli units"
+    if(!yMolal) {yL = yL * 1000;}  // T or TV and "milli units"
     //  pInX=0 "normal" X-axis
     //  pInX=1 pH in X-axis
     //  pInX=2 pe in X-axis
@@ -354,7 +382,7 @@ boolean xMolar, yMolar;
     GraphLib g = new GraphLib();
     boolean textWithFonts = true;
     try {g.start(pred.dd, plotFile, textWithFonts);}
-    catch (GraphLib.OpenPlotFileException ex) {pred.showErrMsgBx(ex.getMessage(),1); g.end(); return;}
+    catch (GraphLib.WritePlotFileException ex) {pred.showErrMsgBx(ex.getMessage(),1); g.end(); return;}
     pred.dd.axisInfo = false;
     g.setLabel("-- PREDOM DIAGRAM --");
     // -------------------------------------------------------------------
@@ -392,8 +420,8 @@ boolean xMolar, yMolar;
     } //"LAV"
     else if(dgrC.hur[diag.compY] ==2) { //"TV"
         t = "["+namn.identC[diag.compY]+"]`TOT'";
-        if(yMolar) {t = t + "    M";}
-        else  {t = t + "    mM";}
+        if(yMolal) {t = t + "   "+cUnit;}
+        else  {t = t + "   "+mUnit;}
     } else  { // if(dgrC.hur[diag.compY] ==3)  "LTV"
         t = "Log ["+namn.identC[diag.compY]+"]`TOT'";
     }
@@ -417,8 +445,8 @@ boolean xMolar, yMolar;
     } //"LAV"
     else if(dgrC.hur[diag.compX] ==2) { //"TV"
         t = "["+namn.identC[diag.compX]+"]`TOT'";
-        if(xMolar) {t = t + "    M";}
-        else  {t = t + "    mM";}
+        if(xMolal) {t = t + "   "+cUnit;}
+        else  {t = t + "   "+mUnit;}
     } else { // if(dgrC.hur[diag.compX] ==3) "LTV"
         t = "Log ["+namn.identC[diag.compX]+"]`TOT'";
     } 
@@ -594,8 +622,8 @@ boolean xMolar, yMolar;
         pred.showMsg("Error: Neutral pH line requested but temperature NOT available.",0);
       } else {
         double pHn;
-        try {pHn = n_pH((float)diag.temperature, (float)diag.pressure);}
-        catch (Chem.ChemicalParameterException ex) {
+        try {pHn = n_pH(diag.temperature, diag.pressure);}
+        catch (Exception ex) {
             pred.showMsg(ex);  pHn = -10;
         }
         if(pHn > 0) {
@@ -626,17 +654,18 @@ boolean xMolar, yMolar;
       if(Double.isNaN(diag.temperature)) {
         pred.showMsg("Temperature NOT available in a pH/(pe or Eh) diagram.",2);
       } else {
-        double O2lgK;
+        double lgKO2;
+        final double CRITICAL_TC = 373.946;
         if(Double.isNaN(diag.pressure)) {
-            if(diag.temperature >= 0 && diag.temperature < lib.kemi.H2O.IAPWSF95.CRITICAL_TC) {
-                diag.pressure = lib.kemi.H2O.IAPWSF95.pSat(diag.temperature);
-            } else {if(diag.temperature > lib.kemi.H2O.IAPWSF95.CRITICAL_TC) {diag.pressure = 1000;}}
+            if(diag.temperature >= 0 && diag.temperature < CRITICAL_TC) {
+                diag.pressure = Math.max(1.,lib.kemi.H2O.IAPWSF95.pSat(diag.temperature));
+            }
         }
-        try {O2lgK = O2_logK((float)diag.temperature, (float)diag.pressure);}
-        catch (Chem.ChemicalParameterException ex) {
-            pred.showMsg(ex);  O2lgK = -1;
-        }
-        if(O2lgK > 0) {
+        if(Double.isNaN(diag.pressure)) {diag.pressure = 1000;}
+        try {lgKO2 = logK_O2(diag.temperature, diag.pressure);}
+        catch (Exception ex) {pred.showMsg(ex);  lgKO2 = -1;}
+        if(pred.dbg) {out.println("logK_O2("+diag.temperature+","+diag.pressure+") = "+lgKO2);}
+        if(!Double.isNaN(lgKO2) && lgKO2 > 0) {
           g.setLabel("-- DASH LINES: O2(g) and H2(g) = 1 atm --"); g.moveToDrawTo(0, 0, 0);
           g.setPen(4);
           g.setPen(-5);
@@ -647,8 +676,8 @@ boolean xMolar, yMolar;
               //the pH range:
               line_pH[0]=-10; line_pH[1]=+20;
               if(diag.pInX == 3 || diag.pInY == 3) {w1 = pred.peEh;} else {w1 = 1;}
-              line_O2[0]= ((0.25*O2lgK) - line_pH[0]) * w1;
-              line_O2[1]= ((0.25*O2lgK) - line_pH[1]) * w1;
+              line_O2[0]= ((0.25*lgKO2) - line_pH[0]) * w1;
+              line_O2[1]= ((0.25*lgKO2) - line_pH[1]) * w1;
               line_H2[0] = -line_pH[0] * w1;
               line_H2[1] = -line_pH[1] * w1;
           if(Util.isProton(namn.identC[diag.compX])) {
@@ -666,6 +695,12 @@ boolean xMolar, yMolar;
     // -------------------------------------------------------------------
     //                  Text with concentrations as a Heading
     g.setLabel("-- HEADING --"); g.setPen(1); g.setPen(-1);
+    if(pred.dbg) {
+        out.print("Heading; concentration units: \""+pred.cUnits[pred.conc_units+1]+"\"");
+        if(pred.conc_nottn == 2 || (pred.conc_nottn == 0 && pred.conc_units == 2)) {out.print(",  notation: engineering");}
+        if(pred.conc_nottn == 1 || (pred.conc_nottn == 0 && pred.conc_units != 2)) {out.print(",  notation: scientific");}
+        out.println();
+    }
     float headColumnX = 0.5f*heightAx;
     int headRow = 0;
     int headRowMax = Math.max(2,(1+cs.Na)/2);
@@ -693,15 +728,30 @@ boolean xMolar, yMolar;
         String value;
         if(dgrC.hur[j] == 1) { //"T"
             w = csC.tot[j]; wa = Math.abs(w);
-            String units = "M";
-            if(wa < 1 && wa >= 0.9999E-4) {w = w*1.E+3; units = "mM";}
-            else if(wa < 0.9999E-4 && wa >= 0.9999E-7) {w = w*1.E+6; units = "$M";}
-            else if(wa < 0.9999E-7 && wa >= 0.9999E-10) {w = w*1.E+9; units = "nM";}
-            else if(wa < 0.9999E-10) {units = " ";}
-            if((wa <= 9999.9 && wa >= 0.9999E-10) || wa < 1.E-99) {
-                value = String.format(engl,"=%8.2f ",(float)w) + units;
+            // use engineering notation?
+            if(pred.conc_nottn == 2 || (pred.conc_nottn == 0 && pred.conc_units == 2)) {
+                if(wa < 1.E-99) {value = String.format(engl,"=%8.2f",(float)w);}
+                else if(wa < 1. && wa >= 0.9999E-4) {
+                    w = w*1.E+3;
+                    value = String.format(engl,"=%8.2f"+mUnit,(float)w);
+                } else if(wa < 0.9999E-4 && wa >= 0.9999E-7) {
+                    w = w*1.E+6;
+                    value = String.format(engl,"=%8.2f"+uUnit,(float)w);
+                } else if(wa < 0.9999E-7 && wa >= 0.9999E-10) {
+                    w = w*1.E+9;
+                    value = String.format(engl,"=%8.2f"+nUnit,(float)w);
+                } else if(wa <= 9999.99 && wa >= 0.99) {
+                    value = String.format(engl,"=%8.2f "+cUnit,(float)w);
+                } else {
+                    value = "= "+double2String(w)+" "+cUnit;
+                }
             } else {
-                value = String.format(engl,"=%10.2e M",(float)w);
+                if(wa < 1.E-99) {value = String.format(engl,"=%8.2f",(float)w);}
+                else if(wa <= 9999.99 && wa >= 0.99) {
+                    value = String.format(engl,"=%8.2f "+cUnit,(float)w);
+                } else {
+                    value = "= "+double2String(w)+" "+cUnit;
+                }
             }
             t = "["+namn.ident[i]+"]`TOT' "+value;
         } // hur=1: "T"
@@ -738,12 +788,12 @@ boolean xMolar, yMolar;
         }
         if(yP > (yPMx + 0.1f*heightAx)) {headColumnX = (0.5f*heightAx); yPMx = yP;}
         if(diag.ionicStrength > 0) {
-            t = String.format(engl,"I=%6.3f M",diag.ionicStrength);
+            t = String.format(engl,"I=%6.3f "+cUnit,diag.ionicStrength);
         } else {t = "I= varied";}
         g.sym(headColumnX, yP, heightAx, t, 0, -1, false);
     } // if ionicStrength != NaN & !=0
 
-    // ---- Temperature in the bottom right corner
+    // ---- Temperature and pressure
     //if(!Double.isNaN(diag.temperature) && diag.temperature > -1.e-6) {
     //    g.setLabel("-- Temperature --");
     //    g.setPen(-1);
@@ -752,7 +802,7 @@ boolean xMolar, yMolar;
     //    g.sym((float)(xMx+w*heightAx), (0.1f*heightAx), heightAx, t, 0, -1, false);
     //} //if temperature_InCommandLine >0
     // ---- Temperature + Pressure (in the heading)
-    if(!Double.isNaN(diag.temperature) && diag.temperature > -1.e-6) {
+    if(!Double.isNaN(diag.temperature)) {
         if(Double.isNaN(diag.pressure) || diag.pressure < 1.02) {
             g.setLabel("-- Temperature --");
         } else {g.setLabel("-- Temperature and Pressure --");}
@@ -801,94 +851,157 @@ boolean xMolar, yMolar;
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="n_pH(temperature)">
-/** Returns the neutral pH at the temperature "tC" (in Celsius)
- * @param tC temperature in Celsius
- * @param pBar pressure in bar
+/** Returns the neutral pH at the given temperature and pressure.
+ * It uses the equation reported in
+ * Marshall W L, Franck E U (1981) Ion product of water substance, 0-1000 °C,
+ * 1-10,000 bars. New international formulation and its background.
+ * J. Phys. Chem. Ref. Data, vol.10, pp.295–304. doi:10.1063/1.555643
+ * @param tC temperature in Celsius (0 to 1000)
+ * @param pBar pressure in bar (1 to 10 000)
  * @return neutral pH at the temperature t
  * @throws chem.Chem.ChemicalParameterException  */
-private float n_pH(float tC, float pBar) throws Chem.ChemicalParameterException {
-  final float NAN = Float.NaN;
-  float[][] logK = new float[5][];
-  //                      0      25        50     100      150    200     250     300     350    400     450     500     550     600
-  logK[0] = new float[]{14.94f, 13.995f, 13.27f, 12.26f, 11.63f, 11.28f, 11.17f, 11.30f, 11.83f, NAN,    NAN,    NAN,    NAN,    NAN};
-  logK[1] = new float[]{14.71f, 13.81f, 13.10f, 12.10f, 11.46f, 11.09f, 10.91f, 10.91f, 11.11f, 11.36f, 12.19f,  NAN,    NAN,    NAN};
-  logK[2] = new float[]{14.51f, 13.63f, 12.94f, 11.95f, 11.31f, 10.92f, 10.70f, 10.62f, 10.66f, 10.81f, 11.07f, 11.46f, 11.98f, 12.56f};
-  logK[3] = new float[]{13.83f, 13.05f, 12.40f, 11.45f, 10.81f, 10.39f, 10.11f,  9.94f,  9.86f,  9.84f,  9.87f,  9.95f, 10.06f, 10.22f};
-  logK[4] = new float[]{13.42f, 12.56f, 11.95f, 11.03f, 10.41f,  9.98f,  9.68f,  9.49f,  9.36f,  9.30f,  9.26f,  9.27f,  9.32f,  9.39f};
-
-  if(tC < 0 || tC > 600) {
-      throw new Chem.ChemicalParameterException (nl+
-              "Error in procedure \"n_pH\":  temperature = "+tC+"°C (min=0, max=600).");
+private static double n_pH(double tC, double pBar) throws IllegalArgumentException,
+        ArithmeticException {
+  if(tC < 0 || tC > 1000) {
+      throw new IllegalArgumentException (nl+
+              "Error in procedure \"n_pH\":  temperature = "+tC+"°C (min=0, max=1000).");
   }
-  if(pBar < 1 || pBar > 5000) {
-      throw new Chem.ChemicalParameterException (nl+
-              "Error in procedure \"n_pH\":  pressure = "+pBar+" bar (min=1, max=5000).");
+  if(pBar < 1 || pBar > 10000) {
+      throw new IllegalArgumentException (nl+
+              "Error in procedure \"n_pH\":  pressure = "+pBar+" bar (min=1, max=10000).");
   }
-  if(pBar < 220.6){
-      if(tC > 374) {
-        throw new Chem.ChemicalParameterException (nl+
+  if(pBar < 220){ // Critical pressure = 220.64 bar
+      if(tC >= 373) { // Critical temperature = 373.946 C
+        throw new IllegalArgumentException (nl+
               "Error in procedure \"n_pH\":"+
-              "  t = "+tC+", p = "+pBar+" bar (at (p < 221 bar) t must be < 374C).");
-      }
-  } else if(pBar <600) {
-      if(tC > 450) {
-        throw new Chem.ChemicalParameterException (nl+
-              "Error in procedure \"n_pH\":"+
-              "  t = "+tC+", p = "+pBar+" bar (at (p > 221 and p < 600) t must be < 450C).");
+              "  t = "+tC+", p = "+pBar+" bar (at (p < 220 bar) t must be < 373C).");
       }
   }
-  float npH = Interpolate.interpolate3D(tC, pBar, logK) / 2f;
-
-  if(pred.dbg) {out.println("--- n_pH("+tC+","+pBar+") = "+npH);}
-
+  double rho = Double.NaN;
+  try {rho = lib.kemi.H2O.IAPWSF95.rho(tC, pBar);}
+  catch (Exception ex) {throw new ArithmeticException(ex.toString());}
+  double a = -4.098, b = -3245.2, c = 2.2362e5, d = -3.984e7;
+  double e = +13.957, f = -1262.3, g = +8.5641e5;
+  double tK = tC + 273.15, tK2 = tK*tK;
+  double npH = a + b/tK + c/tK2 + d/(tK2*tK) + (e + f/tK + g/tK2)*Math.log10(rho);
+  npH = npH / 2;
+  boolean dbg = false;
+  if(dbg) {System.out.println("--- n_pH("+tC+","+pBar+") = "+npH);}
   return npH;
 }
 //</editor-fold>
 
-//<editor-fold defaultstate="collapsed" desc="O2_logK">
-/** returns the logK for reaction [O2(g) + 4H+ + 4e- = 2H2O(l)]
- * at the temperature "t" (in Celsius). Note: logK=4pH+4pe, and
- * for reaction [H2(g) = 2H+ + 2e-] logK=0  at every temperature.
+//<editor-fold defaultstate="collapsed" desc="logK_O2(tC,pbar)">
+/** Calculates the equilibrium constant for reaction 2H2O = O2(g)+2H2(g)
+ * as a function of temperature and pressure. This reaction is equivalent to
+ * 2H2O = O2(g) + 4H+ + 4e-, because the equilibrium constant for H2(g) = 2H+ + 2e-
+ * is by definition zero at all temperatures and pressures. An equation is
+ * used based in the values calculated with the SUPCRT92 software.<b>
+ * Range of conditions: 1 to 5,000 bar, -35 to 600°C.
+ * It returns NaN (Not a Number) outside this range, or if
+ * water is frozen at the requested conditions.
+ * If pBar < 1 a value of pBar = 1 is used.
+ * If tC = 0 and pBar = 1, it returns the value at 0.01 Celsius and 1 bar.
+ * NOTE: values returned at tC <0 are extrapolations outside the valid range.
  * @param tC temperature in Celsius
  * @param pBar pressure in bar
- * @return logK value at the temperature t
- * @throws chem.Chem.ChemicalParameterException
- * @throws diverse.Div.RationalInterpolationException */
-private float O2_logK(float tC, float pBar) throws Chem.ChemicalParameterException {
-  final float NAN = Float.NaN;
-  float[][] logK = new float[5][]; // data at P= pSat, 500, 1000, 3000, 5000 bar
-  //                t/C=  0      25        50     100      150    200     250     300     350    400     450     500     550     600
-  logK[0] = new float[]{92.28f, 83.10f, 75.36f, 63.04f, 53.69f, 46.35f, 40.45f, 35.60f, 31.56f,  NAN,    NAN,    NAN,    NAN,    NAN};
-  logK[1] = new float[]{91.94f, 82.79f, 75.07f, 62.79f, 53.45f, 46.13f, 40.25f, 35.42f, 31.40f, 28.01f, 25.13f,  NAN,    NAN,    NAN};
-  logK[2] = new float[]{91.60f, 82.48f, 74.78f, 62.53f, 53.22f, 45.92f, 40.04f, 35.22f, 31.19f, 27.79f, 24.88f, 22.37f, 20.19f, 18.27f};
-  logK[3] = new float[]{90.33f, 81.30f, 73.68f, 61.55f, 52.33f, 45.09f, 39.26f, 34.47f, 30.47f, 27.08f, 24.17f, 21.65f, 19.44f, 17.50f};
-  logK[4] = new float[]{89.41f, 80.18f, 72.64f, 60.63f, 51.49f, 44.32f, 38.54f, 33.79f, 29.82f, 26.46f, 23.56f, 21.06f, 18.87f, 16.93f};
-  if(tC < 0 || tC > 600) {
-      throw new Chem.ChemicalParameterException (nl+
-              "Error in procedure \"O2_line\":  temperature = "+tC+"°C (min=0, max=600).");
+ * @return the equilibrium constant for the reaction 2H2O = O2(g)+2H2(g)
+ * @throws IllegalArgumentException 
+ */
+  private static double logK_O2(final double tC, final double pBar) throws IllegalArgumentException {
+  if(Double.isNaN(tC)) {throw new IllegalArgumentException("\"logK_O2\" tC = NaN.");}
+  if(Double.isNaN(pBar)) {throw new IllegalArgumentException("\"logK_O2\" pBar = NaN.");}
+  if(tC < -35 || tC > 1000.01 || pBar < 0 || pBar > 5000.01) {
+      throw new IllegalArgumentException("\"logK_O2\" tC = "+tC+", pBar = "+pBar+" (must be -35 to 1000 C and 0 to 5000 bar)");
   }
-  if(pBar < 1 || pBar > 5000) {
-      throw new Chem.ChemicalParameterException (nl+
-              "Error in procedure \"O2_line\":  pressure = "+pBar+" bar (min=1, max=5000).");
+  // set minimum pressure to 1 bar
+  final double p_Bar = Math.max(pBar, 1.);
+  final double t_C;
+  // if pressure = 1 bar and temperature = 0, set temperature to 0.01 C (tripple point of water)
+  if(p_Bar >0.99999 && p_Bar < 1.00001 && Math.abs(tC) < 0.001) {t_C = 0.01;} else {t_C = tC;}  
+  // Make sure that water is not frozen or steam.
+  String str = lib.kemi.H2O.IAPWSF95.isWaterLiquid(t_C, p_Bar); // ma
+  if(str.length() >0) {throw new IllegalArgumentException(str);}
+  // check if pressure is below the saturated vapor line
+  if(t_C > 0.01 && t_C < 373.946) {
+    final double pSat = lib.kemi.H2O.IAPWSF95.pSat(t_C);
+    if(p_Bar < (pSat*0.99)) {
+      throw new IllegalArgumentException("\"logK_O2\": pBar = "+p_Bar+ "(at tC = "+t_C+" pBar must be above "+(float)pSat+" bar)");
+    }
   }
-  if(pBar < 220.6){
-      if(tC > 374) {
-        throw new Chem.ChemicalParameterException (nl+
-              "Error in procedure \"O2_line\":"+
-              "  t = "+tC+", p = "+pBar+" bar (at p < 221 bar t must be < 374C).");
-      }
-  } else if(pBar <600) {
-      if(tC > 450) {
-        throw new Chem.ChemicalParameterException (nl+
-              "Error in procedure \"O2_line\":"+
-              "  t = "+tC+", p = "+pBar+" bar (at (p > 221 and p < 600) t must be < 450C).");
-      }
-  }
-  float O2lgK = Interpolate.interpolate3D(tC, pBar, logK);
-  
-  if(pred.dbg) {out.println("--- O2_logK("+tC+","+pBar+") = "+O2lgK);}
 
-  return O2lgK;
+  final double logK0 = 83.105; // from the SUPCRT92 software
+  final double tK = t_C + 273.15, tK0 = 298.15;
+  final double tK_tK0 = tK-tK0;
+  final double pBar_p0 = p_Bar - 1.;
+  if(Math.abs(tK_tK0) < 1 && p_Bar < 2) {return logK0;}
+  // final double R = 8.31446262; // gas constant
+  // final double ln10 = 2.302585093;
+  // final double Rln10 = 19.14475768082;
+  // final double deltaS0 = -327.77;  // from the SUPCRT92 software
+  final double deltaS0_Rln10 = -17.06840094; // = deltaS0 / (R ln(10))
+  // the equation used is:
+  // logK = (T0/T)logK0 + (deltaS0/(R T ln10)) (T-T0) + a (- (T-T0)/T + ln(T/T0))
+  //       + b (-1/(2T) (T^2-T0^2) + (T-T0)) + e ((1/T) (1/T - 1/T0) - (1/2)(1/T^2 - 1/T0^2))
+  //       - (q1 + q2 T + q3 T^2) (1/T) (P-P0) + (u1 + u2 T + u3 T^2) (1/2T) (P-P0)^2
+  final double a = 5.585, b = -0.000404, e = -257000.;
+  final double q1 = 0.2443,  q2 = -0.0004178, q3 = 7.357E-7;
+  final double u1 = 2.17E-5, u2 = -1.044E-7,  u3 = 1.564E-10;
+  final double tK2 = tK*tK;
+  final double tK02 = 88893.4225; // = 298.15 x 298.15
+  double logK = (tK0/tK)*logK0 + (deltaS0_Rln10/tK)*(tK_tK0);
+  logK = logK + a * (-tK_tK0/tK + Math.log(tK/tK0));
+  logK = logK + b * (-(1./(2.*tK))*(tK2-tK02) + tK_tK0);
+  logK = logK + e * ((1./tK)*((1./tK)-(1./tK0)) - 0.5*((1./tK2)-(1./tK02)));
+  if(p_Bar < 2) {return logK;}
+  final double dq = q1 + q2*tK + q3*tK2;
+  final double du = u1 + u2*tK + u3*tK2;
+  logK = logK - dq * (1./tK)*pBar_p0 + du * (1./(2.*tK))*pBar_p0*pBar_p0;
+  return logK;
+  }
+// </editor-fold>
+
+//<editor-fold defaultstate="collapsed" desc="double2String">
+/** Returns a text representing a double in the format
+ * 1.23×10'-1`.
+ * @param d
+ * @return a string such as 1.23×10'-1`
+ */
+private static String double2String(double d) {
+    if(Double.isNaN(d) || Double.isInfinite(d)) {return String.valueOf(d);}
+    if(d == 0) {return "0.00";}
+    boolean ok = true;
+    // txt = number_in_scientific_notation
+    final String txt = String.format(engl,"%10.2e",d).trim();
+    int e = txt.indexOf('e');
+    String exp = "", sign="";
+    if(e >= 0) {
+        exp = txt.substring(e+1);
+        final int length =exp.length();
+        if(length > 1) {
+            int i, j;
+            sign = exp.substring(0,1);
+            if(sign.equals("+") || sign.equals("-")) {j=1;} else {j=0; sign="";}
+            if(length > j+1) {
+                for (i = j; i < length-1; i++) {
+                    if (exp.charAt(i) != '0') {break;}
+                }
+                exp = exp.substring(i);
+            } else {ok = false;}
+        } else {ok = false;}
+    } else {
+        ok = false;
+    }
+    int k;
+    try{k = Integer.parseInt(exp);} catch (Exception ex) {
+        System.err.println(ex.getMessage());
+        k=0;
+        ok = false;
+    }
+    if(ok && k == 0) {return txt.substring(0, e);}
+    if(ok && exp.length() >0) {
+        return txt.substring(0, e)+"×10'"+sign+exp+"`";
+    } else {return txt;}
 }
 //</editor-fold>
 
