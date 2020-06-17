@@ -38,7 +38,7 @@
                       <Component id="jPanelLevel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                       <Component id="jPanelButtons" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="50" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="56" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jPanelAdv" alignment="0" max="32767" attributes="2"/>
               </Group>
@@ -162,6 +162,11 @@
             <Property name="mnemonic" type="int" value="79"/>
             <Property name="text" type="java.lang.String" value="OK"/>
             <Property name="toolTipText" type="java.lang.String" value="OK (Alt-O orAlt-X)" noResource="true"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[2, 2, 2, 2]"/>
@@ -180,6 +185,11 @@
             <Property name="mnemonic" type="int" value="81"/>
             <Property name="text" type="java.lang.String" value="Quit"/>
             <Property name="toolTipText" type="java.lang.String" value="Cancel (Esc or Alt-Q)" noResource="true"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[2, 2, 2, 2]"/>
@@ -198,6 +208,11 @@
             <Property name="mnemonic" type="int" value="82"/>
             <Property name="text" type="java.lang.String" value="Reset"/>
             <Property name="toolTipText" type="java.lang.String" value="Reset to default values (Alt-R)" noResource="true"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[2, 2, 2, 2]"/>
@@ -262,7 +277,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabelOutput" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="19" max="32767" attributes="0"/>
+                  <EmptySpace pref="20" max="32767" attributes="0"/>
                   <Component id="jPanelAssoc" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>

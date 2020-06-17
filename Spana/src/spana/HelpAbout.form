@@ -78,10 +78,14 @@
                               </Group>
                           </Group>
                           <Component id="jLabelLibs" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabelVers" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabelVers" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabelUnicode" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <Component id="jLabelName" alignment="0" min="-2" pref="331" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="jPanel2" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -96,8 +100,11 @@
                       <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                       <Component id="jLabelName" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabelVers" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabelVers" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelUnicode" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="jLabelLibs" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       <Component id="jLabelLib" min="-2" max="-2" attributes="0"/>
@@ -154,7 +161,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelVers">
       <Properties>
-        <Property name="text" type="java.lang.String" value=" Program version: 2010-March-30"/>
+        <Property name="text" type="java.lang.String" value=" Program version: 2010-September-30"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelLibs">
@@ -201,12 +208,9 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel_www" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel_wwwKTH" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonLicense" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="32" max="32767" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
-                  <Component id="jButtonLicense" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -228,7 +232,13 @@
         <Component class="javax.swing.JButton" name="jButtonLicense">
           <Properties>
             <Property name="mnemonic" type="int" value="108"/>
-            <Property name="text" type="java.lang.String" value="License Details"/>
+            <Property name="text" type="java.lang.String" value=" License Details "/>
+            <Property name="alignmentX" type="float" value="0.5"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonLicenseActionPerformed"/>
@@ -417,6 +427,11 @@
     <Component class="javax.swing.JLabel" name="jLabelIniFile">
       <Properties>
         <Property name="text" type="java.lang.String" value="&quot;null&quot;" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelUnicode">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="(Unicode UTF-8)"/>
       </Properties>
     </Component>
   </SubComponents>

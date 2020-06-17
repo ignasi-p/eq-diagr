@@ -120,6 +120,14 @@ public class ProgramDataSpana {
   /** if <code>true</code> a neutral pH line (at pH=7 for 25°C)
    * will be drawn in Pourbaix diagrams (Eh/pH diagram) */
   public boolean drawNeutralPHinPourbaix = false;
+/** used to direct SED and Predom to draw concentration units
+ * as either:<ul><li>0="molal"</li><li>1="mol/kg_w"</li><li>2="M"</li><li>-1=""</li></ul> */
+  public int concentrationUnits = 0;
+/** used to direct SED and Predom to draw concentrations
+ * as either scientific notation or engineering notation:<ul><li>0 = no choice
+ * (default, means scientific for "molar" and engineering for "M")</li>
+ * <li>1 = scientific notation</li><li>2 = engineering notation</li></ul> */
+  public int concentrationNotation = 0;
   /**  if <code>true</code> special settings will be "on" for students at
    * the school of chemistry at the Royal Institute of Technology (KTH)
    * in Stockholm, Sweden. */

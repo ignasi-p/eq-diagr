@@ -62,6 +62,7 @@ public class DiagrConvert extends javax.swing.JFrame {
   private final double D_FACTOR = 1.00*4;
   /** {"pdf", "ps", "eps"} */
   private static final String[] EXTS = {"pdf", "ps", "eps"};
+  private javax.swing.border.Border scrollBorder;
   private static final String nl = System.getProperty("line.separator");
   private javax.swing.ImageIcon icon = null;
 
@@ -133,6 +134,7 @@ public class DiagrConvert extends javax.swing.JFrame {
     this.setLocation(Math.min(MainFrame.screenSize.width-100, left),
                          Math.min(MainFrame.screenSize.height-100, top));
 
+    scrollBorder = jScrollBarX.getBorder(); // get the default scroll bar border
     this.setTitle("Convert a diagram:");
     //--- Icon
     String iconName;
@@ -171,6 +173,11 @@ public class DiagrConvert extends javax.swing.JFrame {
     jLabelPltFileName.setText(" ");
     jLabelDirName.setText(pc.pathDef.toString());
     jLabelOutputName.setText(" ");
+
+    jScrollBarX.setFocusable(true);
+    jScrollBarY.setFocusable(true);
+    jScrollBarMarginL.setFocusable(true);
+    jScrollBarMarginB.setFocusable(true);
 
   }
   //</editor-fold>
@@ -357,6 +364,15 @@ public class DiagrConvert extends javax.swing.JFrame {
         jScrollBarY.setMinimum(20);
         jScrollBarY.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
         jScrollBarY.setValue(100);
+        jScrollBarY.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jScrollBarY.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jScrollBarYFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jScrollBarYFocusLost(evt);
+            }
+        });
         jScrollBarY.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
                 jScrollBarYAdjustmentValueChanged(evt);
@@ -368,6 +384,15 @@ public class DiagrConvert extends javax.swing.JFrame {
         jScrollBarX.setMinimum(20);
         jScrollBarX.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
         jScrollBarX.setValue(100);
+        jScrollBarX.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jScrollBarX.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jScrollBarXFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jScrollBarXFocusLost(evt);
+            }
+        });
         jScrollBarX.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
                 jScrollBarXAdjustmentValueChanged(evt);
@@ -541,6 +566,15 @@ public class DiagrConvert extends javax.swing.JFrame {
         jScrollBarMarginL.setMaximum(210);
         jScrollBarMarginL.setMinimum(-50);
         jScrollBarMarginL.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
+        jScrollBarMarginL.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jScrollBarMarginL.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jScrollBarMarginLFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jScrollBarMarginLFocusLost(evt);
+            }
+        });
         jScrollBarMarginL.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
                 jScrollBarMarginLAdjustmentValueChanged(evt);
@@ -552,6 +586,15 @@ public class DiagrConvert extends javax.swing.JFrame {
         jScrollBarMarginB.setMaximum(60);
         jScrollBarMarginB.setMinimum(-200);
         jScrollBarMarginB.setValue(-10);
+        jScrollBarMarginB.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jScrollBarMarginB.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jScrollBarMarginBFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jScrollBarMarginBFocusLost(evt);
+            }
+        });
         jScrollBarMarginB.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
                 jScrollBarMarginBAdjustmentValueChanged(evt);
@@ -675,9 +718,8 @@ public class DiagrConvert extends javax.swing.JFrame {
             }
         });
 
-        jCheckHeader.setMnemonic('h');
-        jCheckHeader.setText("Header");
-        jCheckHeader.setFocusPainted(false);
+        jCheckHeader.setMnemonic('b');
+        jCheckHeader.setText("Banner");
         jCheckHeader.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckHeaderActionPerformed(evt);
@@ -770,6 +812,7 @@ public class DiagrConvert extends javax.swing.JFrame {
         jButtonDoIt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Icon-PDF.gif"))); // NOI18N
         jButtonDoIt.setMnemonic('c');
         jButtonDoIt.setText("convert to ...");
+        jButtonDoIt.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonDoIt.setIconTextGap(8);
         jButtonDoIt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -791,7 +834,7 @@ public class DiagrConvert extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonDoIt)
-                        .addGap(0, 238, Short.MAX_VALUE))
+                        .addGap(0, 264, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanelMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -924,6 +967,38 @@ public class DiagrConvert extends javax.swing.JFrame {
         if(this.getWidth()<w){this.setSize(w,this.getHeight());}
       }
     }//GEN-LAST:event_formComponentResized
+
+    private void jScrollBarXFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarXFocusGained
+        jScrollBarX.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0,0,0)));
+    }//GEN-LAST:event_jScrollBarXFocusGained
+
+    private void jScrollBarXFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarXFocusLost
+        jScrollBarX.setBorder(scrollBorder);
+    }//GEN-LAST:event_jScrollBarXFocusLost
+
+    private void jScrollBarYFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarYFocusGained
+        jScrollBarY.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0,0,0)));
+    }//GEN-LAST:event_jScrollBarYFocusGained
+
+    private void jScrollBarYFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarYFocusLost
+        jScrollBarY.setBorder(scrollBorder);
+    }//GEN-LAST:event_jScrollBarYFocusLost
+
+    private void jScrollBarMarginBFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarMarginBFocusGained
+        jScrollBarMarginB.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0,0,0)));
+    }//GEN-LAST:event_jScrollBarMarginBFocusGained
+
+    private void jScrollBarMarginBFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarMarginBFocusLost
+        jScrollBarMarginB.setBorder(scrollBorder);
+    }//GEN-LAST:event_jScrollBarMarginBFocusLost
+
+    private void jScrollBarMarginLFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarMarginLFocusGained
+        jScrollBarMarginL.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0,0,0)));
+    }//GEN-LAST:event_jScrollBarMarginLFocusGained
+
+    private void jScrollBarMarginLFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarMarginLFocusLost
+        jScrollBarMarginL.setBorder(scrollBorder);
+    }//GEN-LAST:event_jScrollBarMarginLFocusLost
 
   //</editor-fold>
 

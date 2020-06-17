@@ -115,6 +115,11 @@
             </Property>
             <Property name="mnemonic" type="int" value="109"/>
             <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&lt;u&gt;M&lt;/u&gt;ake Diagram (Alt-X or Alt-M)&lt;/html&gt;" noResource="true"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[2, 2, 2, 2]"/>
             </Property>
@@ -130,6 +135,11 @@
             </Property>
             <Property name="mnemonic" type="int" value="113"/>
             <Property name="toolTipText" type="java.lang.String" value="Cancel (Alt-Q, Esc)" noResource="true"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[2, 2, 2, 2]"/>
             </Property>
@@ -145,6 +155,11 @@
             </Property>
             <Property name="mnemonic" type="int" value="104"/>
             <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&lt;u&gt;H&lt;/u&gt;elp&lt;/html&gt;" noResource="true"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[2, 2, 2, 2]"/>
             </Property>
@@ -501,11 +516,12 @@
                 <Component class="javax.swing.JTextField" name="jTextFieldXmin">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="-5" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="Xmin" noResource="true"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldXminActionPerformed"/>
                     <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldXminFocusGained"/>
                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldXminFocusLost"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldXminActionPerformed"/>
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldXminKeyReleased"/>
                     <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldXminKeyTyped"/>
                   </Events>
@@ -514,11 +530,12 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="11"/>
                     <Property name="text" type="java.lang.String" value="-5" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="Xmax" noResource="true"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldXmaxActionPerformed"/>
                     <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldXmaxFocusGained"/>
                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldXmaxFocusLost"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldXmaxActionPerformed"/>
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldXmaxKeyReleased"/>
                     <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldXmaxKeyTyped"/>
                   </Events>
@@ -590,6 +607,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="11"/>
                     <Property name="text" type="java.lang.String" value="-999" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="Ymax" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldYmaxActionPerformed"/>
@@ -964,6 +982,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="11"/>
                     <Property name="text" type="java.lang.String" value="-999" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="Ymin" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldYminActionPerformed"/>
@@ -1161,7 +1180,7 @@
                                               <Component id="jLabelTC" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" attributes="0">
-                                              <Component id="jTextFieldIonicStgr" min="-2" pref="58" max="-2" attributes="0"/>
+                                              <Component id="jTextFieldIonicStr" min="-2" pref="58" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="jLabelM" min="-2" max="-2" attributes="0"/>
                                           </Group>
@@ -1186,7 +1205,7 @@
                       </Group>
                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jTextFieldIonicStgr" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTextFieldIonicStr" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabelM" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabelIonicS" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -1235,23 +1254,24 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
                 <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="jTextFieldIonicStgr"/>
+                  <ComponentRef name="jTextFieldIonicStr"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;u&gt;I&lt;/u&gt; = &lt;/html&gt;" noResource="true"/>
                 <Property name="toolTipText" type="java.lang.String" value="Ionic strength ="/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="jTextFieldIonicStgr">
+            <Component class="javax.swing.JTextField" name="jTextFieldIonicStr">
               <Properties>
                 <Property name="text" type="java.lang.String" value="0.0" noResource="true"/>
                 <Property name="toolTipText" type="java.lang.String" value="ionic strength value"/>
+                <Property name="name" type="java.lang.String" value="IonicStr" noResource="true"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldIonicStgrActionPerformed"/>
-                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldIonicStgrFocusGained"/>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldIonicStgrFocusLost"/>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldIonicStgrKeyPressed"/>
-                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldIonicStgrKeyTyped"/>
+                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldIonicStrFocusGained"/>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldIonicStrFocusLost"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldIonicStrActionPerformed"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldIonicStrKeyPressed"/>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldIonicStrKeyTyped"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelM">
@@ -1275,11 +1295,12 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="25" noResource="true"/>
                 <Property name="toolTipText" type="java.lang.String" value="temperature"/>
+                <Property name="name" type="java.lang.String" value="T" noResource="true"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldTActionPerformed"/>
                 <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldTFocusGained"/>
                 <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldTFocusLost"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldTActionPerformed"/>
                 <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldTKeyPressed"/>
                 <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldTKeyTyped"/>
               </Events>
@@ -1458,11 +1479,16 @@
                     </Property>
                     <Property name="orientation" type="int" value="0"/>
                     <Property name="visibleAmount" type="int" value="1"/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                        <EmptyBorder/>
+                      </Border>
+                    </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="jScrollBarPredNbrPAdjustmentValueChanged"/>
                     <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarPredNbrPFocusGained"/>
                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarPredNbrPFocusLost"/>
+                    <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="jScrollBarPredNbrPAdjustmentValueChanged"/>
                   </Events>
                 </Component>
                 <Container class="javax.swing.JPanel" name="jPanelTotCalcs">
@@ -1623,6 +1649,11 @@
                     </Property>
                     <Property name="orientation" type="int" value="0"/>
                     <Property name="visibleAmount" type="int" value="1"/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                        <EmptyBorder/>
+                      </Border>
+                    </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarSEDNbrPFocusGained"/>
@@ -1924,11 +1955,12 @@
                 <Component class="javax.swing.JTextField" name="jTextFieldCLow">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="jTextFieldCLow" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="CLow" noResource="true"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldCLowActionPerformed"/>
                     <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldCLowFocusGained"/>
                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextFieldCLowFocusLost"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldCLowActionPerformed"/>
                     <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldCLowKeyPressed"/>
                     <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldCLowKeyTyped"/>
                   </Events>
@@ -1941,6 +1973,7 @@
                 <Component class="javax.swing.JTextField" name="jTextFieldCHigh">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="jTextFieldCHigh" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="CHigh" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldCHighActionPerformed"/>

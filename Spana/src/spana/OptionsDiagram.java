@@ -29,7 +29,15 @@ public class OptionsDiagram extends javax.swing.JFrame {
     // set values in the local variables, which will be discarded
     // if the user presses "Cancel"
     private java.awt.Color[] L_colours =
-            new java.awt.Color[DiagrPaintUtility.MAX_COLOURS];
+                            new java.awt.Color[DiagrPaintUtility.MAX_COLOURS];
+    private javax.swing.border.Border scrollBorder;
+    private javax.swing.border.Border buttonBorder;
+    private final javax.swing.border.Border buttonBorderSelected = 
+            javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED,
+                new java.awt.Color(102,102,102),
+                new java.awt.Color(255,255,255),
+                new java.awt.Color(102,102,102),
+                new java.awt.Color(0,0,0));
     private java.awt.Color L_backgrnd;
     /** New-line character(s) to substitute "\n". */
     private static final String nl = System.getProperty("line.separator");
@@ -110,6 +118,8 @@ public class OptionsDiagram extends javax.swing.JFrame {
 
     //
     getRootPane().setDefaultButton(jButton_OK);
+    buttonBorder = jButton1.getBorder(); // get the default button border
+    scrollBorder = jScrollBar_Pen.getBorder(); // get the default scroll bar border
     //--- Title
         this.setTitle("Graphic Options:");
     //--- Icon
@@ -237,6 +247,7 @@ public class OptionsDiagram extends javax.swing.JFrame {
 
         buttonGroup_FontPrinter = new javax.swing.ButtonGroup();
         buttonGroup_Colr = new javax.swing.ButtonGroup();
+        jPanel4 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jButton_OK = new javax.swing.JButton();
@@ -289,6 +300,17 @@ public class OptionsDiagram extends javax.swing.JFrame {
         jLabel_PenPrint = new javax.swing.JLabel();
         jScrollBar_PenPrint = new javax.swing.JScrollBar();
 
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -305,6 +327,7 @@ public class OptionsDiagram extends javax.swing.JFrame {
         jButton_OK.setMnemonic('O');
         jButton_OK.setText("OK");
         jButton_OK.setToolTipText("OK (Alt-O orAlt-X)"); // NOI18N
+        jButton_OK.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_OK.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton_OK.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton_OK.addActionListener(new java.awt.event.ActionListener() {
@@ -317,6 +340,7 @@ public class OptionsDiagram extends javax.swing.JFrame {
         jButton_Cancel.setMnemonic('Q');
         jButton_Cancel.setText("Quit");
         jButton_Cancel.setToolTipText("Cancel (Esc or Alt-Q)"); // NOI18N
+        jButton_Cancel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_Cancel.setDefaultCapable(false);
         jButton_Cancel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton_Cancel.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -332,10 +356,10 @@ public class OptionsDiagram extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton_Cancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton_Cancel, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
                     .addComponent(jButton_OK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,17 +416,18 @@ public class OptionsDiagram extends javax.swing.JFrame {
         jScrollBar_Pen.setUnitIncrement(2);
         jScrollBar_Pen.setValue(10);
         jScrollBar_Pen.setVisibleAmount(0);
-        jScrollBar_Pen.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
-            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
-                jScrollBar_PenAdjustmentValueChanged(evt);
-            }
-        });
+        jScrollBar_Pen.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollBar_Pen.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jScrollBar_PenFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jScrollBar_PenFocusLost(evt);
+            }
+        });
+        jScrollBar_Pen.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
+            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
+                jScrollBar_PenAdjustmentValueChanged(evt);
             }
         });
 
@@ -417,7 +442,7 @@ public class OptionsDiagram extends javax.swing.JFrame {
                         .addComponent(jLabel2))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollBar_Pen, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
+                        .addComponent(jScrollBar_Pen, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(40, 40, 40)
                         .addComponent(jLabel_PenThickness)))
@@ -635,6 +660,7 @@ public class OptionsDiagram extends javax.swing.JFrame {
 
         jButton_ResetColours.setMnemonic(java.awt.event.KeyEvent.VK_R);
         jButton_ResetColours.setText("Reset"); // NOI18N
+        jButton_ResetColours.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_ResetColours.setDefaultCapable(false);
         jButton_ResetColours.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -647,10 +673,12 @@ public class OptionsDiagram extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton_ResetColours)
-                    .addComponent(jCheckBackgr)))
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jCheckBackgr))
+                    .addComponent(jButton_ResetColours, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -672,29 +700,26 @@ public class OptionsDiagram extends javax.swing.JFrame {
                 jPanelBackGrndFocusLost(evt);
             }
         });
-        jPanelBackGrnd.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jPanelBackGrndKeyReleased(evt);
-            }
-        });
         jPanelBackGrnd.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jPanelBackGrndMouseReleased(evt);
             }
         });
-
-        jButton1.setMnemonic(java.awt.event.KeyEvent.VK_1);
-        jButton1.setToolTipText("Alt-1"); // NOI18N
-        jButton1.setAlignmentY(0.0F);
-        jButton1.setBorder(null);
-        jButton1.setDefaultCapable(false);
-        jButton1.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        jButton1.setPreferredSize(new java.awt.Dimension(14, 14));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        jPanelBackGrnd.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jPanelBackGrndKeyReleased(evt);
             }
         });
+
+        jButton1.setBackground(new java.awt.Color(102, 102, 255));
+        jButton1.setMnemonic(java.awt.event.KeyEvent.VK_1);
+        jButton1.setToolTipText("Alt-1"); // NOI18N
+        jButton1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton1.setContentAreaFilled(false);
+        jButton1.setDefaultCapable(false);
+        jButton1.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jButton1.setOpaque(true);
+        jButton1.setPreferredSize(new java.awt.Dimension(14, 14));
         jButton1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jButton1FocusGained(evt);
@@ -703,19 +728,21 @@ public class OptionsDiagram extends javax.swing.JFrame {
                 jButton1FocusLost(evt);
             }
         });
-
-        jButton2.setMnemonic(java.awt.event.KeyEvent.VK_2);
-        jButton2.setToolTipText("Alt-2"); // NOI18N
-        jButton2.setAlignmentY(0.0F);
-        jButton2.setBorder(null);
-        jButton2.setDefaultCapable(false);
-        jButton2.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        jButton2.setPreferredSize(new java.awt.Dimension(14, 14));
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
+
+        jButton2.setBackground(new java.awt.Color(255, 153, 153));
+        jButton2.setMnemonic(java.awt.event.KeyEvent.VK_2);
+        jButton2.setToolTipText("Alt-2"); // NOI18N
+        jButton2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton2.setContentAreaFilled(false);
+        jButton2.setDefaultCapable(false);
+        jButton2.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jButton2.setOpaque(true);
+        jButton2.setPreferredSize(new java.awt.Dimension(14, 14));
         jButton2.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jButton2FocusGained(evt);
@@ -724,18 +751,21 @@ public class OptionsDiagram extends javax.swing.JFrame {
                 jButton2FocusLost(evt);
             }
         });
-
-        jButton3.setMnemonic(java.awt.event.KeyEvent.VK_3);
-        jButton3.setToolTipText("Alt-3"); // NOI18N
-        jButton3.setBorder(null);
-        jButton3.setDefaultCapable(false);
-        jButton3.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        jButton3.setPreferredSize(new java.awt.Dimension(14, 14));
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jButton2ActionPerformed(evt);
             }
         });
+
+        jButton3.setBackground(new java.awt.Color(51, 255, 51));
+        jButton3.setMnemonic(java.awt.event.KeyEvent.VK_3);
+        jButton3.setToolTipText("Alt-3"); // NOI18N
+        jButton3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton3.setContentAreaFilled(false);
+        jButton3.setDefaultCapable(false);
+        jButton3.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jButton3.setOpaque(true);
+        jButton3.setPreferredSize(new java.awt.Dimension(14, 14));
         jButton3.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jButton3FocusGained(evt);
@@ -744,12 +774,19 @@ public class OptionsDiagram extends javax.swing.JFrame {
                 jButton3FocusLost(evt);
             }
         });
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setMnemonic(java.awt.event.KeyEvent.VK_4);
         jButton4.setToolTipText("Alt-4"); // NOI18N
-        jButton4.setBorder(null);
+        jButton4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton4.setContentAreaFilled(false);
         jButton4.setDefaultCapable(false);
         jButton4.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jButton4.setOpaque(true);
         jButton4.setPreferredSize(new java.awt.Dimension(14, 14));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -767,11 +804,12 @@ public class OptionsDiagram extends javax.swing.JFrame {
 
         jButton5.setMnemonic(java.awt.event.KeyEvent.VK_5);
         jButton5.setToolTipText("Alt-5"); // NOI18N
-        jButton5.setBorder(null);
+        jButton5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton5.setContentAreaFilled(false);
         jButton5.setDefaultCapable(false);
         jButton5.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jButton5.setOpaque(true);
         jButton5.setPreferredSize(new java.awt.Dimension(14, 14));
-        jButton5.setSelected(true);
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -788,9 +826,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 
         jButton6.setMnemonic(java.awt.event.KeyEvent.VK_6);
         jButton6.setToolTipText("Alt-6"); // NOI18N
-        jButton6.setBorder(null);
+        jButton6.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton6.setContentAreaFilled(false);
         jButton6.setDefaultCapable(false);
         jButton6.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jButton6.setOpaque(true);
         jButton6.setPreferredSize(new java.awt.Dimension(14, 14));
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -808,9 +848,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 
         jButton7.setMnemonic(java.awt.event.KeyEvent.VK_7);
         jButton7.setToolTipText("Alt-7"); // NOI18N
-        jButton7.setBorder(null);
+        jButton7.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton7.setContentAreaFilled(false);
         jButton7.setDefaultCapable(false);
         jButton7.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jButton7.setOpaque(true);
         jButton7.setPreferredSize(new java.awt.Dimension(14, 14));
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -828,9 +870,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 
         jButton8.setMnemonic(java.awt.event.KeyEvent.VK_8);
         jButton8.setToolTipText("Alt-8"); // NOI18N
-        jButton8.setBorder(null);
+        jButton8.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton8.setContentAreaFilled(false);
         jButton8.setDefaultCapable(false);
         jButton8.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jButton8.setOpaque(true);
         jButton8.setPreferredSize(new java.awt.Dimension(14, 14));
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -848,9 +892,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 
         jButton9.setMnemonic(java.awt.event.KeyEvent.VK_9);
         jButton9.setToolTipText("Alt-9"); // NOI18N
-        jButton9.setBorder(null);
+        jButton9.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton9.setContentAreaFilled(false);
         jButton9.setDefaultCapable(false);
         jButton9.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jButton9.setOpaque(true);
         jButton9.setPreferredSize(new java.awt.Dimension(14, 14));
         jButton9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -868,9 +914,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 
         jButton10.setMnemonic(java.awt.event.KeyEvent.VK_0);
         jButton10.setToolTipText("Alt-0"); // NOI18N
-        jButton10.setBorder(null);
+        jButton10.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton10.setContentAreaFilled(false);
         jButton10.setDefaultCapable(false);
         jButton10.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jButton10.setOpaque(true);
         jButton10.setPreferredSize(new java.awt.Dimension(14, 14));
         jButton10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -888,9 +936,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 
         jButton11.setMnemonic(java.awt.event.KeyEvent.VK_Z);
         jButton11.setToolTipText("Alt-Z"); // NOI18N
-        jButton11.setBorder(null);
+        jButton11.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton11.setContentAreaFilled(false);
         jButton11.setDefaultCapable(false);
         jButton11.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jButton11.setOpaque(true);
         jButton11.setPreferredSize(new java.awt.Dimension(14, 14));
         jButton11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -941,22 +991,20 @@ public class OptionsDiagram extends javax.swing.JFrame {
             jPanelBackGrndLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelBackGrndLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelBackGrndLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelBackGrndLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(jPanelBackGrndLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanelBackGrndLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanelBackGrndLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(11, 11, 11)
+                .addGroup(jPanelBackGrndLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1017,17 +1065,18 @@ public class OptionsDiagram extends javax.swing.JFrame {
         jScrollBar_PenPrint.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
         jScrollBar_PenPrint.setUnitIncrement(5);
         jScrollBar_PenPrint.setVisibleAmount(0);
-        jScrollBar_PenPrint.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
-            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
-                jScrollBar_PenPrintAdjustmentValueChanged(evt);
-            }
-        });
+        jScrollBar_PenPrint.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollBar_PenPrint.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jScrollBar_PenPrintFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jScrollBar_PenPrintFocusLost(evt);
+            }
+        });
+        jScrollBar_PenPrint.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
+            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
+                jScrollBar_PenPrintAdjustmentValueChanged(evt);
             }
         });
 
@@ -1045,7 +1094,7 @@ public class OptionsDiagram extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addGap(6, 6, 6)
                         .addComponent(jLabel_PenPrint, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGap(31, 31, 31))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1055,7 +1104,7 @@ public class OptionsDiagram extends javax.swing.JFrame {
                     .addComponent(jLabel_PenPrint))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollBar_PenPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanelPrintLayout = new javax.swing.GroupLayout(jPanelPrint);
@@ -1156,7 +1205,7 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jScrollBar_PenFocusGained
 
     private void jScrollBar_PenFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBar_PenFocusLost
-        jScrollBar_Pen.setBorder(null);
+        jScrollBar_Pen.setBorder(scrollBorder);
 }//GEN-LAST:event_jScrollBar_PenFocusLost
 
     private void jScrollBar_PenAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_jScrollBar_PenAdjustmentValueChanged
@@ -1264,11 +1313,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton1FocusGained
-        highlight(jButton1);
+        jButton1.setBorder(buttonBorderSelected);
 }//GEN-LAST:event_jButton1FocusGained
 
     private void jButton1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton1FocusLost
-        jButton1.setBorder(null);
+        jButton1.setBorder(buttonBorder);
 }//GEN-LAST:event_jButton1FocusLost
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -1277,11 +1326,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton2FocusGained
-        highlight(jButton2);
+        jButton2.setBorder(buttonBorderSelected);
 }//GEN-LAST:event_jButton2FocusGained
 
     private void jButton2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton2FocusLost
-        jButton2.setBorder(null);
+        jButton2.setBorder(buttonBorder);
 }//GEN-LAST:event_jButton2FocusLost
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -1290,11 +1339,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton3FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton3FocusGained
-        highlight(jButton3);
+        jButton3.setBorder(buttonBorderSelected);
 }//GEN-LAST:event_jButton3FocusGained
 
     private void jButton3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton3FocusLost
-        jButton3.setBorder(null);
+        jButton3.setBorder(buttonBorder);
 }//GEN-LAST:event_jButton3FocusLost
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -1303,11 +1352,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton4FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton4FocusGained
-        highlight(jButton4);
+        jButton4.setBorder(buttonBorderSelected);
 }//GEN-LAST:event_jButton4FocusGained
 
     private void jButton4FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton4FocusLost
-        jButton4.setBorder(null);
+        jButton4.setBorder(buttonBorder);
 }//GEN-LAST:event_jButton4FocusLost
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -1316,11 +1365,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton5FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton5FocusGained
-        highlight(jButton5);
+        jButton5.setBorder(buttonBorderSelected);
 }//GEN-LAST:event_jButton5FocusGained
 
     private void jButton5FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton5FocusLost
-        jButton5.setBorder(null);
+        jButton5.setBorder(buttonBorder);
 }//GEN-LAST:event_jButton5FocusLost
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -1329,11 +1378,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton6FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton6FocusGained
-        highlight(jButton6);
+        jButton6.setBorder(buttonBorderSelected);
 }//GEN-LAST:event_jButton6FocusGained
 
     private void jButton6FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton6FocusLost
-        jButton6.setBorder(null);
+        jButton6.setBorder(buttonBorder);
 }//GEN-LAST:event_jButton6FocusLost
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -1342,11 +1391,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton7FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton7FocusGained
-        highlight(jButton7);
+        jButton7.setBorder(buttonBorderSelected);
 }//GEN-LAST:event_jButton7FocusGained
 
     private void jButton7FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton7FocusLost
-        jButton7.setBorder(null);
+        jButton7.setBorder(buttonBorder);
 }//GEN-LAST:event_jButton7FocusLost
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -1355,11 +1404,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton8FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton8FocusGained
-        highlight(jButton8);
+        jButton8.setBorder(buttonBorderSelected);
 }//GEN-LAST:event_jButton8FocusGained
 
     private void jButton8FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton8FocusLost
-        jButton8.setBorder(null);
+        jButton8.setBorder(buttonBorder);
 }//GEN-LAST:event_jButton8FocusLost
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -1368,11 +1417,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton9FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton9FocusGained
-        highlight(jButton9);
+        jButton9.setBorder(buttonBorderSelected);
 }//GEN-LAST:event_jButton9FocusGained
 
     private void jButton9FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton9FocusLost
-        jButton9.setBorder(null);
+        jButton9.setBorder(buttonBorder);
 }//GEN-LAST:event_jButton9FocusLost
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
@@ -1381,11 +1430,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton10FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton10FocusGained
-        highlight(jButton10);
+        jButton10.setBorder(buttonBorderSelected);
 }//GEN-LAST:event_jButton10FocusGained
 
     private void jButton10FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton10FocusLost
-        jButton10.setBorder(null);
+        jButton10.setBorder(buttonBorder);
 }//GEN-LAST:event_jButton10FocusLost
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
@@ -1394,11 +1443,11 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jButton11FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton11FocusGained
-        highlight(jButton11);
+        jButton11.setBorder(buttonBorderSelected);
 }//GEN-LAST:event_jButton11FocusGained
 
     private void jButton11FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jButton11FocusLost
-        jButton11.setBorder(null);
+        jButton11.setBorder(buttonBorder);
 }//GEN-LAST:event_jButton11FocusLost
 
     private void jPanelBackGrndFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPanelBackGrndFocusGained
@@ -1436,7 +1485,7 @@ public class OptionsDiagram extends javax.swing.JFrame {
 }//GEN-LAST:event_jScrollBar_PenPrintFocusGained
 
     private void jScrollBar_PenPrintFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBar_PenPrintFocusLost
-        jScrollBar_PenPrint.setBorder(null);
+        jScrollBar_PenPrint.setBorder(scrollBorder);
 }//GEN-LAST:event_jScrollBar_PenPrintFocusLost
 
     private void jScrollBar_PenPrintAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_jScrollBar_PenPrintAdjustmentValueChanged
@@ -1473,14 +1522,6 @@ public class OptionsDiagram extends javax.swing.JFrame {
     } // while
   } // waitFor()
 
-    public void highlight(javax.swing.JButton c) {
-        c.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED,
-                new java.awt.Color(102,102,102),
-                new java.awt.Color(255,255,255),
-                new java.awt.Color(102,102,102),
-                new java.awt.Color(0,0,0)));
-    }
-
     public java.awt.Color[] resetColours (java.awt.Color c[])
     {c[0] = new java.awt.Color(0,0,0);      //black
      c[1] = new java.awt.Color(255,35,35);  //red
@@ -1496,11 +1537,22 @@ public class OptionsDiagram extends javax.swing.JFrame {
      return c;}
 
     private void changeColour(javax.swing.JButton jB) {
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        Thread w = new Thread() {@Override public void run(){
+            try{Thread.sleep(10000);}   //show the "wait" cursor for 10 sec
+            catch (InterruptedException e) {}
+            OptionsDiagram.this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        }};//new Thread
+        w.start();
         java.awt.Color newColour = javax.swing.JColorChooser.showDialog(
                 jB.getRootPane(),
                 "Select a colour",
                 jB.getBackground());
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         if(newColour != null) {
+            if(pc.dbg) {System.out.println(
+                    "new color = "+newColour.getRed()+"-"+newColour.getGreen()+"-"+newColour.getBlue()+
+                    ", background = "+L_backgrnd.getRed()+"-"+L_backgrnd.getGreen()+"-"+L_backgrnd.getBlue());}
             if(jCheckBackgr.isSelected()) {
                 if(MainFrame.twoColoursEqual(newColour, L_backgrnd)) {
                     javax.swing.JOptionPane.showMessageDialog(this,
@@ -1574,6 +1626,7 @@ public class OptionsDiagram extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;

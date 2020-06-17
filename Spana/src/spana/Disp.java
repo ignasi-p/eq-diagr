@@ -695,8 +695,10 @@ public class Disp extends javax.swing.JFrame {
         dd.pltFile_Name = f.getPath();
         dd.fileLastModified = new java.util.Date(f.lastModified());
         java.io.BufferedReader bufReader;
-        try{bufReader = new java.io.BufferedReader(new java.io.FileReader(f));}
-        catch (java.io.FileNotFoundException e) {
+        try{bufReader = new java.io.BufferedReader(
+                new java.io.InputStreamReader(
+                        new java.io.FileInputStream(f),"UTF8"));
+        } catch (Exception e) {
             String msg = "Error: \""+e.toString()+"\""+nl+nl+
                 "For plot file:"+f.getPath();
             MsgExceptn.exception(msg);

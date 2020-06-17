@@ -29,6 +29,7 @@ public class OptionsCalcs extends javax.swing.JFrame {
   private double tolHalta = Chem.TOL_HALTA_DEF;
   private ProgramDataSpana pd;
   private ProgramConf pc;
+  private javax.swing.border.Border scrollBorder;
   /** level of debug output in HaltaFall:<br>
    * 0 - none<br>
    * 1 - errors only<br>
@@ -137,6 +138,7 @@ public class OptionsCalcs extends javax.swing.JFrame {
     getRootPane().getActionMap().put("ALT_C", altCAction);
 
     //
+    scrollBorder = jScrollBarMin.getBorder();
     //--- Title
     this.setTitle("Calculation Options:");
     //---- Icon
@@ -264,6 +266,7 @@ public class OptionsCalcs extends javax.swing.JFrame {
         jButton_OK.setMnemonic('O');
         jButton_OK.setText("OK");
         jButton_OK.setToolTipText("OK (Alt-O orAlt-X)"); // NOI18N
+        jButton_OK.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_OK.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton_OK.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton_OK.addActionListener(new java.awt.event.ActionListener() {
@@ -276,6 +279,7 @@ public class OptionsCalcs extends javax.swing.JFrame {
         jButton_Cancel.setMnemonic('Q');
         jButton_Cancel.setText("Quit");
         jButton_Cancel.setToolTipText("Cancel (Esc or Alt-Q)"); // NOI18N
+        jButton_Cancel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_Cancel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton_Cancel.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton_Cancel.addActionListener(new java.awt.event.ActionListener() {
@@ -299,6 +303,7 @@ public class OptionsCalcs extends javax.swing.JFrame {
         jScrollBarMin.setToolTipText("default: 3%");
         jScrollBarMin.setValue(0);
         jScrollBarMin.setVisibleAmount(0);
+        jScrollBarMin.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollBarMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jScrollBarMinFocusGained(evt);
@@ -630,7 +635,7 @@ public class OptionsCalcs extends javax.swing.JFrame {
     }//GEN-LAST:event_jScrollBarMinFocusGained
 
     private void jScrollBarMinFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarMinFocusLost
-        jScrollBarMin.setBorder(null);
+        jScrollBarMin.setBorder(scrollBorder);
     }//GEN-LAST:event_jScrollBarMinFocusLost
 
     private void jLabelMinValMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelMinValMouseClicked

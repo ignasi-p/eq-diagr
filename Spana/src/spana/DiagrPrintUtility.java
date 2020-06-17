@@ -12,7 +12,7 @@ import lib.kemi.graph_lib.GraphLib;
  * without restrictions as specified on their web site. To quote the link above:
  * <i>All source code freely available for unrestricted use.</i>
  * <p>
- * Copyright (C) 2014-2016 I.Puigdomenech.
+ * Copyright (C) 2014-2018 I.Puigdomenech.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

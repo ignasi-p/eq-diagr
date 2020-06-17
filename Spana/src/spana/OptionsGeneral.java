@@ -220,14 +220,14 @@ public class OptionsGeneral extends javax.swing.JFrame {
         jLabelNote = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -275,6 +275,7 @@ public class OptionsGeneral extends javax.swing.JFrame {
         jButton_OK.setMnemonic('O');
         jButton_OK.setText("OK");
         jButton_OK.setToolTipText("OK (Alt-O orAlt-X)"); // NOI18N
+        jButton_OK.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_OK.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton_OK.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton_OK.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -288,6 +289,7 @@ public class OptionsGeneral extends javax.swing.JFrame {
         jButton_Cancel.setMnemonic('Q');
         jButton_Cancel.setText("Quit");
         jButton_Cancel.setToolTipText("Cancel (Esc or Alt-Q)"); // NOI18N
+        jButton_Cancel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_Cancel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton_Cancel.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton_Cancel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -301,6 +303,7 @@ public class OptionsGeneral extends javax.swing.JFrame {
         jButton_Reset.setMnemonic('R');
         jButton_Reset.setText("Reset");
         jButton_Reset.setToolTipText("Reset to default values (Alt-R)"); // NOI18N
+        jButton_Reset.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_Reset.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton_Reset.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton_Reset.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -501,7 +504,7 @@ public class OptionsGeneral extends javax.swing.JFrame {
                     .addComponent(jCheckBoxOutput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelOutput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addComponent(jPanelAssoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -516,7 +519,7 @@ public class OptionsGeneral extends javax.swing.JFrame {
                         .addComponent(jPanelLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(50, 50, 50)
                         .addComponent(jPanelButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 50, Short.MAX_VALUE))
+                        .addGap(0, 56, Short.MAX_VALUE))
                     .addComponent(jPanelAdv, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );

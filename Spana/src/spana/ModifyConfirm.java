@@ -366,6 +366,7 @@ public class ModifyConfirm extends javax.swing.JFrame {
         jButtonQuit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Quit_32x32.gif"))); // NOI18N
         jButtonQuit.setMnemonic('Q');
         jButtonQuit.setText("<html><u>Q</u>uit</html>"); // NOI18N
+        jButtonQuit.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonQuit.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jButtonQuit.setIconTextGap(8);
         jButtonQuit.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -379,6 +380,7 @@ public class ModifyConfirm extends javax.swing.JFrame {
         jButtonOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Delete_32x32.gif"))); // NOI18N
         jButtonOK.setMnemonic('O');
         jButtonOK.setText("<html><u>O</u>K <br>get rid of them!</html>"); // NOI18N
+        jButtonOK.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonOK.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jButtonOK.setIconTextGap(8);
         jButtonOK.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -394,7 +396,7 @@ public class ModifyConfirm extends javax.swing.JFrame {
             jPanelButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelButtonsLayout.createSequentialGroup()
                 .addComponent(jButtonQuit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(110, Short.MAX_VALUE))
+                .addContainerGap(114, Short.MAX_VALUE))
             .addComponent(jButtonOK, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
         );
         jPanelButtonsLayout.setVerticalGroup(

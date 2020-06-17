@@ -258,7 +258,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <Component id="jButtonQuit" min="-2" max="-2" attributes="1"/>
-                  <EmptySpace pref="110" max="32767" attributes="0"/>
+                  <EmptySpace pref="114" max="32767" attributes="0"/>
               </Group>
               <Component id="jButtonOK" alignment="0" pref="183" max="32767" attributes="1"/>
           </Group>
@@ -285,6 +285,11 @@
             </Property>
             <Property name="mnemonic" type="int" value="81"/>
             <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;u&gt;Q&lt;/u&gt;uit&lt;/html&gt;" noResource="true"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="10"/>
             <Property name="iconTextGap" type="int" value="8"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
@@ -305,6 +310,11 @@
             </Property>
             <Property name="mnemonic" type="int" value="79"/>
             <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;u&gt;O&lt;/u&gt;K &lt;br&gt;get rid of them!&lt;/html&gt;" noResource="true"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="10"/>
             <Property name="iconTextGap" type="int" value="8"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">

@@ -299,8 +299,15 @@
             <Property name="minimum" type="int" value="20"/>
             <Property name="orientation" type="int" value="0"/>
             <Property name="value" type="int" value="1000"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                <EmptyBorder/>
+              </Border>
+            </Property>
           </Properties>
           <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarWidthFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarWidthFocusLost"/>
             <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="jScrollBarWidthAdjustmentValueChanged"/>
           </Events>
         </Component>
@@ -354,6 +361,11 @@
         </Property>
         <Property name="mnemonic" type="int" value="101"/>
         <Property name="text" type="java.lang.String" value="export to ..."/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+            <BevelBorder/>
+          </Border>
+        </Property>
         <Property name="iconTextGap" type="int" value="8"/>
       </Properties>
       <Events>

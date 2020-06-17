@@ -43,7 +43,7 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="jButtonDoIt" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="238" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="264" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="jPanelMain" min="-2" max="-2" attributes="1"/>
@@ -215,8 +215,15 @@
                 <Property name="minimum" type="int" value="20"/>
                 <Property name="orientation" type="int" value="0"/>
                 <Property name="value" type="int" value="100"/>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                    <EmptyBorder/>
+                  </Border>
+                </Property>
               </Properties>
               <Events>
+                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarYFocusGained"/>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarYFocusLost"/>
                 <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="jScrollBarYAdjustmentValueChanged"/>
               </Events>
             </Component>
@@ -227,8 +234,15 @@
                 <Property name="minimum" type="int" value="20"/>
                 <Property name="orientation" type="int" value="0"/>
                 <Property name="value" type="int" value="100"/>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                    <EmptyBorder/>
+                  </Border>
+                </Property>
               </Properties>
               <Events>
+                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarXFocusGained"/>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarXFocusLost"/>
                 <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="jScrollBarXAdjustmentValueChanged"/>
               </Events>
             </Component>
@@ -491,8 +505,15 @@
                     <Property name="maximum" type="int" value="210"/>
                     <Property name="minimum" type="int" value="-50"/>
                     <Property name="orientation" type="int" value="0"/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                        <EmptyBorder/>
+                      </Border>
+                    </Property>
                   </Properties>
                   <Events>
+                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarMarginLFocusGained"/>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarMarginLFocusLost"/>
                     <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="jScrollBarMarginLAdjustmentValueChanged"/>
                   </Events>
                   <Constraints>
@@ -506,8 +527,15 @@
                     <Property name="maximum" type="int" value="60"/>
                     <Property name="minimum" type="int" value="-200"/>
                     <Property name="value" type="int" value="-10"/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                        <EmptyBorder/>
+                      </Border>
+                    </Property>
                   </Properties>
                   <Events>
+                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarMarginBFocusGained"/>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jScrollBarMarginBFocusLost"/>
                     <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="jScrollBarMarginBAdjustmentValueChanged"/>
                   </Events>
                   <Constraints>
@@ -679,9 +707,8 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="jCheckHeader">
           <Properties>
-            <Property name="mnemonic" type="int" value="104"/>
-            <Property name="text" type="java.lang.String" value="Header"/>
-            <Property name="focusPainted" type="boolean" value="false"/>
+            <Property name="mnemonic" type="int" value="98"/>
+            <Property name="text" type="java.lang.String" value="Banner"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckHeaderActionPerformed"/>
@@ -765,6 +792,11 @@
         </Property>
         <Property name="mnemonic" type="int" value="99"/>
         <Property name="text" type="java.lang.String" value="convert to ..."/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+            <BevelBorder/>
+          </Border>
+        </Property>
         <Property name="iconTextGap" type="int" value="8"/>
       </Properties>
       <Events>

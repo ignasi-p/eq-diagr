@@ -142,23 +142,24 @@ public class HelpAbout extends javax.swing.JFrame {
         jLabelPathUser = new javax.swing.JLabel();
         jLabelIniF = new javax.swing.JLabel();
         jLabelIniFile = new javax.swing.JLabel();
+        jLabelUnicode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
         jLabelName.setText("<html><font size=+1><b>Spana</b></font> &nbsp;&nbsp; © 2012-2020 &nbsp; I.Puigdomenech<br>\nThis program comes with<br>\nABSOLUTELY NO WARRANTY.<br>\nThis is free software, and you may<br>\nredistribute it under the GNU GPL license.</html>"); // NOI18N
         jLabelName.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jLabelVers.setText(" Program version: 2010-March-30");
+        jLabelVers.setText(" Program version: 2010-September-30");
 
         jLabelLibs.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabelLibs.setText("Libraries:");
@@ -179,7 +180,9 @@ public class HelpAbout extends javax.swing.JFrame {
         jPanel2.setOpaque(false);
 
         jButtonLicense.setMnemonic('l');
-        jButtonLicense.setText("License Details");
+        jButtonLicense.setText(" License Details ");
+        jButtonLicense.setAlignmentX(0.5F);
+        jButtonLicense.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonLicense.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonLicenseActionPerformed(evt);
@@ -211,11 +214,9 @@ public class HelpAbout extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel_www, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel_wwwKTH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel_wwwKTH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonLicense))
                 .addContainerGap(32, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jButtonLicense)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -311,6 +312,8 @@ public class HelpAbout extends javax.swing.JFrame {
 
         jLabelIniFile.setText("\"null\""); // NOI18N
 
+        jLabelUnicode.setText("(Unicode UTF-8)");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -355,9 +358,12 @@ public class HelpAbout extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jLabelJVectClipb_www, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(jLabelLibs)
-                            .addComponent(jLabelVers)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelVers)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelUnicode))
                             .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -368,8 +374,10 @@ public class HelpAbout extends javax.swing.JFrame {
                         .addGap(3, 3, 3)
                         .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelVers)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelVers)
+                            .addComponent(jLabelUnicode))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabelLibs)
                         .addGap(2, 2, 2)
                         .addComponent(jLabelLib)
@@ -591,6 +599,7 @@ private static class BareBonesBrowserLaunch {
     private javax.swing.JLabel jLabelPathApp;
     private javax.swing.JLabel jLabelPathU;
     private javax.swing.JLabel jLabelPathUser;
+    private javax.swing.JLabel jLabelUnicode;
     private javax.swing.JLabel jLabelVers;
     private javax.swing.JLabel jLabel_www;
     private javax.swing.JLabel jLabel_wwwKTH;

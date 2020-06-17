@@ -32,6 +32,12 @@ public class LogKchange extends javax.swing.JFrame {
     private boolean deactivated_old;
     private double lBeta_old;
     private boolean modified;
+    /** when a jTextField containing a number is edited,
+     * the old text is saved in this variable. If the user makes a mistake, for example
+     * enters "0.7e", then the old text is restored from this variable. */
+    private String oldTextLogK = "0";
+    /** New-line character(s) to substitute "\n" */
+    private static final String nl = System.getProperty("line.separator");
 
   //<editor-fold defaultstate="collapsed" desc="Constructor">
   /** Creates new form logKchange
@@ -289,6 +295,7 @@ public class LogKchange extends javax.swing.JFrame {
         jButtonQuit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Quit_32x32.gif"))); // NOI18N
         jButtonQuit.setMnemonic('Q');
         jButtonQuit.setText("<html><u>Q</u>uit</html>"); // NOI18N
+        jButtonQuit.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonQuit.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jButtonQuit.setIconTextGap(8);
         jButtonQuit.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -302,6 +309,7 @@ public class LogKchange extends javax.swing.JFrame {
         jButtonOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Save_32x32.gif"))); // NOI18N
         jButtonOK.setMnemonic('O');
         jButtonOK.setText("OK"); // NOI18N
+        jButtonOK.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonOK.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jButtonOK.setIconTextGap(8);
         jButtonOK.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -314,6 +322,7 @@ public class LogKchange extends javax.swing.JFrame {
         jButtonHelp.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButtonHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Help_32x32.gif"))); // NOI18N
         jButtonHelp.setMnemonic('H');
+        jButtonHelp.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonHelp.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButtonHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -434,6 +443,7 @@ public class LogKchange extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldLogKActionPerformed
 
     private void jTextFieldLogKFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldLogKFocusGained
+        oldTextLogK = jTextFieldLogK.getText();
         jTextFieldLogK.selectAll();
     }//GEN-LAST:event_jTextFieldLogKFocusGained
 
@@ -555,15 +565,20 @@ public class LogKchange extends javax.swing.JFrame {
   }
 
   private double readLogK() {
-    if(jTextFieldLogK.getText().length() <=0) {return 0;}
+    String t = jTextFieldLogK.getText().trim();
+    if(t.length() <= 0) {return 0;}
     double w;
-    try{w = Double.parseDouble(jTextFieldLogK.getText());
+    try{w = Double.valueOf(t);
         w = Math.min(1e50,Math.max(w, -1e50));
-        } //try
-    catch (NumberFormatException nfe) {w = Double.NaN;
-                System.out.println("Error reading logK:\n"+
-                "   "+nfe.toString());
-        } //catch
+    } catch (NumberFormatException ex) {
+        try{w = Double.valueOf(oldTextLogK); jTextFieldLogK.setText(oldTextLogK);}
+        catch (NumberFormatException e) {w = 0.;}
+        String msg = "Error (NumberFormatException)";
+        msg = msg +nl+"with text: \""+t+"\"";
+        System.out.println("---- "+msg);
+        javax.swing.JOptionPane.showMessageDialog(this, msg,
+                pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
     return w;
   } //readLogK()
 

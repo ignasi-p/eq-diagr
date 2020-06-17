@@ -39,6 +39,7 @@ public class DiagrExport extends javax.swing.JFrame {
 
   private String exportType = "png";
   private int exportSize = 1000;
+  private javax.swing.border.Border scrollBorder;
 
   private static final String nl = System.getProperty("line.separator");
 
@@ -112,6 +113,7 @@ public class DiagrExport extends javax.swing.JFrame {
     this.setLocation(Math.min(MainFrame.screenSize.width-100, left),
                          Math.min(MainFrame.screenSize.height-100, top));
 
+    scrollBorder = jScrollBarWidth.getBorder(); // get the default scroll bar border
     this.setTitle("Export a diagram:");
     //--- Icon
     String iconName = "images/Icon-Export_24x24.gif";
@@ -156,6 +158,7 @@ public class DiagrExport extends javax.swing.JFrame {
         jLabel_H.setText(String.valueOf((int)((double)exportSize)));
     }
 
+    jScrollBarWidth.setFocusable(true);
   }
   //</editor-fold>
 
@@ -382,6 +385,15 @@ public class DiagrExport extends javax.swing.JFrame {
         jScrollBarWidth.setMinimum(20);
         jScrollBarWidth.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
         jScrollBarWidth.setValue(1000);
+        jScrollBarWidth.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jScrollBarWidth.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jScrollBarWidthFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jScrollBarWidthFocusLost(evt);
+            }
+        });
         jScrollBarWidth.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
                 jScrollBarWidthAdjustmentValueChanged(evt);
@@ -436,6 +448,7 @@ public class DiagrExport extends javax.swing.JFrame {
         jButtonDoIt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Icon-Export_24x24.gif"))); // NOI18N
         jButtonDoIt.setMnemonic('e');
         jButtonDoIt.setText("export to ...");
+        jButtonDoIt.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonDoIt.setIconTextGap(8);
         jButtonDoIt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -524,6 +537,14 @@ public class DiagrExport extends javax.swing.JFrame {
         if(this.getWidth()<w){this.setSize(w,this.getHeight());}
       }
     }//GEN-LAST:event_formComponentResized
+
+    private void jScrollBarWidthFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarWidthFocusGained
+        jScrollBarWidth.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0,0,0)));
+    }//GEN-LAST:event_jScrollBarWidthFocusGained
+
+    private void jScrollBarWidthFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarWidthFocusLost
+        jScrollBarWidth.setBorder(scrollBorder);
+    }//GEN-LAST:event_jScrollBarWidthFocusLost
 
   //</editor-fold>
 

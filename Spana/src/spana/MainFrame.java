@@ -31,7 +31,7 @@ import lib.kemi.graph_lib.DiagrPaintUtility;
 public class MainFrame extends javax.swing.JFrame {
   // Note: for java 1.6 jComboBox must not have type,
   //       for java 1.7 jComboBox must be <String>
-  static final String VERS = "2020-Feb-05";
+  static final String VERS = "2020-June-08";
   /** all program instances will use the same redirected frame */
   private static RedirectedFrame msgFrame = null;
 
@@ -69,15 +69,16 @@ public class MainFrame extends javax.swing.JFrame {
   private final java.util.ArrayList<spana.Disp> diagrArrList =
           new java.util.ArrayList<spana.Disp>();
   /** do not fire an event when adding an item to the combo box
-   * or when setting the selected item whithin the program  */
+   * or when setting the selected item within the program  */
   private boolean jComboBox_Plt_doNothing = false;
 
   static java.io.File fileIni;
   private static final String FileINI_NAME = ".Spana.ini";
-  /** If <code>laf</code> = 2 then the CrossPlatform look-and-feel is used,
-   * else if <code>laf</code> = 1 the System look-and-feel is used.
-   * Else (<code>laf</code> = 0) the System look-and-feel is
-   * used on Windows and the CrossPlatform is used on Linux and Mac OS.
+  /** <tt>laf</tt> = LookAndFeel: the look-and-feel to be used (read from the ini-file).
+   * If <tt>laf</tt> = 2 then the <i>C<rossPlatform</i> look-and-feel will be used;
+   * else if <tt>laf</tt> = 1 the <i>System</i> look-and-feel will be used.
+   * Else (<tt>laf</tt> = 0, default) then the look-and-feel will be <i>System</i>
+   * for Windows and <i>CrossPlatform</i> on Linux and Mac OS.
    * Default at program start = 0 **/
   private int laf = 0;
 
@@ -253,25 +254,26 @@ public class MainFrame extends javax.swing.JFrame {
     } // if(pd.dbg)
 
     //---- set Look-And-Feel
-    try{
-        if(laf == 2) {
-            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getCrossPlatformLookAndFeelClassName());
-            System.out.println("--- setLookAndFeel(CrossPlatform);");
-        } else if(laf == 1) {
-            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-            System.out.println("--- setLookAndFeel(System);");
+    boolean changeLookAndFeel = ((laf == 2 && windows) || (laf == 1 && !windows));
+    if(pc.dbg) {System.out.println("--- Change look-and-feel:  windows = "+windows+",  look-and-feel in ini-file = "+laf);}
+    if (changeLookAndFeel) {
+        try{
+            if(laf == 2) {
+                javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getCrossPlatformLookAndFeelClassName());
+                System.out.println("--- setLookAndFeel(CrossPlatform);");
+            } else if(laf == 1) {
+                javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+                System.out.println("--- setLookAndFeel(System);");
+            }
         }
-    }
-    catch (ClassNotFoundException ex) {System.out.println("Error: "+ex.getMessage());}
-    catch (IllegalAccessException ex) {System.out.println("Error: "+ex.getMessage());}
-    catch (InstantiationException ex) {System.out.println("Error: "+ex.getMessage());}
-    catch (javax.swing.UnsupportedLookAndFeelException ex) {System.out.println("Error: "+ex.getMessage());}
-    javax.swing.SwingUtilities.updateComponentTreeUI(spf);
-    spf.invalidate();spf.validate();spf.repaint();
-    javax.swing.SwingUtilities.updateComponentTreeUI(msgFrame);
-    msgFrame.invalidate();msgFrame.validate();msgFrame.repaint();
-    if(pc.dbg) {System.out.println("--- configureOptionPane();");}
-    Util.configureOptionPane();
+        catch (Exception ex) {System.out.println("Error: "+ex.getMessage());}
+        javax.swing.SwingUtilities.updateComponentTreeUI(spf);
+        spf.invalidate(); spf.validate(); spf.repaint();
+        javax.swing.SwingUtilities.updateComponentTreeUI(msgFrame);
+        msgFrame.invalidate(); msgFrame.validate(); msgFrame.repaint();
+        if(pc.dbg) {System.out.println("--- configureOptionPane();");}
+        Util.configureOptionPane();
+    } // changeLookAndFeel
 
     setVisible(true);
     windowSize = MainFrame.this.getSize();
@@ -2150,9 +2152,9 @@ public class MainFrame extends javax.swing.JFrame {
     if(pc.dbg) {
         String s;
         if(fileINInotRO != null) {s=fileINInotRO.getAbsolutePath();} else {s="\"null\"";}
-        System.out.println("   fileINInotRO = "+s);
+        System.out.println("   ini-file not read-only = "+s);
         if(fileRead != null) {s=fileRead.getAbsolutePath();} else {s="\"null\"";}
-        System.out.println("   fileRead = "+s);
+        System.out.println("   ini-file read = "+s);
     }
     if(!readOk) {
         String msg = "Failed to read any INI-file."+nl+
@@ -2170,11 +2172,13 @@ public class MainFrame extends javax.swing.JFrame {
     System.out.flush();
     System.out.println("Reading ini-file: \""+f.getPath()+"\"");
     java.util.Properties propertiesIni= new java.util.Properties();
-    java.io.FileInputStream properties_iniFile = null;
+    java.io.FileInputStream fis = null;
+    java.io.BufferedReader r = null;
     boolean ok = true;
     try {
-      properties_iniFile = new java.io.FileInputStream(f);
-      propertiesIni.load(properties_iniFile);
+      fis = new java.io.FileInputStream(f);
+      r = new java.io.BufferedReader(new java.io.InputStreamReader(fis,"UTF8"));
+      propertiesIni.load(r);
     } catch (java.io.FileNotFoundException e) {
       String t = "Warning: file Not found: \""+f.getPath()+"\""+nl+
                          "using default parameter values.";
@@ -2192,9 +2196,8 @@ public class MainFrame extends javax.swing.JFrame {
       javax.swing.JOptionPane.showMessageDialog(spf, msg, pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
       ok = false;
     } // catch loading-exception
-    try {
-        if(properties_iniFile != null) {properties_iniFile.close();}
-    } catch (java.io.IOException e) {
+    try {if(r != null) {r.close();} if(fis != null) {fis.close();}}
+    catch (java.io.IOException e) {
         msg ="Error: \""+e.toString()+"\""+nl+
                     "   while closing INI-file:"+nl+
                     "   \""+f.getPath()+"\"";
@@ -2204,7 +2207,7 @@ public class MainFrame extends javax.swing.JFrame {
         ok = false;
     }
     finally {
-        try {if(properties_iniFile != null) {properties_iniFile.close();}}
+        try {if(r != null) {r.close();} if(fis != null) {fis.close();}}
         catch (java.io.IOException e) {
             msg = "Error: \""+e.toString()+"\""+nl+
                           "   while closing INI-file:"+nl+
@@ -2305,14 +2308,20 @@ public class MainFrame extends javax.swing.JFrame {
         pd.diagrConvertSizeY = Integer.parseInt(propertiesIni.getProperty("Convert_SizeY"));
         pd.diagrConvertMarginB = Float.parseFloat(propertiesIni.getProperty("Convert_MarginBottom"));
         pd.diagrConvertMarginL = Float.parseFloat(propertiesIni.getProperty("Convert_MarginLeft"));
-        pd.diagrConvertPortrait = Boolean.parseBoolean(propertiesIni.getProperty("Convert_Portrait","true"));
-        pd.diagrConvertHeader = Boolean.parseBoolean(propertiesIni.getProperty("Convert_Header","true"));
-        pd.diagrConvertColors = Boolean.parseBoolean(propertiesIni.getProperty("Convert_Colour","true"));
         pd.diagrConvertFont = Integer.parseInt(propertiesIni.getProperty("Convert_Font"));
         pd.diagrConvertEPS = Boolean.parseBoolean(propertiesIni.getProperty("Convert_EPS","false"));
         pd.diagrExportType = propertiesIni.getProperty("Export_To");
         pd.diagrExportSize = Integer.parseInt(propertiesIni.getProperty("Export_Size"));
-    } catch (NumberFormatException e) {
+        pd.temperature = Double.parseDouble(propertiesIni.getProperty("Calc_temperature","25"));
+        pd.pressure = Double.parseDouble(propertiesIni.getProperty("Calc_pressure","1"));
+        String units = propertiesIni.getProperty("Calc_concentration_units","0");
+        if(units.length() <2) {units = units+" ";}
+        pd.concentrationUnits = Integer.parseInt(units.substring(0,2).trim());
+        pd.concentrationNotation = Integer.parseInt(propertiesIni.getProperty("Calc_concentration_notation","0").substring(0,1));
+        pd.drawNeutralPHinPourbaix = Boolean.parseBoolean(propertiesIni.getProperty("Calc_draw_pH_line","false"));
+        pd.kth = Boolean.parseBoolean(propertiesIni.getProperty("KTH_settings","false"));
+        pd.jarClassLd = Boolean.parseBoolean(propertiesIni.getProperty("Calc_load_jar-files","true"));
+    } catch (Exception e) {
         msg = "Error: \""+e.toString()+"\""+nl+
                          "   while reading INI-file:"+nl+
                          "   \""+f.getPath()+"\""+nl+nl+
@@ -2322,38 +2331,12 @@ public class MainFrame extends javax.swing.JFrame {
         javax.swing.JOptionPane.showMessageDialog(spf, msg, pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
         ok = false;
     }
-    try {
-        pd.temperature = Double.parseDouble(propertiesIni.getProperty("Calc_temperature","25"));
-    } catch (NumberFormatException e) {
-        msg = "Error: \""+e.toString()+"\""+nl+
-                         "   while reading INI-file:"+nl+
-                         "   \""+f.getPath()+"\""+nl+nl+
-                         "Setting default program parameters.";
-        System.out.println(msg);
-        if(!this.isVisible()) {this.setVisible(true);}
-        javax.swing.JOptionPane.showMessageDialog(spf, msg, pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
-    }
-    try {
-        pd.pressure = Double.parseDouble(propertiesIni.getProperty("Calc_pressure","1"));
-    } catch (NumberFormatException e) {
-        msg = "Error: \""+e.toString()+"\""+nl+
-                         "   while reading INI-file:"+nl+
-                         "   \""+f.getPath()+"\""+nl+nl+
-                         "Setting default program parameters.";
-        System.out.println(msg);
-        if(!this.isVisible()) {this.setVisible(true);}
-        javax.swing.JOptionPane.showMessageDialog(spf, msg, pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
-    }
-    pd.drawNeutralPHinPourbaix = Boolean.parseBoolean(propertiesIni.getProperty("Calc_draw_pH_line","false"));
     try{
-        String s = propertiesIni.getProperty("lookAndFeel").toLowerCase();
+        String s = propertiesIni.getProperty("lookAndFeel").trim().toLowerCase();
         if(s.startsWith("system")) {laf = 1;}
         else if(s.startsWith("cross")) {laf = 2;}
         else {laf = 0;}
-    }
-    catch (NullPointerException e) {laf = 0; pd.drawNeutralPHinPourbaix = false;}
-    pd.kth = Boolean.parseBoolean(propertiesIni.getProperty("KTH_settings","false"));
-    pd.jarClassLd = Boolean.parseBoolean(propertiesIni.getProperty("Calc_load_jar-files","true"));
+    } catch (Exception e) {laf = 0;}
 
     if(pc.dbg) {System.out.println("Finished reading ini-file");}
     System.out.flush();
@@ -2487,19 +2470,26 @@ public class MainFrame extends javax.swing.JFrame {
                   Math.pow(diagrPaintUtil.backgrnd.getGreen(),2) +
                   Math.pow(diagrPaintUtil.backgrnd.getBlue(),2)) < 221)
         {backgrndDark = true;}
-    for(int i=0; i < DiagrPaintUtility.MAX_COLOURS; i++)
-        {
-        if(twoColoursEqual(diagrPaintUtil.backgrnd,diagrPaintUtil.colours[i]))
-            {if(backgrndDark) {diagrPaintUtil.colours[i] = new java.awt.Color(200,200,200);}
-             else {diagrPaintUtil.colours[i] = new java.awt.Color(100,100,100);}
+    for(int i=0; i < DiagrPaintUtility.MAX_COLOURS; i++) {
+        if(twoColoursEqual(diagrPaintUtil.backgrnd,diagrPaintUtil.colours[i])) {
+            if(pc.dbg) {System.out.print("checkIniValues(): color["+i+"] is \"equal\" to background color. Dark background = "+backgrndDark+nl+
+                    "   setting color["+i+"] to ");}
+            if(backgrndDark) {
+                diagrPaintUtil.colours[i] = new java.awt.Color(200,200,200);
+                if(pc.dbg) {System.out.println("(200,200,200)");}
+            } else {
+                diagrPaintUtil.colours[i] = new java.awt.Color(100,100,100);}
+                if(pc.dbg) {System.out.println("(100,100,100)");}
             } // if twoColoursEqual
         } // for i
     pd.SED_nbrSteps = Math.max(MNSTP, Math.min(MXSTP,pd.SED_nbrSteps));
     pd.Predom_nbrSteps = Math.max(MNSTP, Math.min(MXSTP,pd.Predom_nbrSteps));
     pd.ionicStrength = Math.max(-100, Math.min(1000,pd.ionicStrength));
     if(!Double.isNaN(pd.temperature)) {pd.temperature = Math.max(-50, Math.min(400,pd.temperature));} else {pd.temperature = 25;}
-    if(!Double.isNaN(pd.pressure)) {pd.pressure = Math.max(0, Math.min(10000,pd.pressure));} else {pd.pressure = 1;}
+    if(!Double.isNaN(pd.pressure)) {pd.pressure = Math.max(1., Math.min(10000,pd.pressure));} else {pd.pressure = 1.;}
     pd.actCoeffsMethod = Math.max(0, Math.min(2,pd.actCoeffsMethod));
+    pd.concentrationUnits = Math.max(-1, Math.min(2,pd.concentrationUnits));
+    pd.concentrationNotation = Math.max(0, Math.min(2,pd.concentrationNotation));
     pd.calcDbgHalta = Math.max(0, Math.min(6,pd.calcDbgHalta));
     pd.tolHalta = Math.max(1e-9, Math.min(0.01, pd.tolHalta));
     boolean found = false;
@@ -2529,10 +2519,10 @@ public class MainFrame extends javax.swing.JFrame {
   } // checkIniValues()
 
   public static boolean twoColoursEqual (java.awt.Color A, java.awt.Color B) {
-      if(Math.abs(A.getRed()-B.getRed()) >25) {return false;}
-      else if(Math.abs(A.getGreen()-B.getGreen()) >25) {return false;}
-      else if(Math.abs(A.getBlue()-B.getBlue()) >25) {return false;}
-      return true;
+      int diff = Math.abs(A.getRed()-B.getRed()) + 
+                 Math.abs(A.getGreen()-B.getGreen()) + 
+                 Math.abs(A.getBlue()-B.getBlue());
+      return diff <= 120;
   } // twoColoursEqual
 
   public void iniDefaults() {
@@ -2588,8 +2578,10 @@ public class MainFrame extends javax.swing.JFrame {
       if(pc.pathAPP != null && pc.pathAPP.trim().length()>0) {pd.pathSIT = pc.pathAPP;} else {pd.pathSIT = ".";}
       pd.reversedConcs = false;
       pd.drawNeutralPHinPourbaix = false;
+      pd.concentrationUnits = 0;
+      pd.concentrationNotation = 0;
       pd.temperature = 25;
-      pd.pressure = 1;
+      pd.pressure = 1.;
       pd.useEh = true;
       pd.SED_nbrSteps = NSTEPS_DEF;
       pd.SED_tableOutput = false;
@@ -2702,9 +2694,9 @@ public class MainFrame extends javax.swing.JFrame {
     if(createDataFileProg != null) {
         propertiesIni.setProperty("createDataFileProg",createDataFileProg);
     } else {propertiesIni.setProperty("createDataFileProg","");}
-    if(laf==2) {propertiesIni.setProperty("lookAndFeel", "CrossPlatform");}
-    else if(laf==1) {propertiesIni.setProperty("lookAndFeel", "System");}
-    else {propertiesIni.setProperty("lookAndFeel", "Default");}
+    if(laf==2) {propertiesIni.setProperty("lookAndFeel", "CrossPlatform (may be 'CrossPlatform', 'System' or 'Default')");}
+    else if(laf==1) {propertiesIni.setProperty("lookAndFeel", "System (may be 'CrossPlatform', 'System' or 'Default')");}
+    else {propertiesIni.setProperty("lookAndFeel", "Default (may be 'CrossPlatform', 'System' or 'Default')");}
     propertiesIni.setProperty("advancedVersion",String.valueOf(pd.advancedVersion));
     propertiesIni.setProperty("Calc_keepFrame",String.valueOf(pd.keepFrame));
     propertiesIni.setProperty("Calc_SED_nbrSteps",String.valueOf(pd.SED_nbrSteps));
@@ -2718,6 +2710,8 @@ public class MainFrame extends javax.swing.JFrame {
     propertiesIni.setProperty("Calc_activityCoefficientsMethod", String.valueOf(pd.actCoeffsMethod));
     propertiesIni.setProperty("Calc_useEh",String.valueOf(pd.useEh));
     propertiesIni.setProperty("Calc_draw_pH_line",String.valueOf(pd.drawNeutralPHinPourbaix));
+    propertiesIni.setProperty("Calc_concentration_units", String.valueOf(pd.concentrationUnits)+"  (may be 0 (\"molal\"), 1 (\"mol/kg_w\"), 2 (\"M\") or -1 (\"\"))");
+    propertiesIni.setProperty("Calc_concentration_notation", String.valueOf(pd.concentrationNotation)+"  (may be 0 (\"no choice\"), 1 (\"scientific\") or 2 (\"engineering\"))");
     propertiesIni.setProperty("Calc_dbg",String.valueOf(pd.calcDbg));
     propertiesIni.setProperty("Calc_dbgHalta",String.valueOf(pd.calcDbgHalta));
     propertiesIni.setProperty("Calc_tolerance",String.valueOf(pd.tolHalta));
@@ -2789,30 +2783,36 @@ public class MainFrame extends javax.swing.JFrame {
     propertiesIni.setProperty("Calc_load_jar-files", String.valueOf(pd.jarClassLd));
 
     System.out.println("Saving ini-file: \""+f.getPath()+"\"");
-    java.io.FileOutputStream propertiesIniFile = null;
+    java.io.FileOutputStream fos = null;
+    java.io.Writer w = null;
     try{
-        propertiesIniFile = new java.io.FileOutputStream(f);
+        fos = new java.io.FileOutputStream(f);
+        w = new java.io.BufferedWriter(new java.io.OutputStreamWriter(fos,"UTF8"));
         // INI-section needed by PortableApps java launcher
-        int i = nl.length();
-        byte[] b = new byte[7+i];
+        char[] b = new char[7 + nl.length()];
         b[0]='['; b[1]='S'; b[2]='p'; b[3]='a'; b[4]='n'; b[5]='a'; b[6]=']';
-        for(int j =0; j < i; j++) {b[7+j] = (byte)nl.codePointAt(j);}
-        propertiesIniFile.write(b);
+        for(int j =0; j < nl.length(); j++) {b[7+j] = nl.charAt(j);}
+        w.write(b);
         //
-        propertiesIni.store(propertiesIniFile,null);
+        propertiesIni.store(w,null);
         if (pc.dbg) {System.out.println("Written: \""+f.getPath()+"\"");}
     } catch (java.io.IOException e) {
           msg = "Error: \""+e.toString()+"\""+nl+
                 "   while writing INI-file:"+nl+
                 "   \""+f.getPath()+"\"";
-          System.out.println(msg);
           if(!this.isVisible()) {this.setVisible(true);}
-          javax.swing.JOptionPane.showMessageDialog(spf, msg, pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
+          MsgExceptn.showErrMsg(spf,msg,1);
           ok = false;
     }
     finally {
-        try {if (propertiesIniFile != null) {propertiesIniFile.close();}}
-        catch (java.io.IOException e) {ok = false;}
+        try {if(w != null) {w.close();} if(fos != null) {fos.close();}}
+        catch (java.io.IOException e) {
+            msg = e.getMessage()+nl+
+                        "   trying to write ini-file: \""+f.getPath()+"\"";
+            if(!this.isVisible()) {this.setVisible(true);}
+            MsgExceptn.showErrMsg(spf, msg, 1);
+            ok = false;
+        }
     } //finally
     return ok;
   } // saveIni()
@@ -2857,21 +2857,24 @@ public class MainFrame extends javax.swing.JFrame {
                                  "    target: \""+target.getAbsolutePath()+"\"");}
     java.io.BufferedReader in;
     try{
-        in = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(source)));
+        in = new java.io.BufferedReader(
+                new java.io.InputStreamReader(new java.io.FileInputStream(source),"UTF8"));
     }
-    catch (java.io.FileNotFoundException ex) {
-        MsgExceptn.exception("\"source\" file not found:"+nl+
-                             "   \""+source.getAbsolutePath()+"\".");
+    catch (Exception ex) {
+        MsgExceptn.exception("Error: "+ex.getMessage()+nl+
+                "with \"source\" file: \""+source.getAbsolutePath()+"\"");
         return false;        
     }
 
     java.io.BufferedWriter out;
     try {
-        out = new java.io.BufferedWriter(new java.io.FileWriter(target));
+        out = new java.io.BufferedWriter(
+                new java.io.OutputStreamWriter(
+                        new java.io.FileOutputStream(target),"UTF8"));
     }
-    catch (java.io.IOException ex) {
-        MsgExceptn.exception(ex.toString()+" while writing \"target\" file:"+nl+
-                             "   \""+target.getAbsolutePath()+"\".");
+    catch (Exception ex) {
+        MsgExceptn.exception("Error: "+ex.toString()+nl+
+                "with \"target\" file: \""+target.getAbsolutePath()+"\"");
         return false;        
     }
 
@@ -2881,12 +2884,12 @@ public class MainFrame extends javax.swing.JFrame {
             //Process each line and add output to destination file
             out.write(aLine);
             out.newLine();
+            out.flush();
         }
-    } catch (java.io.IOException ex) {
-        MsgExceptn.exception(ex.toString()+" while reading \"source\" file:"+nl+
-                "   \""+source.getAbsolutePath()+"\","+nl+
-                "and writing \"target\" file:"+nl+
-                "   \""+target.getAbsolutePath()+"\".");
+    } catch (Exception ex) {
+        MsgExceptn.exception("Error: "+ex.toString()+nl+
+                "while reading \"source\" file: \""+source.getAbsolutePath()+"\","+nl+
+                "and writing \"target\" file: \""+target.getAbsolutePath()+"\".");
         return false;        
     }
     finally {

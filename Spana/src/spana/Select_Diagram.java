@@ -86,6 +86,13 @@ public class Select_Diagram extends javax.swing.JFrame {
     private int runActCoeffsMethod;
     /** draw pH line in Pourbaix diagrams? */
     private boolean runPHline;
+    /** concentration units when drawing diagrams
+     * (may be 0="molal", 1="mol/kg_w", 2="M" or -1="") */
+    private int runConcUnits;
+    /** concentration notation when drawing diagrams
+     * (may be 0="no choice", 1="scientific", 2="engineering") */
+    private int runConcNottn;
+    
 
     /** true if SED/Predom are from the Medusa-32 package, that is, they are Fortran programs */
     private boolean oldProg = false;
@@ -128,6 +135,38 @@ public class Select_Diagram extends javax.swing.JFrame {
     private final javax.swing.DefaultListModel<String> listCompConcModel = new javax.swing.DefaultListModel<>();
     //private final javax.swing.DefaultListModel listCompConcModel = new javax.swing.DefaultListModel(); // java 1.6
     private final java.awt.Color backg;
+    /** when a jTextField containing a number is edited,
+     * the old text is saved in this variable. If the user makes a mistake, for example
+     * enters "0.7e", then the old text is restored from this variable. */
+    private String oldTextCLow = "0";
+    /** when a jTextField containing a number is edited,
+     * the old text is saved in this variable. If the user makes a mistake, for example
+     * enters "0.7e", then the old text is restored from this variable. */
+    private String oldTextCHigh = "0";
+    /** when a jTextField containing a number is edited,
+     * the old text is saved in this variable. If the user makes a mistake, for example
+     * enters "0.7e", then the old text is restored from this variable. */
+    private String oldTextI = "0";
+    /** when a jTextField containing a number is edited,
+     * the old text is saved in this variable. If the user makes a mistake, for example
+     * enters "0.7e", then the old text is restored from this variable. */
+    private String oldTextT = "25";
+    /** when a jTextField containing a number is edited,
+     * the old text is saved in this variable. If the user makes a mistake, for example
+     * enters "0.7e", then the old text is restored from this variable. */
+    private String oldTextXmin = "0";
+    /** when a jTextField containing a number is edited,
+     * the old text is saved in this variable. If the user makes a mistake, for example
+     * enters "0.7e", then the old text is restored from this variable. */
+    private String oldTextXmax = "0";
+    /** when a jTextField containing a number is edited,
+     * the old text is saved in this variable. If the user makes a mistake, for example
+     * enters "0.7e", then the old text is restored from this variable. */
+    private String oldTextYmin = "0";
+    /** when a jTextField containing a number is edited,
+     * the old text is saved in this variable. If the user makes a mistake, for example
+     * enters "0.7e", then the old text is restored from this variable. */
+    private String oldTextYmax = "0";
     private static String lastDataFileName = null;
     private static String lastPlotFileName = null;
     private boolean plotAndConcsNotGiven;
@@ -138,7 +177,7 @@ public class Select_Diagram extends javax.swing.JFrame {
      * on <code>jListCompConc</code> */
     private String comboBoxConcType0;
     /** do not fire the action event when adding an item to the combo box
-     * or when setting the selected item whithin the program  */
+     * or when setting the selected item within the program  */
     private boolean diagramType_doNothing = false;
     /** the selected component index in the concentrations list */
     private int getConc_idx;
@@ -150,6 +189,7 @@ public class Select_Diagram extends javax.swing.JFrame {
     private static final java.text.DecimalFormat myFormatter =
             (java.text.DecimalFormat)java.text.NumberFormat.getNumberInstance(java.util.Locale.ENGLISH);
     private static final String SLASH = java.io.File.separator;
+    private final javax.swing.border.Border scrollBorder;
     private final javax.swing.border.Border defBorder;
     private final javax.swing.border.Border highlightedBorder = javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED, java.awt.Color.gray, java.awt.Color.black);
 
@@ -296,7 +336,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         getRootPane().getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW).put(altIKeyStroke,"ALT_I");
         javax.swing.Action altIAction = new javax.swing.AbstractAction() {
             @Override public void actionPerformed(java.awt.event.ActionEvent e) {
-                jTextFieldIonicStgr.requestFocus();
+                jTextFieldIonicStr.requestFocus();
             }};
         getRootPane().getActionMap().put("ALT_I", altIAction);
 
@@ -309,6 +349,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         else {System.out.println("--- Error: Could not load image = \""+iconName+"\"");}
         // ---- Set main things
         defBorder = jScrollPaneCompConcList.getBorder();
+        scrollBorder = jScrollBarSEDNbrP.getBorder();
         backg = jPanelDiagrType.getBackground();
         loading = true;
         updatingAxes = false;
@@ -342,6 +383,8 @@ public class Select_Diagram extends javax.swing.JFrame {
     jScrollBarSEDNbrP.setFocusable(true);
     runAqu = pd.aquSpeciesOnly; jCheckBoxAqu.setSelected(runAqu);
     runPHline = pd.drawNeutralPHinPourbaix; jCheckBoxDrawPHline.setSelected(runPHline);
+    runConcUnits = Math.max(-1,Math.min(pd.concentrationUnits, 2));
+    runConcNottn = Math.max(0,Math.min(pd.concentrationNotation, 2));
     runTbl = pd.SED_tableOutput; jCheckBoxTableOut.setSelected(runTbl);
     runRevs = pd.reversedConcs; jCheckBoxRev.setSelected(runRevs);
     runUseEh = pd.useEh; jCheckBoxUseEh.setSelected(runUseEh);
@@ -349,7 +392,7 @@ public class Select_Diagram extends javax.swing.JFrame {
 
     diag.ionicStrength = pd.ionicStrength;
     ionicStrOld = diag.ionicStrength;
-    jTextFieldIonicStgr.setText(Util.formatNum(diag.ionicStrength));
+    jTextFieldIonicStr.setText(Util.formatNum(diag.ionicStrength));
     if(diag.ionicStrength >= 0) {jRadioButtonFixed.doClick();} else {jRadioButtonCalc.doClick();}
 
     this.pack();
@@ -467,7 +510,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jRadioButtonFixed = new javax.swing.JRadioButton();
         jRadioButtonCalc = new javax.swing.JRadioButton();
         jLabelIonicS = new javax.swing.JLabel();
-        jTextFieldIonicStgr = new javax.swing.JTextField();
+        jTextFieldIonicStr = new javax.swing.JTextField();
         jLabelM = new javax.swing.JLabel();
         jLabelT = new javax.swing.JLabel();
         jTextFieldT = new javax.swing.JTextField();
@@ -536,6 +579,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jButton_OK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Spana_icon_32x32.gif"))); // NOI18N
         jButton_OK.setMnemonic('m');
         jButton_OK.setToolTipText("<html><u>M</u>ake Diagram (Alt-X or Alt-M)</html>"); // NOI18N
+        jButton_OK.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_OK.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton_OK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -546,6 +590,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jButton_Cancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Trash.gif"))); // NOI18N
         jButton_Cancel.setMnemonic('q');
         jButton_Cancel.setToolTipText("Cancel (Alt-Q, Esc)"); // NOI18N
+        jButton_Cancel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_Cancel.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton_Cancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -556,6 +601,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jButton_Help.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Help_32x32.gif"))); // NOI18N
         jButton_Help.setMnemonic('h');
         jButton_Help.setToolTipText("<html><u>H</u>elp</html>"); // NOI18N
+        jButton_Help.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_Help.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton_Help.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -759,17 +805,18 @@ public class Select_Diagram extends javax.swing.JFrame {
         jPanelXaxis.setLayout(new javax.swing.BoxLayout(jPanelXaxis, javax.swing.BoxLayout.LINE_AXIS));
 
         jTextFieldXmin.setText("-5"); // NOI18N
-        jTextFieldXmin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldXminActionPerformed(evt);
-            }
-        });
+        jTextFieldXmin.setName("Xmin"); // NOI18N
         jTextFieldXmin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextFieldXminFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldXminFocusLost(evt);
+            }
+        });
+        jTextFieldXmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldXminActionPerformed(evt);
             }
         });
         jTextFieldXmin.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -784,17 +831,18 @@ public class Select_Diagram extends javax.swing.JFrame {
 
         jTextFieldXmax.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         jTextFieldXmax.setText("-5"); // NOI18N
-        jTextFieldXmax.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldXmaxActionPerformed(evt);
-            }
-        });
+        jTextFieldXmax.setName("Xmax"); // NOI18N
         jTextFieldXmax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextFieldXmaxFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldXmaxFocusLost(evt);
+            }
+        });
+        jTextFieldXmax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldXmaxActionPerformed(evt);
             }
         });
         jTextFieldXmax.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -830,6 +878,7 @@ public class Select_Diagram extends javax.swing.JFrame {
 
         jTextFieldYmax.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         jTextFieldYmax.setText("-999"); // NOI18N
+        jTextFieldYmax.setName("Ymax"); // NOI18N
         jTextFieldYmax.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldYmaxActionPerformed(evt);
@@ -1047,6 +1096,7 @@ public class Select_Diagram extends javax.swing.JFrame {
 
         jTextFieldYmin.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         jTextFieldYmin.setText("-999"); // NOI18N
+        jTextFieldYmin.setName("Ymin"); // NOI18N
         jTextFieldYmin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldYminActionPerformed(evt);
@@ -1215,31 +1265,32 @@ public class Select_Diagram extends javax.swing.JFrame {
         });
 
         jLabelIonicS.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabelIonicS.setLabelFor(jTextFieldIonicStgr);
+        jLabelIonicS.setLabelFor(jTextFieldIonicStr);
         jLabelIonicS.setText("<html><u>I</u> = </html>"); // NOI18N
         jLabelIonicS.setToolTipText("Ionic strength =");
 
-        jTextFieldIonicStgr.setText("0.0"); // NOI18N
-        jTextFieldIonicStgr.setToolTipText("ionic strength value");
-        jTextFieldIonicStgr.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldIonicStgrActionPerformed(evt);
-            }
-        });
-        jTextFieldIonicStgr.addFocusListener(new java.awt.event.FocusAdapter() {
+        jTextFieldIonicStr.setText("0.0"); // NOI18N
+        jTextFieldIonicStr.setToolTipText("ionic strength value");
+        jTextFieldIonicStr.setName("IonicStr"); // NOI18N
+        jTextFieldIonicStr.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextFieldIonicStgrFocusGained(evt);
+                jTextFieldIonicStrFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextFieldIonicStgrFocusLost(evt);
+                jTextFieldIonicStrFocusLost(evt);
             }
         });
-        jTextFieldIonicStgr.addKeyListener(new java.awt.event.KeyAdapter() {
+        jTextFieldIonicStr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldIonicStrActionPerformed(evt);
+            }
+        });
+        jTextFieldIonicStr.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextFieldIonicStgrKeyPressed(evt);
+                jTextFieldIonicStrKeyPressed(evt);
             }
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextFieldIonicStgrKeyTyped(evt);
+                jTextFieldIonicStrKeyTyped(evt);
             }
         });
 
@@ -1256,17 +1307,18 @@ public class Select_Diagram extends javax.swing.JFrame {
 
         jTextFieldT.setText("25"); // NOI18N
         jTextFieldT.setToolTipText("temperature");
-        jTextFieldT.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldTActionPerformed(evt);
-            }
-        });
+        jTextFieldT.setName("T"); // NOI18N
         jTextFieldT.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextFieldTFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldTFocusLost(evt);
+            }
+        });
+        jTextFieldT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldTActionPerformed(evt);
             }
         });
         jTextFieldT.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1340,7 +1392,7 @@ public class Select_Diagram extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabelTC))
                                     .addGroup(jPanelActCoefLayout.createSequentialGroup()
-                                        .addComponent(jTextFieldIonicStgr, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextFieldIonicStr, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabelM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -1356,7 +1408,7 @@ public class Select_Diagram extends javax.swing.JFrame {
                     .addComponent(jRadioButtonCalc))
                 .addGap(6, 6, 6)
                 .addGroup(jPanelActCoefLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldIonicStgr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldIonicStr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelIonicS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1386,17 +1438,18 @@ public class Select_Diagram extends javax.swing.JFrame {
         jScrollBarPredNbrP.setMinimum(spana.MainFrame.MNSTP);
         jScrollBarPredNbrP.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
         jScrollBarPredNbrP.setVisibleAmount(1);
-        jScrollBarPredNbrP.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
-            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
-                jScrollBarPredNbrPAdjustmentValueChanged(evt);
-            }
-        });
+        jScrollBarPredNbrP.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollBarPredNbrP.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jScrollBarPredNbrPFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jScrollBarPredNbrPFocusLost(evt);
+            }
+        });
+        jScrollBarPredNbrP.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
+            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
+                jScrollBarPredNbrPAdjustmentValueChanged(evt);
             }
         });
 
@@ -1517,6 +1570,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jScrollBarSEDNbrP.setMinimum(spana.MainFrame.MNSTP);
         jScrollBarSEDNbrP.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
         jScrollBarSEDNbrP.setVisibleAmount(1);
+        jScrollBarSEDNbrP.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollBarSEDNbrP.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jScrollBarSEDNbrPFocusGained(evt);
@@ -1711,17 +1765,18 @@ public class Select_Diagram extends javax.swing.JFrame {
         jLabelFrom.setText("from:"); // NOI18N
 
         jTextFieldCLow.setText("jTextFieldCLow"); // NOI18N
-        jTextFieldCLow.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldCLowActionPerformed(evt);
-            }
-        });
+        jTextFieldCLow.setName("CLow"); // NOI18N
         jTextFieldCLow.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextFieldCLowFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldCLowFocusLost(evt);
+            }
+        });
+        jTextFieldCLow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldCLowActionPerformed(evt);
             }
         });
         jTextFieldCLow.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1736,6 +1791,7 @@ public class Select_Diagram extends javax.swing.JFrame {
         jLabelTo.setText("to:"); // NOI18N
 
         jTextFieldCHigh.setText("jTextFieldCHigh"); // NOI18N
+        jTextFieldCHigh.setName("CHigh"); // NOI18N
         jTextFieldCHigh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldCHighActionPerformed(evt);
@@ -1926,16 +1982,16 @@ public class Select_Diagram extends javax.swing.JFrame {
     private void jButton_OKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_OKActionPerformed
       // --- this will call "runSedPredom()"
       cancel = true;
-      double w = readTextField(jTextFieldXmax, "X-max");
+      double w = readTextField(jTextFieldXmax);
       String t = Util.formatNum(w);
       if(Double.parseDouble(t) != w) {jTextFieldXmax.setText(t);}
-      w = readTextField(jTextFieldXmin, "X-min");
+      w = readTextField(jTextFieldXmin);
       t = Util.formatNum(w);
       if(Double.parseDouble(t) != w) {jTextFieldXmin.setText(t);}
-      w = readTextField(jTextFieldYmax, "Y-max");
+      w = readTextField(jTextFieldYmax);
       t = Util.formatNum(w);
       if(Double.parseDouble(t) != w) {jTextFieldYmax.setText(t);}
-      w = readTextField(jTextFieldYmin, "Y-min");
+      w = readTextField(jTextFieldYmin);
       t = Util.formatNum(w);
       if(Double.parseDouble(t) != w) {jTextFieldYmin.setText(t);}
       updateConcs();
@@ -1997,7 +2053,7 @@ public class Select_Diagram extends javax.swing.JFrame {
     }//GEN-LAST:event_jScrollBarPredNbrPFocusGained
 
     private void jScrollBarPredNbrPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarPredNbrPFocusLost
-        jScrollBarPredNbrP.setBorder(null);
+        jScrollBarPredNbrP.setBorder(scrollBorder);
     }//GEN-LAST:event_jScrollBarPredNbrPFocusLost
 
     private void jScrollBarSEDNbrPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarSEDNbrPFocusGained
@@ -2005,7 +2061,7 @@ public class Select_Diagram extends javax.swing.JFrame {
     }//GEN-LAST:event_jScrollBarSEDNbrPFocusGained
 
     private void jScrollBarSEDNbrPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jScrollBarSEDNbrPFocusLost
-        jScrollBarSEDNbrP.setBorder(null);
+        jScrollBarSEDNbrP.setBorder(scrollBorder);
     }//GEN-LAST:event_jScrollBarSEDNbrPFocusLost
 
     private void jScrollBarPredNbrPAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_jScrollBarPredNbrPAdjustmentValueChanged
@@ -2027,19 +2083,19 @@ public class Select_Diagram extends javax.swing.JFrame {
         runRevs = jCheckBoxRev.isSelected();
     }//GEN-LAST:event_jCheckBoxRevActionPerformed
 
-    private void jTextFieldIonicStgrFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldIonicStgrFocusLost
+    private void jTextFieldIonicStrFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldIonicStrFocusLost
         validateIonicStrength();
-    }//GEN-LAST:event_jTextFieldIonicStgrFocusLost
+    }//GEN-LAST:event_jTextFieldIonicStrFocusLost
 
-    private void jTextFieldIonicStgrKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldIonicStgrKeyPressed
+    private void jTextFieldIonicStrKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldIonicStrKeyPressed
         if(evt.getKeyChar() == java.awt.event.KeyEvent.VK_ENTER) {
             validateIonicStrength();}
-    }//GEN-LAST:event_jTextFieldIonicStgrKeyPressed
+    }//GEN-LAST:event_jTextFieldIonicStrKeyPressed
 
-    private void jTextFieldIonicStgrKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldIonicStgrKeyTyped
+    private void jTextFieldIonicStrKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldIonicStrKeyTyped
         char key = evt.getKeyChar();
         if(!isCharOKforNumberInput(key)) {evt.consume();}
-    }//GEN-LAST:event_jTextFieldIonicStgrKeyTyped
+    }//GEN-LAST:event_jTextFieldIonicStrKeyTyped
 
     private void jTextFieldTKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldTKeyTyped
         char key = evt.getKeyChar();
@@ -2088,14 +2144,17 @@ public class Select_Diagram extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldYmaxFocusLost
 
     private void jTextFieldXminFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldXminFocusGained
+        oldTextXmin = jTextFieldXmin.getText();
         jTextFieldXmin.selectAll();
     }//GEN-LAST:event_jTextFieldXminFocusGained
 
     private void jTextFieldXmaxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldXmaxFocusGained
+        oldTextXmax = jTextFieldXmax.getText();
         jTextFieldXmax.selectAll();
     }//GEN-LAST:event_jTextFieldXmaxFocusGained
 
     private void jTextFieldYmaxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldYmaxFocusGained
+        oldTextYmax = jTextFieldYmax.getText();
         jTextFieldYmax.selectAll();
     }//GEN-LAST:event_jTextFieldYmaxFocusGained
 
@@ -2185,12 +2244,12 @@ public class Select_Diagram extends javax.swing.JFrame {
             fEh = (MainFrame.Rgas * ln10 * (diag.temperature +273.15)) / MainFrame.Faraday;
       }
       double w;
-      w = readTextField(jTextFieldCLow, "C-low");
+      w = readTextField(jTextFieldCLow);
       if(use_pHpe ==1 || use_pHpe ==2) {w = -w;}
       if(use_pHpe == 3) {w = -w / fEh;}
       dgrC.cLow[getConc_idx] = w;
       if(concType.toLowerCase().contains("varied")) {
-            w = readTextField(jTextFieldCHigh, "C-high");
+            w = readTextField(jTextFieldCHigh);
             if(use_pHpe ==1 || use_pHpe ==2) {w = -w;}
             if(use_pHpe == 3) {w = -w / fEh;}
             dgrC.cHigh[getConc_idx] = w;
@@ -2198,19 +2257,21 @@ public class Select_Diagram extends javax.swing.JFrame {
       getConc_Unload();
     }//GEN-LAST:event_jButtonGetConcOKActionPerformed
 
-    private void jTextFieldIonicStgrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIonicStgrActionPerformed
+    private void jTextFieldIonicStrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIonicStrActionPerformed
         validateIonicStrength();
-    }//GEN-LAST:event_jTextFieldIonicStgrActionPerformed
+    }//GEN-LAST:event_jTextFieldIonicStrActionPerformed
 
     private void jTextFieldTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTActionPerformed
         validateTemperature();
     }//GEN-LAST:event_jTextFieldTActionPerformed
 
-    private void jTextFieldIonicStgrFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldIonicStgrFocusGained
-        jTextFieldIonicStgr.selectAll();
-    }//GEN-LAST:event_jTextFieldIonicStgrFocusGained
+    private void jTextFieldIonicStrFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldIonicStrFocusGained
+        oldTextI = jTextFieldIonicStr.getText();
+        jTextFieldIonicStr.selectAll();
+    }//GEN-LAST:event_jTextFieldIonicStrFocusGained
 
     private void jTextFieldTFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldTFocusGained
+        oldTextT = jTextFieldT.getText();
         jTextFieldT.selectAll();
     }//GEN-LAST:event_jTextFieldTFocusGained
 
@@ -2276,8 +2337,8 @@ public class Select_Diagram extends javax.swing.JFrame {
         if(oldDiagType >=0) {jComboBoxDiagType.setSelectedIndex(oldDiagType);}
         if(dt.equalsIgnoreCase("calculated Eh")) {
             double fEh = (MainFrame.Rgas * ln10 * (diag.temperature +273.15)) / MainFrame.Faraday;
-            double w1 = readTextField(jTextFieldYmin,"Y-min");
-            double w2 = readTextField(jTextFieldYmax,"Y-max");
+            double w1 = readTextField(jTextFieldYmin);
+            double w2 = readTextField(jTextFieldYmax);
             if(runUseEh) { // change  "calculated pe"  to  "calculated Eh"
                 w1 = -w1 *fEh;  w2 = -w2 *fEh;
             } else { // change  "calculated Eh"  to  "calculated pe"
@@ -2343,6 +2404,7 @@ public class Select_Diagram extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldYminActionPerformed
 
     private void jTextFieldYminFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldYminFocusGained
+        oldTextYmin = jTextFieldYmin.getText();
         jTextFieldYmin.selectAll();
     }//GEN-LAST:event_jTextFieldYminFocusGained
 
@@ -2551,8 +2613,8 @@ public class Select_Diagram extends javax.swing.JFrame {
     private void jRadioButtonFixedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonFixedActionPerformed
       if(loading) {return;}
       diag.ionicStrength = ionicStrOld;
-      jTextFieldIonicStgr.setText(Util.formatNum(diag.ionicStrength));
-      jTextFieldIonicStgr.setEnabled(true);
+      jTextFieldIonicStr.setText(Util.formatNum(diag.ionicStrength));
+      jTextFieldIonicStr.setEnabled(true);
       jLabelIonicS.setText("<html><u>I</u> =</html>");
       jLabelIonicS.setEnabled(true);
       jLabelM.setEnabled(true);
@@ -2569,8 +2631,8 @@ public class Select_Diagram extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButtonFixedActionPerformed
 
     private void jRadioButtonCalcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonCalcActionPerformed
-      ionicStrOld = Math.max(0,readIonStrength());
-      jTextFieldIonicStgr.setEnabled(false);
+      ionicStrOld = Math.max(0,readTextField(jTextFieldIonicStr));
+      jTextFieldIonicStr.setEnabled(false);
       jLabelIonicS.setText("I =");
       jLabelIonicS.setEnabled(false);
       jLabelM.setEnabled(false);
@@ -2591,10 +2653,12 @@ public class Select_Diagram extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldCHighKeyPressed
 
     private void jTextFieldCLowFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldCLowFocusGained
+        oldTextCLow = jTextFieldCLow.getText();
         jTextFieldCLow.selectAll();
     }//GEN-LAST:event_jTextFieldCLowFocusGained
 
     private void jTextFieldCHighFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldCHighFocusGained
+        oldTextCHigh = jTextFieldCHigh.getText();
         jTextFieldCHigh.selectAll();
     }//GEN-LAST:event_jTextFieldCHighFocusGained
 
@@ -2760,12 +2824,8 @@ private boolean checkChanges() {
   if(changed) {
     System.out.println("--- Saving changes to input file.");
     try {WriteChemSyst.writeChemSyst(ch, dataFile);}
-    catch (WriteChemSyst.DataLimitsException ex) {
+    catch (Exception ex) {
         MsgExceptn.showErrMsg(this,ex.getMessage(),1);
-        return false;
-    } catch (WriteChemSyst.WriteChemSystArgsException ex) {
-        javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(),
-                  pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
         return false;
     }
     return true;
@@ -3596,8 +3656,8 @@ private void diagramType_Click() {
         if(dt.equalsIgnoreCase("calculated pH")) { //calc pH
             if(!jTextFieldYmin.isVisible()
                 || jTextFieldYmin.getText().contains("%") || jTextFieldYmax.getText().contains("%")
-                || readTextField(jTextFieldYmin,"Y-min")<0
-                || readTextField(jTextFieldYmax,"Y-max")<0 || readTextField(jTextFieldYmax,"Y-max")>14) {
+                || readTextField(jTextFieldYmin)<0
+                || readTextField(jTextFieldYmax)<0 || readTextField(jTextFieldYmax)>14) {
                     jTextFieldYmin.setText("0");
                     jTextFieldYmax.setText("14");
             }
@@ -3605,7 +3665,7 @@ private void diagramType_Click() {
         if(dt.equalsIgnoreCase("calculated pe")) {
             if(!jTextFieldYmin.isVisible()
                 || jTextFieldYmin.getText().contains("%") || jTextFieldYmax.getText().contains("%")
-                || readTextField(jTextFieldYmin,"Y-min")>=0 || readTextField(jTextFieldYmax,"Y-max")<=0) {
+                || readTextField(jTextFieldYmin)>=0 || readTextField(jTextFieldYmax)<=0) {
                     jTextFieldYmin.setText("-17");
                     jTextFieldYmax.setText("17");
             }
@@ -3614,8 +3674,8 @@ private void diagramType_Click() {
             System.out.println("## calculated Eh");
             if(!jTextFieldYmin.isVisible()
                 || jTextFieldYmin.getText().contains("%") || jTextFieldYmax.getText().contains("%")
-                || readTextField(jTextFieldYmin,"Y-min")>0 || readTextField(jTextFieldYmin,"Y-min")<-2
-                || readTextField(jTextFieldYmax,"Y-max")<0 || readTextField(jTextFieldYmax,"Y-max")>2) {
+                || readTextField(jTextFieldYmin)>0 || readTextField(jTextFieldYmin)<-2
+                || readTextField(jTextFieldYmax)<0 || readTextField(jTextFieldYmax)>2) {
                     jTextFieldYmin.setText("-1");
                     jTextFieldYmax.setText("1");
             }
@@ -3636,12 +3696,12 @@ private void diagramType_Click() {
         } else if(dt.equalsIgnoreCase("log Activities")) { //log activities
             cl.show(jPanelYaxInner, "cardYlogA");
         }
-        if(readTextField(jTextFieldYmin, "Y-min") >=-1) {
+        if(readTextField(jTextFieldYmin) >=-1) {
             if(!diag.inputYMinMax || (oldPlotType !=3 && oldPlotType !=7) ) {
                 jTextFieldYmin.setText("-9");
             } else {jTextFieldYmin.setText(String.valueOf(diag.yLow));}
         }
-        if(readTextField(jTextFieldYmax, "Y-max") >= 1) {
+        if(readTextField(jTextFieldYmax) >= 1) {
             if(!diag.inputYMinMax || (oldPlotType !=3 && oldPlotType !=7) ) {
                 jTextFieldYmax.setText("1");
             } else {jTextFieldYmax.setText(String.valueOf(diag.yHigh));}
@@ -3668,8 +3728,8 @@ private void diagramType_Click() {
         boolean includeSpecies = true; //both components and reaction products in Y-axis
         updateYcomp(includeSpecies);
         updatingAxes = true;
-        if(readTextField(jTextFieldYmin, "Y-min") >= -1) {jTextFieldYmin.setText("-6");}
-        if(readTextField(jTextFieldYmax, "Y-max") < 1.1) {jTextFieldYmax.setText("6");}
+        if(readTextField(jTextFieldYmin) >= -1) {jTextFieldYmin.setText("-6");}
+        if(readTextField(jTextFieldYmax) < 1.1) {jTextFieldYmax.setText("6");}
         setOKButtonIcon("images/PlotRel256_32x32_transpBckgr.gif");
         cl = (java.awt.CardLayout)jPanelYaxInner.getLayout();
         cl.show(jPanelYaxInner, "cardYRef");
@@ -3814,12 +3874,14 @@ private void diagramType_Click() {
 
 //<editor-fold defaultstate="collapsed" desc="focusLost() CLow/CHigh">
   private void focusLostCLow() {
-    double w = readTextField(jTextFieldCLow, "C-low");
+    double w = readTextField(jTextFieldCLow);
+    if(w == -0.0) {w = 0;}
     String t = Util.formatNum(w);
     if(Double.parseDouble(t) != w) {jTextFieldCLow.setText(t);}
   }
   private void focusLostCHigh() {
-    double w = readTextField(jTextFieldCHigh, "C-high");
+    double w = readTextField(jTextFieldCHigh);
+    if(w == -0.0) {w = 0;}
     String t = Util.formatNum(w);
     if(Double.parseDouble(t) != w) {jTextFieldCHigh.setText(t);}
   }
@@ -3827,7 +3889,7 @@ private void diagramType_Click() {
 
 //<editor-fold defaultstate="collapsed" desc="focusLost X/Y Max/Min">
   private void focusLostXmax() {
-    double w = readTextField(jTextFieldXmax, "X-max");
+    double w = readTextField(jTextFieldXmax);
     if(w == -0.0) {w = 0;}
     String t = Util.formatNum(w); //String.valueOf(w);
     if(Double.parseDouble(t) != w) {jTextFieldXmax.setText(t);}
@@ -3835,7 +3897,7 @@ private void diagramType_Click() {
     updateConcs();
   } // focusLostXmax()
   private void focusLostXmin() {
-    double w = readTextField(jTextFieldXmin, "X-min");
+    double w = readTextField(jTextFieldXmin);
     if(w == -0.0) {w = 0;}
     String t = Util.formatNum(w);
     if(Double.parseDouble(t) != w) {jTextFieldXmin.setText(t);}
@@ -3844,7 +3906,7 @@ private void diagramType_Click() {
   } // focusLostXmin()
   private void focusLostYmax() {
     if(!jTextFieldYmax.isEditable()) {return;}
-    double w = readTextField(jTextFieldYmax, "Y-max");
+    double w = readTextField(jTextFieldYmax);
     if(w == -0.0) {w = 0;}
     String t = Util.formatNum(w);
     if(Double.parseDouble(t) != w) {jTextFieldYmax.setText(t);}
@@ -3853,7 +3915,7 @@ private void diagramType_Click() {
   } // focusLostYmax()
   private void focusLostYmin() {
     if(!jTextFieldYmin.isEditable()) {return;}
-    double w = readTextField(jTextFieldYmin, "Y-min");
+    double w = readTextField(jTextFieldYmin);
     if(w == -0.0) {w = 0;}
     String t = Util.formatNum(w);
     if(Double.parseDouble(t) != w) {jTextFieldYmin.setText(t);}
@@ -3874,8 +3936,8 @@ private void diagramType_Click() {
     String tn = jComboBoxConcType.getSelectedItem().toString();
     String t0 = comboBoxConcType0;
     boolean vary = tn.toLowerCase().contains("varied");
-    double w1 = readTextField(jTextFieldCLow, "C-low");
-    double w2 = readTextField(jTextFieldCHigh, "C-high");
+    double w1 = readTextField(jTextFieldCLow);
+    double w2 = readTextField(jTextFieldCHigh);
     boolean nowTot = tn.toLowerCase().startsWith("tot");
     boolean nowLog = tn.toLowerCase().startsWith("log");
     boolean now_pHpe = (tn.startsWith("pH") || tn.startsWith("pe"));
@@ -3913,7 +3975,7 @@ private void diagramType_Click() {
     if(!t0.equalsIgnoreCase(tn)) { // conc. type has been changed
         if(nowLog && tot0) {
             if(vary && w2>0) {w2 = Math.log10(w2);} else {w2 = 0;}
-            if(w1>0) {w1 = Math.log10(readTextField(jTextFieldCLow, "C-low"));}
+            if(w1>0) {w1 = Math.log10(readTextField(jTextFieldCLow));}
             else {
                 if(vary && w2>0) {w1 = Math.log10(w2) -2d;} else {w1 = -6;}
             }
@@ -4059,17 +4121,21 @@ private void diagramType_Click() {
     try {w = rd.getTemperature();}
     catch (ReadDataLib.DataReadException ex) {
         MsgExceptn.exception(nl+ex.getMessage());
-        w = Double.NaN;
+        w = 25.;
     }
     temperatureGivenInInputFile = !Double.isNaN(w);
+    if(Double.isNaN(w)) {w = 25;}
+    w = Math.min(1000., Math.max(-50, w));
     diag.temperature = w;
     jTextFieldT.setText(Util.formatNum(diag.temperature));
     //--- pressure written as a comment in the data file?
     try {w = rd.getPressure();}
     catch (ReadDataLib.DataReadException ex) {
         MsgExceptn.exception(nl+ex.getMessage());
-        w = Double.NaN;
+        w = 1.;
     }
+    if(Double.isNaN(w)) {w = 1.;}
+    w = Math.min(10000., Math.max(1., w));
     diag.pressure = w;
 
     // get number of gases
@@ -4124,25 +4190,67 @@ private void diagramType_Click() {
 //<editor-fold defaultstate="collapsed" desc="readTextField (X/Y Min/Max)">
 /** Returns a value contained in a text field, catching any errors
  * @param textField the text field to read
- * @param type a message to output if an error occurs. Should be either "Xmin",
- * or "Xmax", "Ymin" or "Ymax", "Clow" or "Chigh".
  * @return the value found in the text field, or Not_a_Number
  * if the text field is not visible or if an error occurs.
  */
-  private double readTextField(javax.swing.JTextField textField, String type) {
+  private double readTextField(javax.swing.JTextField textField) {
     double w;
-    if(!textField.isVisible()) {w = Double.NaN;}
+    if(!textField.isVisible()) {w = 0.;}
     else {
       String t = textField.getText().trim();
       if(t.length() <= 0) {return 0;}
       if(t.endsWith("%")) {t = t.substring(0,t.length()-1).trim();}
       try{w = Double.valueOf(t);}
       catch(NumberFormatException ex) {
-        w = Double.NaN;
-        String msg = "Error reading";
-        if(type != null && type.trim().length() >0) {msg = msg+" "+type;}
-        msg = msg + ":"+nl+ "   "+ex.toString();
-        System.out.println(msg);
+        String type;
+        if(textField.getName().endsWith("Xmin")) {
+            type = "X-min";
+            try{w = Double.valueOf(oldTextXmin); textField.setText(oldTextXmin);}
+            catch (NumberFormatException ex2) {w = 0.;}
+        }
+        else if(textField.getName().endsWith("Xmax")) {
+            type = "X-max";
+            try{w = Double.valueOf(oldTextXmax); textField.setText(oldTextXmax);}
+            catch (NumberFormatException ex2) {w = 0.;}
+        }
+        else if(textField.getName().endsWith("Ymin")) {
+            type = "Y-min";
+            try{w = Double.valueOf(oldTextYmin); textField.setText(oldTextYmin);}
+            catch (NumberFormatException ex2) {w = 0.;}
+        }
+        else if(textField.getName().endsWith("Y-max")) {
+            type = "Y-max";
+            try{w = Double.valueOf(oldTextYmax); textField.setText(oldTextYmax);}
+            catch (NumberFormatException ex2) {w = 0.;}
+        }
+        else if(textField.getName().endsWith("CLow")) {
+            type = "C-low";
+            try{w = Double.valueOf(oldTextCLow); textField.setText(oldTextCLow);}
+            catch (NumberFormatException ex2) {w = 0.;}
+        }
+        else if(textField.getName().endsWith("CHigh")) {
+            type = "C-high";
+            try{w = Double.valueOf(oldTextCHigh); textField.setText(oldTextCHigh);}
+            catch (NumberFormatException ex2) {w = 0.;}
+        }
+        else if(textField.getName().endsWith("IonicStr")) {
+            type = "ionic strength";
+            try{w = Double.valueOf(oldTextI); textField.setText(oldTextI);}
+            catch (NumberFormatException ex2) {w = 0.;}
+        }
+        else if(textField.getName().endsWith("T")) {
+            type = "temperature";
+            try{w = Double.valueOf(oldTextT); textField.setText(oldTextT);}
+            catch (NumberFormatException ex2) {w = 0.;}
+        }
+        else {type = ""; w = 0.;}
+        String msg = "Error (NumberFormatException)";
+        if(type.trim().length() >0) {msg = msg+nl+"reading "+type;}
+        msg = msg +nl+"with text: \""+t+"\"";
+        System.out.println(LINE+nl+msg+nl+LINE);
+        javax.swing.JOptionPane.showMessageDialog(this, msg,
+                pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
+        
       }
     }
     return w;
@@ -4268,14 +4376,19 @@ private boolean runSedPredom() {
     }
     if(dgrC.hur[diag.compMain] != 4 
             && (dgrC.hur[diag.compMain] == 1 && Math.abs(dgrC.cLow[diag.compMain]) <= 0 )) {
-        Object[] opt = {"Cancel", "Make the diagram anyway"};
-        int n= javax.swing.JOptionPane.showOptionDialog(this,
-                "The concentration for the"+nl+
+        Object[] opt = {"Make the diagram anyway", "Cancel"};
+        String msg = "The concentration for the"+nl+
                 "main component ("+namn.identC[diag.compMain]+") is "+nl+
-                "less or equal to zero!",
-                pc.progName,javax.swing.JOptionPane.OK_CANCEL_OPTION,
-                javax.swing.JOptionPane.WARNING_MESSAGE, null, opt, opt[0]);
-        if(n != javax.swing.JOptionPane.OK_OPTION) {return false;}
+                "less or equal to zero!";
+        System.out.println("----- "+msg);
+        int n= javax.swing.JOptionPane.showOptionDialog(this,msg,pc.progName,
+                javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                javax.swing.JOptionPane.WARNING_MESSAGE, null, opt, opt[1]);
+        if(n != javax.swing.JOptionPane.OK_OPTION) {
+            System.out.println("----- [Cancel]");
+            return false;
+        }
+        System.out.println("----- [Make the diagram anyway]");
     }
     oldProg = isOldPredom();
   }
@@ -4337,6 +4450,12 @@ private boolean runSedPredom() {
     runNbrStepsPred = (int)((float)jScrollBarPredNbrP.getValue()/1f);
     if(runNbrStepsPred != MainFrame.NSTEPS_DEF) {options.add("-n="+(runNbrStepsPred));}
     if(runPHline) {options.add("-pH");}
+  }
+
+  if(runConcUnits != 0 && !oldProg) {options.add("-units="+(runConcUnits));}
+  if(runConcNottn != 0 && !oldProg) {
+      if(runConcNottn == 1) {options.add("-sci");}
+      else if(runConcNottn == 2) {options.add("-eng");}
   }
 
   if(runRevs) {options.add("-rev");}
@@ -4577,7 +4696,7 @@ private boolean runSedPredom() {
     if(cs.nx <=0) { //for non-aqueous systems
         jRadioButtonFixed.doClick();
         diag.ionicStrength = 0;
-        jTextFieldIonicStgr.setText("0");
+        jTextFieldIonicStr.setText("0");
     }
 
     loading = true;
@@ -4771,10 +4890,10 @@ private boolean runSedPredom() {
  /** Reads the ionic strength, writes the value (to make sure) in the text
   * field, and enables/disables the activity coefficient and temperature fields  */
   private void validateIonicStrength() {
-      diag.ionicStrength = readIonStrength();
-      if(Double.isNaN(diag.ionicStrength)) {diag.ionicStrength = 0;}
+      diag.ionicStrength = readTextField(jTextFieldIonicStr);
+      diag.ionicStrength = Math.min(1000,Math.max(diag.ionicStrength, -1));
       ionicStrOld = diag.ionicStrength;
-      jTextFieldIonicStgr.setText(Util.formatNum(diag.ionicStrength));
+      jTextFieldIonicStr.setText(Util.formatNum(diag.ionicStrength));
       if(diag.ionicStrength == 0) {
         jComboBoxActCoeff.setVisible(false);
         jLabelModel.setVisible(false);
@@ -4791,40 +4910,10 @@ private boolean runSedPredom() {
   * @see lib.kemi.chem.Chem.Diagr#temperature diag.temperature */
   private void validateTemperature() {
     if(jTextFieldT.getText().length() <=0) {return;}
-    diag.temperature = readTemperature();
+    diag.temperature = readTextField(jTextFieldT);
+    diag.temperature = Math.min(1000,Math.max(diag.temperature, -50));
     jTextFieldT.setText(Util.formatNum(diag.temperature));
   } // validateTemperature()
-  private double readIonStrength() {
-    if(jTextFieldIonicStgr.getText().length() <=0) {return 0;}
-    double w;
-    try{w = Double.parseDouble(jTextFieldIonicStgr.getText());
-        w = Math.min(1000,Math.max(w, -1));
-        } //try
-    catch (NumberFormatException nfe) {w = Double.NaN;
-        //javax.swing.JOptionPane.showMessageDialog
-        //        (this,"Wrong numeric format"+nl+nl+
-        //        "Please enter a floating point number.",pc.progName,
-        //        javax.swing.JOptionPane.WARNING_MESSAGE);
-        System.out.println("Error reading Ionic Strength:"+nl+
-                "   "+nfe.toString());
-        } //catch
-    return w;
-  } //readIonStrength()
-  private double readTemperature() {
-    if(jTextFieldT.getText().length() <=0) {return Double.NaN;}
-    double w;
-    try {
-        w = Double.parseDouble(jTextFieldT.getText());
-        w = Math.min(1000,Math.max(w, -50));
-    }
-    catch (NumberFormatException nfe) {
-        w = Double.NaN;
-        if(!jTextFieldT.getText().equals("NaN")) {
-            System.out.println("Error reading Temperature:"+nl+
-                "   "+nfe.toString());}
-    }
-    return w;
-  } //readTemperature()
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="updateAxes()">
@@ -5146,12 +5235,12 @@ private void updateConcList() {
   } // if LA or LAV
   double fEh, x1, x2;
   fEh = (MainFrame.Rgas * ln10 * (diag.temperature +273.15))/MainFrame.Faraday;
-  x1 = readTextField(jTextFieldXmin, "X-min");
+  x1 = readTextField(jTextFieldXmin);
   if(use_pHpe ==1 || use_pHpe == 2) {x1 = -x1;}
   else if(use_pHpe == 3) {
       x1 = -x1 / fEh;
   }
-  x2 = readTextField(jTextFieldXmax, "X-max");
+  x2 = readTextField(jTextFieldXmax);
   if(use_pHpe ==1 || use_pHpe == 2) {x2 = -x2;}
   else if(use_pHpe == 3) {
       x2 = -x2 / fEh;
@@ -5164,8 +5253,8 @@ private void updateConcList() {
   // --------
   if(runPredomSED != 1) { //not Predom (i.e., for SED)
       updateConcList();
-      diag.yHigh = readTextField(jTextFieldYmax, "Y-max");
-      diag.yLow = readTextField(jTextFieldYmin, "Y-min");
+      diag.yHigh = readTextField(jTextFieldYmax);
+      diag.yLow = readTextField(jTextFieldYmin);
       if(pc.dbg) {System.out.println("updateConcs() -- end");}
       return;
   } // for SED
@@ -5192,10 +5281,10 @@ private void updateConcList() {
       } // if LA or LAV
 
       fEh = (MainFrame.Rgas * ln10 * (diag.temperature +273.15))/MainFrame.Faraday;
-      x1 = readTextField(jTextFieldYmin, "Y-min");
+      x1 = readTextField(jTextFieldYmin);
       if(use_pHpe ==1 || use_pHpe == 2) {x1 = -x1;}
       else if(use_pHpe == 3) {x1 = -x1 / fEh;}
-      x2 = readTextField(jTextFieldYmax, "Y-max");
+      x2 = readTextField(jTextFieldYmax);
       if(use_pHpe ==1 || use_pHpe == 2) {x2 = -x2;}
       else if(use_pHpe == 3) {x2 = -x2 / fEh;}
       dgrC.cLow[diag.compY] = x1 + Math.signum(x1) * Math.abs(x1) * 1e-14;
@@ -5371,8 +5460,10 @@ private void updateConcList() {
   private void comboBoxAxisType(String axisTypeNow, String axisTypeBefore,
           javax.swing.JTextField textFieldMin, javax.swing.JTextField textFieldMax) {
     if(axisTypeNow.equalsIgnoreCase(axisTypeBefore)) {return;}
-    double valueMin = readTextField(textFieldMin, "Min-value");
-    double valueMax = readTextField(textFieldMax, "Max-value");
+    double valueMin = readTextField(textFieldMin);
+    if(Double.isNaN(valueMin)) {valueMin = 0;}
+    double valueMax = readTextField(textFieldMax);
+    if(Double.isNaN(valueMax)) {valueMax = 0;}
     double valueMinNew, valueMaxNew;
     // --- set default values
     if(axisTypeNow.startsWith("Tot")) {valueMinNew = 1e-6; valueMaxNew = 1;}
@@ -5525,7 +5616,7 @@ private void updateConcList() {
     private javax.swing.JTextField jTextFieldCLow;
     private javax.swing.JTextField jTextFieldDataFile;
     private javax.swing.JTextField jTextFieldDiagName;
-    private javax.swing.JTextField jTextFieldIonicStgr;
+    private javax.swing.JTextField jTextFieldIonicStr;
     private javax.swing.JTextField jTextFieldT;
     private javax.swing.JTextField jTextFieldTitle;
     private javax.swing.JTextField jTextFieldXmax;

@@ -353,6 +353,7 @@ public class ModifyChemSyst extends javax.swing.JFrame {
 
         jButtonUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Arrow_up.gif"))); // NOI18N
         jButtonUp.setToolTipText("move component up"); // NOI18N
+        jButtonUp.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonUp.setMargin(new java.awt.Insets(1, 0, 1, 0));
         jButtonUp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -362,6 +363,7 @@ public class ModifyChemSyst extends javax.swing.JFrame {
 
         jButtonDn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/spana/images/Arrow_down.gif"))); // NOI18N
         jButtonDn.setToolTipText("move component down"); // NOI18N
+        jButtonDn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonDn.setMargin(new java.awt.Insets(1, 0, 1, 0));
         jButtonDn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -449,7 +451,7 @@ public class ModifyChemSyst extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -522,7 +524,7 @@ public class ModifyChemSyst extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -588,7 +590,7 @@ public class ModifyChemSyst extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
         );
 
         jPanel2down.add(jPanel7);
@@ -660,7 +662,7 @@ public class ModifyChemSyst extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
         );
 
         jPanel2down.add(jPanel8);
@@ -701,7 +703,7 @@ public class ModifyChemSyst extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanelUpDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(86, Short.MAX_VALUE))
+                        .addContainerGap(91, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2up, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
@@ -716,6 +718,7 @@ public class ModifyChemSyst extends javax.swing.JFrame {
         jButton_Delete.setMnemonic('D');
         jButton_Delete.setText("<html><u>D</u>elete</html>"); // NOI18N
         jButton_Delete.setToolTipText("Alt-D"); // NOI18N
+        jButton_Delete.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_Delete.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jButton_Delete.setIconTextGap(8);
         jButton_Delete.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -730,6 +733,7 @@ public class ModifyChemSyst extends javax.swing.JFrame {
         jButton_Exchange.setMnemonic('E');
         jButton_Exchange.setText("<html><u>E</u>xchange a component<br>with a reaction</html>"); // NOI18N
         jButton_Exchange.setToolTipText("Alt-E"); // NOI18N
+        jButton_Exchange.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_Exchange.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jButton_Exchange.setIconTextGap(8);
         jButton_Exchange.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -744,6 +748,7 @@ public class ModifyChemSyst extends javax.swing.JFrame {
         jButton_Merge.setMnemonic('M');
         jButton_Merge.setText("<html><u>M</u>erge with another<br> data file</html>"); // NOI18N
         jButton_Merge.setToolTipText("Alt-M"); // NOI18N
+        jButton_Merge.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_Merge.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jButton_Merge.setIconTextGap(8);
         jButton_Merge.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -776,6 +781,7 @@ public class ModifyChemSyst extends javax.swing.JFrame {
         jButton_Quit.setMnemonic('Q');
         jButton_Quit.setText("<html><u>Q</u>uit</html>"); // NOI18N
         jButton_Quit.setToolTipText("Esc or Alt-Q"); // NOI18N
+        jButton_Quit.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_Quit.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jButton_Quit.setIconTextGap(8);
         jButton_Quit.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -790,6 +796,7 @@ public class ModifyChemSyst extends javax.swing.JFrame {
         jButton_Save.setMnemonic('S');
         jButton_Save.setText("Save & exit"); // NOI18N
         jButton_Save.setToolTipText("Alt-S or Alt-X"); // NOI18N
+        jButton_Save.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton_Save.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jButton_Save.setIconTextGap(8);
         jButton_Save.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -915,12 +922,8 @@ public class ModifyChemSyst extends javax.swing.JFrame {
       checkPlotInfo();
 
       try{WriteChemSyst.writeChemSyst(ch, dataFileToSave);}
-      catch (WriteChemSyst.DataLimitsException ex) {
-        System.err.println(ex.getMessage());
-        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        return;
-      } catch (WriteChemSyst.WriteChemSystArgsException ex) {
-        System.err.println(ex.getMessage());
+      catch (Exception ex) {
+        MsgExceptn.showErrMsg(this,ex.getMessage(),1);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         return;
       }
@@ -2456,10 +2459,10 @@ if(complex < 0 || complex >= (cs.Ms-cs.Na)) {
     //temperature written as a comment in the data file?
     double w;
     try{w = rd.getTemperature();}
-    catch(ReadDataLib.DataReadException ex) {System.err.println(nl+ex.getMessage()); w = Double.NaN;}
+    catch(ReadDataLib.DataReadException ex) {System.err.println(nl+ex.getMessage()); w = 25;}
     chRead.diag.temperature = w;
     try{w = rd.getPressure();}
-    catch(ReadDataLib.DataReadException ex) {System.err.println(nl+ex.getMessage()); w = Double.NaN;}
+    catch(ReadDataLib.DataReadException ex) {System.err.println(nl+ex.getMessage()); w = 1;}
     chRead.diag.pressure = w;
 
     // is there a title?
