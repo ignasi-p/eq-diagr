@@ -28,7 +28,7 @@ import lib.huvud.SortedProperties;
  * 
  * @author Ignasi Puigdomenech */
 public class DataMaintenance extends javax.swing.JFrame {
-  private static final String VERS = "2020-Feb-03";
+  private static final String VERS = "2020-June-11";
   /** all instances will use the same redirected frame */
   private static RedirectedFrame msgFrame = null;
   private final ProgramDataDB pd = new ProgramDataDB();
@@ -214,6 +214,7 @@ public class DataMaintenance extends javax.swing.JFrame {
         if(pc.pathAPP.trim().length()<=0) {System.out.print("\"\"");}
         else {System.out.print(pc.pathAPP);}
     } System.out.println();
+    System.out.println("Default path for database files: "+pd.pathDatabaseFiles.toString());
     System.out.print("Add-data path: ");
     if(pd.pathAddData == null) {
         System.out.print("\"null\"");
@@ -221,8 +222,8 @@ public class DataMaintenance extends javax.swing.JFrame {
         if(pd.pathAddData.toString().trim().length()<=0) {System.out.print("\"\"");}
         else {System.out.print(pd.pathAddData);}
     }
-    System.out.println("Default path: "+pc.pathDef.toString());
-    System.out.println(nl+LINE);
+    System.out.println(nl+"Default path: "+pc.pathDef.toString());
+    System.out.println(LINE);
 
     //---- deal with command-line arguments
     if(args != null && args.length >0){
@@ -272,8 +273,14 @@ public class DataMaintenance extends javax.swing.JFrame {
         jButtonCancel = new javax.swing.JButton();
         jLabelNbr = new javax.swing.JLabel();
         jLabelVersion = new javax.swing.JLabel();
+        jLabelUnicode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
                 formWindowGainedFocus(evt);
@@ -286,14 +293,10 @@ public class DataMaintenance extends javax.swing.JFrame {
                 formWindowClosing(evt);
             }
         });
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                formComponentResized(evt);
-            }
-        });
 
         jButtonOpen.setMnemonic('o');
         jButtonOpen.setText("<html><center>Open<br>session</center></html>");
+        jButtonOpen.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonOpen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOpenActionPerformed(evt);
@@ -302,6 +305,7 @@ public class DataMaintenance extends javax.swing.JFrame {
 
         jButtonSave.setMnemonic('v');
         jButtonSave.setText("<html><center>Save<br>session</center></html>");
+        jButtonSave.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveActionPerformed(evt);
@@ -309,7 +313,9 @@ public class DataMaintenance extends javax.swing.JFrame {
         });
 
         jButtonExit.setMnemonic('e');
-        jButtonExit.setText("Exit");
+        jButtonExit.setText(" Exit ");
+        jButtonExit.setAlignmentX(0.5F);
+        jButtonExit.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonExitActionPerformed(evt);
@@ -317,7 +323,9 @@ public class DataMaintenance extends javax.swing.JFrame {
         });
 
         jButtonHelp.setMnemonic('h');
-        jButtonHelp.setText("Help");
+        jButtonHelp.setText(" Help ");
+        jButtonHelp.setAlignmentX(0.5F);
+        jButtonHelp.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonHelpActionPerformed(evt);
@@ -353,6 +361,7 @@ public class DataMaintenance extends javax.swing.JFrame {
 
         jButtonStatistics.setMnemonic('c');
         jButtonStatistics.setText("<html><center>statistics<br>and<br>Checks</center></html>");
+        jButtonStatistics.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonStatistics.setMargin(new java.awt.Insets(2, 7, 2, 7));
         jButtonStatistics.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -362,6 +371,7 @@ public class DataMaintenance extends javax.swing.JFrame {
 
         jButtonAddData.setMnemonic('a');
         jButtonAddData.setText("<html><center>Add data<br>or edit<br>a text-file</center></html>");
+        jButtonAddData.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonAddData.setMargin(new java.awt.Insets(2, 7, 2, 7));
         jButtonAddData.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -371,6 +381,7 @@ public class DataMaintenance extends javax.swing.JFrame {
 
         jButton2text.setMnemonic('t');
         jButton2text.setText("<html><center>convert binary<br>databases<br>to Text</center></html>");
+        jButton2text.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton2text.setMargin(new java.awt.Insets(2, 7, 2, 7));
         jButton2text.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -380,6 +391,7 @@ public class DataMaintenance extends javax.swing.JFrame {
 
         jButton2binary.setMnemonic('b');
         jButton2binary.setText("<html><center>merge all<br>databases to<br>a single Binary</center></html>");
+        jButton2binary.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton2binary.setMargin(new java.awt.Insets(2, 7, 2, 7));
         jButton2binary.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -388,6 +400,7 @@ public class DataMaintenance extends javax.swing.JFrame {
         });
 
         jButtonSingle.setText("<html><center>show Data<br>for a single<br>component</center></html>");
+        jButtonSingle.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonSingle.setMargin(new java.awt.Insets(2, 7, 2, 7));
         jButtonSingle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -448,7 +461,9 @@ public class DataMaintenance extends javax.swing.JFrame {
         jProgressBar.setForeground(java.awt.Color.blue);
 
         jButtonCancel.setMnemonic('c');
-        jButtonCancel.setText("Cancel");
+        jButtonCancel.setText(" Cancel ");
+        jButtonCancel.setAlignmentX(0.5F);
+        jButtonCancel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelActionPerformed(evt);
@@ -467,7 +482,7 @@ public class DataMaintenance extends javax.swing.JFrame {
                 .addComponent(jProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabelNbr)
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addContainerGap(206, Short.MAX_VALUE))
         );
         jPanelOutputLayout.setVerticalGroup(
             jPanelOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -480,6 +495,8 @@ public class DataMaintenance extends javax.swing.JFrame {
         );
 
         jLabelVersion.setText("vers. 2014-Aug-31");
+
+        jLabelUnicode.setText("(Unicode UTF-8)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -507,7 +524,10 @@ public class DataMaintenance extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabelVersion)))
+                        .addComponent(jLabelVersion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelUnicode)
+                        .addGap(0, 0, 0)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -524,7 +544,7 @@ public class DataMaintenance extends javax.swing.JFrame {
                 .addGap(7, 7, 7)
                 .addComponent(jLabelDataBases)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneDBlist, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
+                .addComponent(jScrollPaneDBlist, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanelButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -532,7 +552,9 @@ public class DataMaintenance extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelOutput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jLabelVersion))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelVersion)
+                    .addComponent(jLabelUnicode)))
         );
 
         pack();
@@ -666,7 +688,7 @@ public class DataMaintenance extends javax.swing.JFrame {
     }//GEN-LAST:event_jListDBlistFocusLost
 
     private void jButtonOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenActionPerformed
-        String fn = Util.getOpenFileName(this, pc.progName, true, "Open INI file",
+        String fn = Util.getOpenFileName(this, pc.progName, true, "Open INI-file",
                 11, null, pc.pathDef.toString());
         if(fn == null || fn.length() <=0) {return;}
         java.io.File f = new java.io.File(fn);
@@ -684,7 +706,7 @@ public class DataMaintenance extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonOpenActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-        String fn = Util.getSaveFileName(this, pc.progName, "Open INI file",
+        String fn = Util.getSaveFileName(this, pc.progName, "Save INI-file",
                 11, null, pc.pathDef.toString());
         if(fn == null || fn.length() <=0) {return;}
         java.io.File f = new java.io.File(fn);
@@ -1036,12 +1058,13 @@ public class DataMaintenance extends javax.swing.JFrame {
     System.out.flush();
     System.out.println("Reading ini-file: \""+f.getPath()+"\"");
     java.util.Properties propertiesIni = new java.util.Properties();
-    java.io.FileInputStream properties_iniFile = null;
+    java.io.FileInputStream fis = null;
+    java.io.BufferedReader r = null;
     boolean ok = true;
     try {
-      properties_iniFile = new java.io.FileInputStream(f);
-      propertiesIni.load(properties_iniFile);
-      //throw new Exception("Test error");
+      fis = new java.io.FileInputStream(f);
+      r = new java.io.BufferedReader(new java.io.InputStreamReader(fis,"UTF8"));
+      propertiesIni.load(r);
     } //try
     catch (java.io.FileNotFoundException e) {
       System.out.println("Warning: file not found: \""+f.getPath()+"\""+nl+
@@ -1058,7 +1081,7 @@ public class DataMaintenance extends javax.swing.JFrame {
       ok = false;
     } // catch loading-exception
     finally {
-        try {if(properties_iniFile != null) {properties_iniFile.close();}}
+        try {if(r != null) {r.close();} if(fis != null) {fis.close();}}
         catch (java.io.IOException e) {
             String msg = "Error: \""+e.toString()+"\""+nl+
                           "   while closing INI-file:"+nl+
@@ -1077,7 +1100,7 @@ public class DataMaintenance extends javax.swing.JFrame {
             dbName = propertiesIni.getProperty("DataBase["+String.valueOf(i+1).trim()+"]");
             if(dbName != null && dbName.length() >0) {pd.dataBasesList.add(dbName);}
         }
-    }  catch (NumberFormatException e) {
+    }  catch (Exception e) {
         MsgExceptn.exception(Util.stack2string(e));
         String msg = "Error: \""+e.toString()+"\""+nl+
                          "   while reading INI-file:"+nl+
@@ -1088,7 +1111,7 @@ public class DataMaintenance extends javax.swing.JFrame {
     }
     try {
         pc.pathDef.replace(0, pc.pathDef.length(), propertiesIni.getProperty("defaultPath"));
-    } catch (NullPointerException ex) {pc.setPathDef();}
+    } catch (Exception ex) {pc.setPathDef();}
     if(pc.dbg) {System.out.println("Finished reading ini-file");}
     System.out.flush();
     checkIniValues();
@@ -1101,15 +1124,15 @@ public class DataMaintenance extends javax.swing.JFrame {
     //-- check Default Path
     java.io.File f = new java.io.File(pc.pathDef.toString());
     if(!f.exists()) {
-        pc.setPathDef(); // = "user.home"
-    } // if !currentDir.exists()
+        pc.setPathDef(pc.pathAPP);
+    }
     //-- check pathAddData
     if(pd.pathAddData.length() >0) {
-    f = new java.io.File(pd.pathAddData.toString());
-    if(!f.exists()) {
-        if(pd.pathAddData.length() >0) {pd.pathAddData.delete(0, pd.pathAddData.length());}
-        pd.pathAddData.append(pc.pathDef.toString());
-    }
+        f = new java.io.File(pd.pathAddData.toString());
+        if(!f.exists()) {
+            if(pd.pathAddData.length() >0) {pd.pathAddData.delete(0, pd.pathAddData.length());}
+            pd.pathAddData.append(pc.pathDef.toString());
+        }
     } else  {
         pd.pathAddData.append(pc.pathDef.toString());
     }
@@ -1154,9 +1177,9 @@ public class DataMaintenance extends javax.swing.JFrame {
           System.out.flush();
           System.out.println("Setting default parameter values (\"ini\"-values).");
       }
-      // set the default path to the "user.home"
-      pc.setPathDef();
-      pd.pathAddData.replace(0, pd.pathAddData.length(), pc.pathDef.toString()); //System.getProperty("user.home")
+      pc.setPathDef(".");
+      pd.pathAddData.replace(0, pd.pathAddData.length(), System.getProperty("user.home"));
+      pd.pathDatabaseFiles.replace(0, pd.pathDatabaseFiles.length(), pc.pathAPP);
       pd.dataBasesList.clear();
       String dir = pc.pathAPP;
       if(dir != null && dir.endsWith(SLASH)) {dir = dir.substring(0, dir.length()-1);}
@@ -1201,12 +1224,14 @@ public class DataMaintenance extends javax.swing.JFrame {
     }
 
     System.out.println("Saving ini-file: \""+f.getPath()+"\"");
-    java.io.FileOutputStream Properties_iniFile = null;
-    try{
-        Properties_iniFile = new java.io.FileOutputStream(f);
-        propertiesIni.store(Properties_iniFile,null);
+    java.io.FileOutputStream fos = null;
+    java.io.Writer w = null;
+    try {
+        fos = new java.io.FileOutputStream(f);
+        w = new java.io.BufferedWriter(new java.io.OutputStreamWriter(fos,"UTF8"));
+        propertiesIni.store(w,null);
         if (pc.dbg) {System.out.println("Written: \""+f.getPath()+"\"");}
-    } // try
+    }        
     catch (java.io.IOException e) {
         msg = "Error: \""+e.toString()+"\""+nl+
                      "   while writing INI-file:"+nl+
@@ -1215,8 +1240,13 @@ public class DataMaintenance extends javax.swing.JFrame {
         ok = false;
     } // catch store-exception
     finally {
-      try {if(Properties_iniFile != null) {Properties_iniFile.close();}}
-      catch (java.io.IOException e) {}
+      try {if(w != null) {w.close();} if(fos != null) {fos.close();}}
+      catch (java.io.IOException e) {
+            msg = e.getMessage()+nl+
+                        "   trying to write ini-file: \""+f.getPath()+"\"";
+            if(!this.isVisible()) {this.setVisible(true);}
+            MsgExceptn.showErrMsg(this, msg, 1);
+      }
     } //finally
     return ok;
   } // saveIni()
@@ -1344,8 +1374,10 @@ public class DataMaintenance extends javax.swing.JFrame {
             // -- read a txt file
             if(!binary) {
                 fLength = (double)f.length();
-                try{br = new java.io.BufferedReader(new java.io.FileReader(f));}
-                catch (java.io.FileNotFoundException ex) {
+                try{br = new java.io.BufferedReader(
+                        new java.io.InputStreamReader(
+                            new java.io.FileInputStream(f), "UTF8"));
+                } catch (java.io.FileNotFoundException ex) {
                         msg = "Error: "+ex.toString()+nl+"while trying to open file: \""+f.getName()+"\"";
                         System.err.println(msg+nl+"in procedure \"toBinary\".");
                         javax.swing.JOptionPane.showMessageDialog(null, msg, pc.progName, javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -1531,16 +1563,18 @@ public class DataMaintenance extends javax.swing.JFrame {
           publish(0);
           System.out.println("Writing file \""+fileCmplxSave.getName()+"\"");
 
-          java.io.DataOutputStream ds = null;
           boolean fnd;
           int eCompSize = eComp.size();
           // only components (metals or ligands) that are used
           // will be saved in the elements file
           boolean[] eCompUsed = new boolean[eCompSize];
           for(int i=0; i<eCompSize; i++) {eCompUsed[i] = false;}
+          java.io.FileOutputStream fos = null;
+          java.io.DataOutputStream dos = null;
           try {
             // Wrap the FileOutputStream with a DataOutputStream to obtain its writeInt(), etc methods
-            ds = new java.io.DataOutputStream(new java.io.FileOutputStream(fileCmplxSave));
+            fos = new java.io.FileOutputStream(fileCmplxSave);;
+            dos = new java.io.DataOutputStream(fos);
             cmplxNbr = 0;
             System.out.println("total nbr of reactions: "+dataList.size());
             double w = (double)dataList.size();
@@ -1549,8 +1583,8 @@ public class DataMaintenance extends javax.swing.JFrame {
               publish((int)(100*(double)cmplxNbr/w));
               jLabelNbr.setText(String.valueOf(cmplxNbr));
               complex = datIt.next();
-              LibDB.writeBinCmplx(ds,complex);
-              ds.flush();
+              LibDB.writeBinCmplx(dos,complex);
+              dos.flush();
               //mark the components that are used as "needed"
               nTot = Math.min(complex.reactionComp.size(),complex.reactionCoef.size());
               loopNDIM:
@@ -1578,10 +1612,8 @@ public class DataMaintenance extends javax.swing.JFrame {
                return null;
           }
           finally {
-            if(ds != null) {
-                try{ds.flush(); ds.close();}
-                catch (java.io.IOException ex) {System.err.println(ex.toString()); return null;}
-            }
+              try{if(dos != null) {dos.close();} if(fos != null) {fos.close();}}
+              catch (java.io.IOException ex) {System.err.println(ex.toString()); return null;}
           }
           if(!working) {return null;}
 
@@ -1593,10 +1625,11 @@ public class DataMaintenance extends javax.swing.JFrame {
           System.out.println("Writing binary \"elements\"-file:"+nl+"   \""+fileElemSaveName+"\"");
           int n;
           StringBuilder elemSymbol = new StringBuilder();
-          java.io.DataOutputStream dos = null;
+          dos = null;
           final int ELEMENTS = LibDB.ELEMENTS;
           try {
-            dos = new java.io.DataOutputStream(new java.io.FileOutputStream(fileElemSave));
+            fos = new java.io.FileOutputStream(fileElemSave);;
+            dos = new java.io.DataOutputStream(fos);
             for(int i=0; i < ELEMENTS; i++) {
               if(!working) {return null;} //a return here will enter "finally"
               publish((int)(100*(double)i/(double)ELEMENTS));
@@ -1673,10 +1706,9 @@ public class DataMaintenance extends javax.swing.JFrame {
               return null;
           }
           finally {
-            if(dos != null) {
-              try{dos.flush(); dos.close();}
+              try{if(dos != null) {dos.close();} if(fos != null) {fos.close();}}
               catch (java.io.IOException ex) {System.err.println("Error: "+ex.toString()); return null;}
-            }
+            
           }
           
           if(converted > 1) {msg = "Finished merging "+converted+" text databases";}
@@ -1708,6 +1740,9 @@ public class DataMaintenance extends javax.swing.JFrame {
 //</editor-fold>
 
  //<editor-fold defaultstate="collapsed" desc="toText">
+  /**
+   * Reads one or several binary files and writes the into a text database.
+   */
   private void toText() {
     boolean found = false;
     for(int i = 0; i < pd.dataBasesList.size(); i++) {
@@ -1779,10 +1814,12 @@ public class DataMaintenance extends javax.swing.JFrame {
                   System.err.println("Converting \""+fileRead.getName()+"\" into \""+fileSave.getName()+"\"");
                   fLength = (double)fileRead.length();
                   java.io.DataInputStream dis = null;
-                  java.io.PrintWriter pw = null;
+                  java.io.FileOutputStream fos = null;
+                  java.io.Writer w = null;
                   try{
                     dis = new java.io.DataInputStream(new java.io.FileInputStream(fileRead));
-                    pw =  new java.io.PrintWriter(new java.io.BufferedWriter(new java.io.FileWriter(fileSave)));
+                    fos = new java.io.FileOutputStream(fileSave);
+                    w =  new java.io.BufferedWriter(new java.io.OutputStreamWriter(fos,"UTF-8"));
                     cmplxNbr = 0;
                     while (true){
                         if(!working) {return null;} //this will go to finally
@@ -1790,12 +1827,12 @@ public class DataMaintenance extends javax.swing.JFrame {
                         elemSymbol.replace(0, elemSymbol.length(), dis.readUTF());
                         //System.out.println(" element="+elemSymbol.toString());
                         n = dis.readInt();
-                        pw.format("%-2s,%2d ,",elemSymbol.toString(),n);
+                        w.write(String.format("%-2s,%2d ,",elemSymbol.toString(),n));
                         for(int j = 0; j < n; j++) {
-                          pw.print(dis.readUTF()+","+dis.readUTF()+",");
+                          w.write(dis.readUTF()+","+dis.readUTF()+",");
                         }
-                        pw.println();
-                        pw.flush();
+                        w.write(nl);
+                        w.flush();
                         cmplxNbr++;
                     }
                   } //try
@@ -1807,11 +1844,11 @@ public class DataMaintenance extends javax.swing.JFrame {
                       System.err.println("Error: "+ex.toString()+nl+"with \""+elemFileNameIn.toString()+"\"");
                   }
                   finally {
-                    if(dis != null) {
-                        try{dis.close();}
-                        catch (java.io.IOException ex) {System.err.println("Input-Output error: "+ex.toString());}
+                    try{
+                        if(dis != null) {dis.close();}
+                        if(w != null) {w.close();} if(fos != null) {fos.close();}
                     }
-                    if(pw != null) {pw.flush(); pw.close();}
+                    catch (java.io.IOException ex) {System.err.println("Input-Output error: "+ex.toString());}
                     publish(0);
                   }
                   if(!working) {return null;}
@@ -1833,11 +1870,13 @@ public class DataMaintenance extends javax.swing.JFrame {
                   System.err.println("Converting \""+fileRead.getName()+"\" into \""+fileSave.getName()+"\"");
                   fLength = (double)fileRead.length();
                   dis = null;
-                  pw = null;
+                  fos = null;
+                  w = null;
                   try{
                     dis = new java.io.DataInputStream(new java.io.FileInputStream(fileRead));
-                    pw =  new java.io.PrintWriter(new java.io.BufferedWriter(new java.io.FileWriter(fileSave)));
-                    pw.println(Complex.FILE_FIRST_LINE);
+                    fos = new java.io.FileOutputStream(fileSave);
+                    w =  new java.io.BufferedWriter(new java.io.OutputStreamWriter(fos,"UTF-8"));
+                    w.write(Complex.FILE_FIRST_LINE+nl);
                     Complex cmplx;
                     cmplxNbr = 0;
                     while (true){
@@ -1845,7 +1884,7 @@ public class DataMaintenance extends javax.swing.JFrame {
                         publish((int)(100*(double)cmplxNbr*F_BIN_CMPLX/fLength));
                         cmplx = LibDB.getBinComplex(dis);
                         if(cmplx == null) {break;} //end of file
-                        LibDB.writeTxtComplex(pw, cmplx);
+                        LibDB.writeTxtComplex(w, cmplx);
                         cmplxNbr++;
                     }
                     converted++;
@@ -1855,11 +1894,11 @@ public class DataMaintenance extends javax.swing.JFrame {
                     System.err.println("Error: "+ex.toString()+nl+"with \""+elemFileNameIn.toString()+"\"");
                   }
                   finally {
-                    if(dis != null) {
-                        try {dis.close();}
-                        catch (java.io.IOException ex) {System.err.println("Input-Output error: "+ex.toString());}
+                    try {
+                        if(dis != null) {dis.close();}
+                        if(w != null) {w.close();} if(fos != null) {fos.close();}
                     }
-                    if(pw != null) {pw.flush(); pw.close();}
+                    catch (java.io.IOException ex) {System.err.println("Input-Output error: "+ex.toString());}
                     publish(0);
                   }
                   if(!working) {return null;}
@@ -2001,6 +2040,15 @@ public class DataMaintenance extends javax.swing.JFrame {
     //     from different locations having different configuration files.
     final ProgramConf pc = new ProgramConf("DataMaintenance");
     pc.saveIniFileToApplicationPathOnly = false;
+    //----
+    java.text.DateFormat dateFormatter =
+            java.text.DateFormat.getDateTimeInstance
+                (java.text.DateFormat.DEFAULT, java.text.DateFormat.DEFAULT,
+                    java.util.Locale.getDefault());
+    java.util.Date today = new java.util.Date();
+    String dateOut = dateFormatter.format(today);
+    System.out.println("DataMaintenance started: \""+dateOut+"\"");
+
     //---- deal with some command-line arguments
     boolean dbg = false;
     if(args.length > 0) {
@@ -2017,6 +2065,7 @@ public class DataMaintenance extends javax.swing.JFrame {
 
     //---- all output to System.err will show the error in a frame.
     if(msgFrame == null) {msgFrame = new RedirectedFrame(500, 400, pc);}
+    System.out.println("DataMaintenance started: \""+dateOut+"\"");
 
     boolean windows = System.getProperty("os.name").startsWith("Windows");
     //---- set Look-And-Feel
@@ -2052,16 +2101,7 @@ public class DataMaintenance extends javax.swing.JFrame {
     msgFrame.setVisible(dbg);
 
     //---- set Default Path = Start Directory
-    pc.setPathDef(System.getProperty("user.home"));
-
-    //----
-    java.text.DateFormat dateFormatter =
-            java.text.DateFormat.getDateTimeInstance
-                (java.text.DateFormat.DEFAULT, java.text.DateFormat.DEFAULT,
-                    java.util.Locale.getDefault());
-    java.util.Date today = new java.util.Date();
-    String dateOut = dateFormatter.format(today);
-    System.out.println("DataMaintenance started: \""+dateOut+"\"");
+    pc.setPathDef(".");
 
     //---- show the main window
     java.awt.EventQueue.invokeLater(new Runnable() {@Override public void run() {
@@ -2088,6 +2128,7 @@ public class DataMaintenance extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelDataBases;
     private javax.swing.JLabel jLabelNbr;
     private javax.swing.JLabel jLabelSession;
+    private javax.swing.JLabel jLabelUnicode;
     private javax.swing.JLabel jLabelVersion;
     private javax.swing.JList jListDBlist;
     private javax.swing.JPanel jPanelButtons;

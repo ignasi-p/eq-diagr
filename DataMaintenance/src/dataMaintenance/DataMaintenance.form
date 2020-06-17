@@ -54,6 +54,9 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="jLabelVersion" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabelUnicode" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -75,7 +78,7 @@
               <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
               <Component id="jLabelDataBases" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="jScrollPaneDBlist" pref="101" max="32767" attributes="0"/>
+              <Component id="jScrollPaneDBlist" pref="107" max="32767" attributes="0"/>
               <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
               <Component id="jPanelButtons" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -83,7 +86,10 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="jPanelOutput" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-              <Component id="jLabelVersion" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelVersion" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelUnicode" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -93,6 +99,11 @@
       <Properties>
         <Property name="mnemonic" type="int" value="111"/>
         <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;center&gt;Open&lt;br&gt;session&lt;/center&gt;&lt;/html&gt;"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+            <BevelBorder/>
+          </Border>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOpenActionPerformed"/>
@@ -102,6 +113,11 @@
       <Properties>
         <Property name="mnemonic" type="int" value="118"/>
         <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;center&gt;Save&lt;br&gt;session&lt;/center&gt;&lt;/html&gt;"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+            <BevelBorder/>
+          </Border>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSaveActionPerformed"/>
@@ -110,7 +126,13 @@
     <Component class="javax.swing.JButton" name="jButtonExit">
       <Properties>
         <Property name="mnemonic" type="int" value="101"/>
-        <Property name="text" type="java.lang.String" value="Exit"/>
+        <Property name="text" type="java.lang.String" value=" Exit "/>
+        <Property name="alignmentX" type="float" value="0.5"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+            <BevelBorder/>
+          </Border>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonExitActionPerformed"/>
@@ -119,7 +141,13 @@
     <Component class="javax.swing.JButton" name="jButtonHelp">
       <Properties>
         <Property name="mnemonic" type="int" value="104"/>
-        <Property name="text" type="java.lang.String" value="Help"/>
+        <Property name="text" type="java.lang.String" value=" Help "/>
+        <Property name="alignmentX" type="float" value="0.5"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+            <BevelBorder/>
+          </Border>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonHelpActionPerformed"/>
@@ -202,6 +230,11 @@
           <Properties>
             <Property name="mnemonic" type="int" value="99"/>
             <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;center&gt;statistics&lt;br&gt;and&lt;br&gt;Checks&lt;/center&gt;&lt;/html&gt;"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[2, 7, 2, 7]"/>
             </Property>
@@ -214,6 +247,11 @@
           <Properties>
             <Property name="mnemonic" type="int" value="97"/>
             <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;center&gt;Add data&lt;br&gt;or edit&lt;br&gt;a text-file&lt;/center&gt;&lt;/html&gt;"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[2, 7, 2, 7]"/>
             </Property>
@@ -226,6 +264,11 @@
           <Properties>
             <Property name="mnemonic" type="int" value="116"/>
             <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;center&gt;convert binary&lt;br&gt;databases&lt;br&gt;to Text&lt;/center&gt;&lt;/html&gt;"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[2, 7, 2, 7]"/>
             </Property>
@@ -238,6 +281,11 @@
           <Properties>
             <Property name="mnemonic" type="int" value="98"/>
             <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;center&gt;merge all&lt;br&gt;databases to&lt;br&gt;a single Binary&lt;/center&gt;&lt;/html&gt;"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[2, 7, 2, 7]"/>
             </Property>
@@ -249,6 +297,11 @@
         <Component class="javax.swing.JButton" name="jButtonSingle">
           <Properties>
             <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;center&gt;show Data&lt;br&gt;for a single&lt;br&gt;component&lt;/center&gt;&lt;/html&gt;"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[2, 7, 2, 7]"/>
             </Property>
@@ -300,7 +353,7 @@
                   <Component id="jProgressBar" min="-2" pref="167" max="-2" attributes="0"/>
                   <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabelNbr" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="186" max="32767" attributes="0"/>
+                  <EmptySpace pref="206" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -327,7 +380,13 @@
         <Component class="javax.swing.JButton" name="jButtonCancel">
           <Properties>
             <Property name="mnemonic" type="int" value="99"/>
-            <Property name="text" type="java.lang.String" value="Cancel"/>
+            <Property name="text" type="java.lang.String" value=" Cancel "/>
+            <Property name="alignmentX" type="float" value="0.5"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                <BevelBorder/>
+              </Border>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCancelActionPerformed"/>
@@ -343,6 +402,11 @@
     <Component class="javax.swing.JLabel" name="jLabelVersion">
       <Properties>
         <Property name="text" type="java.lang.String" value="vers. 2014-Aug-31"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelUnicode">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="(Unicode UTF-8)"/>
       </Properties>
     </Component>
   </SubComponents>

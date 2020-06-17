@@ -32,7 +32,9 @@ public class Statistics extends javax.swing.JFrame {
   private final ProgramConf pc;
   private final javax.swing.JFrame parent;
   /** the output file where statistics and errors are written */
-  private java.io.PrintWriter outputPW;
+  private java.io.Writer w;
+  /** the output file where statistics and errors are written */
+  java.io.FileOutputStream fos;
 
   private final SortedListModel sortedModelCompsFnd = new SortedListModel();
   private final SortedListModel sortedModelCompsUnknown = new SortedListModel();
@@ -187,6 +189,11 @@ public class Statistics extends javax.swing.JFrame {
         jListCompsUnk = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
                 formWindowGainedFocus(evt);
@@ -199,11 +206,6 @@ public class Statistics extends javax.swing.JFrame {
                 formWindowClosing(evt);
             }
         });
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                formComponentResized(evt);
-            }
-        });
 
         jCheckBoxDebugFrame.setMnemonic('s');
         jCheckBoxDebugFrame.setText("show messages");
@@ -214,7 +216,9 @@ public class Statistics extends javax.swing.JFrame {
         });
 
         jButtonClose.setMnemonic('c');
-        jButtonClose.setText("Close");
+        jButtonClose.setText(" Close ");
+        jButtonClose.setAlignmentX(0.5F);
+        jButtonClose.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButtonClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCloseActionPerformed(evt);
@@ -709,34 +713,40 @@ public class Statistics extends javax.swing.JFrame {
       }
       final java.io.File outFile = new java.io.File(outFileName);
       pc.setPathDef(outFile);
-      outputPW = null;
+      fos = null;
+      w = null;
       try {
-          outputPW = new java.io.PrintWriter(
-                new java.io.BufferedWriter(
-                new java.io.FileWriter(outFile)));
+          fos = new java.io.FileOutputStream(outFile);
+          w = new java.io.BufferedWriter(new java.io.OutputStreamWriter(fos,"UTF8"));
       }
       catch (java.io.IOException ex) {
           String msg = "Error \""+ex.getMessage()+"\","+nl+
-                    "   while making a PrintWriter for file:"+nl+
-                    "   \""+outFileName+"\"";
+                    "   while preparing file:"+nl+"   \""+outFileName+"\"";
           MsgExceptn.exception(msg);
           javax.swing.JOptionPane.showMessageDialog(this, msg, pc.progName,
                                     javax.swing.JOptionPane.ERROR_MESSAGE);
-          if(outputPW != null) {outputPW.close();}
+          try{if(w != null) {w.close();} if(fos != null) {fos.close();}}
+          catch (Exception e) {
+              msg = "Error \""+e.getMessage()+"\","+nl+
+                    "   while closing file:"+nl+"   \""+outFileName+"\"";
+              MsgExceptn.exception(msg);
+          }
           return false;
       }
       System.out.println("Output file: "+outFileName);
       this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
       this.jButtonClose.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
       System.out.println("---- start scanning of databases, checking errors, calculating statistics...");
+
+      try{
       // ----- scan the files
       java.text.DateFormat dateFormatter =
             java.text.DateFormat.getDateTimeInstance
                 (java.text.DateFormat.DEFAULT, java.text.DateFormat.DEFAULT, java.util.Locale.getDefault());
       java.util.Date today = new java.util.Date();
       String dateOut = dateFormatter.format(today);
-      outputPW.println("DataMaintenance (java) - "+dateOut+nl+
-              "Statistics for LogK databases:"+nl+nl+"Database(s) for reactions:");
+      w.write("DataMaintenance (java) - "+dateOut+nl+
+              "Statistics for LogK databases:"+nl+nl+"Database(s) for reactions:"+nl);
       java.io.File f;
       String name;
       java.text.DateFormat df = java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.DEFAULT,
@@ -745,136 +755,150 @@ public class Statistics extends javax.swing.JFrame {
         name = pd.dataBasesList.get(i).trim();
         if(name.length() >0) {
             f = new java.io.File(name);
-            outputPW.println("  "+f.getAbsolutePath()+"   "+df.format(f.lastModified()));
+            w.write("  "+f.getAbsolutePath()+"   "+df.format(f.lastModified())+nl);
         }
       }//for i
-      outputPW.println(nl+"Element-reactant file(s):");
+      w.write(nl+"Element-reactant file(s):"+nl);
       for(int i=0; i < pd.dataBasesList.size(); i++) {
         name = pd.dataBasesList.get(i).trim();
         if(name.length() >0) {
             f = new java.io.File(Div.getFileNameWithoutExtension(name)+".elt");
             if(!f.exists()) {f = new java.io.File(Div.getFileNameWithoutExtension(name)+".elb");}
-            if(f.exists()) {outputPW.println("  "+f.getAbsolutePath()+"   "+df.format(f.lastModified()));}
+            if(f.exists()) {w.write("  "+f.getAbsolutePath()+"   "+df.format(f.lastModified())+nl);}
         }
       }//for i
+      }
+      catch (Exception ex) {
+          String msg = "Error \""+ex.getMessage()+"\","+nl+
+                    "   with file:"+nl+"   \""+outFileName+"\"";
+          MsgExceptn.exception(msg);
+          javax.swing.JOptionPane.showMessageDialog(this, msg, pc.progName,
+                                    javax.swing.JOptionPane.ERROR_MESSAGE);
+          try{if(w != null) {w.close();} if(fos != null) {fos.close();}}
+          catch (Exception e) {
+              msg = "Error \""+e.getMessage()+"\","+nl+
+                    "   while closing file:"+nl+"   \""+outFileName+"\"";
+              MsgExceptn.exception(msg);
+          }
+          return false;
+      }
 
       final CheckDatabases.CheckDataBasesLists lists = new CheckDatabases.CheckDataBasesLists();
 
       new javax.swing.SwingWorker<Void,Void>() {
       @Override protected Void doInBackground() throws Exception {
         if(pc.dbg) {System.out.println("---- doInBackground(),  dbg = "+pc.dbg);}
+        try{
         CheckDatabases.checkDatabases(pc.dbg, Statistics.this,  pd.dataBasesList, pd.references, lists);
         if(finished) { // if the user closed the window
             System.out.println("---- startStatistics() - doInBackground() - cancelled by the user!");
-            outputPW.flush(); outputPW.close(); return null;
+            w.flush(); w.close(); fos.close(); return null;
         }
 
         java.util.ArrayList<String> arrayList;
         java.util.TreeSet<String> treeSet;
-        outputPW.println(nl+"Total nbr reactions = "+lists.productsReactionsSet.size());
-        outputPW.println("Total nbr reactants found in reaction databases = "+lists.reactantsSet.size()+nl+
-                "      (nbr reactants in element-reactant files = "+lists.nbrCompsInElementFiles+")"+nl);
+        w.write(nl+"Total nbr reactions = "+lists.productsReactionsSet.size()+nl);
+        w.write("Total nbr reactants found in reaction databases = "+lists.reactantsSet.size()+nl+
+                "      (nbr reactants in element-reactant files = "+lists.nbrCompsInElementFiles+")"+nl+nl);
         if(lists.reactantsSet.size()>0) {
-            outputPW.println(
+            w.write(
                 "Reactants found in reaction database(s):"+nl+
-                "  Name     &    Nbr of reactions they participate in");
+                "  Name     &    Nbr of reactions they participate in"+nl);
             treeSet = new java.util.TreeSet<String>(lists.reactantsSet.keySet());
             int j;
             for(String t : treeSet) {
                 j = lists.reactantsSet.get(t);
                 if(t.length() <=20) {
-                    outputPW.format("  %-20s   %d", t, j);
-                    outputPW.println();
+                    w.write(String.format("  %-20s   %d", t, j)+nl);
                 } else {
-                    outputPW.format("  %s   %d",  t, j);
-                    outputPW.println();
+                    w.write(String.format("  %s   %d",  t, j+nl));
                 }
             }
         }
         // --
         if(lists.reactantsUnknown.size() > 0) {
-            outputPW.println(nl+"Error: reactants (components) in the reactions database(s) NOT found"+nl+
+            w.write(nl+"Error: reactants (components) in the reactions database(s) NOT found"+nl+
                             "   in the element-reactant file(s)."+nl+
                             "   Note that any reaction involving these components"+nl+
-                            "   will NOT be found in a database search!");
+                            "   will NOT be found in a database search!"+nl);
             treeSet = new java.util.TreeSet<String>(lists.reactantsUnknown);
-            for(String t : treeSet) {outputPW.println(" "+t);}
+            for(String t : treeSet) {w.write(" "+t+nl);}
         }
         // --
         if(lists.reactantsNotUsed.size()>0) {
-            outputPW.println(nl+"Warning: components in the element-reactant file(s)"+nl+
-                                "   not used in the reactions database(s):");
+            w.write(nl+"Warning: components in the element-reactant file(s)"+nl+
+                                "   not used in the reactions database(s):"+nl);
             treeSet = new java.util.TreeSet<String>(lists.reactantsNotUsed);
-            for(String t : treeSet) {outputPW.println(" "+t);}
+            for(String t : treeSet) {w.write(" "+t+nl);}
         }
         // --
         if(lists.reactantsCompare.size()>0) {
-            outputPW.println(nl+"Error: names of reactants in the database file(s)"+nl+
-                    "   that are equivalent but will be treated as different:");
+            w.write(nl+"Error: names of reactants in the database file(s)"+nl+
+                    "   that are equivalent but will be treated as different:"+nl);
             java.util.Collections.sort(lists.reactantsCompare,String.CASE_INSENSITIVE_ORDER);
-            for(String t : lists.reactantsCompare) {outputPW.println(" "+t);}
+            for(String t : lists.reactantsCompare) {w.write(" "+t+nl);}
         }
         if(lists.elementReactantsCompare.size()>0) {
-            outputPW.println(nl+"Error: names of reactants in the element-reactant file(s)"+nl+
-                    "   that are equivalent but will be treated as different:");
+            w.write(nl+"Error: names of reactants in the element-reactant file(s)"+nl+
+                    "   that are equivalent but will be treated as different:"+nl);
             java.util.Collections.sort(lists.elementReactantsCompare,String.CASE_INSENSITIVE_ORDER);
-            for(String t : lists.elementReactantsCompare) {outputPW.println(" "+t);}
+            for(String t : lists.elementReactantsCompare) {w.write(" "+t+nl);}
         }
         // --
         if(lists.reactantWithoutCoef.size() >0) {
-            outputPW.println(nl+"Error: reactions having a reactant with name but without its stoich.coeff:");
+            w.write(nl+"Error: reactions having a reactant with name but without its stoich.coeff:"+nl);
             treeSet = new java.util.TreeSet<String>(lists.reactantWithoutCoef);
-            for(String t : treeSet) {outputPW.println(" "+t);}
+            for(String t : treeSet) {w.write(" "+t+nl);}
         }
         if(lists.coefWithoutReactant.size() >0) {
-            outputPW.println(nl+"Error: reactions having a stoich.coeff with no reactant:");
+            w.write(nl+"Error: reactions having a stoich.coeff with no reactant:"+nl);
             treeSet = new java.util.TreeSet<String>(lists.coefWithoutReactant);
-            for(String t : treeSet) {outputPW.println(" "+t);}
+            for(String t : treeSet) {w.write(" "+t+nl);}
         }
         if(lists.chargeImbalance.size() >0) {
-            outputPW.println(nl+"Error: reactions with charge imbalance:");
+            w.write(nl+"Error: reactions with charge imbalance:"+nl);
             treeSet = new java.util.TreeSet<String>(lists.chargeImbalance);
-            for(String t : treeSet) {outputPW.println(" "+t);}
+            for(String t : treeSet) {w.write(" "+t+nl);}
         }
         if(lists.duplReactionsSameProdctSet.size() > 0) {
-            outputPW.println(nl+"Warning: reactions found more than once"+nl+
-                                  "    (with the same product):");
-            for(String t : lists.duplReactionsSameProdctSet) {outputPW.println(" "+t);}
+            w.write(nl+"Warning: reactions found more than once"+nl+
+                                  "    (with the same product):"+nl);
+            for(String t : lists.duplReactionsSameProdctSet) {w.write(" "+t+nl);}
         }
         if(lists.duplReactionsDifProductSet.size() > 0) {
-            outputPW.println(nl+"Warning: reactions found more than once"+nl+
-                                  "    (with a different product):");
-            for(String t : lists.duplReactionsDifProductSet) {outputPW.println(" "+t);}
+            w.write(nl+"Warning: reactions found more than once"+nl+
+                                  "    (with a different product):"+nl);
+            for(String t : lists.duplReactionsDifProductSet) {w.write(" "+t+nl);}
         }
         if(lists.duplProductsSet.size() > 0) {
-            outputPW.println(nl+"Warning: reaction products found more than once"+nl+
-                                  "    (with a different reaction):");
-            for(String t : lists.duplProductsSet) {outputPW.println(" "+t);}
+            w.write(nl+"Warning: reaction products found more than once"+nl+
+                                  "    (with a different reaction):"+nl);
+            for(String t : lists.duplProductsSet) {w.write(" "+t+nl);}
         }
         if(lists.duplSolidsSet.size() > 0) {
-            outputPW.println(nl+"Note: solids found more than once"+nl+
-                                  "    (with different phase designator)");
-            for(String t : lists.duplSolidsSet) {outputPW.println(" "+t);}
+            w.write(nl+"Note: solids found more than once"+nl+
+                                  "    (with different phase designator)"+nl);
+            for(String t : lists.duplSolidsSet) {w.write(" "+t+nl);}
         }        
         if(lists.itemsNames.size() >0) {
             java.util.Collections.sort(lists.itemsNames,String.CASE_INSENSITIVE_ORDER);
-            outputPW.println(nl+"Error? reaction products where the name"+nl+
-                                  "    does not contain one or more reactant(s):");
-            for(String t : lists.itemsNames) {outputPW.println(" "+t);}
+            w.write(nl+"Error? reaction products where the name"+nl+
+                                  "    does not contain one or more reactant(s):"+nl);
+            for(String t : lists.itemsNames) {w.write(" "+t+nl);}
         }
         if(finished) { // if the user closed the window
             System.out.println("---- startStatistics() - doInBackground() - cancelled by the user!");
-            outputPW.flush(); outputPW.close(); return null;
+            w.flush(); w.close(); fos.close(); return null;
         }
 
         // -- References
         if(pd.references == null) {
-            outputPW.println(nl+"No reference file found.");
+            w.write(nl+"No reference file found."+nl);
         } else {
             if(lists.refsNotFnd != null && !lists.refsNotFnd.isEmpty()) {
-                outputPW.println(nl+"Error: citations with no references:");
+                w.write(nl+"Error: citations with no references:"+nl);
                 java.util.Collections.sort(lists.refsNotFnd,String.CASE_INSENSITIVE_ORDER);
-                for(String t : lists.refsNotFnd) {outputPW.println(" "+t);}
+                for(String t : lists.refsNotFnd) {w.write(" "+t+nl);}
             }
             if(lists.refsFnd != null && !lists.refsFnd.isEmpty()) {
                 boolean ok;
@@ -891,18 +915,33 @@ public class Statistics extends javax.swing.JFrame {
                 } // for Object k
                 if(arrayList.size() >0) {
                     java.util.Collections.sort(arrayList,String.CASE_INSENSITIVE_ORDER);
-                    outputPW.println(nl+"Warning: references not used in the database(s):");
-                    for(String t : arrayList) {outputPW.println(" "+t);}
+                    w.write(nl+"Warning: references not used in the database(s):"+nl);
+                    for(String t : arrayList) {w.write(" "+t+nl);}
                 }
             }
         }// references
 
         // -- close
-        outputPW.flush();
-        outputPW.close();
+        w.flush();
+        w.close();
+        fos.close();
         if(finished) { // if the user closed the window
             System.out.println("---- startStatistics() - doInBackground() - cancelled by the user!");
             return null;
+        }
+        }
+        catch (Exception ex) {
+          String msg = "Error \""+ex.getMessage()+"\","+nl+
+                    "   with file:"+nl+"   \""+outFileName+"\"";
+          MsgExceptn.exception(msg);
+          javax.swing.JOptionPane.showMessageDialog(Statistics.this, msg, pc.progName,
+                                    javax.swing.JOptionPane.ERROR_MESSAGE);
+          try{if(w != null) {w.close();} if(fos != null) {fos.close();}}
+          catch (Exception e) {
+              msg = "Error \""+e.getMessage()+"\","+nl+
+                    "   while closing file:"+nl+"   \""+outFileName+"\"";
+              MsgExceptn.exception(msg);
+          }
         }
 
         if(pc.dbg) {System.out.println("\"doInBackground()\" finished.");}
