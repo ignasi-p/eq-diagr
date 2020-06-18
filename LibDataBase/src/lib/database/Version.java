@@ -17,6 +17,6 @@ package lib.database;
  * 
  * @author Ignasi Puigdomenech */ 
 public class Version { 
-    static final String VERSION = "2020-06-11"; 
+    static final String VERSION = "2020-06-17"; 
     public static String version() {return VERSION;} 
 } 
