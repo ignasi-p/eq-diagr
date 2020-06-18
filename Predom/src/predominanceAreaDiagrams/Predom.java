@@ -37,7 +37,7 @@ import lib.kemi.readWriteDataFiles.ReadChemSyst;
  *
  * @author Ignasi Puigdomenech */
 public class Predom extends javax.swing.JFrame {
-    static final String VERS = "2020-June-17";
+    static final String VERS = "2020-June-18";
     static final String progName = "PREDOM";
 /** variable needed in "main" method */
     private static Predom predomFrame;
@@ -3461,10 +3461,9 @@ public class HaltaTask extends javax.swing.SwingWorker<Boolean, Integer> {
                     if(calcActCoeffs) {msg = msg + "The activity coefficients are then WRONG"+nl+
                           "and the results unrealistic."+nl;}
                     else {msg = msg + "These results are unrealistic."+nl;}
-                    showErrMsgBx(msg, 1);
                 }
             }
-            if(nbrHaltaUncertain >0 && dbg) {
+            if(nbrHaltaErrors <= 0 && nbrHaltaUncertain >0 && dbg) {
                 if(msg.length() >0) msg = msg+nl;
                 msg = msg+String.format("%d",nbrHaltaUncertain).trim()+" point(s) with round-off errors (not within tolerance).";
             }
