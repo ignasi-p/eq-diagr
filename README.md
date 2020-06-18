@@ -84,7 +84,7 @@ Joachim Zeising (KTH). Many thanks are due to the chemistry teaching staff at KT
 
  [1]: https://www.kth.se/che/medusa/
  [2]: https://github.com/ignasi-p/eq-diagr/releases/latest
- [3]: https://github.com/ignasi-p/eq-diagr/Make_1st_diagram.pdf
+ [3]: https://github.com/ignasi-p/eq-diagr/blob/master/Make_1st_diagram.pdf
  [4]: http://portableapps.com
  [5]: https://sv.wikipedia.org/wiki/GNU_General_Public_License
 
