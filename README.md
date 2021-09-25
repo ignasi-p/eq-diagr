@@ -4,7 +4,7 @@
 
 For the course [KD1280][27] (chemical analysis) at [KTH][28] (the Royal Institute of Technology at Stockholm) there is [another version][30] with special settings and a different database. Here you will find the original software (without KTH settings).
 
-A previous version for Windows (now un-maintained, written in Visual Basic) named (**Medusa/Hydra**) and developped at [KTH][1] is available at https://sites.google.com/site/chemdiagr
+A previous version for Windows (now un-maintained, written in Visual Basic) named (**Medusa/Hydra**) and developped at [KTH][1] is available at [sites.google.com/site/chemdiagr][31]
 
 
 ## Download
@@ -105,3 +105,4 @@ Joachim Zeising (KTH). Many thanks are due to the chemistry teaching staff at KT
 [28]: https://www.kth.se/che
 [29]: https://github.com/ignasi-p/eq-diagr
 [30]: https://github.com/ignasi-p/eq-diagr-kth
+[31]: https://drive.google.com/drive/folders/0B8R04krPU1H_fnZlRDFLaFIwYUtGYXV2aEhqb0VvYWl3Q2FfczdFajNRNW1wOEkwbDFYUWc?resourcekey=0-0C1SdnErxCYscSy8nzPYUw&usp=sharing
