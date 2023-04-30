@@ -4,8 +4,9 @@
 
 For the course [KD1280][27] (chemical analysis) at [KTH][28] (the Royal Institute of Technology at Stockholm) there is [another version][30] with special settings and a different database. Here you will find the original software (without KTH settings).
 
-A previous version for Windows (now un-maintained, written in Visual Basic) named (**Medusa/Hydra**) and developped at [KTH][1] is available at [Google Drive][31].  See also https://sites.google.com/site/chemdiagr
+A previous version for Windows (now un-maintained, written in Visual Basic) named (**Medusa/Hydra**) and developped at [KTH][1] is available at https://sites.google.com/site/chemdiagr
 
+See also: https://sites.google.com/site/chemdiagr/
 
 ## Download
 All downloads are available in the [releases section][2]. There are two variants of Chemical Equilibrium Diagrams: multi platform, and Windows. These versions are either a complete zip file or a Windows installer.
@@ -44,6 +45,8 @@ All downloads are available in the [releases section][2]. There are two variants
 ## Report problems
 
 ![e-mail](e-mail.png)
+
+See also Ignasi's page on [water chemistry][40].
 
 
 ## Credits
@@ -88,11 +91,11 @@ Joachim Zeising (KTH). Many thanks are due to the chemistry teaching staff at KT
  [4]: http://portableapps.com
  [5]: https://sv.wikipedia.org/wiki/GNU_General_Public_License
 
- [10]: https://doi.org/10.1016/0039-9140(67)80203-0
- [11]: https://doi.org/10.1016/0039-9140(68)80071-2
- [12]: https://doi.org/10.1016/0039-9140(71)80069-3
- [13]: https://www.hanser-elibrary.com/doi/pdf/10.3139/146.070904
- [14]: https://doi.org/10.1016/S0003-2670(01)85035-2
+[10]: https://doi.org/10.1016/0039-9140(67)80203-0
+[11]: https://doi.org/10.1016/0039-9140(68)80071-2
+[12]: https://doi.org/10.1016/0039-9140(71)80069-3
+[13]: https://www.hanser-elibrary.com/doi/pdf/10.3139/146.070904
+[14]: https://doi.org/10.1016/S0003-2670(01)85035-2
 
 [20]: http://www.rgagnon.com/howto.html
 [21]: http://centerkey.com/java/browser
@@ -105,4 +108,5 @@ Joachim Zeising (KTH). Many thanks are due to the chemistry teaching staff at KT
 [28]: https://www.kth.se/che
 [29]: https://github.com/ignasi-p/eq-diagr
 [30]: https://github.com/ignasi-p/eq-diagr-kth
-[31]: https://drive.google.com/drive/folders/0B8R04krPU1H_fnZlRDFLaFIwYUtGYXV2aEhqb0VvYWl3Q2FfczdFajNRNW1wOEkwbDFYUWc?resourcekey=0-0C1SdnErxCYscSy8nzPYUw&usp=sharing
+
+[40]: https://sites.google.com/view/groundwatergeochemistry
