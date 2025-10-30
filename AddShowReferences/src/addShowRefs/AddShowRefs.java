@@ -6,7 +6,7 @@ import lib.common.Util;
 import lib.database.References;
 
 /**
- * Copyright (C) 2015-2020 I.Puigdomenech.
+ * Copyright (C) 2015-2025 I.Puigdomenech.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,16 +74,27 @@ public class AddShowRefs extends javax.swing.JFrame {
     if (imgURL != null) {
         icon = new javax.swing.ImageIcon(imgURL).getImage();
         this.setIconImage(icon);
-        //com.apple.eawt.Application.getApplication().setDockIconImage(new javax.swing.ImageIcon("Football.png").getImage());
         if(System.getProperty("os.name").startsWith("Mac OS")) {
+            /** old way to change the Dock Icon
             try {
                 Class<?> c = Class.forName("com.apple.eawt.Application");
                 //Class params[] = new Class[] {java.awt.Image.class};
                 java.lang.reflect.Method m =
                     c.getDeclaredMethod("setDockIconImage",new Class[] { java.awt.Image.class });
-                Object i = c.newInstance();
+                Object i = c.getDeclaredConstructor().newInstance();
                 Object paramsObj[] = new Object[]{icon};
                 m.invoke(i, paramsObj);
+            } catch (Exception e) {System.out.println("Error: "+e.getMessage());}
+            **/
+            /** new way to change the Dock Icon */
+            try {
+                final Class<?> macAppClass = Class.forName("com.apple.eawt.Application");
+                final java.lang.reflect.Method macAppGetApp = macAppClass.getMethod("getApplication");
+                final java.lang.reflect.Method macSetDockIconImageMethod =
+                                    macAppClass.getMethod("setDockIconImage", java.awt.Image.class);
+                final Object macAppObj = macAppGetApp.invoke(null);
+                final Object paramsObj[] = new Object[]{icon};
+                macSetDockIconImageMethod.invoke(macAppObj, paramsObj);
             } catch (Exception e) {System.out.println("Error: "+e.getMessage());}
         }
     } else {
